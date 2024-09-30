@@ -1,58 +1,97 @@
-# Turborepo Tailwind CSS starter
+# My Monorepo with Turborepo
 
-This is an official starter Turborepo.
+This is a monorepo built using [Turborepo](https://turbo.build/). It contains multiple pet projects, starting with my
+personal portfolio and expanding to other projects over time.
 
-## Using this example
+## Project Structure
 
-Run the following command:
+- `/portfolio` – My personal portfolio.
+- More pet projects will be added soon.
 
-```sh
-npx create-turbo@latest -e with-tailwind
+## Getting Started
+
+To run this repository, follow these steps:
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/your-monorepo.git
 ```
 
-## What's inside?
+2. Navigate to the project directory:
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
-- `web`: another [Next.js](https://nextjs.org/) app with [Tailwind CSS](https://tailwindcss.com/)
-- `ui`: a stub React component library with [Tailwind CSS](https://tailwindcss.com/) shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Building packages/ui
-
-This example is set up to produce compiled styles for `ui` components into the `dist` directory. The component `.tsx` files are consumed by the Next.js apps directly using `transpilePackages` in `next.config.js`. This was chosen for several reasons:
-
-- Make sharing one `tailwind.config.js` to apps and packages as easy as possible.
-- Make package compilation simple by only depending on the Next.js Compiler and `tailwindcss`.
-- Ensure Tailwind classes do not overwrite each other. The `ui` package uses a `ui-` prefix for it's classes.
-- Maintain clear package export boundaries.
-
-Another option is to consume `packages/ui` directly from source without building. If using this option, you will need to update the `tailwind.config.js` in your apps to be aware of your package locations, so it can find all usages of the `tailwindcss` class names for CSS compilation.
-
-For example, in [tailwind.config.js](packages/tailwind-config/tailwind.config.js):
-
-```js
-  content: [
-    // app content
-    `src/**/*.{js,ts,jsx,tsx}`,
-    // include packages if not transpiling
-    "../../packages/ui/*.{js,ts,jsx,tsx}",
-  ],
+```bash
+cd your-monorepo
 ```
 
-If you choose this strategy, you can remove the `tailwindcss` and `autoprefixer` dependencies from the `ui` package.
+3. Install the dependencies:
+
+```bash
+yarn install
+```
+
+4. Run the development server:
+
+```bash
+yarn dev
+```
+
+## Tech Stack
+
+This project uses a modern stack for building responsive and interactive web applications. Here is an overview of the
+main technologies and tools used in the `portfolio` project:
+
+### Frontend
+
+- **React 18**: Library for building user interfaces.
+- **Next.js 14**: Framework for server-rendered React applications with great SEO and performance optimizations.
+- **TypeScript**: Strictly typed JavaScript for better developer experience and maintainability.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **SASS**: CSS pre-processor for more powerful and maintainable styles.
+
+### Internationalization
+
+- **i18next**: Framework for managing translations and localization.
+- **react-i18next**: React integration for i18next.
+- **next-i18next**: Next.js plugin for i18n management.
+
+### Animations
+
+- **Framer Motion**: Animations and transitions for React components.
+- **GSAP**: High-performance animations library for more complex animations.
+
+### Forms & Hooks
+
+- **@hookform/resolvers**: Validation resolver for React Hook Form.
+- **@mantine/hooks**: Collection of React hooks for UI components.
+- **usehooks-ts**: React hooks written in TypeScript.
+
+### Icons & Images
+
+- **Country Flag Icons**: SVG icons for country flags.
+- **file-loader**: Module for importing and using image and video files.
+
+### Linting & Formatting
+
+- **ESLint**: Tool for identifying and fixing problems in JavaScript/TypeScript code.
+- **Prettier**: Code formatter to maintain a consistent code style.
+- **Tailwind CSS Plugin**: Linting and sorting of Tailwind CSS classes.
 
 ### Utilities
 
-This Turborepo has some additional tools already setup for you:
+- **clsx**: Utility for conditionally joining class names.
+- **js-cookie**: JavaScript API for handling cookies.
+- **tailwind-merge**: Utility to merge Tailwind CSS classes without conflicts.
 
-- [Tailwind CSS](https://tailwindcss.com/) for styles
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+### Development Tools
+
+- **Turborepo**: High-performance build system for monorepos.
+- **TypeScript**: Provides static type-checking.
+- **Prettier**: Code formatting tool.
+- **ESLint**: For linting and enforcing coding standards.
+
+### Build and Deployment
+
+- **Next.js Build Tools**: Commands for building, starting, and linting the project.
+- **Autoprefixer**: Adds vendor prefixes to CSS for better browser support.
+- **PostCSS**: Tool for transforming CSS with plugins.

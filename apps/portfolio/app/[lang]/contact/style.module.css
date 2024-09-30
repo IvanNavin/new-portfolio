@@ -1,0 +1,7 @@
+.rotateAirplane {
+    transform: rotateZ(-45deg) rotateX(25deg) rotateY(15deg);
+}
+
+.hoveredAirplane {
+    transform: rotateZ(-55deg) rotateX(5deg) rotateY(15deg);
+}

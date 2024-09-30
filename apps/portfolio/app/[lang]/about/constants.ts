@@ -1,0 +1,40 @@
+export const htmlSkills = [
+  'HTML',
+  'Accessibility',
+  'Bootstrap',
+  'Material Ui',
+  'Mantine Ui',
+  'Semantic Ui',
+  'Ant Design Ui',
+  'Twig',
+  'Pug',
+];
+export const cssSkills = ['Css', 'Scss', 'Sass', 'Less', 'Tailwind Css'];
+export const JSSkills = [
+  'JavaScript',
+  'JQuery',
+  'Node.js',
+  'React',
+  'Redux',
+  'Thunk',
+  'Redux Toolkit Query',
+  'Zustand',
+  'Tanstack Query & Table',
+  'TypeScript',
+  'Next.js',
+  'AMPS',
+  'Lodash',
+  'Ramda.js',
+  'AGGrid',
+  'GraphQL',
+  'Socket.io',
+];
+export const otherSkills = [
+  'Vite',
+  'Webpack',
+  'GraphQL',
+  'Jest',
+  'Gulp',
+  'EsLint',
+  'Prettier',
+];

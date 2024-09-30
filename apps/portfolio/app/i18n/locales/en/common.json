@@ -1,0 +1,184 @@
+{
+  "main": {
+    "hello": "Hello",
+    "aboutMe": "About Me",
+    "about": "About",
+    "my": "My",
+    "myWorks": "My Works",
+    "names": "Name's",
+    "contacts": "Contacts",
+    "ivan": "Ivan",
+    "performances": "Performances",
+    "presPForPause": "Press \"P\" for Pause. Press \"Space\" for new effect"
+  },
+  "about": {
+    "helloThere": "Hello There!",
+    "text": {
+      "line1": "Since I was 12, I have dreamed to be a programmer and to create something interesting.",
+      "line2": "I understood that it was very difficult, if you have no knowledge in it.",
+      "line3": "However, it didn't scare me. I started my way with studying Basic, Pascal and Delphi.",
+      "line4": "But my life path turned to be different. It took me around 15 years to realize that I wanted to be a programmer.",
+      "line5": "There is a lot of information available on the Internet and I began studying Front-end development.",
+      "line6": "Now I am engaged in the development of Front-end applications, layout and maintenance of sites.",
+      "line7": "I like to turn complex tasks into simple, beautiful and intuitive designs.",
+      "line8": "When I don't code, I play ps5, roast meat, or spend time with my family.",
+      "line9": "From 2018 to 2021 I worked for 'EvoPlay'.",
+      "line10": "From 2021 to 2022, I worked for 'Luxoft'.",
+      "line11": "We developed a trading exchange for the English bank 'City'.",
+      "line12": "From 2022 to 2023 I worked for 'Octal'.",
+      "line13": "In this company I was the only one who made an admin site for pentesters from scratch.",
+      "line14": "I like interesting and challenging tasks for which I try to find the most optimal and workable solutions.",
+      "line15": "In all companies I worked for, I managed to show my soft skills, find common solutions in the team and try to be relevant.",
+      "line16": "I have experience in:"
+    },
+    "description": "At the same time, I study new technologies and try to share them with others.",
+    "randomFacts": "Random facts:",
+    "facts": {
+      "line0": "I don't smoke",
+      "line1": "I don't drink alcohol",
+      "line2": "I drink a lot of tea",
+      "line3": "I like interior design",
+      "line4": "I play the guitar",
+      "line5": "I like to cook meat",
+      "line6": "I love my family",
+      "line7": "I like to travel",
+      "line8": "I don't drink coffee",
+      "line9": "I am cheerful",
+      "line10": "Talkative",
+      "line11": "I like to watch TV series",
+      "line12": "Sociable",
+      "line13": "Optimist"
+    },
+    "downloadCv": "download CV"
+  },
+  "contacts": {
+    "sayHi": "Say Hi!",
+    "name": "Name",
+    "message": "Message",
+    "sendMessage": "Send Message",
+    "messageSent": "Message sent!",
+    "oopsError": "Oops! An error occurred while sending the message. Please try again later."
+  },
+  "myWorks": {
+    "myWorks": "My Works",
+    "description": "According to the regulations which I signed (NDA), working for the company, I will have to post sandbox here"
+  },
+  "performances": {
+    "title": "My reports",
+    "regexp": "Don't be afraid of regular expressions",
+    "accessibility": "Development accessible interfaces️"
+  },
+  "accessibility": {
+    "title": "Development accessible interfaces️",
+    "linkName": "Link to the report"
+  },
+  "regexp": {
+    "title": "Don't be afraid of regular expressions",
+    "linkName": "Useful links",
+    "wikiLink": "Regular expressions on wiki",
+    "learnJS": "Regular Expression Tutorial at learn.javascript.ru",
+    "crib": "Regular Expression Cheat Sheet"
+  },
+  "404": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist. You can go back to the main page."
+  },
+  "works": {
+    "english": {
+      "title": "English learn",
+      "text": {
+        "line0": "English learning is the result of the React Marathon from Zar Zakharov.",
+        "line1": "During this marathon we got acquainted with React and its life cycles, learned how to work with forms and with the Firebase server.",
+        "line2": "From the marathon I got the skill how to work with props and states, and passed them through the components and back.",
+        "line3": "To begin with, we wrote a self-written redux to understand how it works and later connected it.",
+        "line4": "We took icons and shapes from the AntDesign collection.",
+        "line5": "We connected the dictionary api and used the firebase storage to memorize user's words.",
+        "line6": "Then we attached React Router and Thunk.",
+        "line7": "To use the site's capabilities, you need to enter an unknown English word in the input field.",
+        "line8": "Further, this word will appear in the Firebase database and under the input field.",
+        "line9": "If you click on a word, the card will flip and on the other side you can find the translation.",
+        "line10": "This word can be crossed out as memorized or deleted as unnecessary and consequently removed from the base of your words."
+      },
+      "login": "Login: reactmarathon@gmail.com",
+      "password": "Password: 12345678"
+    },
+    "ganttChart": {
+      "text": "This is the testing task. Here I use the technologies that I use in the previous project."
+    },
+    "miner": {
+      "title": "Miner",
+      "text": "Just made the Miner game."
+    },
+    "pokedex": {
+      "text": {
+        "line0": "Pokedex is the result of an advanced React Marathon run by Zar Zakharov.",
+        "line1": "In this marathon, which I successfully did, I would like to dwell on the design, new technologies of React and other aspects.",
+        "line2": "",
+        "line3": "There was a kit in the design - a set of names of all colors, gradients, fonts and their sizes, etc.",
+        "line4": "At the entrance of the marathon, I implemented the following technologies in this project:"
+      },
+      "secondText": {
+        "line0": "In fact, there are many interesting moments in this marathon.",
+        "line1": "The whole project is written in hooks.",
+        "line2": "",
+        "line3": "Later, it helped me a lot - when I switched to the new React command, I immediately began to translate Class components on hooks.",
+        "line4": "Subsequently, I was able to share this knowledge with the team."
+      },
+      "thirdText": {
+        "line0": "Unfortunately, the API is written with the HTTP protocol and is not available currently.",
+        "line1": "Below you can see video demonstration of a working project."
+      },
+      "fourText": {
+        "line0": "In the course of writing this project, I independently added a filter by type and attack,",
+        "line1": "as well as made modals via 'createPortal'.",
+        "line2": "In the future, I plan to add infinite loading to the project."
+      }
+    },
+    "portfolio": {
+      "text": {
+        "line0": "I find it important to have a professional portfolio site that displays all of my projects and accomplishments.",
+        "line1": "",
+        "line2": "At first I had no idea how the site of a portfolio should look and what should be in it. I started enquiring and reading articles on this topic.",
+        "line3": "",
+        "line4": "I drew up a plan, decided on a color scheme, sketched a couple of ideas and set to work. The thing I understood about it was it had to be unique and creative. Fuh, it was difficult!",
+        "line5": "",
+        "line6": "First, the user is taken to the home page where I used the fluid effect. I did not find such a library, but I found places where this effect was applied and borrowed it from there, slightly transforming it in my own way. Here on the main page, you can interact with the animation by pressing SPACE. Flashes of fluid animations will appear, by pressing \"P\". If you want to stop the animation, you can press pause. By clicking and swiping across the screen with a mouse or finger, the animation is brought into action.",
+        "line7": "",
+        "line8": "Then the user can go to the 'About me' page. On this page I introduce my personal story, the stack of technologies I own, work experience and other facts about me =)",
+        "line9": "",
+        "line10": "At this point, I thought it would be good to add a back button. I found an interesting canvas animation and applied it to the back button.",
+        "line11": "",
+        "line12": "The user can go to the projects page (all the best projects with the description of applied technologies used and links to Github. I think live video demos will live here too).",
+        "line13": "",
+        "line14": "The user can go to the 'contacts' page to contact me. On the page of my reports, the skills that I share with others can be shown.",
+        "line15": "",
+        "line16": "At the beginning of writing the code, I didn't know what stack my portfolio site would have. Looking back in the time I really wanted to write it in React, but my basic knowledge hadn't been enough for it, so I had used ES6. Since the time I have gained much experience in React, and now I think I can perform much better. I realized that I needed to customize and add functions in a way that would demonstrate my programming skills, so I wrote it in native JS.",
+        "line19": "",
+        "line20": "The main purpose of this portfolio website is to showcase the projects I've created, and of course, the site itself!"
+      }
+    },
+    "rpg": {
+      "text": {
+        "line0": "Here I managed to write an online game in which several people can play at once.",
+        "line1": "This is cool experience with sockets and server side.",
+        "line2": "There is an online chat.",
+        "line3": "Stack: HTML / SASS / JS / Webpack5 / Websocket (socket.io) / EsLint / Prettier.",
+        "line4": "To check the functionality of the game and chat, you can launch the game in several tabs.",
+        "line5": "Currently the backend is not working now."
+      }
+    },
+    "thanos": {
+      "text": {
+        "line0": "While working in EvoPlay, I received a task to reproduce the Thanos effect.",
+        "line1": "What should be done?",
+        "line2": "The main purpose was to make the disintegration of the pictures like in the movie Avengers 3.",
+        "line3": "The pictures should disintegrate into ash and fly in the wind.",
+        "line4": "After surfing on the Internet, I found many examples of this implementation.",
+        "line5": "Since I needed to split only pictures into atoms but not the content, I found these examples unsuitable for this purpose.",
+        "line6": "However, ordinary canvas is much better for it, so I made this effect without using the html2canvas library."
+      }
+    }
+  },
+  "ivan": "Ivan",
+  "seeTheResultHere": "See the result here"
+}

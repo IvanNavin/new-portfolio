@@ -1,0 +1,121 @@
+{
+  "main": {
+    "hello": "Hallo",
+    "aboutMe": "Über mich",
+    "my": "Meine",
+    "myWorks": "Meine Arbeiten",
+    "names": "heißt",
+    "contacts": "Kontakte",
+    "ivan": "Ivan",
+    "performances": "Vorträge",
+    "presPForPause": "Drücken Sie \"P\" für Pause. Drücken Sie \"Leertaste\" für einen neuen Effekt"
+  },
+  "about": {
+    "helloThere": "Hallo zusammen!",
+    "text": {
+      "line1": "Seit ich 12 Jahre alt war, träumte ich davon, Programmierer zu werden und interessante Dinge zu schaffen. Ich wusste, dass es sehr schwierig sein würde – aber das hat mich nicht abgeschreckt! Zuerst habe ich Basic, Pascal und dann Delphi gelernt. Aber das Leben nahm eine andere Wendung und ich entschied mich später wieder, meiner Leidenschaft nachzugehen. Im Internet gibt es viel zugängliche Information, und so habe ich angefangen, Frontend-Entwicklung zu studieren.",
+      "line2": "Jetzt beschäftige ich mich mit der Entwicklung von Frontend-Anwendungen, dem Layout und der Wartung von Websites.",
+      "line3": "Es macht mir Spaß, komplexe Aufgaben in einfache, schöne und intuitiv verständliche Konstruktionen zu verwandeln.",
+      "line4": "Wenn ich keinen Code schreibe, spiele ich auf der PS5, grille Fleisch oder verbringe Zeit mit meiner Familie.",
+      "line5": "Von 2018 bis 2021 arbeitete ich bei \"EvoPlay\".",
+      "line6": "Dort gab es ein sehr freundliches Team und viele interessante Aufgaben. Wir unterstützten etwa 15 Casino-Websites.",
+      "line7": "Von 2021 bis 2022 arbeitete ich bei \"Luxoft\".",
+      "line8": "Wir entwickelten eine Handelsbörse für die englische Bank \"City\".",
+      "line9": "Von 2022 bis 2023 arbeitete ich bei \"Octal\".",
+      "line10": "Ich baute alleine ein Admin-Panel für Penetrationstester von Grund auf auf.",
+      "line11": "Ich liebe es, interessante Aufgaben zu lösen und kreative Lösungen zu finden.",
+      "line12": "Ich versuche in der Firma, meine Soft Skills zu entwickeln.",
+      "line13": "Ich halte Vorträge und versuche, von Nutzen zu sein.",
+      "line14": "Ich habe Erfahrung mit:"
+    },
+    "description": "Gleichzeitig lerne ich neue Technologien und versuche, dieses Wissen mit anderen zu teilen.",
+    "randomFacts": "Zufällige Fakten:",
+    "facts": {
+      "line0": "Ich rauche nicht",
+      "line1": "Ich trinke keinen Alkohol",
+      "line2": "Ich trinke viel Tee",
+      "line3": "Ich interessiere mich für Interior Design",
+      "line4": "Ich spiele Gitarre",
+      "line5": "Ich grille gerne Fleisch",
+      "line6": "Ich liebe meine Familie",
+      "line7": "Ich reise gerne",
+      "line8": "Ich trinke keinen Kaffee",
+      "line9": "Fröhlich",
+      "line10": "Gesprächig",
+      "line11": "Ich sehe gerne Serien",
+      "line12": "Kommunikativ",
+      "line13": "Optimistisch"
+    },
+    "downloadCv": "Lebenslauf herunterladen"
+  },
+  "contacts": {
+    "sayHi": "Sag Hallo!",
+    "name: ": "Name",
+    "message": "Nachricht",
+    "sendMessage": "Nachricht senden",
+    "messageSent": "Nachricht wurde gesendet!",
+    "oopsError": "Upps! Beim Senden der Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut."
+  },
+  "myWorks": {
+    "myWorks": "Meine Arbeiten",
+    "description": "Da ich in den Unternehmen, in denen ich gearbeitet habe, eine NDA (Geheimhaltungsvereinbarung) unterschrieben habe, muss ich hier meine persönlichen Projekte hochladen."
+  },
+  "performances": {
+    "title": "Meine Vorträge",
+    "regexp": "Habt keine Angst vor regulären Ausdrücken",
+    "accessibility": "Entwicklung zugänglicher Benutzeroberflächen"
+  },
+  "accessibility": {
+    "title": "Entwicklung zugänglicher Benutzeroberflächen",
+    "linkName": "Link zum Vortrag"
+  },
+  "regexp": {
+    "title": "Habt keine Angst vor regulären Ausdrücken",
+    "linkName": "Nützliche Links",
+    "wikiLink": "Reguläre Ausdrücke auf Wikipedia",
+    "learnJS": "Leitfaden zu regulären Ausdrücken auf learn.javascript.ru",
+    "crib": "Cheat-Sheet für reguläre Ausdrücke"
+  },
+  "404": {
+    "title": "Seite nicht gefunden",
+    "description": "Die angeforderte Seite existiert nicht. Sie können zur Startseite zurückkehren."
+  },
+  "works": {
+    "english": {
+      "title": "Englisch lernen",
+      "text": {
+        "line0": "Das Englischlernen ist das Ergebnis eines React-Marathons von Zaur Zakharov.",
+        "line1": "Während dieses Marathons haben wir uns mit React und seinem Lebenszyklus vertraut gemacht und gelernt, mit Formularen und dem Firebase-Server zu arbeiten.",
+        "line2": "Am Ende des Marathons habe ich gelernt, wie man mit Props und States arbeitet und diese zwischen den Komponenten hin- und herreicht.",
+        "line3": "Zu Beginn haben wir unseren eigenen Redux geschrieben, um zu verstehen, wie es funktioniert, und haben ihn später integriert.",
+        "line4": "Wir haben Icons und Formulare aus der AntDesign-Sammlung verwendet.",
+        "line5": "Wir haben eine API für ein Wörterbuch eingebunden und Firebase Storage genutzt, um die Wörter der Benutzer zu speichern.",
+        "line6": "Dann haben wir React Router und Thunk hinzugefügt.",
+        "line7": "Um die Funktionen der Website zu nutzen, geben Sie ein unbekanntes englisches Wort in das Eingabefeld ein.",
+        "line8": "Dieses Wort wird dann in der Firebase-Datenbank gespeichert und unter dem Eingabefeld angezeigt.",
+        "line9": "Wenn Sie auf das Wort klicken, dreht sich die Karte um und auf der Rückseite finden Sie die Übersetzung.",
+        "line10": "Sie können das Wort als gelernt durchstreichen oder als unnötig löschen und es somit aus Ihrer Wörter-Datenbank entfernen."
+      },
+      "login": "Login: reactmarathon@gmail.com",
+      "password": "Passwort: 12345678"
+    },
+    "ganttChart": {
+      "text": "Dies ist eine Testaufgabe. Hier verwende ich Technologien, die ich im vorherigen Projekt verwendet habe."
+    },
+    "miner": {
+      "title": "Minesweeper",
+      "text": "Ich habe einfach ein Miner-Spiel gemacht."
+    },
+    "pokedex": {
+      "text": {
+        "line0": "Pokedex ist das Ergebnis eines fortgeschrittenen React-Marathons von Zaur Zakharov.",
+        "line1": "In diesem Marathon hat mir das Design und die neuen Technologien sehr gefallen.",
+        "line2": "",
+        "line3": "Das Design enthielt ein Kit - eine Sammlung von Farben, Verläufen und Schaltflächen.",
+        "line4": "Das hat mir sehr geholfen, schneller zu arbeiten.",
+        "line5": "Der Marathon begann mit der Wiederholung des Projekts für React Router und der Arbeit mit den URL-Parametern und den Routen. Wir haben React Query hinzugefügt.",
+        "line6": "Am Ende haben wir unser Wissen über die Lebenszyklen und Hooks vertieft."
+      }
+    }
+  }
+}
