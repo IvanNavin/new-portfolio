@@ -1,3 +1,4 @@
+import { TransitionLink } from '@components/TransitionLink';
 import { clsxm } from '@repo/utils';
 import React from 'react';
 
@@ -7,14 +8,14 @@ import { useBackButton } from './useBackButton';
 export default function BackButton({
   className,
   text,
-  onClick,
+  backPath,
 }: BackButtonProps) {
   const { ref, hovered, canvasReady } = useBackButton();
 
   return (
-    <button
+    <TransitionLink
       className='fixed right-1 top-1 z-[9999] overflow-hidden rounded-full'
-      onClick={onClick}
+      href={backPath}
     >
       <canvas
         ref={ref}
@@ -25,6 +26,6 @@ export default function BackButton({
           {text}
         </span>
       )}
-    </button>
+    </TransitionLink>
   );
 }

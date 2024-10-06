@@ -1,16 +1,21 @@
-import { ReactNode } from 'react';
+'use client';
+import { AnimateProvider } from '@components/AnimateProvider';
+import { Preloader } from '@components/preloader';
+import { AnimatePresence } from 'framer-motion';
+import { usePathname } from 'next/navigation';
+import { ReactNode, Suspense } from 'react';
 
 type Props = {
   children: ReactNode;
 };
 export const Providers = ({ children }: Props) => {
-  return children;
+  const pathName = usePathname();
 
-  // return (
-  //   <AnimatePresence mode='wait'>
-  //     <NavigationHistoryProvider key={pathName}>
-  //       {children}
-  //     </NavigationHistoryProvider>
-  //   </AnimatePresence>
-  // );
+  return (
+    <Suspense fallback={<Preloader />}>
+      <AnimatePresence initial={false} mode='wait'>
+        <AnimateProvider key={pathName}>{children}</AnimateProvider>
+      </AnimatePresence>
+    </Suspense>
+  );
 };

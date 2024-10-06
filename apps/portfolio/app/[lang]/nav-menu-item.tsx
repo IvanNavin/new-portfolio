@@ -1,7 +1,7 @@
 import { russoOne } from '@assets/fonts';
+import { TransitionLink } from '@components/TransitionLink';
 import { useHover } from '@mantine/hooks';
 import { clsxm } from '@repo/utils';
-import { useRouter } from 'next/navigation';
 
 type NavMenuItemProps = {
   first: string;
@@ -20,11 +20,11 @@ export const NavMenuItem = ({
   className,
   textClassName,
 }: Props) => {
-  const { hovered, ref } = useHover<HTMLButtonElement>();
-  const router = useRouter();
+  const { hovered, ref } = useHover<HTMLAnchorElement>();
 
   return (
-    <button
+    <TransitionLink
+      href={href}
       ref={ref}
       className={clsxm(
         'overflow-hidden opacity-0 animate-slideText ease-in-out duration-300',
@@ -32,9 +32,6 @@ export const NavMenuItem = ({
         'focus-within:border-transparent focus-within:outline-transparent select-none',
         className,
       )}
-      onClick={() => {
-        router.push(href);
-      }}
     >
       <span
         className={clsxm(
@@ -47,6 +44,6 @@ export const NavMenuItem = ({
       >
         {hovered ? second : first}
       </span>
-    </button>
+    </TransitionLink>
   );
 };

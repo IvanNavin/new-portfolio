@@ -109,6 +109,10 @@ const config: Config = {
             transform: 'rotate3d(1, 1, 1, 65deg) rotate(360deg)',
           },
         },
+        'move-twink-back': {
+          '0%': { backgroundPosition: '0 0' },
+          '100%': { backgroundPosition: '-10000px 5000px' },
+        },
       },
       animation: {
         slideText: 'slideText 1s forwards',
@@ -125,6 +129,7 @@ const config: Config = {
         'instagram-rotate': 'instagram-rotate 0.8s linear 0.4s forwards',
         delay: '.4s delay var(--delay) forwards;',
         rotate: 'rotate 15s linear infinite',
+        'move-twink-back': 'move-twink-back 200s linear infinite',
       },
     },
   },

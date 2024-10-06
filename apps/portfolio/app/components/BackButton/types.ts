@@ -4,7 +4,7 @@ export type MousePositionType = {
 };
 
 export type BackButtonProps = {
-  onClick: () => void;
+  backPath: string;
   text: string;
   className?: string;
 };

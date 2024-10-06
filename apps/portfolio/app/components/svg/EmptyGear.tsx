@@ -3,7 +3,7 @@ import { SVGProps } from 'react';
 export const EmptyGear = ({
   width = 100,
   height = 100,
-  fill,
+  fill = 'white',
 }: SVGProps<SVGSVGElement>) => {
   return (
     <svg
