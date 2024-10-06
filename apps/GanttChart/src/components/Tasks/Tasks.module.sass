@@ -1,0 +1,40 @@
+@import '../../styles/variables'
+
+.Tasks
+  display: flex
+  width: 200px
+  min-width: 200px
+  height: 100%
+  flex-direction: column
+  border-right: 1px solid $greyColor
+
+.Task
+  display: inline-block
+  line-height: 38px
+  height: 38px
+  min-height: 38px
+  border-bottom: 1px solid $greyColor
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  padding: 0 24px 0 12px
+  position: relative
+  &>*:not(:last-child)
+    margin-right: 8px
+  .circle
+    display: inline-block
+    width: 12px
+    height: 12px
+    border-radius: 50%
+  .arrow
+    position: absolute
+    top: 10px
+    right: 12px
+    display: inline-block
+    width: 12px
+    height: 12px
+    border-right: 2px solid #9b9b9b
+    border-bottom: 2px solid #9b9b9b
+    transform: rotate(45deg)
+
+

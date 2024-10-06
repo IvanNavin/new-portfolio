@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="src/style.css" />
+    <title>Miner</title>
+</head>
+<body>
+<div class="miner">
+    <div class="game-field">
+        <header class="top-bar">
+            <div class="counter bomb">010</div>
+            <div class="img"></div>
+            <div class="counter timer">000</div>
+        </header>
+        <main class="field" data-state='menu'>
+            <div class="menu">
+                <select id='select'>
+                    <option value="simple" selected>Simple(10x8)</option>
+                    <option value="normal">Normal(18x14)</option>
+                    <option value="hard">Hard(24x20)</option>
+                </select>
+                <button id="start">Start</button>
+            </div>
+            <div
+                    class="cells"
+                    style="grid-template-columns: repeat(10, 32px);"
+                    onselectstart="return false;"
+            ></div>
+            <div class="gameOver">
+                <span>Game Over</span>
+            </div>
+            <div class="youWin">
+                <span>You Win</span>
+            </div>
+        </main>
+    </div>
+</div>
+<script type="module" src="src/index.mjs"></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 100px;
+}
+
+button {
+  width: 150px;
+  height: 48px;
+  margin-top: 50px;
+  cursor: pointer;
+}
+
+#effect-wrapper {
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  width: 332px;
+  height: 332px;
+  z-index: 1;
+}
+
+#effect-wrapper > * {
+  box-sizing: border-box;
+}
+
+div#effect-wrapper * {
+  transform: translate3d(0, 0, 0);
+}
+
+#effect-wrapper #effect-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 332px;
+  height: 332px;
+}
+
+#effect-wrapper img {
+  width: 100%;
+  height: 100%;
+}
+
+.dust {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  filter: blur(0.05em);
+}
+
+.quickFade {
+  animation: fadeout 0.5s linear forwards;
+}
+
+.blur {
+  animation: fadeblur 1.4s ease-in forwards;
+}
+
+.fadeinimage {
+  transform-origin: center;
+  animation: fadeinimage 1.4s ease-in forwards;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.thanos-hand {
+  width: 36px;
+}
+
+@keyframes fadeout {
+  0% {
+    opacity: 1
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeblur {
+  0% {
+    opacity: 1;
+    filter: blur(0.05em);
+  }
+  80% {
+    filter: blur(0.188em);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeinimage {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
