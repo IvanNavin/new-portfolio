@@ -1,4 +1,8 @@
 import { russoOne } from '@assets/fonts';
+import APPLE_TOUCH_ICON from '@assets/img/favicons/apple-touch-icon.png';
+import FAVICON from '@assets/img/favicons/favicon.ico';
+import FAVICON16 from '@assets/img/favicons/favicon-16x16.png';
+import FAVICON32 from '@assets/img/favicons/favicon-32x32.png';
 import STARS from '@assets/img/stars.png';
 import TWINKLING from '@assets/img/twinkling.png';
 import { LanguageSwitcher } from '@components/LanguageSwitcher';
@@ -14,6 +18,23 @@ import { Providers } from './providers';
 export const metadata: Metadata = {
   title: 'Holovko Ivan Portfolio',
   description: 'Frontend developer portfolio',
+  icons: {
+    icon: FAVICON.src,
+    shortcut: FAVICON.src,
+    apple: APPLE_TOUCH_ICON.src,
+    other: [
+      {
+        rel: 'icon',
+        url: FAVICON32.src,
+        sizes: '32x32',
+      },
+      {
+        rel: 'icon',
+        url: FAVICON16.src,
+        sizes: '16x16',
+      },
+    ],
+  },
 };
 
 type RootLayoutType = {
