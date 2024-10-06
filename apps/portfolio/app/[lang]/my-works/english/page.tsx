@@ -17,11 +17,13 @@ export default function Page({ params: { lang } }: DefaultProps) {
 
   return (
     <Container
+      lang={lang}
       backText={t('myWorks.myWorks')}
-      backPath={ROUTES.myWorks()}
+      backPath={ROUTES.myWorks(lang)}
       title={t('works.english.title')}
     >
       <Image
+        priority={true}
         src={IMG}
         alt={t('works.english.title')}
         className='mb-6 max-h-[500px] object-contain'

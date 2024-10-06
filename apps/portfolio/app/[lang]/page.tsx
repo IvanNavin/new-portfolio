@@ -14,17 +14,25 @@ export default function Home({ params: { lang } }: DefaultProps) {
   const { t } = useTranslation(lang);
 
   const navMenu = [
-    { first: t('main.hello'), second: t('main.aboutMe'), href: ROUTES.about() },
-    { first: t('main.my'), second: t('main.myWorks'), href: ROUTES.myWorks() },
+    {
+      first: t('main.hello'),
+      second: t('main.aboutMe'),
+      href: ROUTES.about(lang),
+    },
+    {
+      first: t('main.my'),
+      second: t('main.myWorks'),
+      href: ROUTES.myWorks(lang),
+    },
     {
       first: t('main.names'),
       second: t('main.contacts'),
-      href: ROUTES.contact(),
+      href: ROUTES.contact(lang),
     },
     {
       first: t('main.ivan'),
       second: t('main.performances'),
-      href: ROUTES.performances(),
+      href: ROUTES.performances(lang),
     },
   ];
 

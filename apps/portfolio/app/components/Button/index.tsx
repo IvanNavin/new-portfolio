@@ -23,6 +23,7 @@ export const Button = ({ text, href, style, className }: Props) => {
       )}
     >
       <Image
+        priority={true}
         src={MONK}
         alt='monk'
         className='absolute left-1/2 top-1/2 size-[30px] -translate-x-1/2 -translate-y-1/2'

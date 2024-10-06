@@ -25,7 +25,12 @@ export const WorkItem = ({
         </div>
         <div className={styles.main}>
           {frontPicture && (
-            <Image src={frontPicture} alt={name} className={styles.back} />
+            <Image
+              priority={true}
+              src={frontPicture}
+              alt={name}
+              className={styles.back}
+            />
           )}
           <div className={clsxm(styles.tags)}>
             <ul className={styles.skills}>
@@ -46,6 +51,7 @@ export const WorkItem = ({
             <picture className={styles.img}>
               {backPicture && (
                 <Image
+                  priority={true}
                   src={backPicture}
                   alt={name}
                   className='absolute inset-0 object-cover'

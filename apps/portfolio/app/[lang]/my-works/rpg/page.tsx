@@ -12,8 +12,9 @@ export default function Page({ params: { lang } }: DefaultProps) {
 
   return (
     <Container
+      lang={lang}
       backText={t('myWorks.myWorks')}
-      backPath={ROUTES.myWorks()}
+      backPath={ROUTES.myWorks(lang)}
       title='RPG'
     >
       <video controls width='100%' autoPlay loop>

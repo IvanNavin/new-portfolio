@@ -11,15 +11,16 @@ import RPG from '@assets/img/RPG.png';
 import RPG_GAME from '@assets/img/RPG-GAME.png';
 import THANOS from '@assets/img/thanos.jpg';
 import THANOS_BACK from '@assets/img/thanos-back.jpeg';
+import { Locale } from '@root/i18n-config';
 
 import { Work } from './types';
 
-export const works: Work[] = [
+export const getWorks = (lang: Locale): Work[] => [
   {
     id: 'miner',
     name: 'Miner',
     status: 'New',
-    route: ROUTES.miner(),
+    route: ROUTES.miner(lang),
     frontPicture: FRONT_MINER,
     backPicture: BACK_MINER,
     stack: ['HTML', 'CSS', 'Javascript'],
@@ -28,7 +29,7 @@ export const works: Work[] = [
     id: 'ganttChart',
     name: 'Gantt Chart',
     status: 'New',
-    route: ROUTES.ganttChart(),
+    route: ROUTES.ganttChart(lang),
     frontPicture: GANTT_CHART_FRONT,
     backPicture: GANTT_CHART_BACK,
     stack: [
@@ -47,7 +48,7 @@ export const works: Work[] = [
     id: 'RPG',
     name: 'RPG Online Game',
     status: 'in process',
-    route: ROUTES.rpg(),
+    route: ROUTES.rpg(lang),
     frontPicture: RPG,
     backPicture: RPG_GAME,
     stack: [
@@ -66,7 +67,7 @@ export const works: Work[] = [
     id: 'portfolio',
     name: 'Portfolio',
     status: 'in process',
-    route: ROUTES.portfolio(),
+    route: ROUTES.portfolio(lang),
     frontPicture: PORTFOLIO,
     stack: [
       'HTML',
@@ -84,7 +85,7 @@ export const works: Work[] = [
     id: 'pokedex',
     name: 'Pokedex',
     status: 'in process',
-    route: ROUTES.pokedex(),
+    route: ROUTES.pokedex(lang),
     frontPicture: POKEDEX_HOME,
     backPicture: POKEDEX_DESKTOP,
     stack: ['React', 'Redux', 'SSR', 'Scss', 'HookRouter', 'TS', 'Es-Lint'],
@@ -92,7 +93,7 @@ export const works: Work[] = [
   {
     id: 'thanos-effect',
     name: 'Thanos Effect',
-    route: ROUTES.thanos(),
+    route: ROUTES.thanos(lang),
     frontPicture: THANOS,
     backPicture: THANOS_BACK,
     stack: ['HTML', 'CSS', 'JS', 'Canvas', 'Animations'],
@@ -100,7 +101,7 @@ export const works: Work[] = [
   {
     id: 'english-learn',
     name: 'English learn',
-    route: ROUTES.english(),
+    route: ROUTES.english(lang),
     frontPicture: ENGLISH,
     stack: ['React', 'Redux', 'SCSS', 'Firebase'],
   },

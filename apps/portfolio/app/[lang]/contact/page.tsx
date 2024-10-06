@@ -29,6 +29,7 @@ export default function Page({ params: { lang } }: DefaultProps) {
 
   return (
     <Container
+      lang={lang}
       backText={t('ivan')}
       title={t('contacts.sayHi')}
       titleClassName='text-center'

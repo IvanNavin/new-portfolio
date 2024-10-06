@@ -22,7 +22,7 @@ export default function Page({ params: { lang } }: DefaultProps) {
   );
 
   return (
-    <Container backText={t('ivan')} title={t('about.helloThere')}>
+    <Container lang={lang} backText={t('ivan')} title={t('about.helloThere')}>
       <section className={roboto.className}>
         {textLines.map((line, index) => (
           <p key={index}>{line}</p>

@@ -12,11 +12,13 @@ export default function Page({ params: { lang } }: DefaultProps) {
 
   return (
     <Container
+      lang={lang}
       backText={t('myWorks.myWorks')}
-      backPath={ROUTES.myWorks()}
+      backPath={ROUTES.myWorks(lang)}
       title='Gantt Chart'
     >
       <Image
+        priority={true}
         src={IMG}
         alt={t('works.english.title')}
         className='mb-6 max-h-[500px] object-contain'

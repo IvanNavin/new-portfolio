@@ -13,17 +13,17 @@ export default function Page({ params: { lang } }: DefaultProps) {
     {
       first: t('performances.accessibility'),
       second: t('performances.accessibility'),
-      href: ROUTES.accessibility(),
+      href: ROUTES.accessibility(lang),
     },
     {
       first: t('performances.regexp'),
       second: t('performances.regexp'),
-      href: ROUTES.regexp(),
+      href: ROUTES.regexp(lang),
     },
   ];
 
   return (
-    <Container backText={t('ivan')} title={t('performances.title')}>
+    <Container lang={lang} backText={t('ivan')} title={t('performances.title')}>
       <nav className='absolute left-[114px] top-1/2 flex -translate-y-1/2 flex-col items-center'>
         {reports.map((item, idx) => (
           <NavMenuItem

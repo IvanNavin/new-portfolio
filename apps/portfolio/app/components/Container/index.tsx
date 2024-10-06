@@ -2,9 +2,11 @@
 import { ROUTES } from '@app/constants/routes';
 import BackButton from '@components/BackButton';
 import { clsxm } from '@repo/utils';
+import { Locale } from '@root/i18n-config';
 import { ReactNode } from 'react';
 
 type Props = {
+  lang: Locale;
   backPath?: string;
   backText: string;
   title: string;
@@ -14,7 +16,8 @@ type Props = {
 };
 
 export const Container = ({
-  backPath = ROUTES.root(),
+  lang,
+  backPath = ROUTES.root(lang),
   backText,
   title,
   children,
