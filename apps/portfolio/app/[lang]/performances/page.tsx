@@ -30,6 +30,7 @@ export default function Page({ params: { lang } }: DefaultProps) {
             key={item.first}
             item={item}
             textClassName={clsxm('text-[3vw]', idx !== 0 && 'text-red-600')}
+            index={idx}
           />
         ))}
       </nav>

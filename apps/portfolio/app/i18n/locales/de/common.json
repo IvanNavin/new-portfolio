@@ -49,8 +49,8 @@
     "downloadCv": "Lebenslauf herunterladen"
   },
   "contacts": {
-    "sayHi": "Sag Hallo!",
-    "name: ": "Name",
+    "sayHi": "Let's work together",
+    "name": "Name",
     "message": "Nachricht",
     "sendMessage": "Nachricht senden",
     "messageSent": "Nachricht wurde gesendet!",

@@ -44,8 +44,8 @@ export default function Home({ params: { lang } }: DefaultProps) {
     <main className='relative h-screen w-screen overflow-hidden'>
       <Fluid />
       <nav className='absolute left-[114px] top-1/2 flex -translate-y-1/2 flex-col items-center'>
-        {navMenu.map((item) => (
-          <NavMenuItem key={item.first} item={item} />
+        {navMenu.map((item, index) => (
+          <NavMenuItem key={item.first} item={item} index={index} />
         ))}
       </nav>
       <section
