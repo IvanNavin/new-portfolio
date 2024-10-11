@@ -6,7 +6,7 @@ cleanup() {
 
   # Clean the current directory
   echo "Cleaning up in $dir"
-  rm -rf "$dir/node_modules" "$dir/yarn.lock" "$dir/yarn-error.log" "$dir/.turbo" "$dir/.next"
+  rm -rf "$dir/node_modules" "$dir/yarn.lock" "$dir/yarn-error.log" "$dir/.turbo" "$dir/.next" "$dir/package-lock.json"
 
   # we recursively go through all subdirectories
   for subdir in "$dir"/*/; do
