@@ -5,12 +5,16 @@ type Props = {
   label: string;
   value: [number, number];
   onChange: (value: [number, number]) => void;
+  min?: number;
+  max?: number;
 };
 
 export default function RangeSelect({
   label,
   value = [0, 100],
   onChange,
+  min = 0,
+  max = 100,
 }: Props) {
   const [opened, setOpened] = useState(false);
 
@@ -29,7 +33,7 @@ export default function RangeSelect({
         </Button>
       </Popover.Target>
       <Popover.Dropdown>
-        <RangeSlider value={value} onChange={onChange} min={0} max={100} />
+        <RangeSlider value={value} onChange={onChange} min={min} max={max} />
       </Popover.Dropdown>
     </Popover>
   );

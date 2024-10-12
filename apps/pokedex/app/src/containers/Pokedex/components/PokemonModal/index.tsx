@@ -73,14 +73,20 @@ export const PokemonModal = ({ data }: Props) => {
             <span>Healthy Points</span>
             <span className={s.points}>{hp}</span>
             <div className={s.progressBar}>
-              <div className={s.progress} style={{ width: '20%' }} />
+              <div
+                className={s.progress}
+                style={{ width: `${(hp / 300) * 100}%` }}
+              />
             </div>
           </div>
           <div className={s.exp}>
             <span>Experience</span>
             <span className={s.points}>{base_experience}</span>
             <div className={s.progressBar}>
-              <div className={s.progress} style={{ width: '60%' }} />
+              <div
+                className={s.progress}
+                style={{ width: `${(base_experience / 300) * 100}%` }}
+              />
             </div>
           </div>
         </div>

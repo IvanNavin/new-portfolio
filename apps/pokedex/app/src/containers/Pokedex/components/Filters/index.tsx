@@ -29,8 +29,15 @@ export const Filters = () => {
         value={experience}
         onChange={setExperience}
         label='Experience'
+        min={0}
+        max={300}
       />
-      <RangeSelect value={attack} onChange={setAttack} label='Attack' />
+      <RangeSelect
+        value={attack}
+        onChange={setAttack}
+        label='Attack'
+        max={200}
+      />
     </div>
   );
 };

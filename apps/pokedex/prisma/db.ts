@@ -17,20 +17,24 @@ export type PokemonsFilterType = {
 export async function getPokemons({
   name,
   types,
-  minExperience,
-  maxExperience,
-  minAttack,
-  maxAttack,
+  minExperience = 0,
+  maxExperience = 300,
+  minAttack = 0,
+  maxAttack = 200,
   page = 1,
-  limit = 9,
+  limit = 18,
 }: PokemonsFilterType): Promise<PokemonType[] | undefined> {
   const where: Prisma.PokemonWhereInput = {
-    ...(name && { name: { contains: name, mode: 'insensitive' } }),
-    ...(types && { types: { hasSome: types } }),
-    ...(minExperience && { base_experience: { gte: minExperience } }),
-    ...(maxExperience && { base_experience: { lte: maxExperience } }),
-    ...(minAttack && { attack: { gte: minAttack } }),
-    ...(maxAttack && { attack: { lte: maxAttack } }),
+    ...(name?.length && { name: { contains: name, mode: 'insensitive' } }),
+    ...(types?.length && { types: { hasSome: types } }),
+    base_experience: {
+      gte: minExperience,
+      lte: maxExperience,
+    },
+    attack: {
+      gte: minAttack,
+      lte: maxAttack,
+    },
   };
 
   return prisma.pokemon.findMany({

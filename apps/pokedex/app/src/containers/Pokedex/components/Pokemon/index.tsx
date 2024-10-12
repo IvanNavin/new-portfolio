@@ -3,6 +3,7 @@ import { openModal } from '@mantine/modals';
 import { PokemonType } from '@src/types/api-types';
 import cn from 'classnames';
 import Image from 'next/image';
+import { forwardRef } from 'react';
 
 import s from './styles.module.scss';
 
@@ -10,63 +11,64 @@ import SOON from '../../assets/soon.png';
 
 type Props = {
   data: PokemonType;
-  isLast?: boolean;
 };
-export const Pokemon = ({ data, isLast }: Props) => {
-  const { types, name, img, attack, defense } = data;
-  const pictureWrap = cn(s.pictureWrap, s[types[0] as keyof typeof s]);
+export const Pokemon = forwardRef<HTMLDivElement, Props>(
+  ({ data }: Props, ref) => {
+    const { types, name, img, attack, defense } = data;
+    const pictureWrap = cn(s.pictureWrap, s[types[0] as keyof typeof s]);
 
-  const onClick = () => {
-    openModal({
-      centered: true,
-      withCloseButton: false,
-      overlayProps: {
-        opacity: 0.8,
-        color: '#171C23',
-      },
-      styles: {
-        content: {
-          overflow: 'visible',
-          background: 'transparent',
+    const onClick = () => {
+      openModal({
+        centered: true,
+        withCloseButton: false,
+        overlayProps: {
+          opacity: 0.8,
+          color: '#171C23',
         },
-        body: {
-          padding: 0,
+        styles: {
+          content: {
+            overflow: 'visible',
+            background: 'transparent',
+          },
+          body: {
+            padding: 0,
+          },
         },
-      },
-      size: 800,
-      withOverlay: true,
-      children: <PokemonModal data={data} />,
-    });
-  };
+        size: 800,
+        withOverlay: true,
+        children: <PokemonModal data={data} />,
+      });
+    };
 
-  return (
-    <div className={s.root} onClick={onClick} role='dialog'>
-      <div className={s.infoWrap}>
-        <h5 className={s.titleName}>{name}</h5>
-        <div className={s.statWrap}>
-          <div className={s.statItem}>
-            <div className={s.statValue}>{attack}</div>
-            Атака
+    return (
+      <div ref={ref} className={s.root} onClick={onClick} role='dialog'>
+        <div className={s.infoWrap}>
+          <h5 className={s.titleName}>{name}</h5>
+          <div className={s.statWrap}>
+            <div className={s.statItem}>
+              <div className={s.statValue}>{attack}</div>
+              Attack
+            </div>
+            <div className={s.statItem}>
+              <div className={s.statValue}>{defense}</div>
+              Defense
+            </div>
           </div>
-          <div className={s.statItem}>
-            <div className={s.statValue}>{defense}</div>
-            Защита
+          <div className={s.labelWrap}>
+            {types.map((type) => {
+              const labelClass = cn(s.label, s[type as keyof typeof s]);
+              return (
+                <span key={type} className={labelClass}>
+                  {type}
+                </span>
+              );
+            })}
           </div>
         </div>
-        <div className={s.labelWrap}>
-          {types.map((type) => {
-            const labelClass = cn(s.label, s[type as keyof typeof s]);
-            return (
-              <span key={type} className={labelClass}>
-                {type}
-              </span>
-            );
-          })}
+        <div className={pictureWrap}>
+          <Image src={img || SOON} alt={name} priority={false} fill />
         </div>
       </div>
-      <div className={pictureWrap}>
-        <Image src={img || SOON} alt={name} priority={false} fill />
-      </div>
-    </div>
-  );
-};
+    );
+  },
+);

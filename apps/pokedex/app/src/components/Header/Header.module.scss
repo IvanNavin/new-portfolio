@@ -25,7 +25,9 @@
   align-items: center;
   max-width: 658px;
   width: 100%;
-  justify-content: space-between;
+  justify-content: flex-end;
+  padding-right: 24px;
+  gap: 24px;
 }
 
 .menuLink {
