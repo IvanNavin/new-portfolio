@@ -16,6 +16,7 @@
     "@mantine/hooks": "^7.13.2",
     "@prisma/client": "^5.20.0",
     "@repo/db": "*",
+    "@vercel/postgres": "^0.10.0",
     "classnames": "^2.5.1",
     "next": "14.2.15",
     "prisma": "^5.20.0",
@@ -42,6 +43,7 @@
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",
     "prettier": "3.3.3",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vercel": "^37.8.0"
   }
 }
