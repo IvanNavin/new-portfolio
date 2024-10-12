@@ -1,13 +1,5 @@
-import { HomePage } from '@app/containers';
-import Header from '@app/components/Header';
-import Footer from '@app/components/Footer';
+import { HomePage } from 'app/src/containers';
 
 export default function Home() {
-  return (
-    <>
-      <Header />
-      <HomePage />
-      <Footer />
-    </>
-  );
+  return <HomePage />;
 }

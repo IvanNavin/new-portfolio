@@ -3,6 +3,7 @@ const nextConfig = {
   eslint: {
     dirs: ['app'],
   },
+  transpilePackages: ['@repo/db'],
   reactStrictMode: false,
   swcMinify: true,
   output: 'standalone',

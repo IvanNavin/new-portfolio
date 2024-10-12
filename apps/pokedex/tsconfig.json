@@ -30,6 +30,18 @@
       ],
       "@app/*": [
         "./app/*"
+      ],
+      "@src/*": [
+        "./app/src/*"
+      ],
+      "@components/*": [
+        "./app/src/components/*"
+      ],
+      "@containers/*": [
+        "./app/src/containers/*"
+      ],
+      "@constants/*": [
+        "./app/src/constants/*"
       ]
     }
   },

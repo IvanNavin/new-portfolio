@@ -13,16 +13,16 @@ import Image from 'next/image';
 
 export default function Page({ params: { lang } }: DefaultProps) {
   const { t } = useTranslation(lang);
-  const textLines = Object.values(
+  const textLines: string[] = Object.values(
     t('works.pokedex.text', { returnObjects: true }),
   );
-  const secondTextLines = Object.values(
+  const secondTextLines: string[] = Object.values(
     t('works.pokedex.secondText', { returnObjects: true }),
   );
-  const thirdTextLines = Object.values(
+  const thirdTextLines: string[] = Object.values(
     t('works.pokedex.thirdText', { returnObjects: true }),
   );
-  const fourthTextLines = Object.values(
+  const fourthTextLines: string[] = Object.values(
     t('works.pokedex.fourText', { returnObjects: true }),
   );
 

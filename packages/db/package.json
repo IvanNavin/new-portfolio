@@ -1,0 +1,15 @@
+{
+  "name": "@repo/db",
+  "version": "1.0.0",
+  "main": "./src/db.ts",
+  "exports": {
+    ".": "./src/db.ts"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "node-fetch": "^3.3.2",
+    "prisma": "^5.20.0",
+    "ts-node": "^10.9.2"
+  }
+}

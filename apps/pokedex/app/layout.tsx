@@ -1,6 +1,10 @@
+import { Providers } from '@app/providers';
+import { ColorSchemeScript } from '@mantine/core';
+import { karla } from '@src/constants';
 import type { Metadata } from 'next';
-import './globals.css';
 import { ReactNode } from 'react';
+
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Pokédex',
@@ -13,7 +17,12 @@ type RootProps = Readonly<{
 export default function RootLayout({ children }: RootProps) {
   return (
     <html lang='en'>
-      <body>{children}</body>
+      <head>
+        <ColorSchemeScript />
+      </head>
+      <body className={karla.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

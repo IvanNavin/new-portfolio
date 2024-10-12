@@ -1,7 +1,5 @@
-import RedirectPage from '@app/containers/RedirectPage';
+import RedirectPage from '@app/src/containers/RedirectPage';
 
-type Props = {};
-
-export default function Page(props: Props) {
+export default function Page() {
   return <RedirectPage />;
 }

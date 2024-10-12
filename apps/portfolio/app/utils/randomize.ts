@@ -1,4 +1,4 @@
-export const randomCount = (arr: string[], count: number = 4): string[] => {
+export const randomCount = (arr: string[], count = 4): string[] => {
   let i = 0;
   const result: string[] = [];
 

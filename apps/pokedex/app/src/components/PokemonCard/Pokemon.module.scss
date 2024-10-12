@@ -1,0 +1,156 @@
+@import '../../../variables';
+
+.root {
+  justify-self: center;
+  width: 26vw;
+  height: 10vw;
+  box-shadow: 4px 4px 4px rgba(33, 33, 33, 0.1);
+  background: #f6f7f9;
+  border-radius: 8px;
+  position: relative;
+  cursor: pointer;
+  transition: all ease-in-out 0.3s;
+  margin-bottom: 20px;
+
+  &:hover {
+    transform: scale(1.03);
+  }
+}
+
+.infoWrap {
+  position: absolute;
+  z-index: 1;
+  width: 20vw;
+  top: 6%;
+  left: 7%;
+}
+
+.titleName {
+  font-size: 1.3vw;
+  margin: 0 0 0.9vw;
+  text-shadow: 4px 4px 4px rgba(33, 33, 33, 0.1);
+}
+
+.statWrap {
+  display: flex;
+  margin-bottom: 0.9vw;
+}
+
+.statItem {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 0.9vw;
+  line-height: 1vw;
+  text-align: center;
+  color: #4b4b4b;
+  margin-right: 0.9vw;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.statValue {
+  width: 2.7vw;
+  height: 2.7vw;
+  border: 3px solid $dark;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 1.1vw;
+  line-height: 1.2vw;
+  color: $dark;
+  margin: 0 auto 0.6vw;
+}
+
+.pictureWrap {
+  width: 65%;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @include colors();
+
+  img {
+    width: 80%;
+  }
+}
+
+.label {
+  background: $second;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18);
+  border-radius: 11px;
+  height: 1.1vw;
+  min-width: 4.4vw;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 0.9vw;
+  line-height: 1vw;
+  text-align: center;
+  color: $dark;
+  padding: 0 0.9vw 0.1vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0.9vw;
+
+  &.stile,
+  &.dark,
+  &.rock {
+    background-color: #a1a1a1;
+  }
+
+  &.bug,
+  &.grass {
+    background-color: #70a83b;
+  }
+
+  &.ice,
+  &.water {
+    background-color: #a2cff0;
+  }
+
+  &.fire,
+  &.fighting,
+  &.dragon {
+    background-color: #f76545;
+  }
+
+  &.normal,
+  &.gosth {
+    background-color: #76aadb;
+  }
+
+  &.poison,
+  &.psychic,
+  &.fairy,
+  &.ghost {
+    background-color: #a974bc;
+  }
+
+  &.ground {
+    background-color: #9b897b;
+  }
+
+  &.flying,
+  &.electric {
+    background-color: #f7c545;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.labelWrap {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}

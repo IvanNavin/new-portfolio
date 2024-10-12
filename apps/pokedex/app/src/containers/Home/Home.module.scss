@@ -1,0 +1,48 @@
+@import '../../../breakpoints';
+@import '../../../variables';
+
+.root {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  background: linear-gradient(180deg, $third 0%, $primary 100%);
+  overflow: hidden;
+}
+
+.contentWrap {
+  display: flex;
+  flex-direction: row;
+
+  //@include media('<tablet-desktop') {
+  //  flex-direction: column-reverse;
+  //  justify-content: center;
+  //  align-items: center;
+  //  height: calc(100vh - 93px);
+  //}
+}
+
+.contentText {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 516px;
+  align-items: flex-start;
+  justify-content: center;
+  color: black;
+  z-index: 1;
+
+  h1 {
+    font-weight: normal;
+    color: black;
+    font-size: 72px;
+
+    b {
+      font-weight: bold;
+    }
+  }
+
+  p {
+    margin: 64px 0;
+  }
+}
+

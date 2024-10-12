@@ -1,0 +1,49 @@
+.h1 {
+  margin-top: 73px;
+  margin-bottom: 34px;
+  text-align: center;
+}
+
+.title {
+  text-align: center;
+  font-weight: 400;
+  margin: 10px;
+
+  b {
+    font-weight: 700;
+  }
+}
+
+.wrapper {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  margin: 0 auto;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: rotating 0.2s ease-in-out infinite;
+}
+
+.filters {
+  display: flex;
+  justify-content: space-around;
+  max-width: 1088px;
+  width: 100%;
+  margin: 28px auto 0;
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
