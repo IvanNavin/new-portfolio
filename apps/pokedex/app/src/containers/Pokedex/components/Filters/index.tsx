@@ -29,7 +29,6 @@ export const Filters = () => {
         value={experience}
         onChange={setExperience}
         label='Experience'
-        min={0}
         max={300}
       />
       <RangeSelect
