@@ -1,4 +1,5 @@
 @import '../../../../../variables';
+@import '../../../../../breakpoints';
 
 
 .root {
@@ -14,6 +15,16 @@
 
   &:hover {
     transform: scale(1.03);
+  }
+
+  @include media('>tablet', '<desktop') {
+    width: 40vw;
+    height: 15vw;
+  }
+
+  @include media('>phone', '<tablet') {
+    width: 80vw;
+    height: 30vw;
   }
 }
 

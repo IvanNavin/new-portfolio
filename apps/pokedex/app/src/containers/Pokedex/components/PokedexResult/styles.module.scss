@@ -1,7 +1,17 @@
+@import '../../../../../breakpoints';
+
 .wrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 0.5rem;
   margin-top: 24px;
   margin-bottom: 100px;
+
+  @include media('>tablet', '<desktop') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include media('>phone', '<tablet') {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
