@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint app --fix && npm run format",
@@ -14,9 +14,11 @@
   "dependencies": {
     "@mantine/core": "^7.13.2",
     "@mantine/hooks": "^7.13.2",
+    "@prisma/client": "^5.20.0",
     "@repo/db": "*",
     "classnames": "^2.5.1",
     "next": "14.2.15",
+    "prisma": "^5.20.0",
     "react": "^18",
     "react-dom": "^18",
     "sass": "^1.79.4"
