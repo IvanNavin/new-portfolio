@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from '@prisma/client';
+import { PokemonType } from '@src/types/api-types';
 
 const prisma = new PrismaClient();
 
@@ -22,9 +23,9 @@ export async function getPokemons({
   maxAttack,
   page = 1,
   limit = 9,
-}: PokemonsFilterType) {
-  const where: any = {
-    ...(name && { name: { contains: name, mode: "insensitive" } }),
+}: PokemonsFilterType): Promise<PokemonType[] | undefined> {
+  const where: Prisma.PokemonWhereInput = {
+    ...(name && { name: { contains: name, mode: 'insensitive' } }),
     ...(types && { types: { hasSome: types } }),
     ...(minExperience && { base_experience: { gte: minExperience } }),
     ...(maxExperience && { base_experience: { lte: maxExperience } }),

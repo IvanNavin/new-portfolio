@@ -1,14 +1,15 @@
 'use client';
-import React from 'react';
-import Button from '../../components/Button';
 import { ParallaxEffect } from '@app/src/components/Parallax';
+import { NotFound } from '@app/src/components/svg';
 import { LinkEnum } from '@src/constants/routes';
 import Image from 'next/image';
-import Trio from './assets/Team_Rocket_trio.png';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 
 import s from './404.module.scss';
-import { NotFound } from '@app/src/components/svg';
-import { useRouter } from 'next/navigation';
+
+import Trio from './assets/Team_Rocket_trio.png';
+import Button from '../../components/Button';
 
 const RedirectPage = () => {
   const { screenX, screenY } = ParallaxEffect();

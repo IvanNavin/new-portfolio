@@ -1,13 +1,12 @@
 'use client';
-import React from 'react';
-import cn from 'classnames';
-
+import { Logo } from '@app/src/components/svg';
 import { GENERAL_MENU } from '@src/constants/routes';
-
-import s from './Header.module.scss';
+import cn from 'classnames';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Logo } from '@app/src/components/svg';
+import React from 'react';
+
+import s from './Header.module.scss';
 
 const Header = () => {
   const pathname = usePathname();

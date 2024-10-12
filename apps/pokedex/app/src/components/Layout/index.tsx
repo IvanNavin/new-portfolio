@@ -1,9 +1,9 @@
-import { ReactNode } from 'react';
+import Footer from '@app/src/components/Footer';
+import Header from '@app/src/components/Header';
 import cn from 'classnames';
+import { ReactNode } from 'react';
 
 import s from './Layout.module.scss';
-import Header from '@app/src/components/Header';
-import Footer from '@app/src/components/Footer';
 
 interface LayoutProps {
   className?: string;

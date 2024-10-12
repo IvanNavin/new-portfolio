@@ -18,10 +18,13 @@ export function Magnetic({ children }: MagneticProps) {
       ease: 'elastic.out(1, 0.3)',
     });
 
-    magnetic.current?.addEventListener('mousemove', (e) => {
+    if (!magnetic.current) return;
+
+    magnetic.current.addEventListener('mousemove', (e) => {
+      if (!magnetic.current) return;
       const { clientX, clientY } = e;
       const { height, width, left, top } =
-        magnetic.current!.getBoundingClientRect();
+        magnetic.current.getBoundingClientRect();
       const x = clientX - (left + width / 2);
       const y = clientY - (top + height / 2);
       xTo(x * 0.35);

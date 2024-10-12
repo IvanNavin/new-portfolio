@@ -20,7 +20,7 @@ import { AnyType } from '../types';
 
 const runsOnServerSide = typeof window === 'undefined';
 
-i18next
+void i18next
   .use(initReactI18next)
   .use(LanguageDetector)
   .use(
@@ -48,7 +48,7 @@ export function useTranslation(
   const i18nCookie = Cookies.get(i18nCookieName);
 
   if (runsOnServerSide && lng && i18n.resolvedLanguage !== lng) {
-    i18n.changeLanguage(lng);
+    void i18n.changeLanguage(lng);
   } else {
     const [activeLng, setActiveLng] = useState(i18n.resolvedLanguage);
 
@@ -61,7 +61,7 @@ export function useTranslation(
     useEffect(() => {
       if (!lng || i18n.resolvedLanguage === lng) return;
 
-      i18n.changeLanguage(lng);
+      void i18n.changeLanguage(lng);
     }, [lng, i18n]);
 
     useEffect(() => {

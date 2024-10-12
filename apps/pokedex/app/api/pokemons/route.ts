@@ -1,4 +1,4 @@
-import { getPokemons, PokemonsFilterType } from '@repo/db';
+import { getPokemons, PokemonsFilterType } from '@root/prisma/db';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {

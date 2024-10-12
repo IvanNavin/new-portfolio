@@ -1,6 +1,6 @@
+import cn from 'classnames';
 import { MouseEvent, ReactNode } from 'react';
 
-import cn from 'classnames';
 import s from './Button.module.scss';
 
 interface ButtonProps {

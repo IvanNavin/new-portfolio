@@ -3,6 +3,7 @@ import { SVGProps } from 'react';
 export const LoaderIcon = ({
   width = 54,
   height = 54,
+  ...rest
 }: SVGProps<SVGSVGElement>) => {
   return (
     <svg
@@ -11,6 +12,7 @@ export const LoaderIcon = ({
       viewBox='0 0 54 54'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
+      {...rest}
     >
       <g clipPath='url(#clip0)'>
         <path
@@ -51,12 +53,12 @@ export const LoaderIcon = ({
           y2='21.2724'
           gradientUnits='userSpaceOnUse'
         >
-          <stop stop-color='#B57E10' />
-          <stop offset='0.240861' stop-color='#B57E10' />
-          <stop offset='0.404291' stop-color='#F9DF7B' />
-          <stop offset='0.59375' stop-color='#FFF3A6' />
-          <stop offset='0.78125' stop-color='#F9DF7B' />
-          <stop offset='1' stop-color='#B57E10' />
+          <stop stopColor='#B57E10' />
+          <stop offset='0.240861' stopColor='#B57E10' />
+          <stop offset='0.404291' stopColor='#F9DF7B' />
+          <stop offset='0.59375' stopColor='#FFF3A6' />
+          <stop offset='0.78125' stopColor='#F9DF7B' />
+          <stop offset='1' stopColor='#B57E10' />
         </linearGradient>
         <clipPath id='clip0'>
           <rect width='54' height='54' fill='white' />

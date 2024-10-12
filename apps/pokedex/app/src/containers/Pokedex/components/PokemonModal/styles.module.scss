@@ -1,15 +1,10 @@
-@import '../../../variables';
+@import '../../../../../variables';
 
-.modalRoot {
-  display: flex;
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
+.wrapper {
+  width: 800px;
+  height: 371px;
+  padding: 0;
+  margin: 0;
 }
 
 .container {
@@ -234,8 +229,8 @@
 
 .button {
   position: absolute;
-  top: -35px;
-  right: 0;
+  top: -42px;
+  right: -24px;
   background-color: transparent;
   border: none;
   outline: none;

@@ -69,8 +69,9 @@ export const useAddEditTask = (task: Partial<Task> | null, onClose: () => void) 
         dependencies: task.dependencies || '',
       })
     }
-  }, [task])
+  }, [task, reset])
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => () => reset(), [])
 
   return {

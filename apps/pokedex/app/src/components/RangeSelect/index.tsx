@@ -13,7 +13,6 @@ export default function RangeSelect({
   onChange,
 }: Props) {
   const [opened, setOpened] = useState(false);
-  // const [range, setRange] = useState<[number, number]>();
 
   return (
     <Popover

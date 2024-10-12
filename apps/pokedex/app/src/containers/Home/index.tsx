@@ -1,11 +1,11 @@
 'use client';
-import s from './Home.module.scss';
-import Layout from '@components/Layout';
-import Heading from '@components/Heading';
 import Button from '@components/Button';
-import { useRouter } from 'next/navigation';
-import { LinkEnum } from '@constants/routes';
+import Layout from '@components/Layout';
 import Parallax from '@components/Parallax';
+import { LinkEnum } from '@constants/routes';
+import { useRouter } from 'next/navigation';
+
+import s from './Home.module.scss';
 
 export const HomePage = () => {
   const router = useRouter();
@@ -14,10 +14,10 @@ export const HomePage = () => {
     <div className={s.root}>
       <Layout className={s.contentWrap}>
         <div className={s.contentText}>
-          <Heading tag='h1'>
+          <h1>
             <b>Find</b> all your
             <br /> favourite <b>Pokemon</b>
-          </Heading>
+          </h1>
           <p>
             You can know the type of Pokemon, its strengths, disadvantages and
             abilities

@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 
 module.exports = {
   webpack: {
@@ -20,15 +20,8 @@ module.exports = {
         '^@utils(.*)$': '<rootDir>/src/utils$1',
       },
       clearMocks: true,
-      coverageReporters: [
-        'lcov',
-        'text-summary',
-      ],
-      moduleFileExtensions: [
-        'ts',
-        'tsx',
-        'js',
-      ],
+      coverageReporters: ['lcov', 'text-summary'],
+      moduleFileExtensions: ['ts', 'tsx', 'js'],
     },
   },
-};
+}
