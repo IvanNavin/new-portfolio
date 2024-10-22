@@ -1,0 +1,30 @@
+.root {
+  display: inline-block;
+  font-family: 'Roboto', Arial,sans-serif;
+  height: 60px;
+  font-size: 16px;
+  padding-left: 60px;
+  padding-right: 60px;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  box-sizing: border-box;
+  border: 2px solid #000000;
+  border-radius: 100px;
+  text-decoration: none;
+  background: transparent;
+  color: white;
+  transition: .25s all ease-in-out;
+  
+  &:hover {
+    background: white;
+    color: black;
+  }
+}

@@ -1,0 +1,18 @@
+.paragraph {
+  color: black;
+  padding: 15px 0 30px 0;
+  font-size: 20px;
+  line-height: 1.55;
+  
+  &.white {
+    color: white;
+  }
+  
+  &.small {
+    font-size: 16px;
+  }
+  
+  &.lead {
+    font-size: 24px;
+  }
+}

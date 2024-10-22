@@ -1,5 +1,6 @@
-import { Prisma, PrismaClient } from '@prisma/client';
 import { PokemonType } from '@src/types/api-types';
+
+import { Prisma, PrismaClient } from '../generated/prisma-client';
 
 const prisma = new PrismaClient();
 

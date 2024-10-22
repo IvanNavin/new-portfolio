@@ -1,3 +1,4 @@
+'use client';
 import { AnyType } from 'portfolio/app/types';
 
 export const getUniqueData = (data: AnyType): AnyType => {

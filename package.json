@@ -6,7 +6,9 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "clean": "turbo clean",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "generate:pokedex": "prisma generate --schema=./apps/pokedex/prisma/schema.prisma",
+    "generate:language": "prisma generate --schema=./apps/language/prisma/schema.prisma"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

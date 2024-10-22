@@ -1,5 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { log } from '@repo/utils';
 import fetch from 'node-fetch';
+
+import { PrismaClient } from '../generated/prisma-client';
 
 const prisma = new PrismaClient();
 
@@ -69,8 +71,7 @@ async function loadPokemons() {
 
 loadPokemons()
   .then(() => {
-    // eslint-disable-next-line no-console
-    console.log('Pokemons loaded successfully');
+    log('Pokemons loaded successfully');
   })
   .catch((error) => {
     // eslint-disable-next-line no-console

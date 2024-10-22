@@ -1,0 +1,17 @@
+.root {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.form {
+  margin-bottom: 24px;
+  input:not(:first-child) {
+    margin: 0 15px;
+  }
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}

@@ -6,6 +6,7 @@ const nextConfig = {
   eslint: {
     dirs: ['app'],
   },
+  transpilePackages: ['@repo/utils'],
   reactStrictMode: false,
   swcMinify: true,
   output: 'standalone',

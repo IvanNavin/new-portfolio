@@ -1,4 +1,4 @@
-import { defaultLocale, languages } from '@i18n/settings';
+import { defaultLocale, languages } from './app/i18n/settings';
 
 export const i18n = {
   defaultLocale,

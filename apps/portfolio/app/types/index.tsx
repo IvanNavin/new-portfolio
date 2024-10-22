@@ -1,4 +1,4 @@
-import { Locale } from '@root/i18n-config';
+import { Locale } from '../../i18n-config';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyType = any;
