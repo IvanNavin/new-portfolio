@@ -26,7 +26,6 @@ export const CardList = () => {
     key: 'cards',
     defaultValue: [],
   });
-  console.log('%c 2 --> Line: 29||index.tsx\n cards: ', 'color:#0f0;', cards);
 
   const userEmail = session?.user?.email || '';
 
@@ -81,11 +80,6 @@ export const CardList = () => {
         setValue('');
       } else {
         const translation = await translate(value);
-        console.log(
-          '%c 1 --> Line: 83||index.tsx\n translation: ',
-          'color:#f0f;',
-          translation,
-        );
 
         if (!translation) {
           setError('Failed to translate the word');

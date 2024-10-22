@@ -71,11 +71,11 @@ export default function Page({ params: { lang } }: DefaultProps) {
       <footer>
         <Button
           text='See the result here'
-          href='https://pokedex777.vercel.app/'
+          href='https://pokedex-pedia.vercel.app'
         />
         <Button
           text='See the code here'
-          href='https://github.com/IvanNavin/Pokedex777'
+          href='https://github.com/IvanNavin/new-portfolio/tree/746546caec8c84bd867805604f001bb1ee5b3f2b/apps/pokedex'
         />
       </footer>
     </Container>
