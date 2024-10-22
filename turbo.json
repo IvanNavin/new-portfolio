@@ -2,8 +2,14 @@
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
   "tasks": {
+    "generate": {
+      "dependsOn": [
+        "^generate"
+      ]
+    },
     "build": {
       "dependsOn": [
+        "generate",
         "^build"
       ],
       "inputs": [
@@ -12,7 +18,9 @@
       ],
       "outputs": [
         ".next/**",
-        "!.next/cache/**"
+        "!.next/cache/**",
+        "{outputDir}/**/*",
+        "apps/pokedex/generated/**/*"
       ]
     },
     "lint": {
