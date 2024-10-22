@@ -1,4 +1,5 @@
 'use client';
+import { useLocalStorage } from '@mantine/hooks';
 import {
   addCard,
   deleteCard,
@@ -21,6 +22,11 @@ export const CardList = () => {
   const [value, setValue] = useState('');
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState('');
+  const [cards, setCards] = useLocalStorage<CardType[]>({
+    key: 'cards',
+    defaultValue: [],
+  });
+  console.log('%c 2 --> Line: 29||index.tsx\n cards: ', 'color:#0f0;', cards);
 
   const userEmail = session?.user?.email || '';
 
@@ -36,31 +42,67 @@ export const CardList = () => {
     setItems(cards?.length ? cards : []);
   };
 
+  const moveLocalStorageCardsToDB = async () => {
+    for (const card of cards) {
+      await addCard({
+        userEmail,
+        word: card.word,
+        translation: card.translation,
+      });
+    }
+    setCards([]);
+  };
+
   const handleSubmitForm = async () => {
     setIsBusy(true);
     try {
-      if (items.some((item) => item.word === value)) {
-        setError('This word is already in your list');
-        setIsBusy(false);
-        return;
+      if (session) {
+        if (items.some((item) => item.word === value)) {
+          setError('This word is already in your list');
+          setIsBusy(false);
+          return;
+        }
+
+        const translation = await translate(value);
+
+        if (!translation) {
+          setError('Failed to translate the word');
+          setIsBusy(false);
+          return;
+        }
+
+        await addCard({
+          userEmail,
+          word: value,
+          translation,
+        });
+
+        await loadCards();
+        setValue('');
+      } else {
+        const translation = await translate(value);
+        console.log(
+          '%c 1 --> Line: 83||index.tsx\n translation: ',
+          'color:#f0f;',
+          translation,
+        );
+
+        if (!translation) {
+          setError('Failed to translate the word');
+          setIsBusy(false);
+          return;
+        }
+
+        setCards((prev) => [
+          ...prev,
+          {
+            id: Date.now().toString(),
+            word: value,
+            translation,
+          } as CardType,
+        ]);
+        setValue('');
       }
-
-      const translation = await translate(value);
-
-      if (!translation) {
-        setError('Failed to translate the word');
-        setIsBusy(false);
-        return;
-      }
-
-      await addCard({
-        userEmail,
-        word: value,
-        translation,
-      });
-
-      await loadCards();
-      setValue('');
     } catch (error) {
       console.error(error);
     } finally {
@@ -69,21 +111,41 @@ export const CardList = () => {
   };
 
   const onDone = async (id: string, remembered: boolean) => {
-    await updateCard({ id, remembered: !remembered });
-    await loadCards();
+    if (userEmail) {
+      await updateCard({ id, remembered: !remembered });
+      await loadCards();
+    } else {
+      const updatedCards = cards.map((card) =>
+        card.id === id ? { ...card, remembered: !remembered } : card,
+      );
+      setCards(updatedCards);
+    }
   };
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteCard(id);
-      await loadCards();
+      if (userEmail) {
+        await deleteCard(id);
+        await loadCards();
+      } else {
+        const updatedCards = cards.filter((card) => card.id !== id);
+        setCards(updatedCards);
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    userEmail && void loadCards();
+    (async () => {
+      if (userEmail) {
+        if (cards.length) {
+          await moveLocalStorageCardsToDB();
+        }
+
+        await loadCards();
+      }
+    })();
   }, [userEmail]);
 
   return (
@@ -101,16 +163,18 @@ export const CardList = () => {
         {error && <div className={s.error}>{error}</div>}
       </div>
       <div className={s.root}>
-        {items.map(({ word, translation, id, remembered }) => (
-          <Card
-            key={id}
-            onDelete={() => handleDelete(id)}
-            onDone={() => onDone(id, !!remembered)}
-            isDone={!!remembered}
-            word={word}
-            translation={translation}
-          />
-        ))}
+        {(userEmail ? items : cards).map(
+          ({ word, translation, id, remembered }) => (
+            <Card
+              key={id}
+              onDelete={() => handleDelete(id)}
+              onDone={() => onDone(id, !!remembered)}
+              isDone={!!remembered}
+              word={word}
+              translation={translation}
+            />
+          ),
+        )}
       </div>
     </>
   );

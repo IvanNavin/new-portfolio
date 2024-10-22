@@ -36,6 +36,7 @@ export const LoginPage = () => {
           data-locale='en'
           data-logo_alignment='left'
         />
+        <button onClick={() => router.push('/')}>Home</button>
       </div>
     </div>
   );

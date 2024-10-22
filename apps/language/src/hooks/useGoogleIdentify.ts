@@ -21,6 +21,7 @@ interface GoogleAccounts {
       [key: string]: AnyType;
     }) => void;
     prompt: (callback: (notification: AnyType) => void) => void;
+    renderButton: (element: HTMLElement, options?: AnyType) => void; // Додано для рендерингу кнопки
   };
 }
 
@@ -86,6 +87,20 @@ const useGoogleIdentify = (props?: UseGoogleIdentifyProps) => {
         if (googleOpt?.isOneTap && !session && !isLoading) {
           google.accounts.id.prompt((notification: AnyType) => {
             log('OneTap prompt:', notification);
+          });
+        }
+
+        // Рендер кнопки Google
+        const buttonContainer = document.querySelector('.g_id_signin');
+        if (buttonContainer) {
+          google.accounts.id.renderButton(buttonContainer as HTMLElement, {
+            type: 'standard',
+            size: 'medium',
+            theme: 'outline',
+            text: 'continue_with',
+            shape: 'pill',
+            locale: 'en',
+            logo_alignment: 'left',
           });
         }
       }
