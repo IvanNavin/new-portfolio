@@ -26,4 +26,6 @@ model Pokemon {
   special_attack  Int
   special_defense Int
   speed           Int
+
+  @@map("pokedex_pokemon")
 }
