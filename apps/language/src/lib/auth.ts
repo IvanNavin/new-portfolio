@@ -1,3 +1,5 @@
+// ESLint: off
+import { log } from '@repo/utils';
 import prisma from '@src/lib/prisma';
 import { AnyType } from '@src/types';
 import { OAuth2Client } from 'google-auth-library';
@@ -18,7 +20,7 @@ export const authConfig: NextAuthOptions = {
         credential: { type: 'text' },
       },
       authorize: async (credentials) => {
-        console.log('credentials', credentials);
+        log('credentials', credentials);
         const token = credentials?.credential;
 
         if (!token) {
@@ -26,14 +28,14 @@ export const authConfig: NextAuthOptions = {
         }
 
         try {
-          console.log('token', token);
+          log('token', token);
           const ticket = (await googleAuthClient.verifyIdToken({
             idToken: token,
             audience: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
           })) as AnyType;
-          console.log('ticket', ticket);
+          log('ticket', ticket);
           const payload = ticket?.getPayload();
-          console.log('payload', payload);
+          log('payload', payload);
           if (!payload) {
             return null;
           }
@@ -49,7 +51,7 @@ export const authConfig: NextAuthOptions = {
               data: { email, name, cards: { create: [] } },
             });
           }
-          console.log('user', user);
+          log('user', user);
           return { email, name, image } as User;
         } catch (error) {
           console.error('Error during Google auth:', error);
