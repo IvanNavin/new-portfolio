@@ -60,7 +60,9 @@ export const PokedexResult = () => {
 
     const data = await response.json();
 
-    setPokemons((prevPokemons) => getUniqueData([...prevPokemons, ...data]));
+    if (data) {
+      setPokemons((prevPokemons) => getUniqueData([...prevPokemons, ...data]));
+    }
     setLoading(false);
   };
 

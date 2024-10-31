@@ -32,6 +32,7 @@ export const HomePage = () => {
   const googleOpt = {
     prompt_parent_id: 'oneTap',
     isOneTap: true,
+    use_fedcm_for_prompt: true,
   };
 
   const { isSignedIn } = useGoogleIdentify({

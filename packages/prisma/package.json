@@ -1,0 +1,19 @@
+{
+  "name": "@repo/prisma",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./generated/prisma-client/index.js",
+  "exports": {
+    ".": "./generated/prisma-client/index.js"
+  },
+  "license": "MIT",
+  "scripts": {
+    "migrate": "prisma migrate dev",
+    "generate": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "5.21.1",
+    "node-fetch": "^3.3.2",
+    "prisma": "^5.21.1"
+  }
+}

@@ -1,3 +1,4 @@
+import { log } from '@repo/utils';
 import { getPokemons, PokemonsFilterType } from '@root/prisma/db';
 import { NextResponse } from 'next/server';
 
@@ -7,6 +8,7 @@ export async function POST(request: Request) {
     const data = await getPokemons(filters);
     return NextResponse.json(data); // Повертаємо дані у форматі JSON
   } catch (error) {
+    log('Failed to fetch pokemons', error);
     return NextResponse.json(
       { error: 'Failed to fetch pokemons' },
       { status: 500 },

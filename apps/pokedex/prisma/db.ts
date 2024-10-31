@@ -1,6 +1,6 @@
+import { Prisma, PrismaClient } from '@repo/prisma';
+import { log } from '@repo/utils';
 import { PokemonType } from '@src/types/api-types';
-
-import { Prisma, PrismaClient } from '../generated/prisma-client';
 
 const prisma = new PrismaClient();
 
@@ -38,9 +38,14 @@ export async function getPokemons({
     },
   };
 
-  return prisma.pokemon.findMany({
-    where,
-    skip: (page - 1) * limit,
-    take: limit,
-  });
+  try {
+    return prisma.pokemon.findMany({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+  } catch (error) {
+    log('Error in getPokemons:', error);
+    throw new Error('Database error');
+  }
 }
