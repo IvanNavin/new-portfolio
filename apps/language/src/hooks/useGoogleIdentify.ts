@@ -71,13 +71,14 @@ const useGoogleIdentify = (props?: UseGoogleIdentifyProps) => {
             .NEXT_PUBLIC_GOOGLE_CLIENT_ID as unknown as string,
           callback: async (response: { credential: string }) => {
             setIsLoading(true);
-
+            log('Google response:', response);
             // call provider with the token provided by google
             await signIn('google', {
               credential: response.credential,
               ...nextAuthOpt,
             });
 
+            log('logged in');
             setIsLoading(false);
           },
           ...googleOpt,

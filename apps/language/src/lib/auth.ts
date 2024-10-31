@@ -18,6 +18,7 @@ export const authConfig: NextAuthOptions = {
         credential: { type: 'text' },
       },
       authorize: async (credentials) => {
+        console.log('credentials', credentials);
         const token = credentials?.credential;
 
         if (!token) {
@@ -25,13 +26,14 @@ export const authConfig: NextAuthOptions = {
         }
 
         try {
+          console.log('token', token);
           const ticket = (await googleAuthClient.verifyIdToken({
             idToken: token,
             audience: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
           })) as AnyType;
-
+          console.log('ticket', ticket);
           const payload = ticket?.getPayload();
-
+          console.log('payload', payload);
           if (!payload) {
             return null;
           }
@@ -47,7 +49,7 @@ export const authConfig: NextAuthOptions = {
               data: { email, name, cards: { create: [] } },
             });
           }
-
+          console.log('user', user);
           return { email, name, image } as User;
         } catch (error) {
           console.error('Error during Google auth:', error);
