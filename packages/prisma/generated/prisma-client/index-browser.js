@@ -153,6 +153,7 @@ exports.Prisma.CardScalarFieldEnum = {
   word: 'word',
   translation: 'translation',
   remembered: 'remembered',
+  createdAt: 'createdAt',
   userId: 'userId'
 };
 

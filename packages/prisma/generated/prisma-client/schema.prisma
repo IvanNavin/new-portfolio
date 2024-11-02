@@ -40,11 +40,12 @@ model User {
 }
 
 model Card {
-  id          String  @id @default(cuid())
+  id          String   @id @default(cuid())
   word        String
   translation String
-  remembered  Boolean @default(false)
-  user        User    @relation(fields: [userId], references: [id])
+  remembered  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
   userId      String
 
   @@map("language_card")
