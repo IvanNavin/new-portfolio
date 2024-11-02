@@ -22,6 +22,7 @@ export async function GET(request: Request) {
       where: {
         userId: user.id,
       },
+      orderBy: { createdAt: 'asc' },
     });
 
     return NextResponse.json(userCards, { status: 200 });

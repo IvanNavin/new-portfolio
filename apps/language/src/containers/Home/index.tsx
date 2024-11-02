@@ -44,7 +44,6 @@ export const HomePage = () => {
 
   return (
     <Suspense fallback={<>Loading...</>}>
-      {!isSignedIn && <div id='oneTap' />}
       <section className={s.authorization_wrap}>
         {isSignedIn ? (
           <>

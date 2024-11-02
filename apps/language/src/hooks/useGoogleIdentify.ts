@@ -107,11 +107,11 @@ const useGoogleIdentify = (props?: UseGoogleIdentifyProps) => {
       }
     };
 
-    document.head.appendChild(script);
+    document.head?.appendChild(script);
 
     return () => {
       // Cleanup script on component unmount
-      document.head.removeChild(script);
+      document.head?.removeChild(script);
     };
   }, [googleOpt, isLoading, isSignedIn, nextAuthOpt]);
 

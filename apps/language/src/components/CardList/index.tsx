@@ -7,6 +7,7 @@ import {
   updateCard,
 } from '@src/apis/cards/cards.services';
 import { translate } from '@src/apis/translate/translate.services';
+import { CustomLoader } from '@src/components/CustomLoader';
 import { Input } from '@src/components/Input';
 import { CardType } from '@src/types';
 import { useSession } from 'next-auth/react';
@@ -105,6 +106,7 @@ export const CardList = () => {
   };
 
   const onDone = async (id: string, remembered: boolean) => {
+    setIsBusy(true);
     if (userEmail) {
       await updateCard({ id, remembered: !remembered });
       await loadCards();
@@ -114,9 +116,11 @@ export const CardList = () => {
       );
       setCards(updatedCards);
     }
+    setIsBusy(false);
   };
 
   const handleDelete = async (id: string) => {
+    setIsBusy(true);
     try {
       if (userEmail) {
         await deleteCard(id);
@@ -127,11 +131,15 @@ export const CardList = () => {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsBusy(false);
     }
   };
 
   useEffect(() => {
     (async () => {
+      setIsBusy(true);
+
       if (userEmail) {
         if (cards.length) {
           await moveLocalStorageCardsToDB();
@@ -139,17 +147,20 @@ export const CardList = () => {
 
         await loadCards();
       }
+
+      setIsBusy(false);
     })();
   }, [userEmail]);
 
   return (
     <>
+      {isBusy && <CustomLoader className='fixed bottom-6 right-6' />}
       <div className={s.form}>
         <Input
           placeholder='Enter a word here:'
           buttonLabel='Search'
-          loading={isBusy}
           value={value}
+          loading={isBusy}
           onSearch={handleSubmitForm}
           onChange={handleInputChange}
           error={error}

@@ -1,5 +1,4 @@
 import { clsxm } from '@repo/utils';
-import { Loader } from '@src/components/Loader';
 import { ChangeEvent } from 'react';
 
 import s from './input.module.scss';
@@ -9,7 +8,7 @@ type Props = {
   onChange: (value: string) => void;
   placeholder: string;
   buttonLabel: string;
-  loading: boolean;
+  loading?: boolean;
   error?: string;
   onSearch: (value: string) => void;
 };
@@ -32,10 +31,13 @@ export const Input = ({
         }
         className={clsxm(s.input, error && s.error)}
         placeholder={placeholder}
-        onKeyDown={({ key }) => key === 'Enter' && onSearch(value)}
+        onKeyDown={({ key }) => key === 'Enter' && !loading && onSearch(value)}
       />
-      <button className={s.button} onClick={() => onSearch(value)}>
-        {loading && <Loader />}
+      <button
+        className={s.button}
+        onClick={() => onSearch(value)}
+        disabled={loading}
+      >
         {buttonLabel}
       </button>
     </div>

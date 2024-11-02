@@ -10,7 +10,11 @@ export const fetchUserCards = async (userEmail: string) => {
     throw new Error('Failed to fetch user cards');
   }
 
-  return response.json();
+  const cards = await response.json();
+
+  return cards.sort((a: { createdAt: string }, b: { createdAt: string }) =>
+    a.createdAt.localeCompare(b.createdAt),
+  );
 };
 
 // POST: Add a new card
