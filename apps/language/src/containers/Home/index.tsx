@@ -54,13 +54,17 @@ export const HomePage = () => {
               </button>
             )}
             <button onClick={() => toggleLogout()}>
-              <Image
-                src={session?.user?.image || ''}
-                height={40}
-                width={40}
-                alt={session?.user?.name || 'user photo'}
-                className={s.user}
-              />
+              {session?.user?.image ? (
+                <Image
+                  src={session.user.image}
+                  height={40}
+                  width={40}
+                  alt={session?.user?.name || 'user photo'}
+                  className={s.user}
+                />
+              ) : (
+                <div className='size-10 bg-red-600 rounded-full' />
+              )}
             </button>
           </>
         ) : (

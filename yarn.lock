@@ -10182,6 +10182,11 @@ google-auth-library@^9.14.2:
     gtoken "^7.0.0"
     jws "^4.0.0"
 
+google-translate-api-x@^10.7.1:
+  version "10.7.1"
+  resolved "https://registry.yarnpkg.com/google-translate-api-x/-/google-translate-api-x-10.7.1.tgz#e82215048250385ed97195888eaa1b497aa6e3ae"
+  integrity sha512-OdZDS6jRWzn1woOk62aOKQ5OyVaJSA+eyc6CktOWxo36IWfstOjwG/dkvnGl3Z2Sbpmk1A+jc2WwrBiRjqaY2A==
+
 gopd@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/gopd/-/gopd-1.0.1.tgz#29ff76de69dac7489b7c0918a5788e56477c332c"
