@@ -27,11 +27,11 @@ export default function Page({ params: { lang } }: DefaultProps) {
       <footer>
         <Button
           text='See the result here'
-          href='https://ivannavin.github.io/miner'
+          href='https://miner-native.vercel.app/'
         />
         <Button
           text='See the code here'
-          href='https://github.com/IvanNavin/miner'
+          href='https://github.com/IvanNavin/new-portfolio/tree/main/apps/miner'
         />
       </footer>
     </Container>

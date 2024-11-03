@@ -107,13 +107,66 @@
     },
     "pokedex": {
       "text": {
-        "line0": "Pokedex ist das Ergebnis eines fortgeschrittenen React-Marathons von Zaur Zakharov.",
-        "line1": "In diesem Marathon hat mir das Design und die neuen Technologien sehr gefallen.",
+        "line0": "Pokédex ist das Ergebnis meines fortgeschrittenen React-Marathons unter der Leitung von Zarem Zakharov.",
+        "line1": "Während dieses Marathons habe ich großartige Erfahrungen mit neuen Technologien und Designs gemacht, die einen detaillierten Style-Guide mit Farben, Verläufen, Schriftarten und deren Größen beinhalteten.",
         "line2": "",
-        "line3": "Das Design enthielt ein Kit - eine Sammlung von Farben, Verläufen und Schaltflächen.",
-        "line4": "Das hat mir sehr geholfen, schneller zu arbeiten.",
-        "line5": "Der Marathon begann mit der Wiederholung des Projekts für React Router und der Arbeit mit den URL-Parametern und den Routen. Wir haben React Query hinzugefügt.",
-        "line6": "Am Ende haben wir unser Wissen über die Lebenszyklen und Hooks vertieft."
+        "line3": "In der ursprünglichen Version des Projekts habe ich folgende Technologien umgesetzt:"
+      },
+      "secondText": {
+        "line0": "Dieses Projekt ist vollständig mit Hooks geschrieben, was den Übergang zu einem neuen React-Team erheblich erleichtert hat, wo ich mich schnell anpasste, indem ich Klassenkomponenten in funktionale umwandelte.",
+        "line1": "Ich konnte auch dieses Wissen mit dem Team teilen, was zur Verbesserung unserer gemeinsamen Praktiken beitrug."
+      },
+      "thirdText": {
+        "line0": "Leider verwendet die API, mit der ich arbeitete, das HTTP-Protokoll und ist derzeit nicht verfügbar.",
+        "line1": "Ich habe jedoch das Projekt verbessert, indem ich Filter nach Typen und Angriffen hinzugefügt und modale Fenster mit \"createPortal\" umgesetzt habe."
+      },
+      "fourText": {
+        "line0": "In der Folge habe ich das Projekt vollständig auf der Basis von modernem Next.js neu geschrieben.",
+        "line1": "Ich habe Daten aller Pokémon hochgeladen, eine eigene Datenbank erstellt und sie nach meinen Bedürfnissen formatiert, wobei ich Prisma für eine bequeme Datenverwaltung verwendet habe."
+      }
+    },
+    "portfolio": {
+      "text": {
+        "line0": "Ich halte es für wichtig, eine professionelle Portfolio-Website zu haben, die alle meine Projekte und Erfolge zeigt.",
+        "line1": "",
+        "line2": "Zunächst hatte ich keine Vorstellung davon, wie eine Portfolio-Website aussehen sollte und was darauf sein sollte. Ich begann zu recherchieren und Artikel zu lesen, was in einem Portfolio enthalten sein sollte.",
+        "line3": "",
+        "line4": "Ich erstellte einen Plan, entschied mich für ein Farbschema, skizzierte ein paar Ideen und machte mich an die Arbeit. Ich verstand, dass das Portfolio einzigartig und kreativ sein musste. Uff, das war schwierig!",
+        "line5": "",
+        "line6": "Zunächst gelangt der Benutzer zur Startseite, wo ich den Fluid-Effekt verwendete. Ich fand keine solche Bibliothek, aber ich fand Stellen, an denen dieser Effekt angewendet wurde, und lieh ihn mir von dort, indem ich ihn ein wenig nach meinem Geschmack veränderte. Hier auf der Hauptseite kann man mit der Animation interagieren, indem man die LEERTASTE drückt. Blitze von fluiden Animationen erscheinen, wenn man \"P\" drückt. Wenn man die Animation stoppen möchte, kann man auf Pause drücken. Durch Klicken und Wischen über den Bildschirm mit der Maus oder dem Finger wird die Animation aktiviert.",
+        "line7": "",
+        "line8": "Dann kann der Benutzer zur Seite 'Über mich' gehen. Auf dieser Seite stelle ich meine persönliche Geschichte, den Technologie-Stack, den ich beherrsche, meine Berufserfahrung und einige interessante Fakten über mich vor =)",
+        "line9": "",
+        "line10": "An diesem Punkt dachte ich, es wäre gut, einen Zurück-Button hinzuzufügen. Ich fand eine interessante Canvas-Animation und wendete sie auf den 'Zurück'-Button an.",
+        "line11": "",
+        "line12": "Der Benutzer kann zur Projekeseite gehen (hier wohnen alle besten Projekte mit Beschreibungen der verwendeten Technologien und Links zu Github. Ich denke, hier werden auch Live-Videodemos zu finden sein).",
+        "line13": "",
+        "line14": "Der Benutzer kann zur Seite 'Kontakte' gehen, um mit mir in Kontakt zu treten. Auf der Seite meiner Berichte können die Fähigkeiten gezeigt werden, die ich mit anderen teile.",
+        "line15": "",
+        "line16": "Zu Beginn des Schreibens des Codes wusste ich nicht, welchen Stack meine Portfolio-Website haben würde. Ich wollte es wirklich in React schreiben, aber meine grundlegenden Kenntnisse waren dafür nicht ausreichend, also benutzte ich ES6. Seitdem habe ich viel Erfahrung mit React gesammelt und denke jetzt, dass ich viel besser arbeiten kann. Ich erkannte, dass ich Funktionen anpassen und hinzufügen musste, um meine Programmierfähigkeiten zu demonstrieren, also schrieb ich es in reinem JS.",
+        "line19": "",
+        "line20": "Im Laufe der Zeit habe ich ein Monorepo (turborepo) für mein Portfolio erstellt, es mit Next.js unter Verwendung moderner Technologien neu geschrieben und fast alle meine Nebenprojekte in dieses Monorepo verschoben. Das Hauptziel dieser Portfolio-Website besteht darin, die Projekte zu präsentieren, die ich erstellt habe, und die Website selbst wird ebenfalls als Projekt betrachtet!"
+      }
+    },
+    "rpg": {
+      "text": {
+        "line0": "Hier habe ich es geschafft, ein Online-Spiel zu schreiben, in dem mehrere Personen gleichzeitig spielen können.",
+        "line1": "Das ist eine coole Erfahrung mit Sockets und Server-Seite.",
+        "line2": "Es gibt einen Online-Chat.",
+        "line3": "Technologien: HTML / SASS / JS / Webpack5 / Websocket (socket.io) / EsLint / Prettier.",
+        "line4": "Um die Funktionalität des Spiels und des Chats zu überprüfen, können Sie das Spiel in mehreren Tabs starten.",
+        "line5": "Derzeit funktioniert das Backend nicht."
+      }
+    },
+    "thanos": {
+      "text": {
+        "line0": "Während meiner Arbeit bei EvoPlay erhielt ich die Aufgabe, den Thanos-Effekt nachzubilden.",
+        "line1": "Was sollte getan werden?",
+        "line2": "Das Hauptziel war es, die Zerfallseffekte der Bilder wie im Film Avengers 3 zu erstellen.",
+        "line3": "Die Bilder sollten in Asche zerfallen und im Wind verwehen.",
+        "line4": "Nachdem ich im Internet recherchiert hatte, fand ich viele Beispiele für diese Umsetzung.",
+        "line5": "Da ich nur Bilder in Atome zerlegen, nicht aber den Inhalt zerlegen wollte, fand ich diese Beispiele dafür ungeeignet.",
+        "line6": "Allerdings ist ein normales Canvas dafür viel besser geeignet, daher habe ich diesen Effekt ohne die Verwendung der html2canvas-Bibliothek erstellt."
       }
     }
   }

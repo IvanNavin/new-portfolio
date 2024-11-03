@@ -108,27 +108,22 @@
     },
     "pokedex": {
       "text": {
-        "line0": "Pokedex is the result of an advanced React Marathon run by Zar Zakharov.",
-        "line1": "In this marathon, which I successfully did, I would like to dwell on the design, new technologies of React and other aspects.",
+        "line0": "Pokédex is the result of my advanced React marathon under the guidance of Zare Zakharov.",
+        "line1": "During the marathon, I gained great experience working with new technologies and design, which included a detailed style guide with colors, gradients, fonts, and their sizes.",
         "line2": "",
-        "line3": "There was a kit in the design - a set of names of all colors, gradients, fonts and their sizes, etc.",
-        "line4": "At the entrance of the marathon, I implemented the following technologies in this project:"
+        "line3": "In the initial version of the project, I implemented the following technologies:"
       },
       "secondText": {
-        "line0": "In fact, there are many interesting moments in this marathon.",
-        "line1": "The whole project is written in hooks.",
-        "line2": "",
-        "line3": "Later, it helped me a lot - when I switched to the new React command, I immediately began to translate Class components on hooks.",
-        "line4": "Subsequently, I was able to share this knowledge with the team."
+        "line0": "This project is entirely written using hooks, which significantly simplified the transition to a new React team where I quickly adapted by converting class components to functional ones.",
+        "line1": "I was also able to share this knowledge with the team, which contributed to improving our collaborative practices."
       },
       "thirdText": {
-        "line0": "Unfortunately, the API is written with the HTTP protocol and is not available currently.",
-        "line1": "Below you can see video demonstration of a working project."
+        "line0": "Unfortunately, the API I was working with used the HTTP protocol and is currently unavailable.",
+        "line1": "However, I enhanced the project by adding filters for types and attacks, and also implemented modal windows using \"createPortal\"."
       },
       "fourText": {
-        "line0": "In the course of writing this project, I independently added a filter by type and attack,",
-        "line1": "as well as made modals via 'createPortal'.",
-        "line2": "In the future, I plan to add infinite loading to the project."
+        "line0": "Subsequently, I completely rewrote the project based on modern Next.js.",
+        "line1": "I uploaded data for all Pokémon, created my own database, and formatted it according to my needs using Prisma for convenient data management."
       }
     },
     "portfolio": {
@@ -151,7 +146,7 @@
         "line15": "",
         "line16": "At the beginning of writing the code, I didn't know what stack my portfolio site would have. Looking back in the time I really wanted to write it in React, but my basic knowledge hadn't been enough for it, so I had used ES6. Since the time I have gained much experience in React, and now I think I can perform much better. I realized that I needed to customize and add functions in a way that would demonstrate my programming skills, so I wrote it in native JS.",
         "line19": "",
-        "line20": "The main purpose of this portfolio website is to showcase the projects I've created, and of course, the site itself!"
+        "line20": "Subsequently, I created a monorepo (turborepo) for my portfolio, rewrote it using Next.js with modern technologies, and moved almost all my pet projects into this monorepo. The main goal of this portfolio website is to showcase the projects I've created, and the site itself is also considered a project!"
       }
     },
     "rpg": {

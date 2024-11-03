@@ -4,14 +4,12 @@ import { DefaultProps } from '@app/types';
 import IMG from '@assets/img/portfolio.png';
 import { Button } from '@components/Button';
 import { Container } from '@components/Container';
+import { RenderTextArea } from '@components/RenderTextArea';
 import { useTranslation } from '@i18n/client';
 import Image from 'next/image';
 
 export default function Page({ params: { lang } }: DefaultProps) {
   const { t } = useTranslation(lang);
-  const textLines = Object.values(
-    t('works.portfolio.text', { returnObjects: true }),
-  );
 
   return (
     <Container
@@ -27,15 +25,13 @@ export default function Page({ params: { lang } }: DefaultProps) {
         className='mb-6 max-h-[500px] object-contain'
       />
       <section>
-        {textLines.map((line) => (
-          <p key={line}>{line}</p>
-        ))}
+        <RenderTextArea t={t} tKey='works.portfolio.text' />
       </section>
 
       <footer>
         <Button
           text='See the code here'
-          href='https://github.com/IvanNavin/portfolio'
+          href='https://github.com/IvanNavin/new-portfolio'
         />
       </footer>
     </Container>

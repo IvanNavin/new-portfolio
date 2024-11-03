@@ -6,25 +6,13 @@ import { roboto } from '@assets/fonts';
 import IMG from '@assets/img/pokedex-home.png';
 import { Button } from '@components/Button';
 import { Container } from '@components/Container';
-import { VideoFrame } from '@components/VideoFrame';
+import { RenderTextArea } from '@components/RenderTextArea';
 import { useTranslation } from '@i18n/client';
 import { clsxm } from '@repo/utils';
 import Image from 'next/image';
 
 export default function Page({ params: { lang } }: DefaultProps) {
   const { t } = useTranslation(lang);
-  const textLines: string[] = Object.values(
-    t('works.pokedex.text', { returnObjects: true }),
-  );
-  const secondTextLines: string[] = Object.values(
-    t('works.pokedex.secondText', { returnObjects: true }),
-  );
-  const thirdTextLines: string[] = Object.values(
-    t('works.pokedex.thirdText', { returnObjects: true }),
-  );
-  const fourthTextLines: string[] = Object.values(
-    t('works.pokedex.fourText', { returnObjects: true }),
-  );
 
   return (
     <Container
@@ -41,9 +29,7 @@ export default function Page({ params: { lang } }: DefaultProps) {
       />
       <div className={clsxm(roboto.className, 'flex flex-col gap-y-6')}>
         <section>
-          {textLines.map((line) => (
-            <p key={line}>{line}</p>
-          ))}
+          <RenderTextArea t={t} tKey='works.pokedex.text' />
           <ul className='ml-6 list-disc'>
             {stack.map((item) => (
               <li key={item}>{item}</li>
@@ -51,20 +37,13 @@ export default function Page({ params: { lang } }: DefaultProps) {
           </ul>
         </section>
         <section>
-          {secondTextLines.map((line) => (
-            <p key={line}>{line}</p>
-          ))}
+          <RenderTextArea t={t} tKey='works.pokedex.secondText' />
         </section>
         <section>
-          {thirdTextLines.map((line) => (
-            <p key={line}>{line}</p>
-          ))}
+          <RenderTextArea t={t} tKey='works.pokedex.thirdText' />
         </section>
-        <VideoFrame src='https://www.youtube.com/embed/3QXCrih6_MI' />
         <section>
-          {fourthTextLines.map((line) => (
-            <p key={line}>{line}</p>
-          ))}
+          <RenderTextArea t={t} tKey='works.pokedex.fourText' />
         </section>
       </div>
 
@@ -75,7 +54,7 @@ export default function Page({ params: { lang } }: DefaultProps) {
         />
         <Button
           text='See the code here'
-          href='https://github.com/IvanNavin/new-portfolio/tree/746546caec8c84bd867805604f001bb1ee5b3f2b/apps/pokedex'
+          href='https://github.com/IvanNavin/new-portfolio/tree/main/apps/pokedex'
         />
       </footer>
     </Container>

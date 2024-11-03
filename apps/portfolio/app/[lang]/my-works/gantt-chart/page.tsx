@@ -31,7 +31,7 @@ export default function Page({ params: { lang } }: DefaultProps) {
         />
         <Button
           text='See the code here'
-          href='https://github.com/IvanNavin/GanttChart'
+          href='https://github.com/IvanNavin/new-portfolio/tree/main/apps/gantt-chart'
         />
       </footer>
     </Container>
