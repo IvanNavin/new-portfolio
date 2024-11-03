@@ -2,6 +2,10 @@ const path = require('path')
 
 module.exports = {
   webpack: {
+    configure: (webpackConfig) => {
+      webpackConfig.output.publicPath = '/'
+      return webpackConfig
+    },
     alias: {
       '@src': path.resolve(__dirname, 'src/'),
       '@components': path.resolve(__dirname, 'src/components/'),
