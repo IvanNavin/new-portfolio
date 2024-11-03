@@ -8,9 +8,7 @@
     "test": "craco test",
     "lint": "eslint src/**/*.{js,jsx,ts,tsx,json}",
     "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx,json}'",
-    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
-    "prepare": "husky install",
-    "lint-staged": "lint-staged"
+    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
   },
   "dependencies": {
     "@craco/craco": "^7.0.0",
@@ -61,7 +59,6 @@
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-simple-import-sort": "^8.0.0",
-    "husky": "^8.0.3",
     "lint-staged": "^13.1.0",
     "prettier": "^2.8.2"
   },
@@ -81,14 +78,6 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
-    ]
-  },
-  "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json}": [
-      "prettier --write --ignore-unknown"
-    ],
-    "src/**/*.{ts,tsx}": [
-      "eslint --fix"
     ]
   },
   "jest": {
