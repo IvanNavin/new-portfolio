@@ -5,13 +5,12 @@ import { roboto } from '@assets/fonts';
 import VIDEO from '@assets/video/effectThanos.mp4';
 import { Button } from '@components/Button';
 import { Container } from '@components/Container';
+import { RenderTextArea } from '@components/RenderTextArea';
 import { useTranslation } from '@i18n/client';
 
 export default function Page({ params: { lang } }: DefaultProps) {
   const { t } = useTranslation(lang);
-  const textLines = Object.values(
-    t('works.thanos.text', { returnObjects: true }),
-  );
+
   return (
     <Container
       lang={lang}
@@ -24,9 +23,7 @@ export default function Page({ params: { lang } }: DefaultProps) {
         Your browser does not support the video tag.
       </video>
       <section className={roboto.className}>
-        {textLines.map((line) => (
-          <p key={line}>{line}</p>
-        ))}
+        <RenderTextArea t={t} tKey='works.thanos.text' />
       </section>
 
       <footer>
@@ -36,7 +33,7 @@ export default function Page({ params: { lang } }: DefaultProps) {
         />
         <Button
           text='See the code here'
-          href='https://github.com/IvanNavin/destructurizator'
+          href='https://github.com/IvanNavin/new-portfolio/tree/main/apps/destructurizator'
         />
       </footer>
     </Container>
