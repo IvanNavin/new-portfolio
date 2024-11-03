@@ -8,7 +8,9 @@ const controls = {
   resetDelay: 1000, // the time in milliseconds before the image returns
 };
 
-document.querySelector("[data-effect]").addEventListener("click", (e) => {
+const btn = document.querySelector("[data-effect]");
+
+btn.addEventListener("click", (e) => {
   const target = document.querySelector(e.target.dataset.target);
 
   if (target.style.display === "none") {
@@ -18,7 +20,7 @@ document.querySelector("[data-effect]").addEventListener("click", (e) => {
   Array.from(target.children).map((el) => {
     el.classList.remove("quickFade");
   });
-
+  btn.disabled = true;
   snap(target);
 });
 
@@ -93,6 +95,7 @@ const snap = (target) => {
   // Запускаємо reset після того, як анімація завершиться
   setTimeout(
     () => {
+      btn.disabled = false;
       reset(target);
     },
     controls.duration * 1000 + controls.resetDelay,

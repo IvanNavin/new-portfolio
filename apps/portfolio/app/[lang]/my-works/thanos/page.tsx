@@ -29,7 +29,7 @@ export default function Page({ params: { lang } }: DefaultProps) {
       <footer>
         <Button
           text='See the result here'
-          href='https://destructurizator.netlify.app/'
+          href='https://thanos-effect-example.vercel.app/'
         />
         <Button
           text='See the code here'
