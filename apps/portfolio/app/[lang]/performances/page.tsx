@@ -20,11 +20,16 @@ export default function Page({ params: { lang } }: DefaultProps) {
       second: t('performances.regexp'),
       href: ROUTES.regexp(lang),
     },
+    {
+      first: t('performances.testingWithJest'),
+      second: t('performances.testingWithJest'),
+      href: ROUTES.jest(lang),
+    },
   ];
 
   return (
     <Container lang={lang} backText={t('ivan')} title={t('performances.title')}>
-      <nav className='absolute left-[114px] top-1/2 flex -translate-y-1/2 flex-col items-center'>
+      <nav className='absolute left-12 top-1/2 flex -translate-y-1/2 flex-col items-center md:left-[114px]'>
         {reports.map((item, idx) => (
           <NavMenuItem
             key={item.first}

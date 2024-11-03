@@ -17,4 +17,5 @@ export const ROUTES = {
   accessibility: (lang: Locale = getLang()) =>
     `/${lang}/performances/accessibility`,
   regexp: (lang: Locale = getLang()) => `/${lang}/performances/regexp`,
+  jest: (lang: Locale = getLang()) => `/${lang}/performances/jest`,
 };

@@ -1,12 +1,13 @@
 'use client';
 import { DefaultProps } from '@app/types';
-import { randomCount } from '@app/utils/randomize';
 import { roboto, russoOne } from '@assets/fonts';
 import { Container } from '@components/Container';
 import { Magnetic } from '@components/Magnetic';
+import { RenderTextArea } from '@components/RenderTextArea';
 import { Css, EmptyGear, Html, Js } from '@components/svg';
 import { useTranslation } from '@i18n/client';
 import { clsxm } from '@repo/utils';
+import { useEffect, useState } from 'react';
 import { useIsClient } from 'usehooks-ts';
 
 import './style.css';
@@ -14,20 +15,48 @@ import './style.css';
 import { cssSkills, htmlSkills, JSSkills, otherSkills } from './constants';
 import { DownloadButton } from './DownloadButton';
 
+const factsPerPage = 4;
+
 export default function Page({ params: { lang } }: DefaultProps) {
+  const [currentPage, setCurrentPage] = useState(0);
   const { t } = useTranslation(lang);
-  const textLines = Object.values(t('about.text', { returnObjects: true }));
   const isClient = useIsClient();
-  const factsLines = randomCount(
-    Object.values(t('about.facts', { returnObjects: true })),
+  const allFacts: string[] = Object.values(
+    t('about.facts', { returnObjects: true }),
   );
+
+  const pages = [];
+  for (let i = 0; i < allFacts.length; i += factsPerPage) {
+    pages.push(allFacts.slice(i, i + factsPerPage));
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentPage((prevPage) => {
+        const isLastPage = prevPage === pages.length - 1;
+        return isLastPage ? 0 : prevPage + 1;
+      });
+    }, 7000); // Facts change every 7 seconds
+
+    return () => clearInterval(intervalId);
+  }, [pages.length]);
+
+  // Select the facts to display on the current page
+  const currentFacts =
+    currentPage === pages.length - 1 && pages[currentPage].length < factsPerPage
+      ? [
+          ...pages[currentPage],
+          ...pages[currentPage - 1].slice(
+            0,
+            factsPerPage - pages[currentPage].length,
+          ),
+        ]
+      : pages[currentPage];
 
   return (
     <Container lang={lang} backText={t('ivan')} title={t('about.helloThere')}>
       <section className={roboto.className}>
-        {textLines.map((line, index) => (
-          <p key={index}>{line}</p>
-        ))}
+        <RenderTextArea t={t} tKey='about.text' />
       </section>
       <section
         className={clsxm(
@@ -92,12 +121,10 @@ export default function Page({ params: { lang } }: DefaultProps) {
         </Magnetic>
       </section>
       <p className={roboto.className}>{t('about.description')}</p>
-      <h2 className='mb-10 mt-5 text-right text-[32px]'>
-        {t('about.randomFacts')}
-      </h2>
-      <ul className='text-right'>
+      <h2 className='mb-6 mt-5 text-right text-[32px]'>{t('about.whoIAm')}</h2>
+      <ul className='mb-6 text-right'>
         {isClient &&
-          factsLines.map((line, index) => <li key={index}>{line}</li>)}
+          currentFacts.map((line, index) => <li key={index}>{line}</li>)}
       </ul>
       <DownloadButton />
     </Container>

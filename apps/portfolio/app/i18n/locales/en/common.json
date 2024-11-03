@@ -14,35 +14,27 @@
   "about": {
     "helloThere": "Hello There!",
     "text": {
-      "line1": "Since I was 12, I have dreamed to be a programmer and to create something interesting.",
-      "line2": "I understood that it was very difficult, if you have no knowledge in it.",
-      "line3": "However, it didn't scare me. I started my way with studying Basic, Pascal and Delphi.",
-      "line4": "But my life path turned to be different. It took me around 15 years to realize that I wanted to be a programmer.",
-      "line5": "There is a lot of information available on the Internet and I began studying Front-end development.",
-      "line6": "Now I am engaged in the development of Front-end applications, layout and maintenance of sites.",
-      "line7": "I like to turn complex tasks into simple, beautiful and intuitive designs.",
-      "line8": "When I don't code, I play ps5, roast meat, or spend time with my family.",
-      "line9": "From 2018 to 2021 I worked for 'EvoPlay'.",
-      "line10": "From 2021 to 2022, I worked for 'Luxoft'.",
-      "line11": "We developed a trading exchange for the English bank 'City'.",
-      "line12": "From 2022 to 2023 I worked for 'Octal'.",
-      "line13": "In this company I was the only one who made an admin site for pentesters from scratch.",
-      "line14": "I like interesting and challenging tasks for which I try to find the most optimal and workable solutions.",
-      "line15": "In all companies I worked for, I managed to show my soft skills, find common solutions in the team and try to be relevant.",
-      "line16": "I have experience in:"
+      "line1": "Since childhood, I dreamed of becoming a programmer and creating something exciting. After my first experiences with Basic, Pascal, and Delphi, my life initially took a different path. However, 15 years later, I realized that programming is my true calling.",
+      "line2": "",
+      "line3": "Today, I am a senior front-end developer specializing in application development, creating user-friendly interfaces, and maintaining web projects. I enjoy turning complex tasks into simple, elegant, and user-centered solutions.",
+      "line4": "",
+      "line5": "My professional journey includes working with modern technologies such as Next.js, React, TypeScript, and various tools for boosting development efficiency. I am always learning, keeping up with the latest trends and technologies, and enjoy sharing my knowledge with my team. In my free time, I enjoy playing on my PlayStation, experimenting with cooking meat, and spending quality time with my family.",
+      "line6": "",
+      "line7": "In all companies I worked for, I managed to show my soft skills, find common solutions in the team and try to be relevant.",
+      "line8": "I have experience in:"
     },
     "description": "At the same time, I study new technologies and try to share them with others.",
-    "randomFacts": "Random facts:",
+    "whoIAm": "Who I Am:",
     "facts": {
-      "line0": "I don't smoke",
-      "line1": "I don't drink alcohol",
-      "line2": "I drink a lot of tea",
-      "line3": "I like interior design",
-      "line4": "I play the guitar",
-      "line5": "I like to cook meat",
-      "line6": "I love my family",
-      "line7": "I like to travel",
-      "line8": "I don't drink coffee",
+      "line0": "I am a team player",
+      "line1": "I enjoy problem solving",
+      "line2": "I communicate clearly and effectively",
+      "line3": "I adapt quickly to new technologies",
+      "line4": "I think creatively to find solutions",
+      "line5": "I am organized and manage my time well",
+      "line6": "I have leadership experience",
+      "line7": "I love my family",
+      "line8": "I like to travel",
       "line9": "I am cheerful",
       "line10": "Talkative",
       "line11": "I like to watch TV series",
@@ -66,7 +58,8 @@
   "performances": {
     "title": "My reports",
     "regexp": "Don't be afraid of regular expressions",
-    "accessibility": "Development accessible interfaces️"
+    "accessibility": "Development accessible interfaces️",
+    "testingWithJest": "Testing with Jest and Testing Library"
   },
   "accessibility": {
     "title": "Development accessible interfaces️",
@@ -78,6 +71,10 @@
     "wikiLink": "Regular expressions on wiki",
     "learnJS": "Regular Expression Tutorial at learn.javascript.ru",
     "crib": "Regular Expression Cheat Sheet"
+  },
+  "jest": {
+    "title": "Testing with Jest and Testing Library",
+    "usefulLinks": "Useful links"
   },
   "404": {
     "title": "Page not found",
