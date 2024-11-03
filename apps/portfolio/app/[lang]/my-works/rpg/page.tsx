@@ -4,11 +4,11 @@ import { DefaultProps } from '@app/types';
 import VIDEO from '@assets/video/game_js_pro.mp4';
 import { Button } from '@components/Button';
 import { Container } from '@components/Container';
+import { RenderTextArea } from '@components/RenderTextArea';
 import { useTranslation } from '@i18n/client';
 
 export default function Page({ params: { lang } }: DefaultProps) {
   const { t } = useTranslation(lang);
-  const textLines = Object.values(t('works.rpg.text', { returnObjects: true }));
 
   return (
     <Container
@@ -22,9 +22,7 @@ export default function Page({ params: { lang } }: DefaultProps) {
         Your browser does not support the video tag.
       </video>
       <section>
-        {textLines.map((line) => (
-          <p key={line}>{line}</p>
-        ))}
+        <RenderTextArea t={t} tKey='works.rpg.text' />
       </section>
 
       <footer>

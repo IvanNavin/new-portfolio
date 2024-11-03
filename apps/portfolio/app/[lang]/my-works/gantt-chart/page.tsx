@@ -27,7 +27,7 @@ export default function Page({ params: { lang } }: DefaultProps) {
       <footer>
         <Button
           text='See the result here'
-          href='https://ganttchart777.netlify.app'
+          href='https://gantt-chart-test.vercel.app/'
         />
         <Button
           text='See the code here'

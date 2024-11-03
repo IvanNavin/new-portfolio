@@ -1,5 +1,5 @@
 import { ROUTES } from '@app/constants/routes';
-import ENGLISH from '@assets/img/English.jpg';
+import ENGLISH from '@assets/img/English.png';
 import GANTT_CHART_BACK from '@assets/img/ganttChartBack.png';
 import GANTT_CHART_FRONT from '@assets/img/ganttChartFront.png';
 import BACK_MINER from '@assets/img/minerBack.png';

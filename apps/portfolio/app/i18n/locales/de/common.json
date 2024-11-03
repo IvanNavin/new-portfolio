@@ -83,20 +83,21 @@
     "english": {
       "title": "Englisch lernen",
       "text": {
-        "line0": "Das Englischlernen ist das Ergebnis eines React-Marathons von Zaur Zakharov.",
-        "line1": "Während dieses Marathons haben wir uns mit React und seinem Lebenszyklus vertraut gemacht und gelernt, mit Formularen und dem Firebase-Server zu arbeiten.",
-        "line2": "Am Ende des Marathons habe ich gelernt, wie man mit Props und States arbeitet und diese zwischen den Komponenten hin- und herreicht.",
-        "line3": "Zu Beginn haben wir unseren eigenen Redux geschrieben, um zu verstehen, wie es funktioniert, und haben ihn später integriert.",
-        "line4": "Wir haben Icons und Formulare aus der AntDesign-Sammlung verwendet.",
-        "line5": "Wir haben eine API für ein Wörterbuch eingebunden und Firebase Storage genutzt, um die Wörter der Benutzer zu speichern.",
-        "line6": "Dann haben wir React Router und Thunk hinzugefügt.",
-        "line7": "Um die Funktionen der Website zu nutzen, geben Sie ein unbekanntes englisches Wort in das Eingabefeld ein.",
-        "line8": "Dieses Wort wird dann in der Firebase-Datenbank gespeichert und unter dem Eingabefeld angezeigt.",
-        "line9": "Wenn Sie auf das Wort klicken, dreht sich die Karte um und auf der Rückseite finden Sie die Übersetzung.",
-        "line10": "Sie können das Wort als gelernt durchstreichen oder als unnötig löschen und es somit aus Ihrer Wörter-Datenbank entfernen."
-      },
-      "login": "Login: reactmarathon@gmail.com",
-      "password": "Passwort: 12345678"
+        "line0": "Englisch lernen ist ein Projekt, das während des React-Marathons von Zara Zakharova gestartet wurde.",
+        "line1": "Während des Marathons haben wir uns mit React, seinem Lebenszyklus vertraut gemacht und gelernt, mit Formularen und Firebase zu arbeiten.",
+        "line2": "Wir haben gelernt, mit Props und States zu arbeiten und Daten zwischen Komponenten zu übergeben.",
+        "line3": "Zu Beginn haben wir unser eigenes Redux geschrieben, um seine Prinzipien zu verstehen, und es später integriert.",
+        "line4": "Für die Benutzeroberfläche verwendeten wir Icons und Formulare aus der AntDesign-Bibliothek.",
+        "line5": "Wir haben die Wörterbuch-API und Firebase Storage verbunden, um die Wörter der Benutzer zu speichern.",
+
+        "line6": "In der neuen Version des Projekts, das ich in Next.js neu geschrieben habe, wurden moderne Technologien und neue Funktionen hinzugefügt.",
+        "line7": "Jetzt wird Google für die Authentifizierung verwendet, und die Daten nicht autorisierter Benutzer werden lokal im LocalStorage gespeichert.",
+        "line8": "Statt Firebase Storage für die Speicherung von Wörtern wird eine benutzerdefinierte Datenbank verwendet, die Karten für alle Benutzer speichert.",
+        "line9": "Um die Seite zu nutzen, müssen Sie ein neues englisches Wort in das Eingabefeld eingeben.",
+        "line10": "Das Wort erscheint in der Datenbank (oder im lokalen Speicher für nicht autorisierte Benutzer) und wird unter dem Eingabefeld angezeigt.",
+        "line11": "Wenn Sie auf das Wort klicken, wird die Karte umgedreht und zeigt die Übersetzung auf der Rückseite.",
+        "line12": "Das Wort kann als gemerkt markiert oder gelöscht werden, wodurch es aus Ihrem Wortschatz entfernt wird."
+      }
     },
     "ganttChart": {
       "text": "Dies ist eine Testaufgabe. Hier verwende ich Technologien, die ich im vorherigen Projekt verwendet habe."

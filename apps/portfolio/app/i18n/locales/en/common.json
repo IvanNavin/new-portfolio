@@ -84,20 +84,20 @@
     "english": {
       "title": "English learn",
       "text": {
-        "line0": "English learning is the result of the React Marathon from Zar Zakharov.",
-        "line1": "During this marathon we got acquainted with React and its life cycles, learned how to work with forms and with the Firebase server.",
-        "line2": "From the marathon I got the skill how to work with props and states, and passed them through the components and back.",
-        "line3": "To begin with, we wrote a self-written redux to understand how it works and later connected it.",
-        "line4": "We took icons and shapes from the AntDesign collection.",
-        "line5": "We connected the dictionary api and used the firebase storage to memorize user's words.",
-        "line6": "Then we attached React Router and Thunk.",
-        "line7": "To use the site's capabilities, you need to enter an unknown English word in the input field.",
-        "line8": "Further, this word will appear in the Firebase database and under the input field.",
-        "line9": "If you click on a word, the card will flip and on the other side you can find the translation.",
-        "line10": "This word can be crossed out as memorized or deleted as unnecessary and consequently removed from the base of your words."
-      },
-      "login": "Login: reactmarathon@gmail.com",
-      "password": "Password: 12345678"
+        "line0": "Learning English is a project that started during the React marathon by Zara Zakharova.",
+        "line1": "During the marathon, we got acquainted with React, its lifecycle, and learned to work with forms and Firebase.",
+        "line2": "We mastered working with props and states, as well as passing data between components.",
+        "line3": "At the beginning, we wrote our own Redux to understand its principles, and later integrated it.",
+        "line4": "We used icons and forms from the AntDesign library for the interface.",
+        "line5": "We connected the dictionary API and Firebase storage to save users' words.",
+        "line6": "In the new version of the project, which I rewrote in Next.js, modern technologies and new features have been added.",
+        "line7": "Now, Google is used for authentication, and the data of unauthorized users is stored locally in localStorage.",
+        "line8": "Instead of Firebase storage for saving words, a custom database is used that stores cards for all users.",
+        "line9": "To use the site, you need to enter a new English word in the input field.",
+        "line10": "The word appears in the database (or in local storage for unauthorized users) and is displayed below the input field.",
+        "line11": "When you click on the word, the card flips over, showing the translation on the back.",
+        "line12": "The word can be marked as memorized or deleted, removing it from your word bank."
+      }
     },
     "ganttChart": {
       "text": "This is the testing task. Here I use the technologies that I use in the previous project."
