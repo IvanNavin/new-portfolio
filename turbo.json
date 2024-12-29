@@ -3,19 +3,11 @@
   "ui": "tui",
   "tasks": {
     "generate": {
-      "dependsOn": [
-        "^generate"
-      ]
+      "dependsOn": ["^generate"]
     },
     "build": {
-      "dependsOn": [
-        "generate",
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        ".env*"
-      ],
+      "dependsOn": ["generate", "^build"],
+      "inputs": ["$TURBO_DEFAULT$",".env*"],
       "outputs": [
         ".next/**",
         "!.next/cache/**",
@@ -25,28 +17,21 @@
       ]
     },
     "lint": {
-      "dependsOn": [
-        "^lint"
-      ]
+      "dependsOn": ["^lint"]
+    },
+    "lint:fix": {
+      "cache": false
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
     "typecheck": {
-      "dependsOn": [
-        "^typecheck"
-      ],
-      "inputs": [
-        "tsconfig.json",
-        "src/**/*.ts",
-        "src/**/*.tsx"
-      ]
+      "dependsOn": ["^typecheck"],
+      "inputs": ["tsconfig.json", "src/**/*.ts", "src/**/*.tsx"]
     },
     "format": {
-      "dependsOn": [
-        "^format"
-      ]
+      "dependsOn": ["^format"]
     },
     "start": {
       "cache": false,
