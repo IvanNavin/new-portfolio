@@ -1,5 +1,6 @@
 'use client';
 /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
+import { useGetLang } from '@app/utils/hooks/useGetLang';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import resourcesToBackend from 'i18next-resources-to-backend';
@@ -39,10 +40,10 @@ void i18next
   });
 
 export function useTranslation(
-  lng = defaultLocale,
   ns = 'common',
   options: Record<string, AnyType> = {},
 ) {
+  const lng = useGetLang() || defaultLocale;
   const ret = useTranslationOrg(ns, options);
   const { i18n } = ret;
   const i18nCookie = Cookies.get(i18nCookieName);

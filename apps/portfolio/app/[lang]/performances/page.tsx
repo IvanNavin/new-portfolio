@@ -7,7 +7,7 @@ import { useTranslation } from '@i18n/client';
 import { clsxm } from '@repo/utils';
 
 export default function Page({ params: { lang } }: DefaultProps) {
-  const { t } = useTranslation(lang);
+  const { t } = useTranslation();
 
   const reports = [
     {

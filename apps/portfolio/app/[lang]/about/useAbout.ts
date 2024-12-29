@@ -5,10 +5,10 @@ import { useIsClient } from 'usehooks-ts';
 const factsPerPage = 4;
 const duration = 7000;
 
-export const useAbout = (lang: string) => {
+export const useAbout = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [progressValue, setProgressValue] = useState(100);
-  const { t } = useTranslation(lang);
+  const { t } = useTranslation();
   const isClient = useIsClient();
   const isReversed = useRef(false);
   const allFacts: string[] = Object.values(

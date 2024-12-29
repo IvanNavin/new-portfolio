@@ -25,7 +25,7 @@ export default function Page({ params: { lang } }: DefaultProps) {
     sent,
     success,
     hovered,
-  } = useContact(lang);
+  } = useContact();
 
   return (
     <Container

@@ -1,5 +1,4 @@
 'use client';
-
 import { ROUTES } from '@app/constants/routes';
 import { DefaultProps } from '@app/types';
 import { Container } from '@components/Container';
@@ -7,7 +6,7 @@ import { VideoFrame } from '@components/VideoFrame';
 import { useTranslation } from '@i18n/client';
 
 export default function Page({ params: { lang } }: DefaultProps) {
-  const { t } = useTranslation(lang);
+  const { t } = useTranslation();
 
   return (
     <Container

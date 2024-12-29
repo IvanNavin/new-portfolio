@@ -16,6 +16,7 @@
     "typecheck": "turbo typecheck",
     "clean": "turbo clean",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint-staged": "lint-staged",
     "generate:pokedex": "prisma generate --schema=./apps/pokedex/prisma/schema.prisma",
     "generate:language": "prisma generate --schema=./apps/language/prisma/schema.prisma"
   },
@@ -38,14 +39,14 @@
     "turbo": "^2.1.1"
   },
   "lint-staged": {
-    "apps/**/src/**/*.{js,jsx,ts,tsx,json}": [
-      "eslint --fix --config packages/config-eslint/base.js --ext .js,.jsx,.ts,.tsx",
-      "eslint --config packages/config-eslint/base.js --ext .js,.jsx,.ts,.tsx --quiet",
+    "*.{js,jsx,ts,tsx}": [
+      "turbo run lint --filter='apps/**' -- --fix",
+      "turbo run lint --filter='packages/**' -- --fix",
+      "turbo run lint --filter='apps/**'",
+      "turbo run lint --filter='packages/**'",
       "prettier --write"
     ],
-    "packages/**/src/**/*.{js,jsx,ts,tsx,json}": [
-      "eslint --fix --config packages/config-eslint/packages.js --ext .js,.jsx,.ts,.tsx",
-      "eslint --config packages/config-eslint/packages.js --ext .js,.jsx,.ts,.tsx --quiet",
+    "*.json": [
       "prettier --write"
     ]
   }

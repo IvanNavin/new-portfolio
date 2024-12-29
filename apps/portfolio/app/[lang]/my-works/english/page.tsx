@@ -10,7 +10,7 @@ import { useTranslation } from '@i18n/client';
 import Image from 'next/image';
 
 export default function Page({ params: { lang } }: DefaultProps) {
-  const { t } = useTranslation(lang);
+  const { t } = useTranslation();
 
   return (
     <Container

@@ -8,7 +8,7 @@ import { RenderTextArea } from '@components/RenderTextArea';
 import { useTranslation } from '@i18n/client';
 
 export default function Page({ params: { lang } }: DefaultProps) {
-  const { t } = useTranslation(lang);
+  const { t } = useTranslation();
 
   return (
     <Container

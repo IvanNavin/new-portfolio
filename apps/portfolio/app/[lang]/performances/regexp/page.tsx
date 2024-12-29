@@ -1,5 +1,4 @@
 'use client';
-
 import { ROUTES } from '@app/constants/routes';
 import { DefaultProps } from '@app/types';
 import { Container } from '@components/Container';
@@ -9,7 +8,7 @@ import { clsxm } from '@repo/utils';
 import Link from 'next/link';
 
 export default function Page({ params: { lang } }: DefaultProps) {
-  const { t } = useTranslation(lang);
+  const { t } = useTranslation();
 
   const links = [
     {

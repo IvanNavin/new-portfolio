@@ -7,7 +7,7 @@ import { useTranslation } from '@i18n/client';
 import Link from 'next/link';
 
 export default function Page({ params: { lang } }: DefaultProps) {
-  const { t } = useTranslation(lang);
+  const { t } = useTranslation();
 
   return (
     <Container

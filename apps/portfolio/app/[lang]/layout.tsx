@@ -59,7 +59,7 @@ export default function RootLayout({
             background: `transparent url(${TWINKLING.src}) repeat top center`,
           }}
         />
-        <Providers>
+        <Providers lang={lang}>
           {children}
           <LanguageSwitcher lang={lang} />
         </Providers>

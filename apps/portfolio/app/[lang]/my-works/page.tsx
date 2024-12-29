@@ -8,7 +8,7 @@ import { getWorks } from './constants';
 import { WorkItem } from './WorkItem';
 
 export default function Page({ params: { lang } }: DefaultProps) {
-  const { t } = useTranslation(lang);
+  const { t } = useTranslation();
 
   const works = useMemo(() => getWorks(lang), [lang]);
 

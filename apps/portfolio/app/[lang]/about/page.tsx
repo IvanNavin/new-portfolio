@@ -15,7 +15,7 @@ import { cssSkills, htmlSkills, JSSkills, otherSkills } from './constants';
 import { DownloadButton } from './DownloadButton';
 
 export default function Page({ params: { lang } }: DefaultProps) {
-  const { t, isClient, currentFacts, progressValue } = useAbout(lang);
+  const { t, isClient, currentFacts, progressValue } = useAbout();
 
   return (
     <Container lang={lang} backText={t('ivan')} title={t('about.helloThere')}>

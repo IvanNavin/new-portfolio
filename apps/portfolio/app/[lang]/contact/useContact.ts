@@ -1,9 +1,8 @@
 import { useTranslation } from '@i18n/client';
 import { useHover } from '@mantine/hooks';
-import { Locale } from '@root/i18n-config';
 import { FormEvent, useEffect, useState } from 'react';
 
-export const useContact = (lang: Locale) => {
+export const useContact = () => {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const [errorName, setErrorName] = useState('');
@@ -11,7 +10,7 @@ export const useContact = (lang: Locale) => {
   const [sent, setSent] = useState(false);
   const [success, setSuccess] = useState<boolean | null>(null);
   const [error, setError] = useState<string>('');
-  const { t } = useTranslation(lang);
+  const { t } = useTranslation();
   const { hovered, ref } = useHover<HTMLButtonElement>();
 
   const reset = () => {

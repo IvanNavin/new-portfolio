@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 
 export default function Home({ params: { lang } }: DefaultProps) {
   const [isTouch, setIsTouch] = useState(false);
-  const { t } = useTranslation(lang);
+  const { t } = useTranslation();
 
   const navMenu = [
     {
