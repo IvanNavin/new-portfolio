@@ -1,10 +1,10 @@
 {
   "main": {
-    "hello": "Hallo",
+    "hello": "Hallo,",
     "aboutMe": "Über mich",
-    "my": "Meine",
+    "my": "Ich",
     "myWorks": "Meine Arbeiten",
-    "names": "heißt",
+    "names": "heiße",
     "contacts": "Kontakte",
     "ivan": "Ivan",
     "performances": "Vorträge",

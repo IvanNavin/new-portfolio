@@ -1,57 +1,21 @@
 'use client';
+import { ProgressFacts } from '@app/[lang]/about/ProgressFacts';
+import { useAbout } from '@app/[lang]/about/useAbout';
 import { DefaultProps } from '@app/types';
 import { roboto, russoOne } from '@assets/fonts';
 import { Container } from '@components/Container';
 import { Magnetic } from '@components/Magnetic';
 import { RenderTextArea } from '@components/RenderTextArea';
 import { Css, EmptyGear, Html, Js } from '@components/svg';
-import { useTranslation } from '@i18n/client';
 import { clsxm } from '@repo/utils';
-import { useEffect, useState } from 'react';
-import { useIsClient } from 'usehooks-ts';
 
 import './style.css';
 
 import { cssSkills, htmlSkills, JSSkills, otherSkills } from './constants';
 import { DownloadButton } from './DownloadButton';
 
-const factsPerPage = 4;
-
 export default function Page({ params: { lang } }: DefaultProps) {
-  const [currentPage, setCurrentPage] = useState(0);
-  const { t } = useTranslation(lang);
-  const isClient = useIsClient();
-  const allFacts: string[] = Object.values(
-    t('about.facts', { returnObjects: true }),
-  );
-
-  const pages = [];
-  for (let i = 0; i < allFacts.length; i += factsPerPage) {
-    pages.push(allFacts.slice(i, i + factsPerPage));
-  }
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentPage((prevPage) => {
-        const isLastPage = prevPage === pages.length - 1;
-        return isLastPage ? 0 : prevPage + 1;
-      });
-    }, 7000); // Facts change every 7 seconds
-
-    return () => clearInterval(intervalId);
-  }, [pages.length]);
-
-  // Select the facts to display on the current page
-  const currentFacts =
-    currentPage === pages.length - 1 && pages[currentPage].length < factsPerPage
-      ? [
-          ...pages[currentPage],
-          ...pages[currentPage - 1].slice(
-            0,
-            factsPerPage - pages[currentPage].length,
-          ),
-        ]
-      : pages[currentPage];
+  const { t, isClient, currentFacts, progressValue } = useAbout(lang);
 
   return (
     <Container lang={lang} backText={t('ivan')} title={t('about.helloThere')}>
@@ -121,11 +85,14 @@ export default function Page({ params: { lang } }: DefaultProps) {
         </Magnetic>
       </section>
       <p className={roboto.className}>{t('about.description')}</p>
+
       <h2 className='mb-6 mt-5 text-right text-[32px]'>{t('about.whoIAm')}</h2>
+      {progressValue !== 100 && <ProgressFacts value={progressValue} />}
       <ul className='mb-6 text-right'>
         {isClient &&
           currentFacts.map((line, index) => <li key={index}>{line}</li>)}
       </ul>
+
       <DownloadButton />
     </Container>
   );

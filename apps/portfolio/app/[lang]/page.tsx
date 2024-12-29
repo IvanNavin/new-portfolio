@@ -51,7 +51,7 @@ export default function Home({ params: { lang } }: DefaultProps) {
       <section
         className={clsxm(
           'pointer-events-none absolute bottom-0 right-0 max-h-screen w-1/2 max-w-[666px]',
-          'animate-fadeInWithScale ease-linear duration-1000 opacity-80',
+          'animate-fadeInWithScale ease-linear duration-1000 opacity-80 z-40',
         )}
       >
         <Image
@@ -60,6 +60,7 @@ export default function Home({ params: { lang } }: DefaultProps) {
           width={666}
           height={666}
           priority={true}
+          draggable={false}
           className='animate-fadeInWithScale object-contain opacity-80'
         />
       </section>

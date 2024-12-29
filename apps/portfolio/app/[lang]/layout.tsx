@@ -6,6 +6,7 @@ import FAVICON32 from '@assets/img/favicons/favicon-32x32.png';
 import STARS from '@assets/img/stars.png';
 import TWINKLING from '@assets/img/twinkling.png';
 import { LanguageSwitcher } from '@components/LanguageSwitcher';
+import { mantineHtmlProps } from '@mantine/core';
 import { Locale } from '@root/i18n-config';
 import { dir } from 'i18next';
 import type { Metadata } from 'next';
@@ -47,7 +48,7 @@ export default function RootLayout({
   params: { lang },
 }: RootLayoutType) {
   return (
-    <html lang={lang} dir={dir(lang)}>
+    <html lang={lang} dir={dir(lang)} {...mantineHtmlProps}>
       <body
         className={`${russoOne.className} relative bg-black text-white antialiased`}
         style={{ background: `#000 url(${STARS.src}) repeat top center` }}

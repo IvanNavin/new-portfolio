@@ -17,7 +17,7 @@ const getValue = (dates: (Date | null) | [Date | null, Date | null], type: strin
     return type === 'start' ? start : end
   }
 
-  return null
+  return undefined
 }
 
 export const DateRange = ({ control }: IProps) => {
@@ -28,10 +28,11 @@ export const DateRange = ({ control }: IProps) => {
       render={({ field: { value, onChange } }) => (
         <>
           <InputLabel sx={styles.mbMinus12}>Date range:</InputLabel>
+          {/*@ts-ignore*/}
           <DatePicker
             id='date'
-            startDate={getValue(value, 'start')}
-            endDate={getValue(value, 'end')}
+            startDate={getValue(value, 'start') || undefined}
+            endDate={getValue(value, 'end') || undefined}
             placeholderText='Select date range'
             customInput={<InputBase sx={{ ...styles.w224, ...styles.input }} />}
             onChange={onChange}

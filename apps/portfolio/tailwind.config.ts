@@ -113,6 +113,10 @@ const config: Config = {
           '0%': { backgroundPosition: '0 0' },
           '100%': { backgroundPosition: '-10000px 5000px' },
         },
+        progress: {
+          '0%': { width: '100%' },
+          '100%': { width: '0%' },
+        },
       },
       animation: {
         slideText: 'slideText 1s forwards',
@@ -130,6 +134,7 @@ const config: Config = {
         delay: '.4s delay var(--delay) forwards;',
         rotate: 'rotate 15s linear infinite',
         'move-twink-back': 'move-twink-back 200s linear infinite',
+        progress: 'progress 7s linear infinite',
       },
     },
   },

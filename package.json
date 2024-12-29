@@ -1,5 +1,14 @@
 {
   "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "name": "with-tailwind",
+  "packageManager": "yarn@1.22.19",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -10,18 +19,34 @@
     "generate:pokedex": "prisma generate --schema=./apps/pokedex/prisma/schema.prisma",
     "generate:language": "prisma generate --schema=./apps/language/prisma/schema.prisma"
   },
+  "dependencies": {
+    "@prisma/client": "^5.22.0"
+  },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "@typescript-eslint/parser": "^8.18.1",
+    "eslint": "8.57.1",
+    "eslint-config-next": "^15.1.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-tailwindcss": "^3.17.5",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "husky": "^8.0.3",
+    "lint-staged": "^12.5.0",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
     "turbo": "^2.1.1"
   },
-  "engines": {
-    "node": ">=18"
-  },
-  "name": "with-tailwind",
-  "packageManager": "yarn@1.22.19",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+  "lint-staged": {
+    "apps/**/src/**/*.{js,jsx,ts,tsx,json}": [
+      "eslint --fix --config packages/config-eslint/base.js --ext .js,.jsx,.ts,.tsx",
+      "eslint --config packages/config-eslint/base.js --ext .js,.jsx,.ts,.tsx --quiet",
+      "prettier --write"
+    ],
+    "packages/**/src/**/*.{js,jsx,ts,tsx,json}": [
+      "eslint --fix --config packages/config-eslint/packages.js --ext .js,.jsx,.ts,.tsx",
+      "eslint --config packages/config-eslint/packages.js --ext .js,.jsx,.ts,.tsx --quiet",
+      "prettier --write"
+    ]
+  }
 }
