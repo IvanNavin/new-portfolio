@@ -1,3 +1,3 @@
-import {Miner} from "./miner.mjs";
+import { Miner } from "./miner.mjs";
 
-new Miner()
+new Miner();
