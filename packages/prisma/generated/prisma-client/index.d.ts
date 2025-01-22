@@ -28,6 +28,21 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  * 
  */
 export type Card = $Result.DefaultSelection<Prisma.$CardPayload>
+/**
+ * Model GameSession
+ * 
+ */
+export type GameSession = $Result.DefaultSelection<Prisma.$GameSessionPayload>
+/**
+ * Model Player
+ * 
+ */
+export type Player = $Result.DefaultSelection<Prisma.$PlayerPayload>
+/**
+ * Model Position
+ * 
+ */
+export type Position = $Result.DefaultSelection<Prisma.$PositionPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -181,6 +196,36 @@ export class PrismaClient<
     * ```
     */
   get card(): Prisma.CardDelegate<ExtArgs>;
+
+  /**
+   * `prisma.gameSession`: Exposes CRUD operations for the **GameSession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GameSessions
+    * const gameSessions = await prisma.gameSession.findMany()
+    * ```
+    */
+  get gameSession(): Prisma.GameSessionDelegate<ExtArgs>;
+
+  /**
+   * `prisma.player`: Exposes CRUD operations for the **Player** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Players
+    * const players = await prisma.player.findMany()
+    * ```
+    */
+  get player(): Prisma.PlayerDelegate<ExtArgs>;
+
+  /**
+   * `prisma.position`: Exposes CRUD operations for the **Position** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Positions
+    * const positions = await prisma.position.findMany()
+    * ```
+    */
+  get position(): Prisma.PositionDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -624,7 +669,10 @@ export namespace Prisma {
   export const ModelName: {
     Pokemon: 'Pokemon',
     User: 'User',
-    Card: 'Card'
+    Card: 'Card',
+    GameSession: 'GameSession',
+    Player: 'Player',
+    Position: 'Position'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -640,7 +688,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "pokemon" | "user" | "card"
+      modelProps: "pokemon" | "user" | "card" | "gameSession" | "player" | "position"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -854,6 +902,216 @@ export namespace Prisma {
           }
         }
       }
+      GameSession: {
+        payload: Prisma.$GameSessionPayload<ExtArgs>
+        fields: Prisma.GameSessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GameSessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GameSessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+          }
+          findFirst: {
+            args: Prisma.GameSessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GameSessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+          }
+          findMany: {
+            args: Prisma.GameSessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>[]
+          }
+          create: {
+            args: Prisma.GameSessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+          }
+          createMany: {
+            args: Prisma.GameSessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GameSessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>[]
+          }
+          delete: {
+            args: Prisma.GameSessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+          }
+          update: {
+            args: Prisma.GameSessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.GameSessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GameSessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.GameSessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GameSessionPayload>
+          }
+          aggregate: {
+            args: Prisma.GameSessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGameSession>
+          }
+          groupBy: {
+            args: Prisma.GameSessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GameSessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GameSessionCountArgs<ExtArgs>
+            result: $Utils.Optional<GameSessionCountAggregateOutputType> | number
+          }
+        }
+      }
+      Player: {
+        payload: Prisma.$PlayerPayload<ExtArgs>
+        fields: Prisma.PlayerFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PlayerFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayerPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PlayerFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayerPayload>
+          }
+          findFirst: {
+            args: Prisma.PlayerFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayerPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PlayerFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayerPayload>
+          }
+          findMany: {
+            args: Prisma.PlayerFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayerPayload>[]
+          }
+          create: {
+            args: Prisma.PlayerCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayerPayload>
+          }
+          createMany: {
+            args: Prisma.PlayerCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PlayerCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayerPayload>[]
+          }
+          delete: {
+            args: Prisma.PlayerDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayerPayload>
+          }
+          update: {
+            args: Prisma.PlayerUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayerPayload>
+          }
+          deleteMany: {
+            args: Prisma.PlayerDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PlayerUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PlayerUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PlayerPayload>
+          }
+          aggregate: {
+            args: Prisma.PlayerAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePlayer>
+          }
+          groupBy: {
+            args: Prisma.PlayerGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PlayerGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PlayerCountArgs<ExtArgs>
+            result: $Utils.Optional<PlayerCountAggregateOutputType> | number
+          }
+        }
+      }
+      Position: {
+        payload: Prisma.$PositionPayload<ExtArgs>
+        fields: Prisma.PositionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PositionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PositionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PositionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PositionPayload>
+          }
+          findFirst: {
+            args: Prisma.PositionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PositionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PositionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PositionPayload>
+          }
+          findMany: {
+            args: Prisma.PositionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PositionPayload>[]
+          }
+          create: {
+            args: Prisma.PositionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PositionPayload>
+          }
+          createMany: {
+            args: Prisma.PositionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PositionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PositionPayload>[]
+          }
+          delete: {
+            args: Prisma.PositionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PositionPayload>
+          }
+          update: {
+            args: Prisma.PositionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PositionPayload>
+          }
+          deleteMany: {
+            args: Prisma.PositionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PositionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PositionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PositionPayload>
+          }
+          aggregate: {
+            args: Prisma.PositionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePosition>
+          }
+          groupBy: {
+            args: Prisma.PositionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PositionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PositionCountArgs<ExtArgs>
+            result: $Utils.Optional<PositionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1016,10 +1274,12 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     cards: number
+    Player: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cards?: boolean | UserCountOutputTypeCountCardsArgs
+    Player?: boolean | UserCountOutputTypeCountPlayerArgs
   }
 
   // Custom InputTypes
@@ -1038,6 +1298,44 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountCardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CardWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPlayerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlayerWhereInput
+  }
+
+
+  /**
+   * Count Type GameSessionCountOutputType
+   */
+
+  export type GameSessionCountOutputType = {
+    players: number
+  }
+
+  export type GameSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    players?: boolean | GameSessionCountOutputTypeCountPlayersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * GameSessionCountOutputType without action
+   */
+  export type GameSessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSessionCountOutputType
+     */
+    select?: GameSessionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * GameSessionCountOutputType without action
+   */
+  export type GameSessionCountOutputTypeCountPlayersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlayerWhereInput
   }
 
 
@@ -2282,6 +2580,7 @@ export namespace Prisma {
     email?: boolean
     name?: boolean
     cards?: boolean | User$cardsArgs<ExtArgs>
+    Player?: boolean | User$PlayerArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2299,6 +2598,7 @@ export namespace Prisma {
 
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cards?: boolean | User$cardsArgs<ExtArgs>
+    Player?: boolean | User$PlayerArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2307,6 +2607,7 @@ export namespace Prisma {
     name: "User"
     objects: {
       cards: Prisma.$CardPayload<ExtArgs>[]
+      Player: Prisma.$PlayerPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2677,6 +2978,7 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     cards<T extends User$cardsArgs<ExtArgs> = {}>(args?: Subset<T, User$cardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CardPayload<ExtArgs>, T, "findMany"> | Null>
+    Player<T extends User$PlayerArgs<ExtArgs> = {}>(args?: Subset<T, User$PlayerArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3040,6 +3342,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CardScalarFieldEnum | CardScalarFieldEnum[]
+  }
+
+  /**
+   * User.Player
+   */
+  export type User$PlayerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Player
+     */
+    select?: PlayerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayerInclude<ExtArgs> | null
+    where?: PlayerWhereInput
+    orderBy?: PlayerOrderByWithRelationInput | PlayerOrderByWithRelationInput[]
+    cursor?: PlayerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PlayerScalarFieldEnum | PlayerScalarFieldEnum[]
   }
 
   /**
@@ -4003,6 +4325,2835 @@ export namespace Prisma {
 
 
   /**
+   * Model GameSession
+   */
+
+  export type AggregateGameSession = {
+    _count: GameSessionCountAggregateOutputType | null
+    _min: GameSessionMinAggregateOutputType | null
+    _max: GameSessionMaxAggregateOutputType | null
+  }
+
+  export type GameSessionMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    createdAt: Date | null
+  }
+
+  export type GameSessionMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    createdAt: Date | null
+  }
+
+  export type GameSessionCountAggregateOutputType = {
+    id: number
+    name: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type GameSessionMinAggregateInputType = {
+    id?: true
+    name?: true
+    createdAt?: true
+  }
+
+  export type GameSessionMaxAggregateInputType = {
+    id?: true
+    name?: true
+    createdAt?: true
+  }
+
+  export type GameSessionCountAggregateInputType = {
+    id?: true
+    name?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type GameSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GameSession to aggregate.
+     */
+    where?: GameSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameSessions to fetch.
+     */
+    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GameSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GameSessions
+    **/
+    _count?: true | GameSessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GameSessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GameSessionMaxAggregateInputType
+  }
+
+  export type GetGameSessionAggregateType<T extends GameSessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateGameSession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGameSession[P]>
+      : GetScalarType<T[P], AggregateGameSession[P]>
+  }
+
+
+
+
+  export type GameSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GameSessionWhereInput
+    orderBy?: GameSessionOrderByWithAggregationInput | GameSessionOrderByWithAggregationInput[]
+    by: GameSessionScalarFieldEnum[] | GameSessionScalarFieldEnum
+    having?: GameSessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GameSessionCountAggregateInputType | true
+    _min?: GameSessionMinAggregateInputType
+    _max?: GameSessionMaxAggregateInputType
+  }
+
+  export type GameSessionGroupByOutputType = {
+    id: string
+    name: string
+    createdAt: Date
+    _count: GameSessionCountAggregateOutputType | null
+    _min: GameSessionMinAggregateOutputType | null
+    _max: GameSessionMaxAggregateOutputType | null
+  }
+
+  type GetGameSessionGroupByPayload<T extends GameSessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GameSessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GameSessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GameSessionGroupByOutputType[P]>
+            : GetScalarType<T[P], GameSessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GameSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    createdAt?: boolean
+    players?: boolean | GameSession$playersArgs<ExtArgs>
+    _count?: boolean | GameSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gameSession"]>
+
+  export type GameSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["gameSession"]>
+
+  export type GameSessionSelectScalar = {
+    id?: boolean
+    name?: boolean
+    createdAt?: boolean
+  }
+
+  export type GameSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    players?: boolean | GameSession$playersArgs<ExtArgs>
+    _count?: boolean | GameSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type GameSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $GameSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GameSession"
+    objects: {
+      players: Prisma.$PlayerPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      createdAt: Date
+    }, ExtArgs["result"]["gameSession"]>
+    composites: {}
+  }
+
+  type GameSessionGetPayload<S extends boolean | null | undefined | GameSessionDefaultArgs> = $Result.GetResult<Prisma.$GameSessionPayload, S>
+
+  type GameSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<GameSessionFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: GameSessionCountAggregateInputType | true
+    }
+
+  export interface GameSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GameSession'], meta: { name: 'GameSession' } }
+    /**
+     * Find zero or one GameSession that matches the filter.
+     * @param {GameSessionFindUniqueArgs} args - Arguments to find a GameSession
+     * @example
+     * // Get one GameSession
+     * const gameSession = await prisma.gameSession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GameSessionFindUniqueArgs>(args: SelectSubset<T, GameSessionFindUniqueArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one GameSession that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {GameSessionFindUniqueOrThrowArgs} args - Arguments to find a GameSession
+     * @example
+     * // Get one GameSession
+     * const gameSession = await prisma.gameSession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GameSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, GameSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first GameSession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameSessionFindFirstArgs} args - Arguments to find a GameSession
+     * @example
+     * // Get one GameSession
+     * const gameSession = await prisma.gameSession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GameSessionFindFirstArgs>(args?: SelectSubset<T, GameSessionFindFirstArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first GameSession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameSessionFindFirstOrThrowArgs} args - Arguments to find a GameSession
+     * @example
+     * // Get one GameSession
+     * const gameSession = await prisma.gameSession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GameSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, GameSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more GameSessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameSessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GameSessions
+     * const gameSessions = await prisma.gameSession.findMany()
+     * 
+     * // Get first 10 GameSessions
+     * const gameSessions = await prisma.gameSession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const gameSessionWithIdOnly = await prisma.gameSession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GameSessionFindManyArgs>(args?: SelectSubset<T, GameSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a GameSession.
+     * @param {GameSessionCreateArgs} args - Arguments to create a GameSession.
+     * @example
+     * // Create one GameSession
+     * const GameSession = await prisma.gameSession.create({
+     *   data: {
+     *     // ... data to create a GameSession
+     *   }
+     * })
+     * 
+     */
+    create<T extends GameSessionCreateArgs>(args: SelectSubset<T, GameSessionCreateArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many GameSessions.
+     * @param {GameSessionCreateManyArgs} args - Arguments to create many GameSessions.
+     * @example
+     * // Create many GameSessions
+     * const gameSession = await prisma.gameSession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GameSessionCreateManyArgs>(args?: SelectSubset<T, GameSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GameSessions and returns the data saved in the database.
+     * @param {GameSessionCreateManyAndReturnArgs} args - Arguments to create many GameSessions.
+     * @example
+     * // Create many GameSessions
+     * const gameSession = await prisma.gameSession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GameSessions and only return the `id`
+     * const gameSessionWithIdOnly = await prisma.gameSession.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GameSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, GameSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a GameSession.
+     * @param {GameSessionDeleteArgs} args - Arguments to delete one GameSession.
+     * @example
+     * // Delete one GameSession
+     * const GameSession = await prisma.gameSession.delete({
+     *   where: {
+     *     // ... filter to delete one GameSession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GameSessionDeleteArgs>(args: SelectSubset<T, GameSessionDeleteArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one GameSession.
+     * @param {GameSessionUpdateArgs} args - Arguments to update one GameSession.
+     * @example
+     * // Update one GameSession
+     * const gameSession = await prisma.gameSession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GameSessionUpdateArgs>(args: SelectSubset<T, GameSessionUpdateArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more GameSessions.
+     * @param {GameSessionDeleteManyArgs} args - Arguments to filter GameSessions to delete.
+     * @example
+     * // Delete a few GameSessions
+     * const { count } = await prisma.gameSession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GameSessionDeleteManyArgs>(args?: SelectSubset<T, GameSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GameSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameSessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GameSessions
+     * const gameSession = await prisma.gameSession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GameSessionUpdateManyArgs>(args: SelectSubset<T, GameSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one GameSession.
+     * @param {GameSessionUpsertArgs} args - Arguments to update or create a GameSession.
+     * @example
+     * // Update or create a GameSession
+     * const gameSession = await prisma.gameSession.upsert({
+     *   create: {
+     *     // ... data to create a GameSession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GameSession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GameSessionUpsertArgs>(args: SelectSubset<T, GameSessionUpsertArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of GameSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameSessionCountArgs} args - Arguments to filter GameSessions to count.
+     * @example
+     * // Count the number of GameSessions
+     * const count = await prisma.gameSession.count({
+     *   where: {
+     *     // ... the filter for the GameSessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends GameSessionCountArgs>(
+      args?: Subset<T, GameSessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GameSessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GameSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GameSessionAggregateArgs>(args: Subset<T, GameSessionAggregateArgs>): Prisma.PrismaPromise<GetGameSessionAggregateType<T>>
+
+    /**
+     * Group by GameSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GameSessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GameSessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GameSessionGroupByArgs['orderBy'] }
+        : { orderBy?: GameSessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GameSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGameSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GameSession model
+   */
+  readonly fields: GameSessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GameSession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GameSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    players<T extends GameSession$playersArgs<ExtArgs> = {}>(args?: Subset<T, GameSession$playersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GameSession model
+   */ 
+  interface GameSessionFieldRefs {
+    readonly id: FieldRef<"GameSession", 'String'>
+    readonly name: FieldRef<"GameSession", 'String'>
+    readonly createdAt: FieldRef<"GameSession", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GameSession findUnique
+   */
+  export type GameSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which GameSession to fetch.
+     */
+    where: GameSessionWhereUniqueInput
+  }
+
+  /**
+   * GameSession findUniqueOrThrow
+   */
+  export type GameSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which GameSession to fetch.
+     */
+    where: GameSessionWhereUniqueInput
+  }
+
+  /**
+   * GameSession findFirst
+   */
+  export type GameSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which GameSession to fetch.
+     */
+    where?: GameSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameSessions to fetch.
+     */
+    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GameSessions.
+     */
+    cursor?: GameSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GameSessions.
+     */
+    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
+  }
+
+  /**
+   * GameSession findFirstOrThrow
+   */
+  export type GameSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which GameSession to fetch.
+     */
+    where?: GameSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameSessions to fetch.
+     */
+    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GameSessions.
+     */
+    cursor?: GameSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GameSessions.
+     */
+    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
+  }
+
+  /**
+   * GameSession findMany
+   */
+  export type GameSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which GameSessions to fetch.
+     */
+    where?: GameSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GameSessions to fetch.
+     */
+    orderBy?: GameSessionOrderByWithRelationInput | GameSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GameSessions.
+     */
+    cursor?: GameSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GameSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GameSessions.
+     */
+    skip?: number
+    distinct?: GameSessionScalarFieldEnum | GameSessionScalarFieldEnum[]
+  }
+
+  /**
+   * GameSession create
+   */
+  export type GameSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GameSession.
+     */
+    data: XOR<GameSessionCreateInput, GameSessionUncheckedCreateInput>
+  }
+
+  /**
+   * GameSession createMany
+   */
+  export type GameSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GameSessions.
+     */
+    data: GameSessionCreateManyInput | GameSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GameSession createManyAndReturn
+   */
+  export type GameSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many GameSessions.
+     */
+    data: GameSessionCreateManyInput | GameSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GameSession update
+   */
+  export type GameSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GameSession.
+     */
+    data: XOR<GameSessionUpdateInput, GameSessionUncheckedUpdateInput>
+    /**
+     * Choose, which GameSession to update.
+     */
+    where: GameSessionWhereUniqueInput
+  }
+
+  /**
+   * GameSession updateMany
+   */
+  export type GameSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GameSessions.
+     */
+    data: XOR<GameSessionUpdateManyMutationInput, GameSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which GameSessions to update
+     */
+    where?: GameSessionWhereInput
+  }
+
+  /**
+   * GameSession upsert
+   */
+  export type GameSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GameSession to update in case it exists.
+     */
+    where: GameSessionWhereUniqueInput
+    /**
+     * In case the GameSession found by the `where` argument doesn't exist, create a new GameSession with this data.
+     */
+    create: XOR<GameSessionCreateInput, GameSessionUncheckedCreateInput>
+    /**
+     * In case the GameSession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GameSessionUpdateInput, GameSessionUncheckedUpdateInput>
+  }
+
+  /**
+   * GameSession delete
+   */
+  export type GameSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+    /**
+     * Filter which GameSession to delete.
+     */
+    where: GameSessionWhereUniqueInput
+  }
+
+  /**
+   * GameSession deleteMany
+   */
+  export type GameSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GameSessions to delete
+     */
+    where?: GameSessionWhereInput
+  }
+
+  /**
+   * GameSession.players
+   */
+  export type GameSession$playersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Player
+     */
+    select?: PlayerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayerInclude<ExtArgs> | null
+    where?: PlayerWhereInput
+    orderBy?: PlayerOrderByWithRelationInput | PlayerOrderByWithRelationInput[]
+    cursor?: PlayerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PlayerScalarFieldEnum | PlayerScalarFieldEnum[]
+  }
+
+  /**
+   * GameSession without action
+   */
+  export type GameSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GameSession
+     */
+    select?: GameSessionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GameSessionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Player
+   */
+
+  export type AggregatePlayer = {
+    _count: PlayerCountAggregateOutputType | null
+    _min: PlayerMinAggregateOutputType | null
+    _max: PlayerMaxAggregateOutputType | null
+  }
+
+  export type PlayerMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    gameId: string | null
+    isReady: boolean | null
+  }
+
+  export type PlayerMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    gameId: string | null
+    isReady: boolean | null
+  }
+
+  export type PlayerCountAggregateOutputType = {
+    id: number
+    userId: number
+    gameId: number
+    isReady: number
+    _all: number
+  }
+
+
+  export type PlayerMinAggregateInputType = {
+    id?: true
+    userId?: true
+    gameId?: true
+    isReady?: true
+  }
+
+  export type PlayerMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    gameId?: true
+    isReady?: true
+  }
+
+  export type PlayerCountAggregateInputType = {
+    id?: true
+    userId?: true
+    gameId?: true
+    isReady?: true
+    _all?: true
+  }
+
+  export type PlayerAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Player to aggregate.
+     */
+    where?: PlayerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Players to fetch.
+     */
+    orderBy?: PlayerOrderByWithRelationInput | PlayerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PlayerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Players from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Players.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Players
+    **/
+    _count?: true | PlayerCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PlayerMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PlayerMaxAggregateInputType
+  }
+
+  export type GetPlayerAggregateType<T extends PlayerAggregateArgs> = {
+        [P in keyof T & keyof AggregatePlayer]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePlayer[P]>
+      : GetScalarType<T[P], AggregatePlayer[P]>
+  }
+
+
+
+
+  export type PlayerGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PlayerWhereInput
+    orderBy?: PlayerOrderByWithAggregationInput | PlayerOrderByWithAggregationInput[]
+    by: PlayerScalarFieldEnum[] | PlayerScalarFieldEnum
+    having?: PlayerScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PlayerCountAggregateInputType | true
+    _min?: PlayerMinAggregateInputType
+    _max?: PlayerMaxAggregateInputType
+  }
+
+  export type PlayerGroupByOutputType = {
+    id: string
+    userId: string
+    gameId: string
+    isReady: boolean
+    _count: PlayerCountAggregateOutputType | null
+    _min: PlayerMinAggregateOutputType | null
+    _max: PlayerMaxAggregateOutputType | null
+  }
+
+  type GetPlayerGroupByPayload<T extends PlayerGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PlayerGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PlayerGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PlayerGroupByOutputType[P]>
+            : GetScalarType<T[P], PlayerGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PlayerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    gameId?: boolean
+    isReady?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    position?: boolean | Player$positionArgs<ExtArgs>
+    game?: boolean | GameSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["player"]>
+
+  export type PlayerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    gameId?: boolean
+    isReady?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    game?: boolean | GameSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["player"]>
+
+  export type PlayerSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    gameId?: boolean
+    isReady?: boolean
+  }
+
+  export type PlayerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    position?: boolean | Player$positionArgs<ExtArgs>
+    game?: boolean | GameSessionDefaultArgs<ExtArgs>
+  }
+  export type PlayerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    game?: boolean | GameSessionDefaultArgs<ExtArgs>
+  }
+
+  export type $PlayerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Player"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      position: Prisma.$PositionPayload<ExtArgs> | null
+      game: Prisma.$GameSessionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      gameId: string
+      isReady: boolean
+    }, ExtArgs["result"]["player"]>
+    composites: {}
+  }
+
+  type PlayerGetPayload<S extends boolean | null | undefined | PlayerDefaultArgs> = $Result.GetResult<Prisma.$PlayerPayload, S>
+
+  type PlayerCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PlayerFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PlayerCountAggregateInputType | true
+    }
+
+  export interface PlayerDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Player'], meta: { name: 'Player' } }
+    /**
+     * Find zero or one Player that matches the filter.
+     * @param {PlayerFindUniqueArgs} args - Arguments to find a Player
+     * @example
+     * // Get one Player
+     * const player = await prisma.player.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PlayerFindUniqueArgs>(args: SelectSubset<T, PlayerFindUniqueArgs<ExtArgs>>): Prisma__PlayerClient<$Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Player that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PlayerFindUniqueOrThrowArgs} args - Arguments to find a Player
+     * @example
+     * // Get one Player
+     * const player = await prisma.player.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PlayerFindUniqueOrThrowArgs>(args: SelectSubset<T, PlayerFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PlayerClient<$Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Player that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayerFindFirstArgs} args - Arguments to find a Player
+     * @example
+     * // Get one Player
+     * const player = await prisma.player.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PlayerFindFirstArgs>(args?: SelectSubset<T, PlayerFindFirstArgs<ExtArgs>>): Prisma__PlayerClient<$Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Player that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayerFindFirstOrThrowArgs} args - Arguments to find a Player
+     * @example
+     * // Get one Player
+     * const player = await prisma.player.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PlayerFindFirstOrThrowArgs>(args?: SelectSubset<T, PlayerFindFirstOrThrowArgs<ExtArgs>>): Prisma__PlayerClient<$Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Players that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayerFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Players
+     * const players = await prisma.player.findMany()
+     * 
+     * // Get first 10 Players
+     * const players = await prisma.player.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const playerWithIdOnly = await prisma.player.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PlayerFindManyArgs>(args?: SelectSubset<T, PlayerFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Player.
+     * @param {PlayerCreateArgs} args - Arguments to create a Player.
+     * @example
+     * // Create one Player
+     * const Player = await prisma.player.create({
+     *   data: {
+     *     // ... data to create a Player
+     *   }
+     * })
+     * 
+     */
+    create<T extends PlayerCreateArgs>(args: SelectSubset<T, PlayerCreateArgs<ExtArgs>>): Prisma__PlayerClient<$Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Players.
+     * @param {PlayerCreateManyArgs} args - Arguments to create many Players.
+     * @example
+     * // Create many Players
+     * const player = await prisma.player.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PlayerCreateManyArgs>(args?: SelectSubset<T, PlayerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Players and returns the data saved in the database.
+     * @param {PlayerCreateManyAndReturnArgs} args - Arguments to create many Players.
+     * @example
+     * // Create many Players
+     * const player = await prisma.player.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Players and only return the `id`
+     * const playerWithIdOnly = await prisma.player.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PlayerCreateManyAndReturnArgs>(args?: SelectSubset<T, PlayerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Player.
+     * @param {PlayerDeleteArgs} args - Arguments to delete one Player.
+     * @example
+     * // Delete one Player
+     * const Player = await prisma.player.delete({
+     *   where: {
+     *     // ... filter to delete one Player
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PlayerDeleteArgs>(args: SelectSubset<T, PlayerDeleteArgs<ExtArgs>>): Prisma__PlayerClient<$Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Player.
+     * @param {PlayerUpdateArgs} args - Arguments to update one Player.
+     * @example
+     * // Update one Player
+     * const player = await prisma.player.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PlayerUpdateArgs>(args: SelectSubset<T, PlayerUpdateArgs<ExtArgs>>): Prisma__PlayerClient<$Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Players.
+     * @param {PlayerDeleteManyArgs} args - Arguments to filter Players to delete.
+     * @example
+     * // Delete a few Players
+     * const { count } = await prisma.player.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PlayerDeleteManyArgs>(args?: SelectSubset<T, PlayerDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Players.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayerUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Players
+     * const player = await prisma.player.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PlayerUpdateManyArgs>(args: SelectSubset<T, PlayerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Player.
+     * @param {PlayerUpsertArgs} args - Arguments to update or create a Player.
+     * @example
+     * // Update or create a Player
+     * const player = await prisma.player.upsert({
+     *   create: {
+     *     // ... data to create a Player
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Player we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PlayerUpsertArgs>(args: SelectSubset<T, PlayerUpsertArgs<ExtArgs>>): Prisma__PlayerClient<$Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Players.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayerCountArgs} args - Arguments to filter Players to count.
+     * @example
+     * // Count the number of Players
+     * const count = await prisma.player.count({
+     *   where: {
+     *     // ... the filter for the Players we want to count
+     *   }
+     * })
+    **/
+    count<T extends PlayerCountArgs>(
+      args?: Subset<T, PlayerCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PlayerCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Player.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayerAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PlayerAggregateArgs>(args: Subset<T, PlayerAggregateArgs>): Prisma.PrismaPromise<GetPlayerAggregateType<T>>
+
+    /**
+     * Group by Player.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PlayerGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PlayerGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PlayerGroupByArgs['orderBy'] }
+        : { orderBy?: PlayerGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PlayerGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPlayerGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Player model
+   */
+  readonly fields: PlayerFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Player.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PlayerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    position<T extends Player$positionArgs<ExtArgs> = {}>(args?: Subset<T, Player$positionArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    game<T extends GameSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GameSessionDefaultArgs<ExtArgs>>): Prisma__GameSessionClient<$Result.GetResult<Prisma.$GameSessionPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Player model
+   */ 
+  interface PlayerFieldRefs {
+    readonly id: FieldRef<"Player", 'String'>
+    readonly userId: FieldRef<"Player", 'String'>
+    readonly gameId: FieldRef<"Player", 'String'>
+    readonly isReady: FieldRef<"Player", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Player findUnique
+   */
+  export type PlayerFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Player
+     */
+    select?: PlayerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayerInclude<ExtArgs> | null
+    /**
+     * Filter, which Player to fetch.
+     */
+    where: PlayerWhereUniqueInput
+  }
+
+  /**
+   * Player findUniqueOrThrow
+   */
+  export type PlayerFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Player
+     */
+    select?: PlayerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayerInclude<ExtArgs> | null
+    /**
+     * Filter, which Player to fetch.
+     */
+    where: PlayerWhereUniqueInput
+  }
+
+  /**
+   * Player findFirst
+   */
+  export type PlayerFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Player
+     */
+    select?: PlayerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayerInclude<ExtArgs> | null
+    /**
+     * Filter, which Player to fetch.
+     */
+    where?: PlayerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Players to fetch.
+     */
+    orderBy?: PlayerOrderByWithRelationInput | PlayerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Players.
+     */
+    cursor?: PlayerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Players from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Players.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Players.
+     */
+    distinct?: PlayerScalarFieldEnum | PlayerScalarFieldEnum[]
+  }
+
+  /**
+   * Player findFirstOrThrow
+   */
+  export type PlayerFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Player
+     */
+    select?: PlayerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayerInclude<ExtArgs> | null
+    /**
+     * Filter, which Player to fetch.
+     */
+    where?: PlayerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Players to fetch.
+     */
+    orderBy?: PlayerOrderByWithRelationInput | PlayerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Players.
+     */
+    cursor?: PlayerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Players from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Players.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Players.
+     */
+    distinct?: PlayerScalarFieldEnum | PlayerScalarFieldEnum[]
+  }
+
+  /**
+   * Player findMany
+   */
+  export type PlayerFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Player
+     */
+    select?: PlayerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayerInclude<ExtArgs> | null
+    /**
+     * Filter, which Players to fetch.
+     */
+    where?: PlayerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Players to fetch.
+     */
+    orderBy?: PlayerOrderByWithRelationInput | PlayerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Players.
+     */
+    cursor?: PlayerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Players from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Players.
+     */
+    skip?: number
+    distinct?: PlayerScalarFieldEnum | PlayerScalarFieldEnum[]
+  }
+
+  /**
+   * Player create
+   */
+  export type PlayerCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Player
+     */
+    select?: PlayerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayerInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Player.
+     */
+    data: XOR<PlayerCreateInput, PlayerUncheckedCreateInput>
+  }
+
+  /**
+   * Player createMany
+   */
+  export type PlayerCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Players.
+     */
+    data: PlayerCreateManyInput | PlayerCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Player createManyAndReturn
+   */
+  export type PlayerCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Player
+     */
+    select?: PlayerSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Players.
+     */
+    data: PlayerCreateManyInput | PlayerCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayerIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Player update
+   */
+  export type PlayerUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Player
+     */
+    select?: PlayerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayerInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Player.
+     */
+    data: XOR<PlayerUpdateInput, PlayerUncheckedUpdateInput>
+    /**
+     * Choose, which Player to update.
+     */
+    where: PlayerWhereUniqueInput
+  }
+
+  /**
+   * Player updateMany
+   */
+  export type PlayerUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Players.
+     */
+    data: XOR<PlayerUpdateManyMutationInput, PlayerUncheckedUpdateManyInput>
+    /**
+     * Filter which Players to update
+     */
+    where?: PlayerWhereInput
+  }
+
+  /**
+   * Player upsert
+   */
+  export type PlayerUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Player
+     */
+    select?: PlayerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayerInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Player to update in case it exists.
+     */
+    where: PlayerWhereUniqueInput
+    /**
+     * In case the Player found by the `where` argument doesn't exist, create a new Player with this data.
+     */
+    create: XOR<PlayerCreateInput, PlayerUncheckedCreateInput>
+    /**
+     * In case the Player was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PlayerUpdateInput, PlayerUncheckedUpdateInput>
+  }
+
+  /**
+   * Player delete
+   */
+  export type PlayerDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Player
+     */
+    select?: PlayerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayerInclude<ExtArgs> | null
+    /**
+     * Filter which Player to delete.
+     */
+    where: PlayerWhereUniqueInput
+  }
+
+  /**
+   * Player deleteMany
+   */
+  export type PlayerDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Players to delete
+     */
+    where?: PlayerWhereInput
+  }
+
+  /**
+   * Player.position
+   */
+  export type Player$positionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Position
+     */
+    select?: PositionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PositionInclude<ExtArgs> | null
+    where?: PositionWhereInput
+  }
+
+  /**
+   * Player without action
+   */
+  export type PlayerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Player
+     */
+    select?: PlayerSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlayerInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Position
+   */
+
+  export type AggregatePosition = {
+    _count: PositionCountAggregateOutputType | null
+    _avg: PositionAvgAggregateOutputType | null
+    _sum: PositionSumAggregateOutputType | null
+    _min: PositionMinAggregateOutputType | null
+    _max: PositionMaxAggregateOutputType | null
+  }
+
+  export type PositionAvgAggregateOutputType = {
+    x: number | null
+    y: number | null
+  }
+
+  export type PositionSumAggregateOutputType = {
+    x: number | null
+    y: number | null
+  }
+
+  export type PositionMinAggregateOutputType = {
+    id: string | null
+    x: number | null
+    y: number | null
+    playerId: string | null
+  }
+
+  export type PositionMaxAggregateOutputType = {
+    id: string | null
+    x: number | null
+    y: number | null
+    playerId: string | null
+  }
+
+  export type PositionCountAggregateOutputType = {
+    id: number
+    x: number
+    y: number
+    playerId: number
+    _all: number
+  }
+
+
+  export type PositionAvgAggregateInputType = {
+    x?: true
+    y?: true
+  }
+
+  export type PositionSumAggregateInputType = {
+    x?: true
+    y?: true
+  }
+
+  export type PositionMinAggregateInputType = {
+    id?: true
+    x?: true
+    y?: true
+    playerId?: true
+  }
+
+  export type PositionMaxAggregateInputType = {
+    id?: true
+    x?: true
+    y?: true
+    playerId?: true
+  }
+
+  export type PositionCountAggregateInputType = {
+    id?: true
+    x?: true
+    y?: true
+    playerId?: true
+    _all?: true
+  }
+
+  export type PositionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Position to aggregate.
+     */
+    where?: PositionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Positions to fetch.
+     */
+    orderBy?: PositionOrderByWithRelationInput | PositionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PositionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Positions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Positions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Positions
+    **/
+    _count?: true | PositionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PositionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PositionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PositionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PositionMaxAggregateInputType
+  }
+
+  export type GetPositionAggregateType<T extends PositionAggregateArgs> = {
+        [P in keyof T & keyof AggregatePosition]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePosition[P]>
+      : GetScalarType<T[P], AggregatePosition[P]>
+  }
+
+
+
+
+  export type PositionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PositionWhereInput
+    orderBy?: PositionOrderByWithAggregationInput | PositionOrderByWithAggregationInput[]
+    by: PositionScalarFieldEnum[] | PositionScalarFieldEnum
+    having?: PositionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PositionCountAggregateInputType | true
+    _avg?: PositionAvgAggregateInputType
+    _sum?: PositionSumAggregateInputType
+    _min?: PositionMinAggregateInputType
+    _max?: PositionMaxAggregateInputType
+  }
+
+  export type PositionGroupByOutputType = {
+    id: string
+    x: number
+    y: number
+    playerId: string
+    _count: PositionCountAggregateOutputType | null
+    _avg: PositionAvgAggregateOutputType | null
+    _sum: PositionSumAggregateOutputType | null
+    _min: PositionMinAggregateOutputType | null
+    _max: PositionMaxAggregateOutputType | null
+  }
+
+  type GetPositionGroupByPayload<T extends PositionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PositionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PositionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PositionGroupByOutputType[P]>
+            : GetScalarType<T[P], PositionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PositionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    x?: boolean
+    y?: boolean
+    playerId?: boolean
+    player?: boolean | PlayerDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["position"]>
+
+  export type PositionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    x?: boolean
+    y?: boolean
+    playerId?: boolean
+    player?: boolean | PlayerDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["position"]>
+
+  export type PositionSelectScalar = {
+    id?: boolean
+    x?: boolean
+    y?: boolean
+    playerId?: boolean
+  }
+
+  export type PositionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    player?: boolean | PlayerDefaultArgs<ExtArgs>
+  }
+  export type PositionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    player?: boolean | PlayerDefaultArgs<ExtArgs>
+  }
+
+  export type $PositionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Position"
+    objects: {
+      player: Prisma.$PlayerPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      x: number
+      y: number
+      playerId: string
+    }, ExtArgs["result"]["position"]>
+    composites: {}
+  }
+
+  type PositionGetPayload<S extends boolean | null | undefined | PositionDefaultArgs> = $Result.GetResult<Prisma.$PositionPayload, S>
+
+  type PositionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PositionFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PositionCountAggregateInputType | true
+    }
+
+  export interface PositionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Position'], meta: { name: 'Position' } }
+    /**
+     * Find zero or one Position that matches the filter.
+     * @param {PositionFindUniqueArgs} args - Arguments to find a Position
+     * @example
+     * // Get one Position
+     * const position = await prisma.position.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PositionFindUniqueArgs>(args: SelectSubset<T, PositionFindUniqueArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Position that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PositionFindUniqueOrThrowArgs} args - Arguments to find a Position
+     * @example
+     * // Get one Position
+     * const position = await prisma.position.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PositionFindUniqueOrThrowArgs>(args: SelectSubset<T, PositionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Position that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PositionFindFirstArgs} args - Arguments to find a Position
+     * @example
+     * // Get one Position
+     * const position = await prisma.position.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PositionFindFirstArgs>(args?: SelectSubset<T, PositionFindFirstArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Position that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PositionFindFirstOrThrowArgs} args - Arguments to find a Position
+     * @example
+     * // Get one Position
+     * const position = await prisma.position.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PositionFindFirstOrThrowArgs>(args?: SelectSubset<T, PositionFindFirstOrThrowArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Positions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PositionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Positions
+     * const positions = await prisma.position.findMany()
+     * 
+     * // Get first 10 Positions
+     * const positions = await prisma.position.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const positionWithIdOnly = await prisma.position.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PositionFindManyArgs>(args?: SelectSubset<T, PositionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Position.
+     * @param {PositionCreateArgs} args - Arguments to create a Position.
+     * @example
+     * // Create one Position
+     * const Position = await prisma.position.create({
+     *   data: {
+     *     // ... data to create a Position
+     *   }
+     * })
+     * 
+     */
+    create<T extends PositionCreateArgs>(args: SelectSubset<T, PositionCreateArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Positions.
+     * @param {PositionCreateManyArgs} args - Arguments to create many Positions.
+     * @example
+     * // Create many Positions
+     * const position = await prisma.position.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PositionCreateManyArgs>(args?: SelectSubset<T, PositionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Positions and returns the data saved in the database.
+     * @param {PositionCreateManyAndReturnArgs} args - Arguments to create many Positions.
+     * @example
+     * // Create many Positions
+     * const position = await prisma.position.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Positions and only return the `id`
+     * const positionWithIdOnly = await prisma.position.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PositionCreateManyAndReturnArgs>(args?: SelectSubset<T, PositionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Position.
+     * @param {PositionDeleteArgs} args - Arguments to delete one Position.
+     * @example
+     * // Delete one Position
+     * const Position = await prisma.position.delete({
+     *   where: {
+     *     // ... filter to delete one Position
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PositionDeleteArgs>(args: SelectSubset<T, PositionDeleteArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Position.
+     * @param {PositionUpdateArgs} args - Arguments to update one Position.
+     * @example
+     * // Update one Position
+     * const position = await prisma.position.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PositionUpdateArgs>(args: SelectSubset<T, PositionUpdateArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Positions.
+     * @param {PositionDeleteManyArgs} args - Arguments to filter Positions to delete.
+     * @example
+     * // Delete a few Positions
+     * const { count } = await prisma.position.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PositionDeleteManyArgs>(args?: SelectSubset<T, PositionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Positions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PositionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Positions
+     * const position = await prisma.position.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PositionUpdateManyArgs>(args: SelectSubset<T, PositionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Position.
+     * @param {PositionUpsertArgs} args - Arguments to update or create a Position.
+     * @example
+     * // Update or create a Position
+     * const position = await prisma.position.upsert({
+     *   create: {
+     *     // ... data to create a Position
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Position we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PositionUpsertArgs>(args: SelectSubset<T, PositionUpsertArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Positions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PositionCountArgs} args - Arguments to filter Positions to count.
+     * @example
+     * // Count the number of Positions
+     * const count = await prisma.position.count({
+     *   where: {
+     *     // ... the filter for the Positions we want to count
+     *   }
+     * })
+    **/
+    count<T extends PositionCountArgs>(
+      args?: Subset<T, PositionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PositionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Position.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PositionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PositionAggregateArgs>(args: Subset<T, PositionAggregateArgs>): Prisma.PrismaPromise<GetPositionAggregateType<T>>
+
+    /**
+     * Group by Position.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PositionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PositionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PositionGroupByArgs['orderBy'] }
+        : { orderBy?: PositionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PositionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPositionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Position model
+   */
+  readonly fields: PositionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Position.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PositionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    player<T extends PlayerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PlayerDefaultArgs<ExtArgs>>): Prisma__PlayerClient<$Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Position model
+   */ 
+  interface PositionFieldRefs {
+    readonly id: FieldRef<"Position", 'String'>
+    readonly x: FieldRef<"Position", 'Int'>
+    readonly y: FieldRef<"Position", 'Int'>
+    readonly playerId: FieldRef<"Position", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Position findUnique
+   */
+  export type PositionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Position
+     */
+    select?: PositionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PositionInclude<ExtArgs> | null
+    /**
+     * Filter, which Position to fetch.
+     */
+    where: PositionWhereUniqueInput
+  }
+
+  /**
+   * Position findUniqueOrThrow
+   */
+  export type PositionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Position
+     */
+    select?: PositionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PositionInclude<ExtArgs> | null
+    /**
+     * Filter, which Position to fetch.
+     */
+    where: PositionWhereUniqueInput
+  }
+
+  /**
+   * Position findFirst
+   */
+  export type PositionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Position
+     */
+    select?: PositionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PositionInclude<ExtArgs> | null
+    /**
+     * Filter, which Position to fetch.
+     */
+    where?: PositionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Positions to fetch.
+     */
+    orderBy?: PositionOrderByWithRelationInput | PositionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Positions.
+     */
+    cursor?: PositionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Positions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Positions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Positions.
+     */
+    distinct?: PositionScalarFieldEnum | PositionScalarFieldEnum[]
+  }
+
+  /**
+   * Position findFirstOrThrow
+   */
+  export type PositionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Position
+     */
+    select?: PositionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PositionInclude<ExtArgs> | null
+    /**
+     * Filter, which Position to fetch.
+     */
+    where?: PositionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Positions to fetch.
+     */
+    orderBy?: PositionOrderByWithRelationInput | PositionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Positions.
+     */
+    cursor?: PositionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Positions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Positions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Positions.
+     */
+    distinct?: PositionScalarFieldEnum | PositionScalarFieldEnum[]
+  }
+
+  /**
+   * Position findMany
+   */
+  export type PositionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Position
+     */
+    select?: PositionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PositionInclude<ExtArgs> | null
+    /**
+     * Filter, which Positions to fetch.
+     */
+    where?: PositionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Positions to fetch.
+     */
+    orderBy?: PositionOrderByWithRelationInput | PositionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Positions.
+     */
+    cursor?: PositionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Positions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Positions.
+     */
+    skip?: number
+    distinct?: PositionScalarFieldEnum | PositionScalarFieldEnum[]
+  }
+
+  /**
+   * Position create
+   */
+  export type PositionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Position
+     */
+    select?: PositionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PositionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Position.
+     */
+    data: XOR<PositionCreateInput, PositionUncheckedCreateInput>
+  }
+
+  /**
+   * Position createMany
+   */
+  export type PositionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Positions.
+     */
+    data: PositionCreateManyInput | PositionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Position createManyAndReturn
+   */
+  export type PositionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Position
+     */
+    select?: PositionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Positions.
+     */
+    data: PositionCreateManyInput | PositionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PositionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Position update
+   */
+  export type PositionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Position
+     */
+    select?: PositionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PositionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Position.
+     */
+    data: XOR<PositionUpdateInput, PositionUncheckedUpdateInput>
+    /**
+     * Choose, which Position to update.
+     */
+    where: PositionWhereUniqueInput
+  }
+
+  /**
+   * Position updateMany
+   */
+  export type PositionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Positions.
+     */
+    data: XOR<PositionUpdateManyMutationInput, PositionUncheckedUpdateManyInput>
+    /**
+     * Filter which Positions to update
+     */
+    where?: PositionWhereInput
+  }
+
+  /**
+   * Position upsert
+   */
+  export type PositionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Position
+     */
+    select?: PositionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PositionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Position to update in case it exists.
+     */
+    where: PositionWhereUniqueInput
+    /**
+     * In case the Position found by the `where` argument doesn't exist, create a new Position with this data.
+     */
+    create: XOR<PositionCreateInput, PositionUncheckedCreateInput>
+    /**
+     * In case the Position was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PositionUpdateInput, PositionUncheckedUpdateInput>
+  }
+
+  /**
+   * Position delete
+   */
+  export type PositionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Position
+     */
+    select?: PositionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PositionInclude<ExtArgs> | null
+    /**
+     * Filter which Position to delete.
+     */
+    where: PositionWhereUniqueInput
+  }
+
+  /**
+   * Position deleteMany
+   */
+  export type PositionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Positions to delete
+     */
+    where?: PositionWhereInput
+  }
+
+  /**
+   * Position without action
+   */
+  export type PositionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Position
+     */
+    select?: PositionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PositionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -4058,6 +7209,35 @@ export namespace Prisma {
   };
 
   export type CardScalarFieldEnum = (typeof CardScalarFieldEnum)[keyof typeof CardScalarFieldEnum]
+
+
+  export const GameSessionScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    createdAt: 'createdAt'
+  };
+
+  export type GameSessionScalarFieldEnum = (typeof GameSessionScalarFieldEnum)[keyof typeof GameSessionScalarFieldEnum]
+
+
+  export const PlayerScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    gameId: 'gameId',
+    isReady: 'isReady'
+  };
+
+  export type PlayerScalarFieldEnum = (typeof PlayerScalarFieldEnum)[keyof typeof PlayerScalarFieldEnum]
+
+
+  export const PositionScalarFieldEnum: {
+    id: 'id',
+    x: 'x',
+    y: 'y',
+    playerId: 'playerId'
+  };
+
+  export type PositionScalarFieldEnum = (typeof PositionScalarFieldEnum)[keyof typeof PositionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -4277,6 +7457,7 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
     cards?: CardListRelationFilter
+    Player?: PlayerListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -4284,6 +7465,7 @@ export namespace Prisma {
     email?: SortOrder
     name?: SortOrderInput | SortOrder
     cards?: CardOrderByRelationAggregateInput
+    Player?: PlayerOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -4294,6 +7476,7 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringNullableFilter<"User"> | string | null
     cards?: CardListRelationFilter
+    Player?: PlayerListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -4372,6 +7555,159 @@ export namespace Prisma {
     remembered?: BoolWithAggregatesFilter<"Card"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Card"> | Date | string
     userId?: StringWithAggregatesFilter<"Card"> | string
+  }
+
+  export type GameSessionWhereInput = {
+    AND?: GameSessionWhereInput | GameSessionWhereInput[]
+    OR?: GameSessionWhereInput[]
+    NOT?: GameSessionWhereInput | GameSessionWhereInput[]
+    id?: StringFilter<"GameSession"> | string
+    name?: StringFilter<"GameSession"> | string
+    createdAt?: DateTimeFilter<"GameSession"> | Date | string
+    players?: PlayerListRelationFilter
+  }
+
+  export type GameSessionOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    players?: PlayerOrderByRelationAggregateInput
+  }
+
+  export type GameSessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: GameSessionWhereInput | GameSessionWhereInput[]
+    OR?: GameSessionWhereInput[]
+    NOT?: GameSessionWhereInput | GameSessionWhereInput[]
+    name?: StringFilter<"GameSession"> | string
+    createdAt?: DateTimeFilter<"GameSession"> | Date | string
+    players?: PlayerListRelationFilter
+  }, "id">
+
+  export type GameSessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    _count?: GameSessionCountOrderByAggregateInput
+    _max?: GameSessionMaxOrderByAggregateInput
+    _min?: GameSessionMinOrderByAggregateInput
+  }
+
+  export type GameSessionScalarWhereWithAggregatesInput = {
+    AND?: GameSessionScalarWhereWithAggregatesInput | GameSessionScalarWhereWithAggregatesInput[]
+    OR?: GameSessionScalarWhereWithAggregatesInput[]
+    NOT?: GameSessionScalarWhereWithAggregatesInput | GameSessionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GameSession"> | string
+    name?: StringWithAggregatesFilter<"GameSession"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"GameSession"> | Date | string
+  }
+
+  export type PlayerWhereInput = {
+    AND?: PlayerWhereInput | PlayerWhereInput[]
+    OR?: PlayerWhereInput[]
+    NOT?: PlayerWhereInput | PlayerWhereInput[]
+    id?: StringFilter<"Player"> | string
+    userId?: StringFilter<"Player"> | string
+    gameId?: StringFilter<"Player"> | string
+    isReady?: BoolFilter<"Player"> | boolean
+    user?: XOR<UserRelationFilter, UserWhereInput>
+    position?: XOR<PositionNullableRelationFilter, PositionWhereInput> | null
+    game?: XOR<GameSessionRelationFilter, GameSessionWhereInput>
+  }
+
+  export type PlayerOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    gameId?: SortOrder
+    isReady?: SortOrder
+    user?: UserOrderByWithRelationInput
+    position?: PositionOrderByWithRelationInput
+    game?: GameSessionOrderByWithRelationInput
+  }
+
+  export type PlayerWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PlayerWhereInput | PlayerWhereInput[]
+    OR?: PlayerWhereInput[]
+    NOT?: PlayerWhereInput | PlayerWhereInput[]
+    userId?: StringFilter<"Player"> | string
+    gameId?: StringFilter<"Player"> | string
+    isReady?: BoolFilter<"Player"> | boolean
+    user?: XOR<UserRelationFilter, UserWhereInput>
+    position?: XOR<PositionNullableRelationFilter, PositionWhereInput> | null
+    game?: XOR<GameSessionRelationFilter, GameSessionWhereInput>
+  }, "id">
+
+  export type PlayerOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    gameId?: SortOrder
+    isReady?: SortOrder
+    _count?: PlayerCountOrderByAggregateInput
+    _max?: PlayerMaxOrderByAggregateInput
+    _min?: PlayerMinOrderByAggregateInput
+  }
+
+  export type PlayerScalarWhereWithAggregatesInput = {
+    AND?: PlayerScalarWhereWithAggregatesInput | PlayerScalarWhereWithAggregatesInput[]
+    OR?: PlayerScalarWhereWithAggregatesInput[]
+    NOT?: PlayerScalarWhereWithAggregatesInput | PlayerScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Player"> | string
+    userId?: StringWithAggregatesFilter<"Player"> | string
+    gameId?: StringWithAggregatesFilter<"Player"> | string
+    isReady?: BoolWithAggregatesFilter<"Player"> | boolean
+  }
+
+  export type PositionWhereInput = {
+    AND?: PositionWhereInput | PositionWhereInput[]
+    OR?: PositionWhereInput[]
+    NOT?: PositionWhereInput | PositionWhereInput[]
+    id?: StringFilter<"Position"> | string
+    x?: IntFilter<"Position"> | number
+    y?: IntFilter<"Position"> | number
+    playerId?: StringFilter<"Position"> | string
+    player?: XOR<PlayerRelationFilter, PlayerWhereInput>
+  }
+
+  export type PositionOrderByWithRelationInput = {
+    id?: SortOrder
+    x?: SortOrder
+    y?: SortOrder
+    playerId?: SortOrder
+    player?: PlayerOrderByWithRelationInput
+  }
+
+  export type PositionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    playerId?: string
+    AND?: PositionWhereInput | PositionWhereInput[]
+    OR?: PositionWhereInput[]
+    NOT?: PositionWhereInput | PositionWhereInput[]
+    x?: IntFilter<"Position"> | number
+    y?: IntFilter<"Position"> | number
+    player?: XOR<PlayerRelationFilter, PlayerWhereInput>
+  }, "id" | "playerId">
+
+  export type PositionOrderByWithAggregationInput = {
+    id?: SortOrder
+    x?: SortOrder
+    y?: SortOrder
+    playerId?: SortOrder
+    _count?: PositionCountOrderByAggregateInput
+    _avg?: PositionAvgOrderByAggregateInput
+    _max?: PositionMaxOrderByAggregateInput
+    _min?: PositionMinOrderByAggregateInput
+    _sum?: PositionSumOrderByAggregateInput
+  }
+
+  export type PositionScalarWhereWithAggregatesInput = {
+    AND?: PositionScalarWhereWithAggregatesInput | PositionScalarWhereWithAggregatesInput[]
+    OR?: PositionScalarWhereWithAggregatesInput[]
+    NOT?: PositionScalarWhereWithAggregatesInput | PositionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Position"> | string
+    x?: IntWithAggregatesFilter<"Position"> | number
+    y?: IntWithAggregatesFilter<"Position"> | number
+    playerId?: StringWithAggregatesFilter<"Position"> | string
   }
 
   export type PokemonCreateInput = {
@@ -4516,6 +7852,7 @@ export namespace Prisma {
     email: string
     name?: string | null
     cards?: CardCreateNestedManyWithoutUserInput
+    Player?: PlayerCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -4523,6 +7860,7 @@ export namespace Prisma {
     email: string
     name?: string | null
     cards?: CardUncheckedCreateNestedManyWithoutUserInput
+    Player?: PlayerUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -4530,6 +7868,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     cards?: CardUpdateManyWithoutUserNestedInput
+    Player?: PlayerUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -4537,6 +7876,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     cards?: CardUncheckedUpdateManyWithoutUserNestedInput
+    Player?: PlayerUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -4617,6 +7957,151 @@ export namespace Prisma {
     remembered?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GameSessionCreateInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    players?: PlayerCreateNestedManyWithoutGameInput
+  }
+
+  export type GameSessionUncheckedCreateInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+    players?: PlayerUncheckedCreateNestedManyWithoutGameInput
+  }
+
+  export type GameSessionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    players?: PlayerUpdateManyWithoutGameNestedInput
+  }
+
+  export type GameSessionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    players?: PlayerUncheckedUpdateManyWithoutGameNestedInput
+  }
+
+  export type GameSessionCreateManyInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+  }
+
+  export type GameSessionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GameSessionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlayerCreateInput = {
+    id?: string
+    isReady?: boolean
+    user: UserCreateNestedOneWithoutPlayerInput
+    position?: PositionCreateNestedOneWithoutPlayerInput
+    game: GameSessionCreateNestedOneWithoutPlayersInput
+  }
+
+  export type PlayerUncheckedCreateInput = {
+    id?: string
+    userId: string
+    gameId: string
+    isReady?: boolean
+    position?: PositionUncheckedCreateNestedOneWithoutPlayerInput
+  }
+
+  export type PlayerUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isReady?: BoolFieldUpdateOperationsInput | boolean
+    user?: UserUpdateOneRequiredWithoutPlayerNestedInput
+    position?: PositionUpdateOneWithoutPlayerNestedInput
+    game?: GameSessionUpdateOneRequiredWithoutPlayersNestedInput
+  }
+
+  export type PlayerUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    gameId?: StringFieldUpdateOperationsInput | string
+    isReady?: BoolFieldUpdateOperationsInput | boolean
+    position?: PositionUncheckedUpdateOneWithoutPlayerNestedInput
+  }
+
+  export type PlayerCreateManyInput = {
+    id?: string
+    userId: string
+    gameId: string
+    isReady?: boolean
+  }
+
+  export type PlayerUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isReady?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PlayerUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    gameId?: StringFieldUpdateOperationsInput | string
+    isReady?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PositionCreateInput = {
+    id?: string
+    x: number
+    y: number
+    player: PlayerCreateNestedOneWithoutPositionInput
+  }
+
+  export type PositionUncheckedCreateInput = {
+    id?: string
+    x: number
+    y: number
+    playerId: string
+  }
+
+  export type PositionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    x?: IntFieldUpdateOperationsInput | number
+    y?: IntFieldUpdateOperationsInput | number
+    player?: PlayerUpdateOneRequiredWithoutPositionNestedInput
+  }
+
+  export type PositionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    x?: IntFieldUpdateOperationsInput | number
+    y?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PositionCreateManyInput = {
+    id?: string
+    x: number
+    y: number
+    playerId: string
+  }
+
+  export type PositionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    x?: IntFieldUpdateOperationsInput | number
+    y?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type PositionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    x?: IntFieldUpdateOperationsInput | number
+    y?: IntFieldUpdateOperationsInput | number
+    playerId?: StringFieldUpdateOperationsInput | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -4828,7 +8313,17 @@ export namespace Prisma {
     none?: CardWhereInput
   }
 
+  export type PlayerListRelationFilter = {
+    every?: PlayerWhereInput
+    some?: PlayerWhereInput
+    none?: PlayerWhereInput
+  }
+
   export type CardOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PlayerOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -4907,6 +8402,91 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type GameSessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type GameSessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type GameSessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PositionNullableRelationFilter = {
+    is?: PositionWhereInput | null
+    isNot?: PositionWhereInput | null
+  }
+
+  export type GameSessionRelationFilter = {
+    is?: GameSessionWhereInput
+    isNot?: GameSessionWhereInput
+  }
+
+  export type PlayerCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    gameId?: SortOrder
+    isReady?: SortOrder
+  }
+
+  export type PlayerMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    gameId?: SortOrder
+    isReady?: SortOrder
+  }
+
+  export type PlayerMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    gameId?: SortOrder
+    isReady?: SortOrder
+  }
+
+  export type PlayerRelationFilter = {
+    is?: PlayerWhereInput
+    isNot?: PlayerWhereInput
+  }
+
+  export type PositionCountOrderByAggregateInput = {
+    id?: SortOrder
+    x?: SortOrder
+    y?: SortOrder
+    playerId?: SortOrder
+  }
+
+  export type PositionAvgOrderByAggregateInput = {
+    x?: SortOrder
+    y?: SortOrder
+  }
+
+  export type PositionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    x?: SortOrder
+    y?: SortOrder
+    playerId?: SortOrder
+  }
+
+  export type PositionMinOrderByAggregateInput = {
+    id?: SortOrder
+    x?: SortOrder
+    y?: SortOrder
+    playerId?: SortOrder
+  }
+
+  export type PositionSumOrderByAggregateInput = {
+    x?: SortOrder
+    y?: SortOrder
+  }
+
   export type PokemonCreateabilitiesInput = {
     set: string[]
   }
@@ -4952,11 +8532,25 @@ export namespace Prisma {
     connect?: CardWhereUniqueInput | CardWhereUniqueInput[]
   }
 
+  export type PlayerCreateNestedManyWithoutUserInput = {
+    create?: XOR<PlayerCreateWithoutUserInput, PlayerUncheckedCreateWithoutUserInput> | PlayerCreateWithoutUserInput[] | PlayerUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlayerCreateOrConnectWithoutUserInput | PlayerCreateOrConnectWithoutUserInput[]
+    createMany?: PlayerCreateManyUserInputEnvelope
+    connect?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+  }
+
   export type CardUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<CardCreateWithoutUserInput, CardUncheckedCreateWithoutUserInput> | CardCreateWithoutUserInput[] | CardUncheckedCreateWithoutUserInput[]
     connectOrCreate?: CardCreateOrConnectWithoutUserInput | CardCreateOrConnectWithoutUserInput[]
     createMany?: CardCreateManyUserInputEnvelope
     connect?: CardWhereUniqueInput | CardWhereUniqueInput[]
+  }
+
+  export type PlayerUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PlayerCreateWithoutUserInput, PlayerUncheckedCreateWithoutUserInput> | PlayerCreateWithoutUserInput[] | PlayerUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlayerCreateOrConnectWithoutUserInput | PlayerCreateOrConnectWithoutUserInput[]
+    createMany?: PlayerCreateManyUserInputEnvelope
+    connect?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
   }
 
   export type CardUpdateManyWithoutUserNestedInput = {
@@ -4973,6 +8567,20 @@ export namespace Prisma {
     deleteMany?: CardScalarWhereInput | CardScalarWhereInput[]
   }
 
+  export type PlayerUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PlayerCreateWithoutUserInput, PlayerUncheckedCreateWithoutUserInput> | PlayerCreateWithoutUserInput[] | PlayerUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlayerCreateOrConnectWithoutUserInput | PlayerCreateOrConnectWithoutUserInput[]
+    upsert?: PlayerUpsertWithWhereUniqueWithoutUserInput | PlayerUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PlayerCreateManyUserInputEnvelope
+    set?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    disconnect?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    delete?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    connect?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    update?: PlayerUpdateWithWhereUniqueWithoutUserInput | PlayerUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PlayerUpdateManyWithWhereWithoutUserInput | PlayerUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PlayerScalarWhereInput | PlayerScalarWhereInput[]
+  }
+
   export type CardUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<CardCreateWithoutUserInput, CardUncheckedCreateWithoutUserInput> | CardCreateWithoutUserInput[] | CardUncheckedCreateWithoutUserInput[]
     connectOrCreate?: CardCreateOrConnectWithoutUserInput | CardCreateOrConnectWithoutUserInput[]
@@ -4985,6 +8593,20 @@ export namespace Prisma {
     update?: CardUpdateWithWhereUniqueWithoutUserInput | CardUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: CardUpdateManyWithWhereWithoutUserInput | CardUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: CardScalarWhereInput | CardScalarWhereInput[]
+  }
+
+  export type PlayerUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PlayerCreateWithoutUserInput, PlayerUncheckedCreateWithoutUserInput> | PlayerCreateWithoutUserInput[] | PlayerUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PlayerCreateOrConnectWithoutUserInput | PlayerCreateOrConnectWithoutUserInput[]
+    upsert?: PlayerUpsertWithWhereUniqueWithoutUserInput | PlayerUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PlayerCreateManyUserInputEnvelope
+    set?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    disconnect?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    delete?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    connect?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    update?: PlayerUpdateWithWhereUniqueWithoutUserInput | PlayerUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PlayerUpdateManyWithWhereWithoutUserInput | PlayerUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PlayerScalarWhereInput | PlayerScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutCardsInput = {
@@ -5003,6 +8625,122 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutCardsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCardsInput, UserUpdateWithoutCardsInput>, UserUncheckedUpdateWithoutCardsInput>
+  }
+
+  export type PlayerCreateNestedManyWithoutGameInput = {
+    create?: XOR<PlayerCreateWithoutGameInput, PlayerUncheckedCreateWithoutGameInput> | PlayerCreateWithoutGameInput[] | PlayerUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: PlayerCreateOrConnectWithoutGameInput | PlayerCreateOrConnectWithoutGameInput[]
+    createMany?: PlayerCreateManyGameInputEnvelope
+    connect?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+  }
+
+  export type PlayerUncheckedCreateNestedManyWithoutGameInput = {
+    create?: XOR<PlayerCreateWithoutGameInput, PlayerUncheckedCreateWithoutGameInput> | PlayerCreateWithoutGameInput[] | PlayerUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: PlayerCreateOrConnectWithoutGameInput | PlayerCreateOrConnectWithoutGameInput[]
+    createMany?: PlayerCreateManyGameInputEnvelope
+    connect?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+  }
+
+  export type PlayerUpdateManyWithoutGameNestedInput = {
+    create?: XOR<PlayerCreateWithoutGameInput, PlayerUncheckedCreateWithoutGameInput> | PlayerCreateWithoutGameInput[] | PlayerUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: PlayerCreateOrConnectWithoutGameInput | PlayerCreateOrConnectWithoutGameInput[]
+    upsert?: PlayerUpsertWithWhereUniqueWithoutGameInput | PlayerUpsertWithWhereUniqueWithoutGameInput[]
+    createMany?: PlayerCreateManyGameInputEnvelope
+    set?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    disconnect?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    delete?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    connect?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    update?: PlayerUpdateWithWhereUniqueWithoutGameInput | PlayerUpdateWithWhereUniqueWithoutGameInput[]
+    updateMany?: PlayerUpdateManyWithWhereWithoutGameInput | PlayerUpdateManyWithWhereWithoutGameInput[]
+    deleteMany?: PlayerScalarWhereInput | PlayerScalarWhereInput[]
+  }
+
+  export type PlayerUncheckedUpdateManyWithoutGameNestedInput = {
+    create?: XOR<PlayerCreateWithoutGameInput, PlayerUncheckedCreateWithoutGameInput> | PlayerCreateWithoutGameInput[] | PlayerUncheckedCreateWithoutGameInput[]
+    connectOrCreate?: PlayerCreateOrConnectWithoutGameInput | PlayerCreateOrConnectWithoutGameInput[]
+    upsert?: PlayerUpsertWithWhereUniqueWithoutGameInput | PlayerUpsertWithWhereUniqueWithoutGameInput[]
+    createMany?: PlayerCreateManyGameInputEnvelope
+    set?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    disconnect?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    delete?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    connect?: PlayerWhereUniqueInput | PlayerWhereUniqueInput[]
+    update?: PlayerUpdateWithWhereUniqueWithoutGameInput | PlayerUpdateWithWhereUniqueWithoutGameInput[]
+    updateMany?: PlayerUpdateManyWithWhereWithoutGameInput | PlayerUpdateManyWithWhereWithoutGameInput[]
+    deleteMany?: PlayerScalarWhereInput | PlayerScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutPlayerInput = {
+    create?: XOR<UserCreateWithoutPlayerInput, UserUncheckedCreateWithoutPlayerInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPlayerInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type PositionCreateNestedOneWithoutPlayerInput = {
+    create?: XOR<PositionCreateWithoutPlayerInput, PositionUncheckedCreateWithoutPlayerInput>
+    connectOrCreate?: PositionCreateOrConnectWithoutPlayerInput
+    connect?: PositionWhereUniqueInput
+  }
+
+  export type GameSessionCreateNestedOneWithoutPlayersInput = {
+    create?: XOR<GameSessionCreateWithoutPlayersInput, GameSessionUncheckedCreateWithoutPlayersInput>
+    connectOrCreate?: GameSessionCreateOrConnectWithoutPlayersInput
+    connect?: GameSessionWhereUniqueInput
+  }
+
+  export type PositionUncheckedCreateNestedOneWithoutPlayerInput = {
+    create?: XOR<PositionCreateWithoutPlayerInput, PositionUncheckedCreateWithoutPlayerInput>
+    connectOrCreate?: PositionCreateOrConnectWithoutPlayerInput
+    connect?: PositionWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutPlayerNestedInput = {
+    create?: XOR<UserCreateWithoutPlayerInput, UserUncheckedCreateWithoutPlayerInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPlayerInput
+    upsert?: UserUpsertWithoutPlayerInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPlayerInput, UserUpdateWithoutPlayerInput>, UserUncheckedUpdateWithoutPlayerInput>
+  }
+
+  export type PositionUpdateOneWithoutPlayerNestedInput = {
+    create?: XOR<PositionCreateWithoutPlayerInput, PositionUncheckedCreateWithoutPlayerInput>
+    connectOrCreate?: PositionCreateOrConnectWithoutPlayerInput
+    upsert?: PositionUpsertWithoutPlayerInput
+    disconnect?: PositionWhereInput | boolean
+    delete?: PositionWhereInput | boolean
+    connect?: PositionWhereUniqueInput
+    update?: XOR<XOR<PositionUpdateToOneWithWhereWithoutPlayerInput, PositionUpdateWithoutPlayerInput>, PositionUncheckedUpdateWithoutPlayerInput>
+  }
+
+  export type GameSessionUpdateOneRequiredWithoutPlayersNestedInput = {
+    create?: XOR<GameSessionCreateWithoutPlayersInput, GameSessionUncheckedCreateWithoutPlayersInput>
+    connectOrCreate?: GameSessionCreateOrConnectWithoutPlayersInput
+    upsert?: GameSessionUpsertWithoutPlayersInput
+    connect?: GameSessionWhereUniqueInput
+    update?: XOR<XOR<GameSessionUpdateToOneWithWhereWithoutPlayersInput, GameSessionUpdateWithoutPlayersInput>, GameSessionUncheckedUpdateWithoutPlayersInput>
+  }
+
+  export type PositionUncheckedUpdateOneWithoutPlayerNestedInput = {
+    create?: XOR<PositionCreateWithoutPlayerInput, PositionUncheckedCreateWithoutPlayerInput>
+    connectOrCreate?: PositionCreateOrConnectWithoutPlayerInput
+    upsert?: PositionUpsertWithoutPlayerInput
+    disconnect?: PositionWhereInput | boolean
+    delete?: PositionWhereInput | boolean
+    connect?: PositionWhereUniqueInput
+    update?: XOR<XOR<PositionUpdateToOneWithWhereWithoutPlayerInput, PositionUpdateWithoutPlayerInput>, PositionUncheckedUpdateWithoutPlayerInput>
+  }
+
+  export type PlayerCreateNestedOneWithoutPositionInput = {
+    create?: XOR<PlayerCreateWithoutPositionInput, PlayerUncheckedCreateWithoutPositionInput>
+    connectOrCreate?: PlayerCreateOrConnectWithoutPositionInput
+    connect?: PlayerWhereUniqueInput
+  }
+
+  export type PlayerUpdateOneRequiredWithoutPositionNestedInput = {
+    create?: XOR<PlayerCreateWithoutPositionInput, PlayerUncheckedCreateWithoutPositionInput>
+    connectOrCreate?: PlayerCreateOrConnectWithoutPositionInput
+    upsert?: PlayerUpsertWithoutPositionInput
+    connect?: PlayerWhereUniqueInput
+    update?: XOR<XOR<PlayerUpdateToOneWithWhereWithoutPositionInput, PlayerUpdateWithoutPositionInput>, PlayerUncheckedUpdateWithoutPositionInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -5180,6 +8918,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type PlayerCreateWithoutUserInput = {
+    id?: string
+    isReady?: boolean
+    position?: PositionCreateNestedOneWithoutPlayerInput
+    game: GameSessionCreateNestedOneWithoutPlayersInput
+  }
+
+  export type PlayerUncheckedCreateWithoutUserInput = {
+    id?: string
+    gameId: string
+    isReady?: boolean
+    position?: PositionUncheckedCreateNestedOneWithoutPlayerInput
+  }
+
+  export type PlayerCreateOrConnectWithoutUserInput = {
+    where: PlayerWhereUniqueInput
+    create: XOR<PlayerCreateWithoutUserInput, PlayerUncheckedCreateWithoutUserInput>
+  }
+
+  export type PlayerCreateManyUserInputEnvelope = {
+    data: PlayerCreateManyUserInput | PlayerCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CardUpsertWithWhereUniqueWithoutUserInput = {
     where: CardWhereUniqueInput
     update: XOR<CardUpdateWithoutUserInput, CardUncheckedUpdateWithoutUserInput>
@@ -5208,16 +8970,44 @@ export namespace Prisma {
     userId?: StringFilter<"Card"> | string
   }
 
+  export type PlayerUpsertWithWhereUniqueWithoutUserInput = {
+    where: PlayerWhereUniqueInput
+    update: XOR<PlayerUpdateWithoutUserInput, PlayerUncheckedUpdateWithoutUserInput>
+    create: XOR<PlayerCreateWithoutUserInput, PlayerUncheckedCreateWithoutUserInput>
+  }
+
+  export type PlayerUpdateWithWhereUniqueWithoutUserInput = {
+    where: PlayerWhereUniqueInput
+    data: XOR<PlayerUpdateWithoutUserInput, PlayerUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PlayerUpdateManyWithWhereWithoutUserInput = {
+    where: PlayerScalarWhereInput
+    data: XOR<PlayerUpdateManyMutationInput, PlayerUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PlayerScalarWhereInput = {
+    AND?: PlayerScalarWhereInput | PlayerScalarWhereInput[]
+    OR?: PlayerScalarWhereInput[]
+    NOT?: PlayerScalarWhereInput | PlayerScalarWhereInput[]
+    id?: StringFilter<"Player"> | string
+    userId?: StringFilter<"Player"> | string
+    gameId?: StringFilter<"Player"> | string
+    isReady?: BoolFilter<"Player"> | boolean
+  }
+
   export type UserCreateWithoutCardsInput = {
     id?: string
     email: string
     name?: string | null
+    Player?: PlayerCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCardsInput = {
     id?: string
     email: string
     name?: string | null
+    Player?: PlayerUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCardsInput = {
@@ -5240,12 +9030,222 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    Player?: PlayerUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCardsInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    Player?: PlayerUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type PlayerCreateWithoutGameInput = {
+    id?: string
+    isReady?: boolean
+    user: UserCreateNestedOneWithoutPlayerInput
+    position?: PositionCreateNestedOneWithoutPlayerInput
+  }
+
+  export type PlayerUncheckedCreateWithoutGameInput = {
+    id?: string
+    userId: string
+    isReady?: boolean
+    position?: PositionUncheckedCreateNestedOneWithoutPlayerInput
+  }
+
+  export type PlayerCreateOrConnectWithoutGameInput = {
+    where: PlayerWhereUniqueInput
+    create: XOR<PlayerCreateWithoutGameInput, PlayerUncheckedCreateWithoutGameInput>
+  }
+
+  export type PlayerCreateManyGameInputEnvelope = {
+    data: PlayerCreateManyGameInput | PlayerCreateManyGameInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PlayerUpsertWithWhereUniqueWithoutGameInput = {
+    where: PlayerWhereUniqueInput
+    update: XOR<PlayerUpdateWithoutGameInput, PlayerUncheckedUpdateWithoutGameInput>
+    create: XOR<PlayerCreateWithoutGameInput, PlayerUncheckedCreateWithoutGameInput>
+  }
+
+  export type PlayerUpdateWithWhereUniqueWithoutGameInput = {
+    where: PlayerWhereUniqueInput
+    data: XOR<PlayerUpdateWithoutGameInput, PlayerUncheckedUpdateWithoutGameInput>
+  }
+
+  export type PlayerUpdateManyWithWhereWithoutGameInput = {
+    where: PlayerScalarWhereInput
+    data: XOR<PlayerUpdateManyMutationInput, PlayerUncheckedUpdateManyWithoutGameInput>
+  }
+
+  export type UserCreateWithoutPlayerInput = {
+    id?: string
+    email: string
+    name?: string | null
+    cards?: CardCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutPlayerInput = {
+    id?: string
+    email: string
+    name?: string | null
+    cards?: CardUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPlayerInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPlayerInput, UserUncheckedCreateWithoutPlayerInput>
+  }
+
+  export type PositionCreateWithoutPlayerInput = {
+    id?: string
+    x: number
+    y: number
+  }
+
+  export type PositionUncheckedCreateWithoutPlayerInput = {
+    id?: string
+    x: number
+    y: number
+  }
+
+  export type PositionCreateOrConnectWithoutPlayerInput = {
+    where: PositionWhereUniqueInput
+    create: XOR<PositionCreateWithoutPlayerInput, PositionUncheckedCreateWithoutPlayerInput>
+  }
+
+  export type GameSessionCreateWithoutPlayersInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+  }
+
+  export type GameSessionUncheckedCreateWithoutPlayersInput = {
+    id?: string
+    name: string
+    createdAt?: Date | string
+  }
+
+  export type GameSessionCreateOrConnectWithoutPlayersInput = {
+    where: GameSessionWhereUniqueInput
+    create: XOR<GameSessionCreateWithoutPlayersInput, GameSessionUncheckedCreateWithoutPlayersInput>
+  }
+
+  export type UserUpsertWithoutPlayerInput = {
+    update: XOR<UserUpdateWithoutPlayerInput, UserUncheckedUpdateWithoutPlayerInput>
+    create: XOR<UserCreateWithoutPlayerInput, UserUncheckedCreateWithoutPlayerInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPlayerInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPlayerInput, UserUncheckedUpdateWithoutPlayerInput>
+  }
+
+  export type UserUpdateWithoutPlayerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    cards?: CardUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPlayerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    cards?: CardUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type PositionUpsertWithoutPlayerInput = {
+    update: XOR<PositionUpdateWithoutPlayerInput, PositionUncheckedUpdateWithoutPlayerInput>
+    create: XOR<PositionCreateWithoutPlayerInput, PositionUncheckedCreateWithoutPlayerInput>
+    where?: PositionWhereInput
+  }
+
+  export type PositionUpdateToOneWithWhereWithoutPlayerInput = {
+    where?: PositionWhereInput
+    data: XOR<PositionUpdateWithoutPlayerInput, PositionUncheckedUpdateWithoutPlayerInput>
+  }
+
+  export type PositionUpdateWithoutPlayerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    x?: IntFieldUpdateOperationsInput | number
+    y?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type PositionUncheckedUpdateWithoutPlayerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    x?: IntFieldUpdateOperationsInput | number
+    y?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type GameSessionUpsertWithoutPlayersInput = {
+    update: XOR<GameSessionUpdateWithoutPlayersInput, GameSessionUncheckedUpdateWithoutPlayersInput>
+    create: XOR<GameSessionCreateWithoutPlayersInput, GameSessionUncheckedCreateWithoutPlayersInput>
+    where?: GameSessionWhereInput
+  }
+
+  export type GameSessionUpdateToOneWithWhereWithoutPlayersInput = {
+    where?: GameSessionWhereInput
+    data: XOR<GameSessionUpdateWithoutPlayersInput, GameSessionUncheckedUpdateWithoutPlayersInput>
+  }
+
+  export type GameSessionUpdateWithoutPlayersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GameSessionUncheckedUpdateWithoutPlayersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlayerCreateWithoutPositionInput = {
+    id?: string
+    isReady?: boolean
+    user: UserCreateNestedOneWithoutPlayerInput
+    game: GameSessionCreateNestedOneWithoutPlayersInput
+  }
+
+  export type PlayerUncheckedCreateWithoutPositionInput = {
+    id?: string
+    userId: string
+    gameId: string
+    isReady?: boolean
+  }
+
+  export type PlayerCreateOrConnectWithoutPositionInput = {
+    where: PlayerWhereUniqueInput
+    create: XOR<PlayerCreateWithoutPositionInput, PlayerUncheckedCreateWithoutPositionInput>
+  }
+
+  export type PlayerUpsertWithoutPositionInput = {
+    update: XOR<PlayerUpdateWithoutPositionInput, PlayerUncheckedUpdateWithoutPositionInput>
+    create: XOR<PlayerCreateWithoutPositionInput, PlayerUncheckedCreateWithoutPositionInput>
+    where?: PlayerWhereInput
+  }
+
+  export type PlayerUpdateToOneWithWhereWithoutPositionInput = {
+    where?: PlayerWhereInput
+    data: XOR<PlayerUpdateWithoutPositionInput, PlayerUncheckedUpdateWithoutPositionInput>
+  }
+
+  export type PlayerUpdateWithoutPositionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isReady?: BoolFieldUpdateOperationsInput | boolean
+    user?: UserUpdateOneRequiredWithoutPlayerNestedInput
+    game?: GameSessionUpdateOneRequiredWithoutPlayersNestedInput
+  }
+
+  export type PlayerUncheckedUpdateWithoutPositionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    gameId?: StringFieldUpdateOperationsInput | string
+    isReady?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CardCreateManyUserInput = {
@@ -5254,6 +9254,12 @@ export namespace Prisma {
     translation: string
     remembered?: boolean
     createdAt?: Date | string
+  }
+
+  export type PlayerCreateManyUserInput = {
+    id?: string
+    gameId: string
+    isReady?: boolean
   }
 
   export type CardUpdateWithoutUserInput = {
@@ -5280,6 +9286,52 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PlayerUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isReady?: BoolFieldUpdateOperationsInput | boolean
+    position?: PositionUpdateOneWithoutPlayerNestedInput
+    game?: GameSessionUpdateOneRequiredWithoutPlayersNestedInput
+  }
+
+  export type PlayerUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gameId?: StringFieldUpdateOperationsInput | string
+    isReady?: BoolFieldUpdateOperationsInput | boolean
+    position?: PositionUncheckedUpdateOneWithoutPlayerNestedInput
+  }
+
+  export type PlayerUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    gameId?: StringFieldUpdateOperationsInput | string
+    isReady?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type PlayerCreateManyGameInput = {
+    id?: string
+    userId: string
+    isReady?: boolean
+  }
+
+  export type PlayerUpdateWithoutGameInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    isReady?: BoolFieldUpdateOperationsInput | boolean
+    user?: UserUpdateOneRequiredWithoutPlayerNestedInput
+    position?: PositionUpdateOneWithoutPlayerNestedInput
+  }
+
+  export type PlayerUncheckedUpdateWithoutGameInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    isReady?: BoolFieldUpdateOperationsInput | boolean
+    position?: PositionUncheckedUpdateOneWithoutPlayerNestedInput
+  }
+
+  export type PlayerUncheckedUpdateManyWithoutGameInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    isReady?: BoolFieldUpdateOperationsInput | boolean
+  }
+
 
 
   /**
@@ -5289,6 +9341,10 @@ export namespace Prisma {
      * @deprecated Use UserCountOutputTypeDefaultArgs instead
      */
     export type UserCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = UserCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use GameSessionCountOutputTypeDefaultArgs instead
+     */
+    export type GameSessionCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = GameSessionCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use PokemonDefaultArgs instead
      */
@@ -5301,6 +9357,18 @@ export namespace Prisma {
      * @deprecated Use CardDefaultArgs instead
      */
     export type CardArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CardDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use GameSessionDefaultArgs instead
+     */
+    export type GameSessionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = GameSessionDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PlayerDefaultArgs instead
+     */
+    export type PlayerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PlayerDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PositionDefaultArgs instead
+     */
+    export type PositionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PositionDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

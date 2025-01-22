@@ -157,6 +157,26 @@ exports.Prisma.CardScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.GameSessionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PlayerScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  gameId: 'gameId',
+  isReady: 'isReady'
+};
+
+exports.Prisma.PositionScalarFieldEnum = {
+  id: 'id',
+  x: 'x',
+  y: 'y',
+  playerId: 'playerId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -176,7 +196,10 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   Pokemon: 'Pokemon',
   User: 'User',
-  Card: 'Card'
+  Card: 'Card',
+  GameSession: 'GameSession',
+  Player: 'Player',
+  Position: 'Position'
 };
 
 /**

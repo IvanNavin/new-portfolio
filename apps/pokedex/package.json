@@ -28,7 +28,6 @@
     "sass": "^1.79.4"
   },
   "devDependencies": {
-    "@repo/eslint-config": "*",
     "@total-typescript/ts-reset": "0.5.1",
     "@types/node": "^20",
     "@types/react": "^18",

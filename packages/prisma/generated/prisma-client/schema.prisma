@@ -31,10 +31,11 @@ model Pokemon {
 }
 
 model User {
-  id    String  @id @default(cuid())
-  email String  @unique
-  name  String?
-  cards Card[]
+  id     String   @id @default(cuid())
+  email  String   @unique
+  name   String?
+  cards  Card[]
+  Player Player[]
 
   @@map("language_user")
 }
@@ -49,4 +50,35 @@ model Card {
   userId      String
 
   @@map("language_card")
+}
+
+model GameSession {
+  id        String   @id @default(cuid())
+  name      String
+  players   Player[]
+  createdAt DateTime @default(now())
+
+  @@map("game_session")
+}
+
+model Player {
+  id       String      @id @default(cuid())
+  userId   String
+  user     User        @relation(fields: [userId], references: [id])
+  position Position?
+  gameId   String
+  game     GameSession @relation(fields: [gameId], references: [id])
+  isReady  Boolean     @default(false)
+
+  @@map("game_player")
+}
+
+model Position {
+  id       String @id @default(cuid())
+  x        Int
+  y        Int
+  playerId String @unique
+  player   Player @relation(fields: [playerId], references: [id])
+
+  @@map("game_position")
 }

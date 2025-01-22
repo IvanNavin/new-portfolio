@@ -24,14 +24,6 @@
     "@prisma/client": "^5.22.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.18.1",
-    "@typescript-eslint/parser": "^8.18.1",
-    "eslint": "8.57.1",
-    "eslint-config-next": "^15.1.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "eslint-plugin-tailwindcss": "^3.17.5",
-    "eslint-plugin-unused-imports": "^4.1.4",
     "husky": "^8.0.3",
     "lint-staged": "^12.5.0",
     "prettier": "^3.2.5",
@@ -39,14 +31,14 @@
     "turbo": "^2.1.1"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "turbo run lint --filter='apps/**' -- --fix",
-      "turbo run lint --filter='packages/**' -- --fix",
-      "turbo run lint --filter='apps/**'",
-      "turbo run lint --filter='packages/**'",
+    "apps/**/src/**/*.{js,jsx,ts,tsx,json}": [
+      "eslint --fix --ext .js,.jsx,.ts,.tsx",
+      "eslint --ext .js,.jsx,.ts,.tsx --quiet",
       "prettier --write"
     ],
-    "*.json": [
+    "packages/**/src/**/*.{js,jsx,ts,tsx,json}": [
+      "eslint --fix --ext .js,.jsx,.ts,.tsx",
+      "eslint --ext .js,.jsx,.ts,.tsx --quiet",
       "prettier --write"
     ]
   }
