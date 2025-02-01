@@ -26,8 +26,7 @@
     "next": "14.2.5",
     "prisma": "^5.20.0",
     "dayjs": "^1.11.13",
-    "node-fetch": "^3.3.2",
-    "prisma": "^5.20.0"
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@total-typescript/ts-reset": "0.5.1",
