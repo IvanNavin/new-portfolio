@@ -20,11 +20,14 @@
     "@phosphor-icons/react": "2.1.5",
     "@prisma/client": "^5.20.0",
     "@repo/utils": "*",
+    "@vercel/postgres": "^0.10.0",
     "react": "^18",
     "react-dom": "^18",
     "next": "14.2.5",
     "prisma": "^5.20.0",
-    "dayjs": "^1.11.13"
+    "dayjs": "^1.11.13",
+    "node-fetch": "^3.3.2",
+    "prisma": "^5.20.0"
   },
   "devDependencies": {
     "@total-typescript/ts-reset": "0.5.1",
