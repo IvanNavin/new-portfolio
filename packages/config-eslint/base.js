@@ -30,7 +30,7 @@ module.exports = {
       },
     ],
     "no-unused-vars": "off",
-    "no-console": "error",
+    "no-console": ["error", { allow: ["warn", "error"] }],
     "no-useless-catch": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/ban-ts-comment": "warn",

@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --mantine-color-body: #fff;
+}
+
+@media print {
+  /* Сховати всі елементи */
+  .print-hide {
+    display: none;
+  }
+
+  /* Показати лише елемент, який має клас `printable` */
+  .printable {
+    visibility: visible;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+
+
+  /* Друк на аркуші A4 */
+  @page {
+    size: A4;
+    margin: 4mm;
+  }
+}
+
+

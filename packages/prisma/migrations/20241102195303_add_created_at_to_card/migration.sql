@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "language_card" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

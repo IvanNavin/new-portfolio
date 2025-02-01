@@ -36,9 +36,27 @@ CREATE TABLE "language_card" (
     "word" TEXT NOT NULL,
     "translation" TEXT NOT NULL,
     "remembered" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "userId" TEXT NOT NULL,
 
     CONSTRAINT "language_card_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "apartment" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+
+    CONSTRAINT "apartment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "cleaning-schedule" (
+    "id" TEXT NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+    "apartmentId" TEXT NOT NULL,
+
+    CONSTRAINT "cleaning-schedule_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -46,3 +64,6 @@ CREATE UNIQUE INDEX "language_user_email_key" ON "language_user"("email");
 
 -- AddForeignKey
 ALTER TABLE "language_card" ADD CONSTRAINT "language_card_userId_fkey" FOREIGN KEY ("userId") REFERENCES "language_user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "cleaning-schedule" ADD CONSTRAINT "cleaning-schedule_apartmentId_fkey" FOREIGN KEY ("apartmentId") REFERENCES "apartment"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

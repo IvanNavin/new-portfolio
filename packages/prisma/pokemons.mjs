@@ -15,16 +15,20 @@ async function fetchPokemonDetails(url) {
   const res = await fetch(url);
   const data = await res.json();
 
+  if (!data?.stats?.[0]?.base_stat) {
+    console.log("### data: ", data);
+  }
+
   return {
     name_clean: data.name,
     abilities: data.abilities.map((ability) => ability.ability.name),
     stats: {
-      hp: data.stats[0].base_stat,
-      attack: data.stats[1].base_stat,
-      defense: data.stats[2].base_stat,
-      "special-attack": data.stats[3].base_stat,
-      "special-defense": data.stats[4].base_stat,
-      speed: data.stats[5].base_stat,
+      hp: data?.stats?.[0]?.base_stat || 0,
+      attack: data?.stats?.[1]?.base_stat || 0,
+      defense: data?.stats?.[2]?.base_stat || 0,
+      "special-attack": data?.stats?.[3]?.base_stat || 0,
+      "special-defense": data?.stats?.[4]?.base_stat || 0,
+      speed: data?.stats?.[5]?.base_stat || 0,
     },
     types: data.types.map((type) => type.type.name),
     img: data?.sprites?.other?.dream_world?.front_default || null,
