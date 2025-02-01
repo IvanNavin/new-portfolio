@@ -1,3 +1,4 @@
+"use server";
 import { HousePage } from "@app/components/HousePage";
 import { ApartmentListType } from "@app/types";
 import { PrismaClient } from "@repo/prisma";
