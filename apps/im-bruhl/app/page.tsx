@@ -6,9 +6,12 @@ import { PrismaClient } from "@repo/prisma";
 const prisma = new PrismaClient();
 
 export default async function HomePage() {
-  const apartmentList = (await prisma.apartmentList.findMany({
-    include: { apartments: true },
-  })) as ApartmentListType[];
+  // const apartmentList = (await prisma.apartmentList.findMany({
+  //   include: { apartments: true },
+  // })) as ApartmentListType[];
 
-  return <HousePage apartmentList={apartmentList[0]} />;
+  // return <HousePage apartmentList={apartmentList[0]} />;
+  const apartmentList = {} as ApartmentListType;
+
+  return <HousePage apartmentList={apartmentList} />;
 }
