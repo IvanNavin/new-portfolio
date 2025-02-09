@@ -3,7 +3,7 @@ import { Link } from "@phosphor-icons/react";
 
 export const AbfallKalenderLink = () => {
   return (
-    <Flex gap={8} align="center">
+    <Flex gap={8} align="center" className="print-hide">
       <Link size={32} />
       <section>
         <p className="text-lg font-semibold">Abfallkalender</p>

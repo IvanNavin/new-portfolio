@@ -9,7 +9,7 @@
 @media print {
   /* Сховати всі елементи */
   .print-hide {
-    display: none;
+    display: none !important;
   }
 
   /* Показати лише елемент, який має клас `printable` */
