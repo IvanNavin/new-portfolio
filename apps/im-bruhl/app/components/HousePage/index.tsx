@@ -21,7 +21,9 @@ export const HousePage = ({ apartmentList }: Props) => {
     <HouseContext.Provider value={ctx}>
       <main className="p-6 flex flex-col gap-y-6 items-center mb-[100px] relative">
         <div className="print-hide flex flex-col gap-y-6 items-center">
-          <h1 className="text-5xl text-center text-black">Reinigungsplan</h1>
+          <h1 className="text-5xl text-center text-black underline">
+            Reinigungsplan
+          </h1>
           <AccessComponent />
 
           {/* Apartments List */}
