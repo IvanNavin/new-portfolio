@@ -1,0 +1,186 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background: radial-gradient(gray, black);
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#undoBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  font-size: 1.5em;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 14px;
+  right: 60px;
+}
+
+#newGameBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.5em;
+  color: white;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 32px;
+  padding-right: 16px;
+  border-bottom: 2px solid transparent;
+}
+
+#newGameBtn:hover {
+  border-bottom: 2px solid white;
+}
+
+.theme-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  color: white;
+  font-size: 1.5em;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+
+.menu-btn {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 2em;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.menu-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9;
+  animation: overlayFadeIn 0.4s ease-out forwards;
+}
+.menu-overlay.hidden { display: none; }
+
+.menu-content {
+  background: #222;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  color: white;
+  box-shadow: 0 0 10px #000;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: contentPop 0.5s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+
+.menu-content h2 {
+  font-size: 2em;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+.theme-options img {
+  width: 100%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 4px;
+}
+.theme-options img.selected {
+  border-color: #0f0;
+}
+
+.overlay {
+  position: absolute; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.6);
+  display:flex; align-items:center; justify-content:center;
+  animation: overlayFadeIn 0.4s ease-out forwards;
+}
+.overlay.hidden { display: none; }
+.message {
+  background: #222; color:#fff;
+  padding: 2rem; border-radius: 12px;
+  text-align:center;
+}
+
+#playAgain {
+  background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform .1s ease, box-shadow .2s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  animation: buttonPulse 1.5s ease-in-out 0.6s infinite;
+}
+
+/* ефект при наведенні */
+#playAgain:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+}
+
+/* ефект при кліку */
+#playAgain:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+
+/* 1) Ключові кадри для появи оверлею */
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes contentPop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  60%  { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+@keyframes buttonPulse {
+  0%   { box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+  50%  { box-shadow: 0 6px 12px rgba(0,0,0,0.5); }
+  100% { box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+}
