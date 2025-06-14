@@ -4,8 +4,8 @@
 
 .root {
   justify-self: center;
-  width: 26vw;
-  height: 10vw;
+  width: 100%;
+  padding-top: 56.25%;
   box-shadow: 4px 4px 4px rgba(33, 33, 33, 0.1);
   background: #f6f7f9;
   border-radius: 8px;
@@ -17,53 +17,50 @@
     transform: scale(1.03);
   }
 
-  @include media('>tablet', '<desktop') {
-    width: 40vw;
-    height: 15vw;
-  }
-
-  @include media('>phone', '<tablet') {
-    width: 80vw;
-    height: 30vw;
+  .container {
+    display: flex;
+    position: absolute;
+    inset: 0;
   }
 }
 
 .infoWrap {
-  position: absolute;
+  width: 35%;
+  height: 100%;
+  padding: 8px;
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
   z-index: 1;
-  width: 20vw;
-  top: 6%;
-  left: 7%;
 }
 
 .titleName {
-  font-size: 1.3vw;
-  margin: 0 0 0.9vw;
+  font-size: 18px;
   text-shadow: 4px 4px 4px rgba(33, 33, 33, 0.1);
 }
 
 .statWrap {
   display: flex;
-  margin-bottom: 0.9vw;
+  gap: 8px;
 }
 
 .statItem {
   font-style: normal;
   font-weight: normal;
-  font-size: 0.9vw;
-  line-height: 1vw;
+  font-size: 14px;
+  line-height: 1;
   text-align: center;
   color: #4b4b4b;
-  margin-right: 0.9vw;
-
-  &:last-child {
-    margin-right: 0;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .statValue {
-  width: 2.7vw;
-  height: 2.7vw;
+  width: 32px;
+  height: 32px;
   border: 3px solid $dark;
   border-radius: 50%;
   overflow: hidden;
@@ -72,17 +69,16 @@
   align-items: center;
   font-style: normal;
   font-weight: normal;
-  font-size: 1.1vw;
-  line-height: 1.2vw;
+  font-size: 14px;
+  line-height: 1;
   color: $dark;
-  margin: 0 auto 0.6vw;
+  margin: 0 auto;
 }
 
 .pictureWrap {
   width: 65%;
   height: 100%;
-  position: absolute;
-  right: 0;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -97,20 +93,18 @@
 .label {
   background: $second;
   box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18);
-  border-radius: 11px;
-  height: 1.1vw;
-  min-width: 4.4vw;
+  border-radius: 24px;
+  height: 24px;
   font-style: normal;
   font-weight: normal;
-  font-size: 0.9vw;
-  line-height: 1vw;
+  font-size: 14px;
+  line-height: 1;
   text-align: center;
   color: $dark;
-  padding: 0 0.9vw 0.1vw;
+  padding: 4px 8px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 0.9vw;
 
   &.stile,
   &.dark,
@@ -164,4 +158,5 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  gap: 4px;
 }

@@ -1,0 +1,40 @@
+@import '../../../breakpoints';
+@import '../../../variables';
+
+.contentText {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 516px;
+  align-items: flex-start;
+  justify-content: center;
+  color: black;
+  z-index: 1;
+
+  h1 {
+    font-weight: normal;
+    color: black;
+    font-size: 72px;
+
+    b {
+      font-weight: bold;
+    }
+  }
+
+  p {
+    margin: 64px 0;
+    @include media('<tablet-desktop') {
+      margin: 8px 0;
+    }
+  }
+
+  @include media('<tablet-desktop') {
+    align-items: center;
+    p {
+      text-align: center;
+    }
+    h1 {
+      text-align: center;
+      font-size: 36px;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+.rotateLock {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+  font-size: 1.2rem;
+  z-index: 9999;
+
+  &.hidden {
+    display: none;
+  }
+}
+
+@media (orientation: landscape) {
+  .rotateLock {
+    display: flex;
+  }
+  .rotateLock.hidden {
+    display: none;
+  }
+}

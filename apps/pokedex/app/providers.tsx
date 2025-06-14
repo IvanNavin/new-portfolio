@@ -1,4 +1,5 @@
 'use client';
+import { RotateLock } from '@components/RotateLock';
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { ReactNode, Suspense } from 'react';
@@ -12,6 +13,7 @@ export const Providers = ({ children }: Props) => {
     <MantineProvider withGlobalClasses withCssVariables withStaticClasses>
       <ModalsProvider>
         <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+        <RotateLock />
       </ModalsProvider>
     </MantineProvider>
   );

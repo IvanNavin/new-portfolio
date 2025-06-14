@@ -3,7 +3,8 @@
 html,
 body {
   width: 100%;
-  min-width: 100vh;
+  min-width: 320px;
+  max-height: 100vh;
 }
 
 * {

@@ -14,7 +14,9 @@ const Header = () => {
   return (
     <header className={s.root}>
       <div className={s.wrap}>
-        <Logo className={s.pokemonLogo} />
+        <Link href='/'>
+          <Logo className={s.pokemonLogo} />
+        </Link>
         <nav className={s.menuWrap}>
           {GENERAL_MENU.map(({ title, link }) => (
             <Link

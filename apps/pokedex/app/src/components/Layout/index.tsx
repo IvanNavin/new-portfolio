@@ -14,6 +14,7 @@ const Layout = ({ children, className }: LayoutProps) => (
   <>
     <Header />
     <div className={cn(s.root, className)}>{children}</div>
+    <div />
     <Footer />
   </>
 );

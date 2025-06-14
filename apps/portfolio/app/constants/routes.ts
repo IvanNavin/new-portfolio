@@ -18,4 +18,6 @@ export const ROUTES = {
     `/${lang}/performances/accessibility`,
   regexp: (lang: Locale = getLang()) => `/${lang}/performances/regexp`,
   jest: (lang: Locale = getLang()) => `/${lang}/performances/jest`,
+  typeVsInterface: (lang: Locale = getLang()) =>
+    `/${lang}/performances/type-vs-interface`,
 };

@@ -15,7 +15,7 @@ const Input = ({ ...props }: Props) => {
       className={s.root}
       value={inputValue}
       onChange={onChange}
-      placeholder='find your pokemon...'
+      placeholder='Find your pokemon...'
     />
   );
 };

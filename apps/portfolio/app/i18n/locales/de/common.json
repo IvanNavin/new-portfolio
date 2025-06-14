@@ -75,6 +75,10 @@
     "title": "Testen mit Jest und Testing Library",
     "usefulLinks": "Nützliche Links"
   },
+  "types": {
+    "title": "Type vs. Interface",
+    "description": "Type vs. Interface - Dies ist ein Thema, das häufig zu Diskussionen zwischen Typenkriptentwicklern führt. Beide Mechanismen ermöglichen es Ihnen, die Datenstruktur zu bestimmen, haben jedoch ihre eigenen Besonderheiten und Zwecke..."
+  },
   "404": {
     "title": "Seite nicht gefunden",
     "description": "Die angeforderte Seite existiert nicht. Sie können zur Startseite zurückkehren."

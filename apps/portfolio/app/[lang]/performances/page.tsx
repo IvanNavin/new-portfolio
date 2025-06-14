@@ -25,6 +25,11 @@ export default function Page({ params: { lang } }: DefaultProps) {
       second: t('performances.testingWithJest'),
       href: ROUTES.jest(lang),
     },
+    {
+      first: 'Type vs Interface',
+      second: 'Type vs Interface',
+      href: ROUTES.typeVsInterface(lang),
+    },
   ];
 
   return (
