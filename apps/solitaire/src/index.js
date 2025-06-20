@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   );
 
   // Занурюємо 8 back-картинок
-  const current = localStorage.getItem("cardBack") || backs[0];
+  const current = localStorage.getItem("cardBack") || backs[7];
   backs.forEach((path) => {
     const img = document.createElement("img");
     img.src = path;
@@ -39,7 +39,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   await Card.preloadFaces();
 
   const canvas = document.getElementById("canvas");
-  // щоб width/height="100%" працювали, треба встановити реальні розміри
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
@@ -94,5 +93,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     game.render();
     requestAnimationFrame(animate);
   }
+
   requestAnimationFrame(animate);
 });
