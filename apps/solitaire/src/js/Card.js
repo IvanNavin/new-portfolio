@@ -74,7 +74,7 @@ class Card {
    * @param {string} [path] – path to back.png file
    * @returns {Promise<void>}
    */
-  static loadBackImage(path = "src/assets/cards/back07.png") {
+  static loadBackImage(path = "src/assets/cards/back08.png") {
     const cardBackPath = localStorage.getItem("cardBack") || path;
     return new Promise((resolve) => {
       Card.backImage = new Image();
