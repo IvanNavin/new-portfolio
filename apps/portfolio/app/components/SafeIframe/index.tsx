@@ -11,12 +11,11 @@ export const SafeIframe = ({ imgSrc, iframeSrc, isIframeAvailable }: Props) => {
   return (
     <div className='relative aspect-video w-full'>
       <Image
+        fill
         priority
         src={imgSrc}
         alt='Image work'
-        fill
-        objectFit='cover'
-        className='z-0'
+        className='z-0 object-cover'
       />
 
       <iframe

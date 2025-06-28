@@ -1,5 +1,6 @@
 import { log } from '@repo/utils';
 import { AnyType } from '@src/types';
+import { isInIframe } from '@src/utils/isInIframe';
 import { signIn, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
@@ -45,6 +46,10 @@ const useGoogleIdentify = (props?: UseGoogleIdentifyProps) => {
   }, [session]);
 
   useEffect(() => {
+    if (isInIframe()) {
+      console.warn('Iframe detected: skipping Google Identify logic.');
+      return;
+    }
     // add Google Identify script
     const script = document.createElement('script');
     script.src = url;

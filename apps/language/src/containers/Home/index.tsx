@@ -11,10 +11,9 @@ import {
   Section,
   SmileOutlined,
 } from '@src/components';
-import useGoogleIdentify from '@src/hooks/useGoogleIdentify';
-import Image from 'next/image';
-import { signOut, useSession } from 'next-auth/react';
-import { Suspense, useState } from 'react';
+import { AuthHeader } from '@src/containers/AuthHeader';
+import { isInIframe } from '@src/utils/isInIframe';
+import { Suspense } from 'react';
 
 import s from './home.module.scss';
 
@@ -22,56 +21,9 @@ import secondBackground from '../../assets/back2.jpg';
 import firstBackground from '../../assets/background.jpg';
 
 export const HomePage = () => {
-  const [showLogout, setShowLogout] = useState(false);
-  const { data: session } = useSession();
-
-  const nextAuthOpt = {
-    redirect: false,
-  };
-
-  const googleOpt = {
-    prompt_parent_id: 'oneTap',
-    isOneTap: true,
-    use_fedcm_for_prompt: true,
-  };
-
-  const { isSignedIn } = useGoogleIdentify({
-    nextAuthOpt,
-    googleOpt,
-  });
-
-  const toggleLogout = () => setShowLogout((p) => !p);
-
   return (
     <Suspense fallback={<>Loading...</>}>
-      <section className={s.authorization_wrap}>
-        {isSignedIn ? (
-          <>
-            {showLogout && (
-              <button className={s.link} onClick={() => signOut()}>
-                Logout
-              </button>
-            )}
-            <button onClick={() => toggleLogout()}>
-              {session?.user?.image ? (
-                <Image
-                  src={session.user.image}
-                  height={40}
-                  width={40}
-                  alt={session?.user?.name || 'user photo'}
-                  className={s.user}
-                />
-              ) : (
-                <div className='size-10 bg-red-600 rounded-full' />
-              )}
-            </button>
-          </>
-        ) : (
-          <a className={s.link} href='/login'>
-            Login
-          </a>
-        )}
-      </section>
+      {!isInIframe() && <AuthHeader />}
 
       <BackgroundBlock backgroundImg={firstBackground} fullHeight>
         <Header white>Time to learn words online</Header>
