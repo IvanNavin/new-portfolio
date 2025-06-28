@@ -1,16 +1,27 @@
 {
-  "main": {
-    "hello": "Hallo,",
-    "aboutMe": "Über mich",
-    "my": "Ich",
-    "myWorks": "Meine Arbeiten",
-    "names": "heiße",
-    "contacts": "Kontakte",
-    "ivan": "Ivan",
-    "performances": "Vorträge",
-    "presPForPause": "Drücken Sie \"P\" für Pause. Drücken Sie \"Leertaste\" für einen neuen Effekt"
+  "404": {
+    "description": "Die angeforderte Seite existiert nicht. Sie können zur Startseite zurückkehren.",
+    "title": "Seite nicht gefunden"
   },
   "about": {
+    "description": "Gleichzeitig lerne ich neue Technologien und versuche, dieses Wissen mit anderen zu teilen.",
+    "downloadCv": "Lebenslauf herunterladen",
+    "facts": {
+      "line0": "Ich bin ein Teamplayer",
+      "line1": "Ich genieße es, Probleme zu lösen",
+      "line10": "Gesprächig",
+      "line11": "Ich schaue gerne Serien",
+      "line12": "Gesellig",
+      "line13": "Optimist",
+      "line2": "Ich kommuniziere klar und effektiv",
+      "line3": "Ich passe mich schnell an neue Technologien an",
+      "line4": "Ich denke kreativ, um Lösungen zu finden",
+      "line5": "Ich bin organisiert und verwalte meine Zeit gut",
+      "line6": "Ich habe Führungserfahrung",
+      "line7": "Ich liebe meine Familie",
+      "line8": "Ich reise gerne",
+      "line9": "Ich bin fröhlich"
+    },
     "helloThere": "Hallo zusammen!",
     "text": {
       "line1": "Schon als Kind träumte ich davon, Programmierer zu werden und etwas Spannendes zu schaffen. Nach meinen ersten Erfahrungen mit Basic, Pascal und Delphi nahm mein Leben zunächst einen anderen Weg. Doch 15 Jahre später erkannte ich, dass Programmieren meine wahre Berufung ist.",
@@ -22,126 +33,106 @@
       "line7": "In allen Unternehmen, in denen ich gearbeitet habe, konnte ich meine Soft Skills unter Beweis stellen, gemeinsam mit dem Team Lösungen finden und meine Relevanz zeigen.",
       "line8": "Ich habe Erfahrung mit:"
     },
-    "description": "Gleichzeitig lerne ich neue Technologien und versuche, dieses Wissen mit anderen zu teilen.",
-    "whoIAm": "Wer ich bin:",
-    "facts": {
-      "line0": "Ich bin ein Teamplayer",
-      "line1": "Ich genieße es, Probleme zu lösen",
-      "line2": "Ich kommuniziere klar und effektiv",
-      "line3": "Ich passe mich schnell an neue Technologien an",
-      "line4": "Ich denke kreativ, um Lösungen zu finden",
-      "line5": "Ich bin organisiert und verwalte meine Zeit gut",
-      "line6": "Ich habe Führungserfahrung",
-      "line7": "Ich liebe meine Familie",
-      "line8": "Ich reise gerne",
-      "line9": "Ich bin fröhlich",
-      "line10": "Gesprächig",
-      "line11": "Ich schaue gerne Serien",
-      "line12": "Gesellig",
-      "line13": "Optimist"
-    },
-    "downloadCv": "Lebenslauf herunterladen"
-  },
-  "contacts": {
-    "sayHi": "Let's work together",
-    "name": "Name",
-    "message": "Nachricht",
-    "sendMessage": "Nachricht senden",
-    "messageSent": "Nachricht wurde gesendet!",
-    "oopsError": "Upps! Beim Senden der Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut."
-  },
-  "myWorks": {
-    "myWorks": "Meine Arbeiten",
-    "description": "Da ich in den Unternehmen, in denen ich gearbeitet habe, eine NDA (Geheimhaltungsvereinbarung) unterschrieben habe, muss ich hier meine persönlichen Projekte hochladen."
-  },
-  "performances": {
-    "title": "Meine Vorträge",
-    "regexp": "Habt keine Angst vor regulären Ausdrücken",
-    "accessibility": "Entwicklung zugänglicher Benutzeroberflächen",
-    "testingWithJest": "Testen mit Jest und Testing Library"
+    "whoIAm": "Wer ich bin:"
   },
   "accessibility": {
-    "title": "Entwicklung zugänglicher Benutzeroberflächen",
-    "linkName": "Link zum Vortrag"
+    "linkName": "Link zum Vortrag",
+    "title": "Entwicklung zugänglicher Benutzeroberflächen"
   },
-  "regexp": {
-    "title": "Habt keine Angst vor regulären Ausdrücken",
-    "linkName": "Nützliche Links",
-    "wikiLink": "Reguläre Ausdrücke auf Wikipedia",
-    "learnJS": "Leitfaden zu regulären Ausdrücken auf learn.javascript.ru",
-    "crib": "Cheat-Sheet für reguläre Ausdrücke"
+  "contacts": {
+    "message": "Nachricht",
+    "messageSent": "Nachricht wurde gesendet!",
+    "name": "Name",
+    "oopsError": "Upps! Beim Senden der Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
+    "sayHi": "Let's work together",
+    "sendMessage": "Nachricht senden"
   },
   "jest": {
     "title": "Testen mit Jest und Testing Library",
     "usefulLinks": "Nützliche Links"
   },
-  "types": {
-    "title": "Type vs. Interface",
-    "description": "Type vs. Interface - Dies ist ein Thema, das häufig zu Diskussionen zwischen Typenkriptentwicklern führt. Beide Mechanismen ermöglichen es Ihnen, die Datenstruktur zu bestimmen, haben jedoch ihre eigenen Besonderheiten und Zwecke..."
+  "main": {
+    "aboutMe": "Über mich",
+    "contacts": "Kontakte",
+    "hello": "Hallo,",
+    "ivan": "Ivan",
+    "my": "Ich",
+    "myWorks": "Meine Arbeiten",
+    "names": "heiße",
+    "performances": "Vorträge",
+    "presPForPause": "Drücken Sie \"P\" für Pause. Drücken Sie \"Leertaste\" für einen neuen Effekt"
   },
-  "404": {
-    "title": "Seite nicht gefunden",
-    "description": "Die angeforderte Seite existiert nicht. Sie können zur Startseite zurückkehren."
+  "myWorks": {
+    "description": "Da ich in den Unternehmen, in denen ich gearbeitet habe, eine NDA (Geheimhaltungsvereinbarung) unterschrieben habe, muss ich hier meine persönlichen Projekte hochladen.",
+    "myWorks": "Meine Arbeiten"
+  },
+  "performances": {
+    "accessibility": "Entwicklung zugänglicher Benutzeroberflächen",
+    "regexp": "Habt keine Angst vor regulären Ausdrücken",
+    "testingWithJest": "Testen mit Jest und Testing Library",
+    "title": "Meine Vorträge"
+  },
+  "regexp": {
+    "crib": "Cheat-Sheet für reguläre Ausdrücke",
+    "learnJS": "Leitfaden zu regulären Ausdrücken auf learn.javascript.ru",
+    "linkName": "Nützliche Links",
+    "title": "Habt keine Angst vor regulären Ausdrücken",
+    "wikiLink": "Reguläre Ausdrücke auf Wikipedia"
+  },
+  "types": {
+    "description": "Type vs. Interface - Dies ist ein Thema, das häufig zu Diskussionen zwischen Typenkriptentwicklern führt. Beide Mechanismen ermöglichen es Ihnen, die Datenstruktur zu bestimmen, haben jedoch ihre eigenen Besonderheiten und Zwecke...",
+    "title": "Type vs. Interface"
   },
   "works": {
     "english": {
-      "title": "Englisch lernen",
       "text": {
         "line0": "Englisch lernen ist ein Projekt, das während des React-Marathons von Zara Zakharova gestartet wurde.",
         "line1": "Während des Marathons haben wir uns mit React, seinem Lebenszyklus vertraut gemacht und gelernt, mit Formularen und Firebase zu arbeiten.",
+        "line10": "Das Wort erscheint in der Datenbank (oder im lokalen Speicher für nicht autorisierte Benutzer) und wird unter dem Eingabefeld angezeigt.",
+        "line11": "Wenn Sie auf das Wort klicken, wird die Karte umgedreht und zeigt die Übersetzung auf der Rückseite.",
+        "line12": "Das Wort kann als gemerkt markiert oder gelöscht werden, wodurch es aus Ihrem Wortschatz entfernt wird.",
         "line2": "Wir haben gelernt, mit Props und States zu arbeiten und Daten zwischen Komponenten zu übergeben.",
         "line3": "Zu Beginn haben wir unser eigenes Redux geschrieben, um seine Prinzipien zu verstehen, und es später integriert.",
         "line4": "Für die Benutzeroberfläche verwendeten wir Icons und Formulare aus der AntDesign-Bibliothek.",
         "line5": "Wir haben die Wörterbuch-API und Firebase Storage verbunden, um die Wörter der Benutzer zu speichern.",
-
         "line6": "In der neuen Version des Projekts, das ich in Next.js neu geschrieben habe, wurden moderne Technologien und neue Funktionen hinzugefügt.",
         "line7": "Jetzt wird Google für die Authentifizierung verwendet, und die Daten nicht autorisierter Benutzer werden lokal im LocalStorage gespeichert.",
         "line8": "Statt Firebase Storage für die Speicherung von Wörtern wird eine benutzerdefinierte Datenbank verwendet, die Karten für alle Benutzer speichert.",
-        "line9": "Um die Seite zu nutzen, müssen Sie ein neues englisches Wort in das Eingabefeld eingeben.",
-        "line10": "Das Wort erscheint in der Datenbank (oder im lokalen Speicher für nicht autorisierte Benutzer) und wird unter dem Eingabefeld angezeigt.",
-        "line11": "Wenn Sie auf das Wort klicken, wird die Karte umgedreht und zeigt die Übersetzung auf der Rückseite.",
-        "line12": "Das Wort kann als gemerkt markiert oder gelöscht werden, wodurch es aus Ihrem Wortschatz entfernt wird."
-      }
+        "line9": "Um die Seite zu nutzen, müssen Sie ein neues englisches Wort in das Eingabefeld eingeben."
+      },
+      "title": "Englisch lernen"
     },
     "ganttChart": {
       "text": "Dies ist eine Testaufgabe. Hier verwende ich Technologien, die ich im vorherigen Projekt verwendet habe."
     },
     "miner": {
-      "title": "Minesweeper",
-      "text": "Ich habe einfach ein Miner-Spiel gemacht."
+      "text": "Ich habe einfach ein Miner-Spiel gemacht.",
+      "title": "Minesweeper"
     },
     "pokedex": {
+      "fourText": {
+        "line0": "In der Folge habe ich das Projekt vollständig auf der Basis von modernem Next.js neu geschrieben.",
+        "line1": "Ich habe Daten aller Pokémon hochgeladen, eine eigene Datenbank erstellt und sie nach meinen Bedürfnissen formatiert, wobei ich Prisma für eine bequeme Datenverwaltung verwendet habe."
+      },
+      "secondText": {
+        "line0": "Dieses Projekt ist vollständig mit Hooks geschrieben, was den Übergang zu einem neuen React-Team erheblich erleichtert hat, wo ich mich schnell anpasste, indem ich Klassenkomponenten in funktionale umwandelte.",
+        "line1": "Ich konnte auch dieses Wissen mit dem Team teilen, was zur Verbesserung unserer gemeinsamen Praktiken beitrug."
+      },
       "text": {
         "line0": "Pokédex ist das Ergebnis meines fortgeschrittenen React-Marathons unter der Leitung von Zarem Zakharov.",
         "line1": "Während dieses Marathons habe ich großartige Erfahrungen mit neuen Technologien und Designs gemacht, die einen detaillierten Style-Guide mit Farben, Verläufen, Schriftarten und deren Größen beinhalteten.",
         "line2": "",
         "line3": "In der ursprünglichen Version des Projekts habe ich folgende Technologien umgesetzt:"
       },
-      "secondText": {
-        "line0": "Dieses Projekt ist vollständig mit Hooks geschrieben, was den Übergang zu einem neuen React-Team erheblich erleichtert hat, wo ich mich schnell anpasste, indem ich Klassenkomponenten in funktionale umwandelte.",
-        "line1": "Ich konnte auch dieses Wissen mit dem Team teilen, was zur Verbesserung unserer gemeinsamen Praktiken beitrug."
-      },
       "thirdText": {
         "line0": "Leider verwendet die API, mit der ich arbeitete, das HTTP-Protokoll und ist derzeit nicht verfügbar.",
         "line1": "Ich habe jedoch das Projekt verbessert, indem ich Filter nach Typen und Angriffen hinzugefügt und modale Fenster mit \"createPortal\" umgesetzt habe."
-      },
-      "fourText": {
-        "line0": "In der Folge habe ich das Projekt vollständig auf der Basis von modernem Next.js neu geschrieben.",
-        "line1": "Ich habe Daten aller Pokémon hochgeladen, eine eigene Datenbank erstellt und sie nach meinen Bedürfnissen formatiert, wobei ich Prisma für eine bequeme Datenverwaltung verwendet habe."
       }
     },
     "portfolio": {
       "text": {
         "line0": "Ich halte es für wichtig, eine professionelle Portfolio-Website zu haben, die alle meine Projekte und Erfolge zeigt.",
         "line1": "",
-        "line2": "Zunächst hatte ich keine Vorstellung davon, wie eine Portfolio-Website aussehen sollte und was darauf sein sollte. Ich begann zu recherchieren und Artikel zu lesen, was in einem Portfolio enthalten sein sollte.",
-        "line3": "",
-        "line4": "Ich erstellte einen Plan, entschied mich für ein Farbschema, skizzierte ein paar Ideen und machte mich an die Arbeit. Ich verstand, dass das Portfolio einzigartig und kreativ sein musste. Uff, das war schwierig!",
-        "line5": "",
-        "line6": "Zunächst gelangt der Benutzer zur Startseite, wo ich den Fluid-Effekt verwendete. Ich fand keine solche Bibliothek, aber ich fand Stellen, an denen dieser Effekt angewendet wurde, und lieh ihn mir von dort, indem ich ihn ein wenig nach meinem Geschmack veränderte. Hier auf der Hauptseite kann man mit der Animation interagieren, indem man die LEERTASTE drückt. Blitze von fluiden Animationen erscheinen, wenn man \"P\" drückt. Wenn man die Animation stoppen möchte, kann man auf Pause drücken. Durch Klicken und Wischen über den Bildschirm mit der Maus oder dem Finger wird die Animation aktiviert.",
-        "line7": "",
-        "line8": "Dann kann der Benutzer zur Seite 'Über mich' gehen. Auf dieser Seite stelle ich meine persönliche Geschichte, den Technologie-Stack, den ich beherrsche, meine Berufserfahrung und einige interessante Fakten über mich vor =)",
-        "line9": "",
         "line10": "An diesem Punkt dachte ich, es wäre gut, einen Zurück-Button hinzuzufügen. Ich fand eine interessante Canvas-Animation und wendete sie auf den 'Zurück'-Button an.",
         "line11": "",
         "line12": "Der Benutzer kann zur Projekeseite gehen (hier wohnen alle besten Projekte mit Beschreibungen der verwendeten Technologien und Links zu Github. Ich denke, hier werden auch Live-Videodemos zu finden sein).",
@@ -150,7 +141,15 @@
         "line15": "",
         "line16": "Zu Beginn des Schreibens des Codes wusste ich nicht, welchen Stack meine Portfolio-Website haben würde. Ich wollte es wirklich in React schreiben, aber meine grundlegenden Kenntnisse waren dafür nicht ausreichend, also benutzte ich ES6. Seitdem habe ich viel Erfahrung mit React gesammelt und denke jetzt, dass ich viel besser arbeiten kann. Ich erkannte, dass ich Funktionen anpassen und hinzufügen musste, um meine Programmierfähigkeiten zu demonstrieren, also schrieb ich es in reinem JS.",
         "line19": "",
-        "line20": "Im Laufe der Zeit habe ich ein Monorepo (turborepo) für mein Portfolio erstellt, es mit Next.js unter Verwendung moderner Technologien neu geschrieben und fast alle meine Nebenprojekte in dieses Monorepo verschoben. Das Hauptziel dieser Portfolio-Website besteht darin, die Projekte zu präsentieren, die ich erstellt habe, und die Website selbst wird ebenfalls als Projekt betrachtet!"
+        "line2": "Zunächst hatte ich keine Vorstellung davon, wie eine Portfolio-Website aussehen sollte und was darauf sein sollte. Ich begann zu recherchieren und Artikel zu lesen, was in einem Portfolio enthalten sein sollte.",
+        "line20": "Im Laufe der Zeit habe ich ein Monorepo (turborepo) für mein Portfolio erstellt, es mit Next.js unter Verwendung moderner Technologien neu geschrieben und fast alle meine Nebenprojekte in dieses Monorepo verschoben. Das Hauptziel dieser Portfolio-Website besteht darin, die Projekte zu präsentieren, die ich erstellt habe, und die Website selbst wird ebenfalls als Projekt betrachtet!",
+        "line3": "",
+        "line4": "Ich erstellte einen Plan, entschied mich für ein Farbschema, skizzierte ein paar Ideen und machte mich an die Arbeit. Ich verstand, dass das Portfolio einzigartig und kreativ sein musste. Uff, das war schwierig!",
+        "line5": "",
+        "line6": "Zunächst gelangt der Benutzer zur Startseite, wo ich den Fluid-Effekt verwendete. Ich fand keine solche Bibliothek, aber ich fand Stellen, an denen dieser Effekt angewendet wurde, und lieh ihn mir von dort, indem ich ihn ein wenig nach meinem Geschmack veränderte. Hier auf der Hauptseite kann man mit der Animation interagieren, indem man die LEERTASTE drückt. Blitze von fluiden Animationen erscheinen, wenn man \"P\" drückt. Wenn man die Animation stoppen möchte, kann man auf Pause drücken. Durch Klicken und Wischen über den Bildschirm mit der Maus oder dem Finger wird die Animation aktiviert.",
+        "line7": "",
+        "line8": "Dann kann der Benutzer zur Seite 'Über mich' gehen. Auf dieser Seite stelle ich meine persönliche Geschichte, den Technologie-Stack, den ich beherrsche, meine Berufserfahrung und einige interessante Fakten über mich vor =)",
+        "line9": ""
       }
     },
     "rpg": {
@@ -162,6 +161,15 @@
         "line4": "Um die Funktionalität des Spiels und des Chats zu überprüfen, können Sie das Spiel in mehreren Tabs starten.",
         "line5": "Derzeit funktioniert das Backend nicht."
       }
+    },
+    "solitaire": {
+      "description": "Alle Karten sind PNGs und werden mit Canvas gerendert.\nDie Architektur nutzt Klassen mit einem “Composition over Inheritance”-Ansatz: Karten, Decks und Spielzustände kapseln ihr eigenes Verhalten und interagieren über Komposition statt starre Vererbung. Das ermöglicht eine flexible Erweiterung und einfache Updates. Anstatt schwerer Vererbungsketten ist alles in kleine, unabhängige Klassen aufgeteilt. Die Hauptidee: Neue Features sollen sich einfach ergänzen lassen.",
+      "features": "Features:",
+      "li1": "Logik basiert vollständig auf Klassen.",
+      "li2": "Erweiterbare Struktur.",
+      "li3": "Sauberer, minimalistischer Code ohne unnötige Abhängigkeiten.",
+      "li4": "Fokus auf ein angenehmes UI.",
+      "title": "Reines HTML, CSS, JS (ohne Frameworks)."
     },
     "thanos": {
       "text": {

@@ -1,17 +1,27 @@
 {
-  "main": {
-    "hello": "Hello",
-    "aboutMe": "About Me",
-    "about": "About",
-    "my": "My",
-    "myWorks": "My Works",
-    "names": "Name's",
-    "contacts": "Contacts",
-    "ivan": "Ivan",
-    "performances": "Performances",
-    "presPForPause": "Press \"P\" for Pause. Press \"Space\" for new effect"
+  "404": {
+    "description": "The page you are looking for does not exist. You can go back to the main page.",
+    "title": "Page not found"
   },
   "about": {
+    "description": "At the same time, I study new technologies and try to share them with others.",
+    "downloadCv": "download CV",
+    "facts": {
+      "line0": "I am a team player",
+      "line1": "I enjoy problem solving",
+      "line10": "Talkative",
+      "line11": "I like to watch TV series",
+      "line12": "Sociable",
+      "line13": "Optimist",
+      "line2": "I communicate clearly and effectively",
+      "line3": "I adapt quickly to new technologies",
+      "line4": "I think creatively to find solutions",
+      "line5": "I am organized and manage my time well",
+      "line6": "I have leadership experience",
+      "line7": "I love my family",
+      "line8": "I like to travel",
+      "line9": "I am cheerful"
+    },
     "helloThere": "Hello There!",
     "text": {
       "line1": "Since childhood, I dreamed of becoming a programmer and creating something exciting. After my first experiences with Basic, Pascal, and Delphi, my life initially took a different path. However, 15 years later, I realized that programming is my true calling.",
@@ -23,73 +33,67 @@
       "line7": "In all companies I worked for, I managed to show my soft skills, find common solutions in the team and try to be relevant.",
       "line8": "I have experience in:"
     },
-    "description": "At the same time, I study new technologies and try to share them with others.",
-    "whoIAm": "Who I Am:",
-    "facts": {
-      "line0": "I am a team player",
-      "line1": "I enjoy problem solving",
-      "line2": "I communicate clearly and effectively",
-      "line3": "I adapt quickly to new technologies",
-      "line4": "I think creatively to find solutions",
-      "line5": "I am organized and manage my time well",
-      "line6": "I have leadership experience",
-      "line7": "I love my family",
-      "line8": "I like to travel",
-      "line9": "I am cheerful",
-      "line10": "Talkative",
-      "line11": "I like to watch TV series",
-      "line12": "Sociable",
-      "line13": "Optimist"
-    },
-    "downloadCv": "download CV"
-  },
-  "contacts": {
-    "sayHi": "Let's work together",
-    "name": "Name",
-    "message": "Message",
-    "sendMessage": "Send Message",
-    "messageSent": "Message sent!",
-    "oopsError": "Oops! An error occurred while sending the message. Please try again later."
-  },
-  "myWorks": {
-    "myWorks": "My Works",
-    "description": "According to the regulations which I signed (NDA), working for the company, I will have to post sandbox here"
-  },
-  "performances": {
-    "title": "My reports",
-    "regexp": "Don't be afraid of regular expressions",
-    "accessibility": "Development accessible interfaces️",
-    "testingWithJest": "Testing with Jest and Testing Library"
+    "whoIAm": "Who I Am:"
   },
   "accessibility": {
-    "title": "Development accessible interfaces️",
-    "linkName": "Link to the report"
+    "linkName": "Link to the report",
+    "title": "Development accessible interfaces️"
   },
-  "regexp": {
-    "title": "Don't be afraid of regular expressions",
-    "linkName": "Useful links",
-    "wikiLink": "Regular expressions on wiki",
-    "learnJS": "Regular Expression Tutorial at learn.javascript.ru",
-    "crib": "Regular Expression Cheat Sheet"
+  "contacts": {
+    "message": "Message",
+    "messageSent": "Message sent!",
+    "name": "Name",
+    "oopsError": "Oops! An error occurred while sending the message. Please try again later.",
+    "sayHi": "Let's work together",
+    "sendMessage": "Send Message"
   },
+  "ivan": "Ivan",
   "jest": {
     "title": "Testing with Jest and Testing Library",
     "usefulLinks": "Useful links"
   },
-  "types": {
-    "title": "Type vs. Interface",
-    "description": "Type vs. Interface - This is a topic that often causes discussions among Typescript developers. Both of these mechanisms allow you to determine the data structure but have their own peculiarities and purpose..."
+  "main": {
+    "about": "About",
+    "aboutMe": "About Me",
+    "contacts": "Contacts",
+    "hello": "Hello",
+    "ivan": "Ivan",
+    "my": "My",
+    "myWorks": "My Works",
+    "names": "Name's",
+    "performances": "Performances",
+    "presPForPause": "Press \"P\" for Pause. Press \"Space\" for new effect"
   },
-  "404": {
-    "title": "Page not found",
-    "description": "The page you are looking for does not exist. You can go back to the main page."
+  "myWorks": {
+    "description": "According to the regulations which I signed (NDA), working for the company, I will have to post sandbox here",
+    "myWorks": "My Works"
+  },
+  "performances": {
+    "accessibility": "Development accessible interfaces️",
+    "regexp": "Don't be afraid of regular expressions",
+    "testingWithJest": "Testing with Jest and Testing Library",
+    "title": "My reports"
+  },
+  "regexp": {
+    "crib": "Regular Expression Cheat Sheet",
+    "learnJS": "Regular Expression Tutorial at learn.javascript.ru",
+    "linkName": "Useful links",
+    "title": "Don't be afraid of regular expressions",
+    "wikiLink": "Regular expressions on wiki"
+  },
+  "seeTheResultHere": "See the result here",
+  "types": {
+    "description": "Type vs. Interface - This is a topic that often causes discussions among Typescript developers. Both of these mechanisms allow you to determine the data structure but have their own peculiarities and purpose...",
+    "title": "Type vs. Interface"
   },
   "works": {
     "english": {
-      "title": "English learn",
       "text": {
         "line0": "Learning English is a project that started during the React marathon by Zara Zakharova.",
         "line1": "During the marathon, we got acquainted with React, its lifecycle, and learned to work with forms and Firebase.",
+        "line10": "The word appears in the database (or in local storage for unauthorized users) and is displayed below the input field.",
+        "line11": "When you click on the word, the card flips over, showing the translation on the back.",
+        "line12": "The word can be marked as memorized or deleted, removing it from your word bank.",
         "line2": "We mastered working with props and states, as well as passing data between components.",
         "line3": "At the beginning, we wrote our own Redux to understand its principles, and later integrated it.",
         "line4": "We used icons and forms from the AntDesign library for the interface.",
@@ -97,51 +101,41 @@
         "line6": "In the new version of the project, which I rewrote in Next.js, modern technologies and new features have been added.",
         "line7": "Now, Google is used for authentication, and the data of unauthorized users is stored locally in localStorage.",
         "line8": "Instead of Firebase storage for saving words, a custom database is used that stores cards for all users.",
-        "line9": "To use the site, you need to enter a new English word in the input field.",
-        "line10": "The word appears in the database (or in local storage for unauthorized users) and is displayed below the input field.",
-        "line11": "When you click on the word, the card flips over, showing the translation on the back.",
-        "line12": "The word can be marked as memorized or deleted, removing it from your word bank."
-      }
+        "line9": "To use the site, you need to enter a new English word in the input field."
+      },
+      "title": "English learn"
     },
     "ganttChart": {
       "text": "This is the testing task. Here I use the technologies that I use in the previous project."
     },
     "miner": {
-      "title": "Miner",
-      "text": "Just made the Miner game."
+      "text": "Just made the Miner game.",
+      "title": "Miner"
     },
     "pokedex": {
+      "fourText": {
+        "line0": "Subsequently, I completely rewrote the project based on modern Next.js.",
+        "line1": "I uploaded data for all Pokémon, created my own database, and formatted it according to my needs using Prisma for convenient data management."
+      },
+      "secondText": {
+        "line0": "This project is entirely written using hooks, which significantly simplified the transition to a new React team where I quickly adapted by converting class components to functional ones.",
+        "line1": "I was also able to share this knowledge with the team, which contributed to improving our collaborative practices."
+      },
       "text": {
         "line0": "Pokédex is the result of my advanced React marathon under the guidance of Zare Zakharov.",
         "line1": "During the marathon, I gained great experience working with new technologies and design, which included a detailed style guide with colors, gradients, fonts, and their sizes.",
         "line2": "",
         "line3": "In the initial version of the project, I implemented the following technologies:"
       },
-      "secondText": {
-        "line0": "This project is entirely written using hooks, which significantly simplified the transition to a new React team where I quickly adapted by converting class components to functional ones.",
-        "line1": "I was also able to share this knowledge with the team, which contributed to improving our collaborative practices."
-      },
       "thirdText": {
         "line0": "Unfortunately, the API I was working with used the HTTP protocol and is currently unavailable.",
         "line1": "However, I enhanced the project by adding filters for types and attacks, and also implemented modal windows using \"createPortal\"."
-      },
-      "fourText": {
-        "line0": "Subsequently, I completely rewrote the project based on modern Next.js.",
-        "line1": "I uploaded data for all Pokémon, created my own database, and formatted it according to my needs using Prisma for convenient data management."
       }
     },
     "portfolio": {
       "text": {
         "line0": "I find it important to have a professional portfolio site that displays all of my projects and accomplishments.",
         "line1": "",
-        "line2": "At first I had no idea how the site of a portfolio should look and what should be in it. I started enquiring and reading articles on this topic.",
-        "line3": "",
-        "line4": "I drew up a plan, decided on a color scheme, sketched a couple of ideas and set to work. The thing I understood about it was it had to be unique and creative. Fuh, it was difficult!",
-        "line5": "",
-        "line6": "First, the user is taken to the home page where I used the fluid effect. I did not find such a library, but I found places where this effect was applied and borrowed it from there, slightly transforming it in my own way. Here on the main page, you can interact with the animation by pressing SPACE. Flashes of fluid animations will appear, by pressing \"P\". If you want to stop the animation, you can press pause. By clicking and swiping across the screen with a mouse or finger, the animation is brought into action.",
-        "line7": "",
-        "line8": "Then the user can go to the 'About me' page. On this page I introduce my personal story, the stack of technologies I own, work experience and other facts about me =)",
-        "line9": "",
         "line10": "At this point, I thought it would be good to add a back button. I found an interesting canvas animation and applied it to the back button.",
         "line11": "",
         "line12": "The user can go to the projects page (all the best projects with the description of applied technologies used and links to Github. I think live video demos will live here too).",
@@ -150,7 +144,15 @@
         "line15": "",
         "line16": "At the beginning of writing the code, I didn't know what stack my portfolio site would have. Looking back in the time I really wanted to write it in React, but my basic knowledge hadn't been enough for it, so I had used ES6. Since the time I have gained much experience in React, and now I think I can perform much better. I realized that I needed to customize and add functions in a way that would demonstrate my programming skills, so I wrote it in native JS.",
         "line19": "",
-        "line20": "Subsequently, I created a monorepo (turborepo) for my portfolio, rewrote it using Next.js with modern technologies, and moved almost all my pet projects into this monorepo. The main goal of this portfolio website is to showcase the projects I've created, and the site itself is also considered a project!"
+        "line2": "At first I had no idea how the site of a portfolio should look and what should be in it. I started enquiring and reading articles on this topic.",
+        "line20": "Subsequently, I created a monorepo (turborepo) for my portfolio, rewrote it using Next.js with modern technologies, and moved almost all my pet projects into this monorepo. The main goal of this portfolio website is to showcase the projects I've created, and the site itself is also considered a project!",
+        "line3": "",
+        "line4": "I drew up a plan, decided on a color scheme, sketched a couple of ideas and set to work. The thing I understood about it was it had to be unique and creative. Fuh, it was difficult!",
+        "line5": "",
+        "line6": "First, the user is taken to the home page where I used the fluid effect. I did not find such a library, but I found places where this effect was applied and borrowed it from there, slightly transforming it in my own way. Here on the main page, you can interact with the animation by pressing SPACE. Flashes of fluid animations will appear, by pressing \"P\". If you want to stop the animation, you can press pause. By clicking and swiping across the screen with a mouse or finger, the animation is brought into action.",
+        "line7": "",
+        "line8": "Then the user can go to the 'About me' page. On this page I introduce my personal story, the stack of technologies I own, work experience and other facts about me =)",
+        "line9": ""
       }
     },
     "rpg": {
@@ -163,6 +165,15 @@
         "line5": "Currently the backend is not working now."
       }
     },
+    "solitaire": {
+      "description": "All cards are PNGs rendered with Canvas.\nThe architecture uses classes with a “Composition over Inheritance” approach: cards, decks, and game states encapsulate their own behavior while interacting through composition rather than rigid inheritance. This allows for flexible feature expansion and easy updates. Instead of heavy inheritance chains, everything is split into small, independent classes. The main idea is to keep adding new features simple.",
+      "features": "Features:",
+      "li1": "All logic is class-based.",
+      "li2": "Extendable structure.",
+      "li3": "Clean, minimal code without unnecessary dependencies.",
+      "li4": "Focus on a pleasant UI.",
+      "title": "Native HTML, CSS, JS (no frameworks)."
+    },
     "thanos": {
       "text": {
         "line0": "While working in EvoPlay, I received a task to reproduce the Thanos effect.",
@@ -174,7 +185,5 @@
         "line6": "However, ordinary canvas is much better for it, so I made this effect without using the html2canvas library."
       }
     }
-  },
-  "ivan": "Ivan",
-  "seeTheResultHere": "See the result here"
+  }
 }

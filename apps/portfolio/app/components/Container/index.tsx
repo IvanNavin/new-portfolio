@@ -26,7 +26,10 @@ export const Container = ({
 }: Props) => {
   return (
     <main
-      className={clsxm('mx-auto max-w-[1000px] p-8 min-h-screen', className)}
+      className={clsxm(
+        'mx-auto max-w-[1000px] p-8 pb-[100px] min-h-screen',
+        className,
+      )}
     >
       <BackButton backPath={backPath} text={backText} />
       <h2 className={clsxm('mb-10 mt-5 text-[32px]', titleClassName)}>

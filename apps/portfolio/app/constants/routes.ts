@@ -20,4 +20,5 @@ export const ROUTES = {
   jest: (lang: Locale = getLang()) => `/${lang}/performances/jest`,
   typeVsInterface: (lang: Locale = getLang()) =>
     `/${lang}/performances/type-vs-interface`,
+  solitaire: (lang: Locale = getLang()) => `/${lang}/my-works/solitaire`,
 };

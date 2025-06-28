@@ -9,6 +9,7 @@ import POKEDEX_HOME from '@assets/img/pokedex-home.png';
 import PORTFOLIO from '@assets/img/portfolio.png';
 import RPG from '@assets/img/RPG.png';
 import RPG_GAME from '@assets/img/RPG-GAME.png';
+import SOLITAIRE_FRONT from '@assets/img/solitaireFront.png';
 import THANOS from '@assets/img/thanos.jpg';
 import THANOS_BACK from '@assets/img/thanos-back.jpeg';
 import { Locale } from '@root/i18n-config';
@@ -43,6 +44,15 @@ export const getWorks = (lang: Locale): Work[] => [
       ESkill.Sass,
       ESkill.ReactI18Next,
     ],
+  },
+  {
+    id: 'solitaire',
+    name: 'Solitaire',
+    status: 'New',
+    workType: [EWorkType.Game, EWorkType.VisualEffect],
+    route: ROUTES.solitaire(lang),
+    frontPicture: SOLITAIRE_FRONT,
+    stack: [ESkill.HTML, ESkill.CSS, ESkill.JavaScript],
   },
   {
     id: 'miner',
