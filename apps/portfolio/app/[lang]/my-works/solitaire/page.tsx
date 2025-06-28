@@ -1,16 +1,11 @@
 import { Solitaire } from '@app/[lang]/my-works/solitaire/Solitaire';
 import { DefaultProps } from '@app/types';
+import { isUrlAvailable } from '@app/utils/isUrlAvailable';
 
 export default async function Page({ params: { lang } }: DefaultProps) {
-  const iframeUrl = 'https://hi-solitaire.vercel.app/';
-  let isIframeAvailable: boolean;
-
-  try {
-    const res = await fetch(iframeUrl, { method: 'HEAD' });
-    isIframeAvailable = res.ok;
-  } catch (e) {
-    isIframeAvailable = false;
-  }
+  const isIframeAvailable = await isUrlAvailable(
+    'https://hi-solitaire.vercel.app/',
+  );
 
   return <Solitaire lang={lang} isIframeAvailable={isIframeAvailable} />;
 }
