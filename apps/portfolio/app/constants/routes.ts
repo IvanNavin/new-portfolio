@@ -21,4 +21,5 @@ export const ROUTES = {
   typeVsInterface: (lang: Locale = getLang()) =>
     `/${lang}/performances/type-vs-interface`,
   solitaire: (lang: Locale = getLang()) => `/${lang}/my-works/solitaire`,
+  snake: (lang: Locale = getLang()) => `/${lang}/my-works/snake`,
 };

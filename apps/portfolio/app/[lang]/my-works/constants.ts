@@ -9,6 +9,8 @@ import POKEDEX_HOME from '@assets/img/pokedex-home.png';
 import PORTFOLIO from '@assets/img/portfolio.png';
 import RPG from '@assets/img/RPG.png';
 import RPG_GAME from '@assets/img/RPG-GAME.png';
+import SNAKE_BACK from '@assets/img/snake-back.png';
+import SNAKE_FRONT from '@assets/img/snake-front.png';
 import SOLITAIRE_FRONT from '@assets/img/solitaireFront.png';
 import THANOS from '@assets/img/thanos.jpg';
 import THANOS_BACK from '@assets/img/thanos-back.jpeg';
@@ -52,6 +54,16 @@ export const getWorks = (lang: Locale): Work[] => [
     workType: [EWorkType.Game, EWorkType.VisualEffect],
     route: ROUTES.solitaire(lang),
     frontPicture: SOLITAIRE_FRONT,
+    stack: [ESkill.HTML, ESkill.CSS, ESkill.JavaScript],
+  },
+  {
+    id: 'snake',
+    name: 'Snake',
+    status: 'New',
+    workType: [EWorkType.Game, EWorkType.VisualEffect],
+    route: ROUTES.snake(lang),
+    frontPicture: SNAKE_FRONT,
+    backPicture: SNAKE_BACK,
     stack: [ESkill.HTML, ESkill.CSS, ESkill.JavaScript],
   },
   {

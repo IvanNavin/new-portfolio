@@ -162,6 +162,15 @@
         "line5": "Derzeit funktioniert das Backend nicht."
       }
     },
+    "snake": {
+      "description": "Klassisches Snake ohne Abhängigkeiten. Nutzt das DOM zur Darstellung des Spielfelds und requestAnimationFrame als Haupt-Gameloop für konsistente Updates. Der Code ist klassenbasiert aufgebaut; die Kernelemente (Game, Cell) kapseln ihre Logik und interagieren per Komposition. Tastatureingaben werden über eine Queue verarbeitet, um Hänger und fehlerhafte Richtungswechsel zu vermeiden.",
+      "features": "Features:",
+      "li1": "Komplette Logik in Klassen geschrieben.",
+      "li2": "Saubere, gut lesbare Code-Struktur.",
+      "li3": "Keine Frameworks oder unnötigen Abhängigkeiten.",
+      "li4": "Gameloop via requestAnimationFrame.",
+      "title": "Reines HTML, CSS, JS (ohne Frameworks)."
+    },
     "solitaire": {
       "description": "Alle Karten sind PNGs und werden mit Canvas gerendert.\nDie Architektur nutzt Klassen mit einem “Composition over Inheritance”-Ansatz: Karten, Decks und Spielzustände kapseln ihr eigenes Verhalten und interagieren über Komposition statt starre Vererbung. Das ermöglicht eine flexible Erweiterung und einfache Updates. Anstatt schwerer Vererbungsketten ist alles in kleine, unabhängige Klassen aufgeteilt. Die Hauptidee: Neue Features sollen sich einfach ergänzen lassen.",
       "features": "Features:",
