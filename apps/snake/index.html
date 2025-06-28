@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./src/css/main.css">
+    <title>Snake</title>
+</head>
+<body>
+
+    <section class="start-screen">
+        <h1>Snake</h1>
+        <h2>Choose Difficulty</h2>
+        <button class="difficulty" data-speed="300">Easy</button>
+        <button class="difficulty" data-speed="200">Medium</button>
+        <button class="difficulty" data-speed="100">Hard</button>
+    </section>
+    <section class="game-screen display-none">
+        <header>
+            <p>Time: <span id="time">0:00</span></p>
+            <p>Score: <span id='score'>0</span></p>
+        </header>
+        <div class="game-container">
+            <main id='main'></main>
+            <div id="food"></div>
+        </div>
+    </section>
+    <section class="pause-menu display-none">
+        <h2>Paused</h2>
+        <button id="resume">Resume</button>
+        <button id="restart-from-pause">Restart</button>
+        <button class="exit-to-menu">Exit to Menu</button>
+    </section>
+    <section class='game-over display-none'>
+        <h2>GAME OVER</h2>
+
+        <button id='restart'>
+            Restart
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 125 125">
+                <path d="m 60.90625,7.984375 c -28.67767,0 -51.9375,23.259829 -51.9375,51.9375 0,16.676866 7.86714,31.512857 20.09375,41.000005 l -10.96875,10.65625 36,0.3125 0.75,-36.000005 -11.375,11.03125 C 34.61486,81.195848 28.75,71.254649 28.75,59.921875 c 0,-17.763035 14.39321,-32.15625 32.15625,-32.15625 0.77958,0 1.54683,0.03923 2.3125,0.09375 l 0,-19.8125 c -0.76301,-0.03329 -1.5413,-0.0625 -2.3125,-0.0625 z m 13,8.125 -0.75,36 11.375,-11.03125 c 8.85389,5.726027 14.71875,15.667226 14.71875,27 0,17.763035 -14.39321,32.156255 -32.15625,32.156255 -0.779582,0 -1.546832,-0.0392 -2.3125,-0.0937 l 0,19.8125 c 0.763014,0.0333 1.541303,0.0625 2.3125,0.0625 28.67767,0 51.9375,-23.259834 51.9375,-51.937505 0,-16.676866 -7.86714,-31.512857 -20.09375,-41 l 10.96875,-10.65625 -36,-0.3125 z" fill="#fff"/>
+            </svg>
+        </button>
+        <button class="exit-to-menu">Exit to Menu</button>
+    </section>
+
+    <script type="module" src="src/js/main.js"></script>
+</body>
+</html>
