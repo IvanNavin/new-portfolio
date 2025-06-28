@@ -1,41 +1,11 @@
-'use client';
-import { ROUTES } from '@app/constants/routes';
+import { Thanos } from '@app/[lang]/my-works/thanos/Thanos';
 import { DefaultProps } from '@app/types';
-import { roboto } from '@assets/fonts';
-import VIDEO from '@assets/video/effectThanos.mp4';
-import { Button } from '@components/Button';
-import { Container } from '@components/Container';
-import { RenderTextArea } from '@components/RenderTextArea';
-import { useTranslation } from '@i18n/client';
+import { isUrlAvailable } from '@app/utils/isUrlAvailable';
 
-export default function Page({ params: { lang } }: DefaultProps) {
-  const { t } = useTranslation();
-
-  return (
-    <Container
-      lang={lang}
-      backText={t('myWorks.myWorks')}
-      backPath={ROUTES.myWorks(lang)}
-      title='Thanos'
-    >
-      <video controls width='100%' autoPlay loop muted>
-        <source src={VIDEO} type='video/mp4' />
-        Your browser does not support the video tag.
-      </video>
-      <section className={roboto.className}>
-        <RenderTextArea t={t} tKey='works.thanos.text' />
-      </section>
-
-      <footer>
-        <Button
-          text='See the result here'
-          href='https://thanos-effect-example.vercel.app/'
-        />
-        <Button
-          text='See the code here'
-          href='https://github.com/IvanNavin/new-portfolio/tree/main/apps/destructurizator'
-        />
-      </footer>
-    </Container>
+export default async function Page({ params: { lang } }: DefaultProps) {
+  const isIframeAvailable = await isUrlAvailable(
+    'https://thanos-effect-example.vercel.app/',
   );
+
+  return <Thanos lang={lang} isIframeAvailable={isIframeAvailable} />;
 }
