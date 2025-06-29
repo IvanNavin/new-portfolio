@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --experimental-https",
-    "generate:prisma": "cd ../../packages/prisma && npx prisma generate",
-    "build": "npm run generate:prisma && next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint app --fix && npm run format",
