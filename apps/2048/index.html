@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="src/css/main.css" />
+        <title>2048</title>
+    </head>
+    <body>
+        <!-- screen: menu | game -->
+        <div class="wrapper" data-screen="menu">
+            <div class="main-menu" data-menu>
+                <h1>2048</h1>
+                <button class="button-start" data-start-game>Start Game</button>
+            </div>
+            <div class="game-wrapper" data-game>
+                <div>
+                    <h1>2048</h1>
+                    <div class="top-menu" data-restart-game>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 256 256">
+                            <path d="M244,56v48a12,12,0,0,1-12,12H184a12,12,0,1,1,0-24H201.1l-19-17.38c-.13-.12-.26-.24-.38-.37A76,76,0,1,0,127,204h1a75.53,75.53,0,0,0,52.15-20.72,12,12,0,0,1,16.49,17.45A99.45,99.45,0,0,1,128,228h-1.37A100,100,0,1,1,198.51,57.06L220,76.72V56a12,12,0,0,1,24,0Z" fill="orange"></path>
+                        </svg>
+                    </div>
+                    <div class="board" data-board></div>
+                    <h2 class="hide" data-win>You win!</h2>
+                </div>
+            </div>
+            <div class="overlay hide" data-game-over>
+                <div class="modal">
+                    <h2>Game Over</h2>
+                    <footer class="modal-footer">
+                        <button class="btn btn-blue" data-restart-game>Restart Game</button>
+                        <button class="btn btn-green" data-to-menu>Home</button>
+                    </footer>
+                </div>
+            </div>
+        </div>
+
+        <script type="module" src="src/js/main.js"></script>
+    </body>
+</html>
