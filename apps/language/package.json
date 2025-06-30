@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --experimental-https",
-    "build": "yarn workspace @repo/prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint app --fix && npm run format",

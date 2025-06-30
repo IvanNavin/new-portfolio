@@ -16,10 +16,7 @@
     "typecheck": "turbo typecheck",
     "clean": "turbo clean",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "lint-staged": "lint-staged",
-    "generate:prisma": "cd packages/prisma && npx prisma generate",
-    "generate:pokedex": "prisma generate --schema=./apps/pokedex/prisma/schema.prisma",
-    "generate:language": "prisma generate --schema=./apps/language/prisma/schema.prisma"
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0"
