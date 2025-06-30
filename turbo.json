@@ -3,10 +3,10 @@
   "ui": "tui",
   "tasks": {
     "generate": {
-      "outputs": ["packages/prisma/generated/prisma-client/**"]
+      "outputs": ["^generate"]
     },
     "build": {
-      "dependsOn": ["@repo/prisma#generate", "^build"],
+      "dependsOn": ["generate", "^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [
         ".next/**",
