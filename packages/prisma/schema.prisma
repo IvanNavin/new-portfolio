@@ -72,3 +72,27 @@ model ApartmentList {
 
   @@map("apartment_list")
 }
+
+model VisitStat {
+  id         String   @id @default(cuid())
+  domain     String
+  path       String
+  country    String?
+  region     String?
+  city       String?
+  timeZone   String?
+  latitude   Float?
+  longitude  Float?
+  ip         String
+  userAgent  String
+  referrer   String?
+  language   String?
+  deviceType String?
+  timestamp  DateTime @default(now())
+  sessionId  String?
+  event      String   @default("pageview")
+  extra      Json?
+
+  @@index([domain, path, timestamp])
+  @@map("visit_stat")
+}

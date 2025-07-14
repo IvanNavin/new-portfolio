@@ -1,6 +1,7 @@
 'use client';
 import { AnimateProvider } from '@components/AnimateProvider';
 import { Preloader } from '@components/preloader';
+import { VisitTracker } from '@components/VisitTracker';
 import { LangContext } from '@i18n/context';
 import { MantineProvider } from '@mantine/core';
 import { Locale } from '@root/i18n-config';
@@ -23,6 +24,7 @@ export const Providers = ({ children, lang }: Props) => {
         <MantineProvider withGlobalClasses withCssVariables withStaticClasses>
           <AnimatePresence initial={false} mode='wait'>
             <AnimateProvider key={pathName}>{children}</AnimateProvider>
+            <VisitTracker />
           </AnimatePresence>
         </MantineProvider>
       </Suspense>

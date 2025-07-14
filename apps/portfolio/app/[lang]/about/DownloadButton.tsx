@@ -1,15 +1,27 @@
+import { ETrackVisitEvent } from '@app/types/trackVisitTypes';
+import { useTrackVisit } from '@app/utils/hooks/useTrackVisit';
 import CV from '@assets/cv/Ivan_Holovko_CV.pdf';
 import { Magnetic } from '@components/Magnetic';
 import { clsxm } from '@repo/utils';
 import Link from 'next/link';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 export const DownloadButton = () => {
+  const trackVisit = useTrackVisit();
+
+  const handleClick = useCallback(async () => {
+    await trackVisit({
+      event: ETrackVisitEvent.CLICK,
+      extra: { file: 'Ivan_Holovko_CV.pdf' },
+    });
+  }, [trackVisit]);
+
   return (
     <Magnetic>
       <Link
         href={CV}
         download='CV_Holovko_Ivan.pdf'
+        onClick={handleClick}
         className={clsxm(
           'download text-gold relative inline-block cursor-pointer ',
           'overflow-hidden bg-transparent px-6 py-7 text-2xl uppercase tracking-wider',

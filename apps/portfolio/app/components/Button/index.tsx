@@ -1,8 +1,10 @@
+import { ETrackVisitEvent } from '@app/types/trackVisitTypes';
+import { useTrackVisit } from '@app/utils/hooks/useTrackVisit';
 import MONK from '@assets/img/monk.png';
 import { clsxm } from '@repo/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { CSSProperties } from 'react';
+import { CSSProperties, useCallback } from 'react';
 
 type Props = {
   text: string;
@@ -12,11 +14,26 @@ type Props = {
 };
 
 export const Button = ({ text, href, style, className }: Props) => {
+  const trackVisit = useTrackVisit();
+
+  const handleClick = useCallback(
+    async () =>
+      trackVisit({
+        event: ETrackVisitEvent.CLICK,
+        extra: {
+          target: 'external_link',
+          url: href,
+        },
+      }),
+    [trackVisit],
+  );
+
   return (
     <Link
       href={href}
       target='_blank'
       rel='noopener noreferrer'
+      onClick={handleClick}
       className={clsxm(
         'inline-block size-[100px] relative text-white group',
         className,

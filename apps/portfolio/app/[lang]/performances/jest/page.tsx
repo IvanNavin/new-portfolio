@@ -1,12 +1,28 @@
 'use client';
 import { ROUTES } from '@app/constants/routes';
 import { DefaultProps } from '@app/types';
+import { ETrackVisitEvent } from '@app/types/trackVisitTypes';
+import { useTrackVisit } from '@app/utils/hooks/useTrackVisit';
 import { Container } from '@components/Container';
 import { VideoFrame } from '@components/VideoFrame';
 import { useTranslation } from '@i18n/client';
+import { useCallback } from 'react';
 
 export default function Page({ params: { lang } }: DefaultProps) {
   const { t } = useTranslation();
+  const trackVisit = useTrackVisit();
+
+  const handleClick = useCallback(
+    async () =>
+      trackVisit({
+        event: ETrackVisitEvent.CLICK,
+        extra: {
+          target: 'external_link',
+          url: 'https://docs.google.com/presentation/d/1xImjqRFFIQHXt2sgdj5Eiw-RhWTfdbyMM3dgAiNn9RY/edit?usp=sharing',
+        },
+      }),
+    [trackVisit],
+  );
 
   return (
     <Container
@@ -46,6 +62,7 @@ export default function Page({ params: { lang } }: DefaultProps) {
             href='https://docs.google.com/presentation/d/1xImjqRFFIQHXt2sgdj5Eiw-RhWTfdbyMM3dgAiNn9RY/edit?usp=sharing'
             target='_blank'
             rel='noreferrer'
+            onClick={handleClick}
             className='text-blue-500'
           >
             link

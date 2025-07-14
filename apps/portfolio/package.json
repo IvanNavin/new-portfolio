@@ -15,6 +15,8 @@
     "@hookform/resolvers": "3.1.1",
     "@mantine/core": "^7.13.2",
     "@mantine/hooks": "7.12.2",
+    "@prisma/client": "^5.20.0",
+    "@repo/prisma": "*",
     "@repo/utils": "*",
     "clsx": "1.2.1",
     "country-flag-icons": "1.5.7",
@@ -27,6 +29,7 @@
     "next": "14.2.5",
     "next-i18n-router": "^5.5.1",
     "next-i18next": "14.0.0",
+    "prisma": "^5.20.0",
     "react": "^18",
     "react-dom": "^18",
     "react-i18next": "13.1.2",
@@ -35,6 +38,7 @@
     "usehooks-ts": "3.1.0"
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "^15.3.4",
     "@repo/eslint-config": "*",
     "@tailwindcss/forms": "0.5.3",
     "@total-typescript/ts-reset": "0.5.1",
