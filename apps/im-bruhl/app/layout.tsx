@@ -1,3 +1,4 @@
+import { VisitTracker } from "@app/components/VisitTracker";
 import { MantineProvider } from "@mantine/core";
 import { roboto } from "language/src/app/fonts/roboto";
 import type { Metadata } from "next";
@@ -27,6 +28,7 @@ export default function RootLayout({
           withStaticClasses
         >
           {children}
+          <VisitTracker />
         </MantineProvider>
       </body>
     </html>
