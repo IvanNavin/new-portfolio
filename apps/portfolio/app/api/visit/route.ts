@@ -9,23 +9,28 @@ export async function POST(req: NextRequest) {
 
   // Get iP (take from Headers, because Next/Server is not always given req.ip)
   const forwarded = req.headers.get('x-forwarded-for');
-  let ip = forwarded ? forwarded.split(',')[0] : '';
+  let ip = forwarded ? forwarded.split(',')[0].trim() : '';
 
   // Basic Fallback - IP API allows an empty IP (defines automatically)
   // But better clearly - because then works in both Dev and on the prod
-  if (!ip || ip === '::1' || ip === '127.0.0.1') ip = ''; // Then IP API itself determines
+  if (!ip || ip === '::1' || ip === '127.0.0.1') ip = '';
 
   // Geo info through public API (free)
   let geo: AnyType = {};
   try {
-    const geoRes = await fetch(`https://ipapi.co/${ip}/json/`, {
+    const endpoint = ip
+      ? `https://freegeoip.app/json/${ip}`
+      : `https://freegeoip.app/json/`;
+    const geoRes = await fetch(endpoint, {
       next: { revalidate: 60 * 60 * 12 },
     }); // cache 12h
     if (geoRes.ok) {
       geo = await geoRes.json();
+    } else {
+      window.console.error('freeGeoIp status:', geoRes.status);
     }
   } catch (e) {
-    window.console.error(e);
+    window.console.error('Geo lookup failed:', e);
   }
 
   // User-Agent
@@ -43,13 +48,13 @@ export async function POST(req: NextRequest) {
     data: {
       domain,
       path,
-      country: geo?.country || geo?.country_code || null,
-      region: geo?.region || geo?.region_code || null,
-      city: geo?.city || null,
-      timeZone: geo?.timezone || null,
-      latitude: geo?.latitude ?? geo?.lat ?? null,
-      longitude: geo?.longitude ?? geo?.lon ?? null,
-      ip: ip || geo?.ip || '',
+      country: geo.country_code || null,
+      region: geo.region_code || null,
+      city: geo.city || null,
+      timeZone: geo.time_zone || null,
+      latitude: geo.latitude ?? null,
+      longitude: geo.longitude ?? null,
+      ip: ip || geo.ip || '',
       userAgent,
       language,
       deviceType,
