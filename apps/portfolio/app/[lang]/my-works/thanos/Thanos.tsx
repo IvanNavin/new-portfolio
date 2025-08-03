@@ -24,7 +24,7 @@ export const Thanos = ({ lang, isIframeAvailable }: Props) => {
       title='Thanos'
     >
       <SafeIframe
-        iframeSrc='https://thanos-effect-example.vercel.app/'
+        iframeSrc='https://thanos-effect.netlify.app/'
         imgSrc={IMG}
         isIframeAvailable={isIframeAvailable}
       />
@@ -35,7 +35,7 @@ export const Thanos = ({ lang, isIframeAvailable }: Props) => {
       <footer>
         <Button
           text='See the result here'
-          href='https://thanos-effect-example.vercel.app/'
+          href='https://thanos-effect.netlify.app/'
         />
         <Button
           text='See the code here'

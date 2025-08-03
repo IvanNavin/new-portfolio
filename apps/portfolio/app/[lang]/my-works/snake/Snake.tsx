@@ -23,7 +23,7 @@ export const Snake = ({ lang, isIframeAvailable }: Props) => {
       title='Snake'
     >
       <SafeIframe
-        iframeSrc='https://snake-native.vercel.app/'
+        iframeSrc='https://snake-native.netlify.app/'
         imgSrc={IMG}
         isIframeAvailable={isIframeAvailable}
       />
@@ -43,7 +43,7 @@ export const Snake = ({ lang, isIframeAvailable }: Props) => {
       <footer className='mt-6'>
         <Button
           text='See the result here'
-          href='https://snake-native.vercel.app/'
+          href='https://snake-native.netlify.app/'
         />
         <Button
           text='See the code here'

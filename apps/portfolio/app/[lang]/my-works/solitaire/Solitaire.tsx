@@ -22,7 +22,7 @@ export const Solitaire = ({ lang, isIframeAvailable }: Props) => {
       title='Solitaire'
     >
       <SafeIframe
-        iframeSrc='https://hi-solitaire.vercel.app/'
+        iframeSrc='https://solitare-native.netlify.app/'
         imgSrc={IMG}
         isIframeAvailable={isIframeAvailable}
       />
@@ -42,7 +42,7 @@ export const Solitaire = ({ lang, isIframeAvailable }: Props) => {
       <footer className='mt-6'>
         <Button
           text='See the result here'
-          href='https://hi-solitaire.vercel.app/'
+          href='https://solitare-native.netlify.app/'
         />
         <Button
           text='See the code here'

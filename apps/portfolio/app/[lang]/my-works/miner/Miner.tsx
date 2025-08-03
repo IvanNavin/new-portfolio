@@ -23,7 +23,7 @@ export const Miner = ({ lang, isIframeAvailable }: Props) => {
       title={t('works.miner.title')}
     >
       <SafeIframe
-        iframeSrc='https://miner-native.vercel.app/'
+        iframeSrc='https://miner-native.netlify.app/'
         imgSrc={IMG}
         isIframeAvailable={isIframeAvailable}
       />
@@ -32,7 +32,7 @@ export const Miner = ({ lang, isIframeAvailable }: Props) => {
       <footer>
         <Button
           text='See the result here'
-          href='https://miner-native.vercel.app/'
+          href='https://miner-native.netlify.app/'
         />
         <Button
           text='See the code here'
