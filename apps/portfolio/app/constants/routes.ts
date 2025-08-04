@@ -22,4 +22,5 @@ export const ROUTES = {
     `/${lang}/performances/type-vs-interface`,
   solitaire: (lang: Locale = getLang()) => `/${lang}/my-works/solitaire`,
   snake: (lang: Locale = getLang()) => `/${lang}/my-works/snake`,
+  game2048: (lang: Locale = getLang()) => `/${lang}/my-works/game-2048`,
 };

@@ -1,4 +1,5 @@
 import { ROUTES } from '@app/constants/routes';
+import GAME_2048 from '@assets/img/2048.png';
 import ENGLISH from '@assets/img/English.png';
 import GANTT_CHART_BACK from '@assets/img/ganttChartBack.png';
 import GANTT_CHART_FRONT from '@assets/img/ganttChartFront.png';
@@ -7,8 +8,6 @@ import FRONT_MINER from '@assets/img/minerFront.png';
 import POKEDEX_DESKTOP from '@assets/img/pokedex-desktop.png';
 import POKEDEX_HOME from '@assets/img/pokedex-home.png';
 import PORTFOLIO from '@assets/img/portfolio.png';
-import RPG from '@assets/img/RPG.png';
-import RPG_GAME from '@assets/img/RPG-GAME.png';
 import SNAKE_BACK from '@assets/img/snake-back.png';
 import SNAKE_FRONT from '@assets/img/snake-front.png';
 import SOLITAIRE_FRONT from '@assets/img/solitaireFront.png';
@@ -50,7 +49,7 @@ export const getWorks = (lang: Locale): Work[] => [
   {
     id: 'solitaire',
     name: 'Solitaire',
-    status: 'New',
+    status: '2025',
     workType: [EWorkType.Game, EWorkType.VisualEffect],
     route: ROUTES.solitaire(lang),
     frontPicture: SOLITAIRE_FRONT,
@@ -59,7 +58,7 @@ export const getWorks = (lang: Locale): Work[] => [
   {
     id: 'snake',
     name: 'Snake',
-    status: 'New',
+    status: '2025',
     workType: [EWorkType.Game, EWorkType.VisualEffect],
     route: ROUTES.snake(lang),
     frontPicture: SNAKE_FRONT,
@@ -67,38 +66,47 @@ export const getWorks = (lang: Locale): Work[] => [
     stack: [ESkill.HTML, ESkill.CSS, ESkill.JavaScript],
   },
   {
+    id: '2048',
+    name: '2048',
+    status: '2023',
+    workType: [EWorkType.Game, EWorkType.VisualEffect],
+    route: ROUTES.game2048(lang),
+    frontPicture: GAME_2048,
+    stack: [ESkill.HTML, ESkill.CSS, ESkill.JavaScript],
+  },
+  {
     id: 'miner',
     name: 'Miner',
-    status: 'New',
+    status: '2023',
     workType: [EWorkType.Game],
     route: ROUTES.miner(lang),
     frontPicture: FRONT_MINER,
     backPicture: BACK_MINER,
     stack: [ESkill.HTML, ESkill.CSS, ESkill.JavaScript],
   },
-  {
-    id: 'RPG',
-    name: 'RPG Online Game',
-    status: 'in process',
-    workType: [EWorkType.Game, EWorkType.VisualEffect],
-    route: ROUTES.rpg(lang),
-    frontPicture: RPG,
-    backPicture: RPG_GAME,
-    stack: [
-      ESkill.HTML,
-      ESkill.CSS,
-      ESkill.JavaScript,
-      ESkill.Canvas,
-      ESkill.Node,
-      ESkill.Hapi,
-      ESkill.Websockets,
-      ESkill.Chat,
-    ],
-  },
+  // {
+  //   id: 'RPG',
+  //   name: 'RPG Online Game',
+  //   status: 'in process',
+  //   workType: [EWorkType.Game, EWorkType.VisualEffect],
+  //   route: ROUTES.rpg(lang),
+  //   frontPicture: RPG,
+  //   backPicture: RPG_GAME,
+  //   stack: [
+  //     ESkill.HTML,
+  //     ESkill.CSS,
+  //     ESkill.JavaScript,
+  //     ESkill.Canvas,
+  //     ESkill.Node,
+  //     ESkill.Hapi,
+  //     ESkill.Websockets,
+  //     ESkill.Chat,
+  //   ],
+  // },
   {
     id: 'ganttChart',
     name: 'Gantt Chart',
-    status: 'New',
+    status: '2022',
     workType: [EWorkType.Productivity],
     route: ROUTES.ganttChart(lang),
     frontPicture: GANTT_CHART_FRONT,
@@ -119,6 +127,7 @@ export const getWorks = (lang: Locale): Work[] => [
   {
     id: 'pokedex',
     name: 'Pokedex',
+    status: '2021',
     workType: [EWorkType.Education],
     route: ROUTES.pokedex(lang),
     frontPicture: POKEDEX_HOME,
@@ -137,6 +146,7 @@ export const getWorks = (lang: Locale): Work[] => [
   {
     id: 'english-learn',
     name: 'English learn',
+    status: '2020',
     workType: [EWorkType.Education],
     route: ROUTES.english(lang),
     frontPicture: ENGLISH,
@@ -155,6 +165,7 @@ export const getWorks = (lang: Locale): Work[] => [
   {
     id: 'thanos-effect',
     name: 'Thanos Effect',
+    status: '2019',
     workType: [EWorkType.VisualEffect],
     route: ROUTES.thanos(lang),
     frontPicture: THANOS,

@@ -1,7 +1,5 @@
 import { StaticImageData } from 'next/image';
 
-type WorkStatus = 'New' | 'in process';
-
 export type Option = {
   label: string;
   value: string | EWorkType;
@@ -19,7 +17,7 @@ export type Work = {
   id: string;
   name: string;
   workType?: EWorkType[];
-  status?: WorkStatus;
+  status?: string;
   route: string;
   stack: string[];
   frontPicture?: StaticImageData;
