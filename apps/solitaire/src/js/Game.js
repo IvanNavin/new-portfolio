@@ -99,30 +99,40 @@ export default class Game {
 
     ctx.clearRect(0, 0, W, H);
 
-    const margin = 20;
-    const gap = 20; // The gap between the pictures
-    const cols = 7; // the number of columns in Tableau
+    // --- layout params ---
+    const idealW = 1000,
+      idealH = 780;
+    const scale = Math.min(W / idealW, H / idealH);
 
-    // Calculate the width and height of the card to fit in 7 columns
-    const cw = (W - 2 * margin - (cols - 1) * gap) / cols;
-    const ch = cw * 1.5; // The ratio of the sides is 2: 3
+    const idealMargin = 20,
+      idealGap = 20,
+      cols = 7;
+    const margin = idealMargin * scale;
+    const gap = idealGap * scale;
 
-    // Зсув угорі під HUD/меню
-    const extra = this.verticalOffset;
+    const cw0 = (idealW - 2 * idealMargin - (cols - 1) * idealGap) / cols;
+    const ch0 = cw0 * 1.5;
+    const cw = cw0 * scale;
+    const ch = ch0 * scale;
 
-    // Y-координати
-    const topY = margin + extra;
+    const groupW = (cw + gap) * 7 - gap;
+    const startX = (W - groupW) / 2;
+
+    const topY = margin + this.verticalOffset;
     const tableauY = topY + ch + margin;
+    const overlapY = ch * this.overlapFactor;
 
-    // 1) Малюємо 4 foundations зліва
+    const stockCol = 6;
+    const stockX = startX + stockCol * (cw + gap);
+    const wasteX = stockX - gap - cw;
+
+    // --- 1) foundations ---
     for (let i = 0; i < 4; i++) {
-      const x = margin + i * (cw + gap);
+      const x = startX + i * (cw + gap);
       const y = topY;
-
       if (this.foundations[i].length) {
         this.foundations[i].at(-1).draw(ctx, x, y, cw, ch);
       } else {
-        // 1) External white frame with rounded
         ctx.save();
         ctx.strokeStyle = "#fff";
         ctx.lineWidth = 2;
@@ -130,16 +140,20 @@ export default class Game {
         strokeRoundedRect(ctx, x, y, cw, ch, 10);
         ctx.restore();
 
-        // 2) Inside the dotted point is transparent
         ctx.save();
         ctx.strokeStyle = "rgba(255,255,255,0.5)";
         ctx.lineWidth = 1;
-        ctx.setLineDash([5, 5]); // 5px stroke, 5px skip
-        // Move a little inside so that the dotted dot is “in the middle”
-        strokeRoundedRect(ctx, x + 8, y + 8, cw - 16, ch - 16, 8);
+        ctx.setLineDash([5 * scale, 5 * scale]);
+        strokeRoundedRect(
+          ctx,
+          x + 8 * scale,
+          y + 8 * scale,
+          cw - 16 * scale,
+          ch - 16 * scale,
+          8 * scale,
+        );
         ctx.restore();
 
-        // 3) Draw the letter “A”
         ctx.save();
         ctx.fillStyle = "rgba(255,255,255,0.5)";
         ctx.font = `${ch * 0.6}px sans-serif`;
@@ -150,14 +164,10 @@ export default class Game {
       }
     }
 
-    // 2) Drawing Stock and Waste to the right
-    // Stock pressed to the right edge
-    const stockX = W - margin - cw;
-
+    // --- 2) stock ---
     if (this.stock.length) {
       this.stock.at(-1).draw(ctx, stockX, topY, cw, ch);
     } else {
-      // 1) External white frame
       ctx.save();
       ctx.strokeStyle = "#fff";
       ctx.lineWidth = 2;
@@ -166,7 +176,7 @@ export default class Game {
       ctx.restore();
 
       // 2) Dashed inner frame
-      const inset = 8;
+      const inset = 8 * scale;
       const innerX = stockX + inset;
       const innerY = topY + inset;
       const innerW = cw - inset * 2;
@@ -175,114 +185,84 @@ export default class Game {
       ctx.save();
       ctx.strokeStyle = "rgba(255,255,255,0.5)";
       ctx.lineWidth = 1;
-      ctx.setLineDash([5, 5]);
-      strokeRoundedRect(ctx, innerX, innerY, innerW, innerH, 8);
+      ctx.setLineDash([5 * scale, 5 * scale]);
+      strokeRoundedRect(ctx, innerX, innerY, innerW, innerH, 8 * scale);
       ctx.restore();
 
-      // 3) SVG-Icon inside the dotted
       const svgPath = `M224,48V96a8,8,0,0,1-8,8H168a8,8,0,0,1,0-16h28.69L182.06,73.37a79.56,79.56,0,0,0-56.13-23.43h-.45A79.52,79.52,0,0,0,69.59,72.71,8,8,0,0,1,58.41,61.27a96,96,0,0,1,135,.79L208,76.69V48a8,8,0,0,1,16,0ZM186.41,183.29a80,80,0,0,1-112.47-.66L59.31,168H88a8,8,0,0,0,0-16H40a8,8,0,0,0-8,8v48a8,8,0,0,0,16,0V179.31l14.63,14.63A95.43,95.43,0,0,0,130,222.06h.53a95.36,95.36,0,0,0,67.07-27.33,8,8,0,0,0-11.18-11.44Z`;
       const p = new Path2D(svgPath);
-
-      // Calculate the scale to fit the icon in innerW × innerH
       const scaleX = innerW / 256;
       const scaleY = innerH / 256;
-      const scale = Math.min(scaleX, scaleY);
-      // Centering
-      const iconW = 256 * scale;
-      const iconH = 256 * scale;
+      const iconScale = Math.min(scaleX, scaleY);
+      const iconW = 256 * iconScale;
+      const iconH = 256 * iconScale;
       const dx = innerX + (innerW - iconW) / 2;
       const dy = innerY + (innerH - iconH) / 2;
 
       ctx.save();
       ctx.fillStyle = "rgba(255,255,255,0.5)";
       ctx.translate(dx, dy);
-      ctx.scale(scale, scale);
+      ctx.scale(iconScale, iconScale);
       ctx.fill(p);
       ctx.restore();
     }
 
-    // Waste to the left of the Stock with the indentation gap
-    const wasteX = stockX - gap - cw;
-    const maxVisible = 3;
-    const wasteArray = this.waste;
-    const total = wasteArray.length;
+    // --- 3) waste ---
+    const maxVis = 3;
+    const total = this.waste.length;
 
-    // If we right now pull a map from Waste - do not animate, and show only two cards,
-    // for the third in the hands
     if (this.drag?.from?.pile === "waste") {
       const overlapX = cw * 0.3;
       const xSlots = [wasteX - 2 * overlapX, wasteX - overlapX, wasteX];
-      // Take the last two
-      const visible = wasteArray.slice(-2);
-      visible.forEach((card, i) => {
-        // Two cards occupy slots 1 and 2
-        const slotIndex = 1 + i;
-        const x = xSlots[slotIndex];
-        card.draw(ctx, x, topY, cw, ch);
-      });
-    }
-    // All other cases - normally animated three cards
-    else if (total > 0) {
+      const visible = this.waste.slice(-2);
+      visible.forEach((c, i) => c.draw(ctx, xSlots[1 + i], topY, cw, ch));
+    } else if (total > 0) {
       const overlapX = cw * 0.3;
       const xSlots = [wasteX - 2 * overlapX, wasteX - overlapX, wasteX];
-
-      // 1) Hidden cards (all except the last three)
-      const hiddenCount = Math.max(0, total - maxVisible);
-      for (let i = 0; i < hiddenCount; i++) {
-        wasteArray[i].draw(ctx, xSlots[0], topY, cw, ch);
+      const hidden = Math.max(0, total - maxVis);
+      for (let i = 0; i < hidden; i++) {
+        this.waste[i].draw(ctx, xSlots[0], topY, cw, ch);
       }
-
-      // 2) The last three cards
-      const visible = wasteArray.slice(-maxVisible);
-
-      // 3) Progress of animation 0 → 1
+      const visible = this.waste.slice(-maxVis);
       let t = 1;
       if (this.wasteAnim.active) {
-        const elapsed = Date.now() - this.wasteAnim.start;
-        t = Math.min(1, elapsed / this.wasteAnim.duration);
+        const e = Date.now() - this.wasteAnim.start;
+        t = Math.min(1, e / this.wasteAnim.duration);
         if (t === 1) this.wasteAnim.active = false;
       }
-
-      // 4) Draw with the interpolation of slots
-      visible.forEach((card, i) => {
-        const fromSlot = this.wasteAnim.fromSlot.get(card);
-        const toSlot = this.wasteAnim.toSlot.get(card);
+      visible.forEach((c, i) => {
+        const from = this.wasteAnim.fromSlot.get(c);
+        const to = this.wasteAnim.toSlot.get(c);
         let x;
-        if (this.wasteAnim.active && fromSlot != null && toSlot != null) {
-          const x0 = xSlots[fromSlot];
-          const x1 = xSlots[toSlot];
-          x = x0 + (x1 - x0) * t;
+        if (this.wasteAnim.active && from != null && to != null) {
+          const xSlots = [wasteX - 2 * overlapX, wasteX - overlapX, wasteX];
+          x = xSlots[from] + (xSlots[to] - xSlots[from]) * t;
         } else {
-          // static mode - just take our slot
-          const startSlot = maxVisible - visible.length;
-          const slotIndex = startSlot + i;
-          x = xSlots[slotIndex];
+          const start = maxVis - visible.length;
+          x = xSlots[start + i];
         }
-        card.draw(ctx, x, topY, cw, ch);
+        c.draw(ctx, x, topY, cw, ch);
       });
     }
 
-    // 3) Draw Tableau (7 columns) all over the space below
-    const overlapY = ch * this.overlapFactor;
-
+    // --- 4) tableau ---
     for (let col = 0; col < cols; col++) {
-      const xStart = margin + col * (cw + gap);
-      const column = this.tableau[col];
-      for (let row = 0; row < column.length; row++) {
-        const card = column[row];
-        // shift by y - for example 30% of the height of the card
+      const xStart = startX + col * (cw + gap);
+      this.tableau[col].forEach((card, row) => {
         const y = tableauY + row * overlapY;
         card.draw(ctx, xStart, y, cw, ch);
-      }
-    }
-
-    if (this.drag) {
-      const { cards, x, y, offsetX, offsetY, cw, ch, overlapY } = this.drag;
-      cards.forEach((card, i) => {
-        card.draw(this.ctx, x - offsetX, y - offsetY + i * overlapY, cw, ch);
       });
     }
 
+    // --- 5) drag layer ---
+    if (this.drag) {
+      const { cards, x, y, offsetX, offsetY, overlapY } = this.drag;
+      cards.forEach((c, i) =>
+        c.draw(ctx, x - offsetX, y - offsetY + i * overlapY, cw, ch),
+      );
+    }
+
+    // --- 6) HUD ---
     this.drawHUD();
   }
 
@@ -297,22 +277,35 @@ export default class Game {
 
   // Determines which "bite" (pile) click
   hitTest(x, y) {
-    const W = this.canvas.width;
-    const margin = 20;
-    const gap = 20;
-    const cols = 7;
-    const cw = (W - 2 * margin - (cols - 1) * gap) / cols;
-    const ch = cw * 1.5;
-    const extra = this.verticalOffset;
-    const topY = margin + extra;
+    const W = this.canvas.width,
+      H = this.canvas.height;
+    const idealW = 1000,
+      idealH = 780,
+      scale = Math.min(W / idealW, H / idealH);
+    const idealMargin = 20,
+      idealGap = 20,
+      cols = 7;
+    const margin = idealMargin * scale,
+      gap = idealGap * scale;
+    const cw0 = (idealW - 2 * idealMargin - (cols - 1) * idealGap) / cols;
+    const ch0 = cw0 * 1.5;
+    const cw = cw0 * scale,
+      ch = ch0 * scale;
+
+    const groupW = (cw + gap) * 7 - gap;
+    const startX = (W - groupW) / 2;
+    const topY = margin + this.verticalOffset;
     const rowY = topY + ch + margin;
     const overlap = ch * this.overlapFactor;
 
-    // 0) Allow a drop on the empty column of Tableau
+    const stockCol = 6;
+    const stockX = startX + stockCol * (cw + gap);
+    const wasteX = stockX - gap - cw;
+
+    // empty tableau spots
     for (let col = 0; col < cols; col++) {
-      if (this.tableau[col].length === 0) {
-        const tx = margin + col * (cw + gap);
-        // the area where the cards fall: If there was one card
+      if (!this.tableau[col].length) {
+        const tx = startX + col * (cw + gap);
         if (x >= tx && x <= tx + cw && y >= rowY && y <= rowY + ch) {
           return {
             pile: "tableau",
@@ -328,32 +321,29 @@ export default class Game {
       }
     }
 
-    // 1) Foundations (i=0..3)
+    // foundations
     for (let i = 0; i < 4; i++) {
-      const fx = margin + i * (cw + gap);
-      const fy = topY;
+      const fx = startX + i * (cw + gap),
+        fy = topY;
       if (x >= fx && x <= fx + cw && y >= fy && y <= fy + ch) {
         return { pile: "foundation", index: i, fx, fy, cw, ch };
       }
     }
 
-    // 2) Stock & Waste in the right corner
-    const stockX = W - margin - cw;
-    const wasteX = stockX - gap - cw;
     // stock
     if (x >= stockX && x <= stockX + cw && y >= topY && y <= topY + ch) {
-      return { pile: "stock", index: null, fx: stockX, fy: topY, cw, ch };
-    }
-    // waste
-    if (x >= wasteX && x <= wasteX + cw && y >= topY && y <= topY + ch) {
-      return { pile: "waste", index: null, fx: wasteX, fy: topY, cw, ch };
+      return { pile: "stock", fx: stockX, fy: topY, cw, ch };
     }
 
-    // 3) Tableau
+    // waste
+    if (x >= wasteX && x <= wasteX + cw && y >= topY && y <= topY + ch) {
+      return { pile: "waste", fx: wasteX, fy: topY, cw, ch };
+    }
+
+    // tableau cards
     for (let col = 0; col < cols; col++) {
-      const tx = margin + col * (cw + gap);
-      const column = this.tableau[col];
-      for (let row = column.length - 1; row >= 0; row--) {
+      const tx = startX + col * (cw + gap);
+      for (let row = this.tableau[col].length - 1; row >= 0; row--) {
         const ty = rowY + row * overlap;
         if (x >= tx && x <= tx + cw && y >= ty && y <= ty + ch) {
           return {
@@ -445,7 +435,6 @@ export default class Game {
         overlapY: hit.overlap ?? hit.ch * this.overlapFactor,
       };
       this.render();
-      return;
     }
 
     // Other cases - we're not dragging anything
@@ -549,8 +538,6 @@ export default class Game {
 
   drawHUD() {
     const ctx = this.ctx;
-    const W = this.canvas.width;
-    const H = this.canvas.height;
     const margin = 20;
 
     ctx.save();
