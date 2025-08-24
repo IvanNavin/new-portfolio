@@ -20,7 +20,8 @@ export const DownloadButton = () => {
     <Magnetic>
       <Link
         href={CV}
-        download='CV_Holovko_Ivan.pdf'
+        target='_blank'
+        rel='noopener noreferrer'
         onClick={handleClick}
         className={clsxm(
           'download text-gold relative inline-block cursor-pointer ',

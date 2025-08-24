@@ -27,6 +27,18 @@ export const Game2048 = ({ lang, isIframeAvailable }: Props) => {
         isIframeAvailable={isIframeAvailable}
       />
 
+      <div>
+        <p className='my-4'>{t('works.2048.title')}</p>
+        <p>{t('works.2048.description')}</p>
+        <p className='my-4'>{t('works.2048.features')}</p>
+        <ul className='list-disc'>
+          <li>{t('works.2048.li1')}</li>
+          <li>{t('works.2048.li2')}</li>
+          <li>{t('works.2048.li3')}</li>
+          <li>{t('works.2048.li4')}</li>
+        </ul>
+      </div>
+
       <footer>
         <Button
           text='See the result here'

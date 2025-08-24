@@ -193,6 +193,15 @@
         "line5": "Since I needed to split only pictures into atoms but not the content, I found these examples unsuitable for this purpose.",
         "line6": "However, ordinary canvas is much better for it, so I made this effect without using the html2canvas library."
       }
+    },
+    "2048": {
+      "title": "Plain HTML, CSS, JS (no frameworks).",
+      "description": "Class-based 2048 with zero dependencies. The grid renders via the DOM and CSS Grid. Default board is 5×5; size and styling are controlled via cols/rows and CSS custom properties. Each move runs as a pipeline: slide → merge → spawn, synchronized by transitionend/animationend. New tiles spawn as 2 or 4 (25% for 4). Win appears once a tile exceeds 2048; game over when no moves remain.",
+      "features": "Features:",
+      "li1": "Class engine: Game, Board, Cell, Box, EventListener; composition over deep inheritance.",
+      "li2": "DOM + CSS Grid with CSS custom properties.",
+      "li3": "Keyboard and touch; waits for animations to finish.",
+      "li4": "Slide/merge algorithm grouping by rows and columns."
     }
   }
 }

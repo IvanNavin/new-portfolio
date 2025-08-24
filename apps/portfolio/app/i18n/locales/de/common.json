@@ -190,6 +190,15 @@
         "line5": "Da ich nur Bilder in Atome zerlegen, nicht aber den Inhalt zerlegen wollte, fand ich diese Beispiele dafür ungeeignet.",
         "line6": "Allerdings ist ein normales Canvas dafür viel besser geeignet, daher habe ich diesen Effekt ohne die Verwendung der html2canvas-Bibliothek erstellt."
       }
+    },
+    "2048": {
+      "title": "Reines HTML, CSS, JS (ohne Frameworks).",
+      "description": "2048 auf Klassenbasis, ohne Abhängigkeiten. Das Raster rendert über DOM und CSS Grid. Standard 5×5; Größe und Stil via cols/rows und CSS-Variablen. Jeder Zug als Pipeline: Schieben → Mergen → Spawn, synchronisiert über transitionend/animationend. Neue Kacheln: 2 oder 4 (25 % für 4). Gewinn-Banner bei Wert > 2048; Game Over, wenn keine Züge mehr möglich sind.",
+      "features": "Besonderheiten:",
+      "li1": "Klassen Game, Board, Cell, Box, EventListener; Komposition statt tiefer Vererbung.",
+      "li2": "DOM + CSS Grid; Steuerung per CSS-Variablen.",
+      "li3": "Tastatur und Touch; wartet auf Animationsende.",
+      "li4": "Schiebe/Merge-Algorithmus mit Gruppierung nach Reihen und Spalten."
     }
   }
 }
