@@ -17,14 +17,14 @@ export const useVisitStatData = (buildQuery: () => string) => {
       const res = await fetch(`/api?${qs}`, { cache: 'no-store' });
 
       if (!res.ok) {
-        setError(String(res.status)); // опційно
+        setError(String(res.status));
         setData([]);
         setRowCount(0);
-        return; // ← без throw
+        return;
       }
 
       const json: ApiListResponse = await res.json();
-      setError(null); // опційно
+      setError(null);
       setData(json.items);
       setRowCount(json.total);
     } catch (e) {

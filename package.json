@@ -18,8 +18,6 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint-staged": "lint-staged",
     "generate:prisma": "cd packages/prisma && npx prisma generate",
-    "generate:pokedex": "prisma generate --schema=./apps/pokedex/prisma/schema.prisma",
-    "generate:language": "prisma generate --schema=./apps/language/prisma/schema.prisma",
     "postinstall": "yarn generate:prisma"
   },
   "dependencies": {
