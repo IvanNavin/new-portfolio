@@ -1,6 +1,7 @@
 import { AnyType } from "@app/types";
 import { PrismaClient } from "@repo/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { isBotUserAgent } from "@repo/utils";
 
 const prisma = new PrismaClient();
 
@@ -35,6 +36,9 @@ export async function POST(req: NextRequest) {
 
   // User-Agent
   const userAgent = req.headers.get("user-agent") || "";
+
+  if (isBotUserAgent(userAgent)) return new NextResponse(null, { status: 204 });
+
   const language = req.headers.get("accept-language")?.split(",")[0] || "";
 
   // Device Type (Simple Detector)

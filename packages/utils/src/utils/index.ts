@@ -5,3 +5,4 @@ export { isTouchDevice } from './isTouchDevice';
 export { isValidUrl } from './isValidUrl';
 export { log } from './log';
 export { toCapitalize } from './toCapitalize';
+export { isBotUserAgent, isLikelyBotClient } from './botUserAgent';
