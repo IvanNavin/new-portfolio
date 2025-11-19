@@ -6,6 +6,6 @@ import App from './App'
 
 test('renders learn react link', () => {
   render(<App />)
-  const element = screen.getByText('Ivan Navin Boilerplate')
+  const element = screen.getByText('Ivan Holovko Boilerplate')
   expect(element).toBeInTheDocument()
 })

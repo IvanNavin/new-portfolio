@@ -200,7 +200,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👤 Author
 
-**Ivan Navin**
+**Ivan Holovko**
 
 - GitHub: [@IvanNavin](https://github.com/IvanNavin)
 - Repository: [new-portfolio](https://github.com/IvanNavin/new-portfolio)
@@ -214,4 +214,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-<p align="center">Made with ❤️ by Ivan Navin</p>
+<p align="center">Made with ❤️ by Ivan Holovko</p>
