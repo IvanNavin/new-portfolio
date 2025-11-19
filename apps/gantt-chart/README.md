@@ -1,46 +1,329 @@
-# Getting Started with Create React App
+# 📅 Gantt Chart - Interactive Project Timeline
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An interactive Gantt chart application built with React and TypeScript, perfect for visualizing project timelines, tasks, and milestones.
 
-## Available Scripts
+## ✨ Features
 
-In the project directory, you can run:
+- 📊 **Interactive Timeline** - Drag and drop tasks
+- 🎨 **Visual Design** - Clean and modern interface
+- 📱 **Responsive** - Works on all devices
+- 🔄 **Real-time Updates** - Instant feedback
+- 💾 **Data Persistence** - Save your projects
+- 🎯 **TypeScript** - Full type safety
 
-### `yarn start`
+## 🛠️ Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Core
+- **React 18** - UI library
+- **TypeScript** - Type safety
+- **Create React App (CRA)** - Build tooling
+- **CRACO** - CRA configuration override
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Testing
+- **Jest** - Testing framework
+- **@testing-library/react** - React testing utilities
+- **@testing-library/user-event** - User interaction testing
+- **@testing-library/jest-dom** - Custom Jest matchers
 
-### `yarn test`
+### Development
+- **ESLint** - Code linting
+  - `eslint-plugin-jest` - Jest-specific linting
+- **TypeScript** - Static type checking
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🚀 Getting Started
 
-### `yarn build`
+### Prerequisites
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Node.js >= 20.19.0
+- Yarn or npm
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. **Navigate to the gantt-chart directory:**
+   ```bash
+   cd apps/gantt-chart
+   ```
 
-### `yarn eject`
+2. **Install dependencies:**
+   ```bash
+   yarn install
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+3. **Start development server:**
+   ```bash
+   yarn dev
+   ```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+4. **Open your browser:**
+   ```
+   http://localhost:3000
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## 📜 Available Scripts
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+| Script | Description |
+|--------|-------------|
+| `yarn dev` | Start development server (alias for start) |
+| `yarn start` | Start development server with CRACO |
+| `yarn build` | Build for production |
+| `yarn test` | Run tests in watch mode |
+| `yarn eject` | Eject from CRA (irreversible!) |
 
-## Learn More
+## 📁 Project Structure
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+gantt-chart/
+├── public/                # Static files
+│   ├── index.html
+│   ├── manifest.json
+│   └── robots.txt
+├── src/                   # Source code
+│   ├── components/       # React components
+│   ├── utils/            # Utility functions
+│   ├── types/            # TypeScript types
+│   ├── styles/           # CSS/SCSS files
+│   ├── App.tsx           # Main app component
+│   ├── App.css           # App styles
+│   ├── index.tsx         # Entry point
+│   └── setupTests.ts     # Test setup
+├── craco.config.js       # CRACO configuration
+├── tsconfig.json         # TypeScript configuration
+├── vercel.json           # Vercel deployment config
+└── package.json
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🧪 Testing
+
+This app includes comprehensive testing setup:
+
+### Running Tests
+
+```bash
+# Run all tests in watch mode
+yarn test
+
+# Run tests once (CI mode)
+CI=true yarn test
+
+# Run tests with coverage
+yarn test --coverage
+```
+
+### Writing Tests
+
+```tsx
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import App from './App';
+
+test('renders gantt chart', () => {
+  render(<App />);
+  const element = screen.getByText(/gantt/i);
+  expect(element).toBeInTheDocument();
+});
+
+test('adds new task', async () => {
+  const user = userEvent.setup();
+  render(<App />);
+  
+  const button = screen.getByRole('button', { name: /add task/i });
+  await user.click(button);
+  
+  expect(screen.getByText(/new task/i)).toBeInTheDocument();
+});
+```
+
+### Test Coverage
+
+The project uses Jest for testing with the following matchers:
+- `toBeInTheDocument()` - Element is present
+- `toHaveClass()` - Element has CSS class
+- `toHaveStyle()` - Element has inline styles
+- `toBeVisible()` - Element is visible
+
+## ⚙️ CRACO Configuration
+
+Uses **CRACO** to customize CRA without ejecting:
+
+```javascript
+// craco.config.js
+module.exports = {
+  // Custom webpack configuration
+  webpack: {
+    configure: (webpackConfig) => {
+      // Modifications here
+      return webpackConfig;
+    },
+  },
+  // Jest configuration
+  jest: {
+    configure: (jestConfig) => {
+      // Test modifications here
+      return jestConfig;
+    },
+  },
+};
+```
+
+## 🎨 Styling
+
+The app uses CSS/SCSS for styling:
+
+```css
+/* App.css */
+.gantt-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20px;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+}
+
+.task {
+  padding: 10px;
+  border-radius: 4px;
+  background: #f0f0f0;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.task:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+```
+
+## 📦 Build for Production
+
+### Create Production Build
+
+```bash
+yarn build
+```
+
+This creates an optimized production build in the `build/` directory.
+
+### Build Output
+
+- Minified and optimized JavaScript
+- CSS extracted and minified
+- Static assets with hashed filenames
+- Source maps for debugging
+
+## 🌐 Deployment
+
+### Vercel
+
+The app includes `vercel.json` configuration:
+
+```json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ]
+}
+```
+
+Deploy:
+```bash
+vercel --prod
+```
+
+### Other Platforms
+
+The build output in `build/` can be deployed to:
+- GitHub Pages
+- Netlify
+- AWS S3
+- Any static hosting service
+
+## 🔧 ESLint Configuration
+
+Custom ESLint rules for Jest testing:
+
+```json
+{
+  "extends": [
+    "react-app",
+    "react-app/jest"
+  ],
+  "plugins": ["jest"]
+}
+```
+
+## 🎯 TypeScript
+
+Full TypeScript support with strict mode:
+
+```typescript
+// Task type
+interface Task {
+  id: string;
+  title: string;
+  startDate: Date;
+  endDate: Date;
+  progress: number;
+  dependencies?: string[];
+}
+
+// Component props
+interface GanttChartProps {
+  tasks: Task[];
+  onTaskUpdate: (task: Task) => void;
+}
+```
+
+## 🐛 Troubleshooting
+
+### Port Already in Use
+
+```bash
+# Use a different port
+PORT=3001 yarn start
+```
+
+### Module Not Found
+
+```bash
+# Clear cache and reinstall
+rm -rf node_modules build
+yarn install
+```
+
+### Test Failures
+
+```bash
+# Update snapshots
+yarn test -u
+```
+
+### Build Errors
+
+```bash
+# Check TypeScript errors
+npx tsc --noEmit
+```
+
+## 📝 License
+
+Part of the Portfolio Monorepo - MIT License
+
+## 🤝 Contributing
+
+See the [main repository README](../../README.md) for contribution guidelines.
+
+---
+
+Built with ❤️ using React and TypeScript
