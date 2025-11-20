@@ -2,6 +2,7 @@ services:
   - type: web
     name: rpg-game
     env: node
+    rootDir: apps/rpg-game
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
