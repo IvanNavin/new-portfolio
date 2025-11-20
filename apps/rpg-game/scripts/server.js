@@ -13,7 +13,7 @@ const PATH = {
 const init = async () => {
     const server = Hapi.server({
         port,
-        host: 'localhost', // Explicitly set host
+        host: '0.0.0.0', // Allow external connections (required for Render)
         routes: {
             cors: {
                 origin: ['*']
