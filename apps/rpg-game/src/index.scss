@@ -1,0 +1,354 @@
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@300&display=swap');
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background: #000;
+}
+
+body {
+  min-height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-image: url(./assets/Mountains1.png);
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.canvas-wrap {
+  width: 616px;
+  height: 616px;
+  position: relative;
+  border-radius: 12px;
+  background: #b6b6b6;
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Big Shoulders Stencil Display', cursive;
+  font-size: 38px;
+
+  @media all and (max-width: 600px) {
+    transform: scale(0.5);
+    margin-top: -50%;
+  }
+}
+
+.canvas-wrap canvas {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  bottom: 8px;
+  right: 8px;
+  z-index: 1;
+}
+
+.top {
+  background-image: url(./assets/border-top.png);
+  background-repeat: repeat-x;
+  position: absolute;
+  height: 12px;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  z-index: 100;
+}
+
+.bottom {
+  background-image: url(./assets/border-bottom.png);
+  background-repeat: repeat-x;
+  position: absolute;
+  height: 12px;
+  bottom: 0;
+  left: 12px;
+  right: 12px;
+  z-index: 100;
+}
+
+.top-right {
+  background-image: url(./assets/border-top-right.png);
+  background-repeat: repeat-x;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.top-left {
+  background-image: url(./assets/border-top-left.png);
+  background-repeat: repeat-x;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.left {
+  background-image: url(./assets/border-left.png);
+  background-repeat: repeat-y;
+  position: absolute;
+  width: 12px;
+  top: 12px;
+  bottom: 12px;
+  left: 0;
+  z-index: 100;
+}
+
+.right {
+  background-image: url(./assets/border-right.png);
+  background-repeat: repeat-y;
+  position: absolute;
+  width: 12px;
+  top: 12px;
+  bottom: 12px;
+  right: 0;
+  z-index: 100;
+}
+
+.bottom-right {
+  background-image: url(./assets/border-bottom-right.png);
+  background-repeat: repeat-x;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.bottom-left {
+  background-image: url(./assets/border-bottom-left.png);
+  background-repeat: repeat-x;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.start-game {
+  position: absolute;
+  z-index: 99;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  background-image: url(./assets/WorldMap.png);
+  background-position: center;
+  color: #f4f4f4;
+}
+
+.row {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+label.row {
+  display: flex;
+  justify-content: center;
+}
+
+.input {
+  width: 201px;
+  height: 46px;
+  border: 4px solid #a5a5a5;
+  border-radius: 4px;
+  padding: 0 12px;
+  font-size: 24px;
+  text-align: center;
+}
+
+.btn {
+  width: 201px;
+  height: 56px;
+  background-color: transparent;
+  background-image: url(./assets/button.png);
+  cursor: pointer;
+  position: relative;
+  border: none;
+  outline: 0;
+  text-indent: -9999px;
+
+  &:hover {
+    &:before {
+      top: 59%;
+      left: -38px;
+    }
+  }
+
+  &:before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 32px;
+    background-image: url(./assets/small-pointer.png);
+    top: 60%;
+    transform: translate(0, -50%);
+    left: -40px;
+    position: absolute;
+  }
+}
+
+.warning {
+  opacity: 0;
+  font-size: 20px;
+  color: #000055;
+  text-align: center;
+  padding: 1em;
+  background-color: rgba(#fff, 0.6);
+  border-radius: 10px;
+}
+
+.chat-wrap {
+  position: relative;
+  background-color: #f4f4f4;
+  border-radius: 20px;
+  width: 616px;
+  height: 300px;
+
+  &::before {
+    content: attr(data-online);
+    opacity: 0.3;
+    position: absolute;
+    top: 14px;
+    right: 24px;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 17.5px;
+    right: 34px;
+    width: 12px;
+    height: 12px;
+    background: #3aebca;
+    border-radius: 50%;
+  }
+}
+
+.send {
+  height: 28px;
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+}
+
+.send form {
+  display: flex;
+  align-content: stretch;
+}
+
+.send form input {
+  width: 100%;
+  height: 28px;
+  font-size: 14px;
+  padding: 0 8px;
+}
+
+.send form button {
+  background: #0633ff;
+  color: #fff;
+  border: 1px solid #838383;
+  border-radius: 0 4px 4px 0;
+  padding: 0 8px;
+  cursor: pointer;
+}
+
+.message {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 36px;
+  overflow: scroll;
+  padding: 6px 8px;
+}
+
+.msg-box {
+  display: flex;
+  margin: 12px 0 2px;
+
+  .name {
+    display: flex;
+    align-items: center;
+    margin-top: -4px;
+  }
+
+  .msg {
+    padding: 2px 5px;
+    border: 1px solid dodgerblue;
+    border-radius: 4px;
+    position: relative;
+    margin-left: 5px;
+
+    &::before {
+      content: attr(data-time);
+      font-size: 10px;
+      position: absolute;
+      top: -12px;
+      right: 0;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: -9px;
+      margin-top: -5px;
+      border: 4px solid transparent;
+      border-right: 4px solid dodgerblue;
+    }
+  }
+
+  &.isCurrentUser {
+    justify-content: flex-end;
+
+    .name {
+      order: 1;
+      margin-top: 0;
+    }
+
+    .msg {
+      margin-right: 5px;
+
+      &::before {
+        left: 0;
+      }
+
+      &::after {
+        right: -9px;
+        left: auto;
+        border: 4px solid transparent;
+        border-left: 4px solid dodgerblue;
+      }
+    }
+  }
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>RPG game</title>
+</head>
+<body>
+<div class="wrap">
+    <div class="canvas-wrap">
+        <canvas id="world" width="600" height="600" tabindex="1">
+            Ваш браузер не поддерживает Canvas
+        </canvas>
+        <h3>Loading...</h3>
+        <div class="border">
+            <div class="top-left"></div>
+            <div class="top"></div>
+            <div class="top-right"></div>
+            <div class="right"></div>
+            <div class="bottom-right"></div>
+            <div class="bottom"></div>
+            <div class="bottom-left"></div>
+            <div class="left"></div>
+        </div>
+
+        <div class="start-game" style="display: none;">
+            <form id="nameForm">
+                <label class="row">
+                    Put Your Name
+                </label>
+                <div class="row">
+                    <input class="input" type="text" name="name" id="name" autofocus>
+                </div>
+                <div class="row">
+                    <button class="btn">
+                        START GAME
+                    </button>
+                </div>
+                <p class="warning">
+                    Дружочек, ты кем себя возомнил??? <br>
+                    придумай имя покороче.
+                </p>
+            </form>
+        </div>
+    </div>
+    <div class="chat-wrap" data-online style="display: none">
+        <div class="message"></div>
+        <div class="send">
+            <form id="form">
+                <input type="text" id="input" name="message">
+                <button>
+                    SEND
+                </button>
+            </form>
+        </div>
+        <div class="border">
+            <div class="top-left"></div>
+            <div class="top"></div>
+            <div class="top-right"></div>
+            <div class="right"></div>
+            <div class="bottom-right"></div>
+            <div class="bottom"></div>
+            <div class="bottom-left"></div>
+            <div class="left"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
