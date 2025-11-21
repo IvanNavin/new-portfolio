@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "RPG Game",
   "engines": {
-    "node": "16.x"
+    "node": "18.x"
   },
   "scripts": {
     "build:dev": "npx cross-env NODE_ENV=development webpack",
@@ -11,8 +11,7 @@
     "start": "node scripts/server.js",
     "lint": "npx eslint src/**/*.js --fix",
     "prettier": "npx prettier --write .",
-    "dev": "npx cross-env NODE_ENV=development webpack server",
-    "prepare": "npx husky install"
+    "dev": "npx cross-env NODE_ENV=development webpack server"
   },
   "repository": {
     "type": "git",
