@@ -18,7 +18,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint-staged": "lint-staged",
     "generate:prisma": "cd packages/prisma && npx prisma generate",
-    "postinstall": "yarn generate:prisma"
+    "postinstall": "if [ \"$SKIP_PRISMA\" != \"true\" ]; then yarn generate:prisma; fi"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0"
