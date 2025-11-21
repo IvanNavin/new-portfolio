@@ -9,11 +9,16 @@ class ClientApi {
   }
 
   connect() {
-    const { url, path } = this;
+    const { url, path, socket } = this;
 
-    this.io = io(url, {
-      path,
-    });
+    // If a socket was passed in, reuse it. Otherwise create a new one.
+    if (socket) {
+      this.io = socket;
+    } else {
+      this.io = io(url, {
+        path,
+      });
+    }
 
     this.io.on('welcome', this.onWelcome);
     this.io.on('join', this.onJoin.bind(this));

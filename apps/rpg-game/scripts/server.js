@@ -141,21 +141,30 @@ const world = require('../src/configs/world.json');
 
         // Chat Logic
         socket.on('start', (name) => {
-             // Chat start event, similar to join but for chat specific logic if needed
-             // The original code emitted 'start' with name
+             console.log('START event received:', name, 'Current player:', socket.data.player);
+             // Save the name to socket data so it's available for chat
+             if (!socket.data.player) {
+                 socket.data.player = { name };
+             } else {
+                 socket.data.player.name = name;
+             }
+             
              io.emit('chat connection', {
                  time: Date.now(),
                  msg: `${name} connected`,
                  id: socket.id
              });
              
-             // Update online count
-             io.emit('chat online', { online: io.engine.clientsCount });
+             // Update online count - use actual socket count
+             const onlineCount = io.sockets.sockets.size;
+             io.emit('chat online', { online: onlineCount });
         });
 
         socket.on('chat message', (msg) => {
+            console.log('CHAT MESSAGE event. socket.data.player:', socket.data.player);
             const player = socket.data.player;
             const name = player ? player.name : 'Anonymous';
+            console.log('Sending chat message with name:', name);
             io.emit('chat message', {
                 name,
                 time: Date.now(),
@@ -174,7 +183,10 @@ const world = require('../src/configs/world.json');
                     msg: `${player.name} disconnected`
                 });
             }
-             io.emit('chat online', { online: io.engine.clientsCount });
+            
+            // Update online count after disconnect
+            const onlineCount = io.sockets.sockets.size;
+            io.emit('chat online', { online: onlineCount });
         });
     });
 };

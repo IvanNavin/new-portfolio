@@ -31,6 +31,7 @@ window.addEventListener('load', async () => {
     }
 
     if (name.length) {
+      // Pass the existing socket to the game API to avoid duplicate connections
       ClientGame.init({
         tagID: 'world',
         playerName: name,
@@ -38,8 +39,7 @@ window.addEventListener('load', async () => {
         sprites,
         gameObjects,
         apiCfg: {
-          url: window.location.origin,
-          path: '', // No custom path needed for default socket.io
+          socket: socket, // Reuse existing socket!
         },
       });
 
