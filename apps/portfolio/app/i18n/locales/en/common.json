@@ -161,8 +161,7 @@
         "line1": "This is cool experience with sockets and server side.",
         "line2": "There is an online chat.",
         "line3": "Stack: HTML / SASS / JS / Webpack5 / Websocket (socket.io) / EsLint / Prettier.",
-        "line4": "To check the functionality of the game and chat, you can launch the game in several tabs.",
-        "line5": "Currently the backend is not working now."
+        "line4": "To check the functionality of the game and chat, you can launch the game in several tabs."
       }
     },
     "snake": {

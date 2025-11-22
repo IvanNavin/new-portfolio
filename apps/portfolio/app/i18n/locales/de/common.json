@@ -158,8 +158,7 @@
         "line1": "Das ist eine coole Erfahrung mit Sockets und Server-Seite.",
         "line2": "Es gibt einen Online-Chat.",
         "line3": "Technologien: HTML / SASS / JS / Webpack5 / Websocket (socket.io) / EsLint / Prettier.",
-        "line4": "Um die Funktionalität des Spiels und des Chats zu überprüfen, können Sie das Spiel in mehreren Tabs starten.",
-        "line5": "Derzeit funktioniert das Backend nicht."
+        "line4": "Um die Funktionalität des Spiels und des Chats zu überprüfen, können Sie das Spiel in mehreren Tabs starten."
       }
     },
     "snake": {

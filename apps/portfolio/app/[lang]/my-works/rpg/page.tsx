@@ -28,11 +28,11 @@ export default function Page({ params: { lang } }: DefaultProps) {
       <footer>
         <Button
           text='See the result here'
-          href='https://quest-world.herokuapp.com/'
+          href='https://rpg-game-b89w.onrender.com'
         />
         <Button
           text='See the code here'
-          href='https://github.com/IvanNavin/js-pro-game'
+          href='https://github.com/IvanNavin/new-portfolio/tree/main/apps/rpg-game'
         />
       </footer>
     </Container>
