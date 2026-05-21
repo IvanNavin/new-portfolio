@@ -57,7 +57,7 @@ export default function Page({ params: { lang } }: DefaultProps) {
           }}
         />
         <button
-          ref={ref}
+          ref={ref as React.Ref<HTMLButtonElement>}
           type='submit'
           className={clsxm(
             'relative h-12 border border-white/50 bg-transparent px-4 py-2 text-white',
