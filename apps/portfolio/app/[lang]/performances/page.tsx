@@ -5,8 +5,10 @@ import { DefaultProps } from '@app/types';
 import { Container } from '@components/Container';
 import { useTranslation } from '@i18n/client';
 import { clsxm } from '@repo/utils';
+import { use } from 'react';
 
-export default function Page({ params: { lang } }: DefaultProps) {
+export default function Page({ params }: DefaultProps) {
+  const { lang } = use(params);
   const { t } = useTranslation();
 
   const reports = [

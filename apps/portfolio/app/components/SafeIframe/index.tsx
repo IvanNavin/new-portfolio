@@ -1,7 +1,7 @@
 import { Preloader } from '@components/preloader';
 import { clsxm } from '@repo/utils';
-import { StaticImageData } from 'next/image';
 import Image from 'next/image';
+import { StaticImageData } from 'next/image';
 import { useEffect, useState } from 'react';
 
 type Props = {

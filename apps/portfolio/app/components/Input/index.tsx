@@ -1,8 +1,8 @@
 import { clsxm } from '@repo/utils';
-import { InputHTMLAttributes, ReactNode, useState } from 'react';
+import { InputHTMLAttributes, ReactElement, ReactNode, useState } from 'react';
 
 type Props = {
-  label?: string | JSX.Element;
+  label?: string | ReactElement;
   error?: ReactNode;
   className?: string;
   inputClassNames?: string;

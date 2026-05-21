@@ -5,7 +5,9 @@
 
 .loader {
   color: #3df1f1;
-  font: 1em 'RussoOneRegular', sans-serif;
+  font:
+    1em 'RussoOneRegular',
+    sans-serif;
   height: 100vh;
   line-height: 1.5;
   perspective: 40em;
@@ -61,7 +63,11 @@
 }
 
 .preloader__sector:empty:before {
-  background: linear-gradient(transparent 45%, currentColor 45%, transparent 55%);
+  background: linear-gradient(
+    transparent 45%,
+    currentColor 45%,
+    transparent 55%
+  );
   content: '';
 }
 

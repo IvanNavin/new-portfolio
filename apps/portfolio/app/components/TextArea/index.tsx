@@ -1,8 +1,13 @@
 import { clsxm } from '@repo/utils';
-import { ReactNode, TextareaHTMLAttributes, useState } from 'react';
+import {
+  ReactElement,
+  ReactNode,
+  TextareaHTMLAttributes,
+  useState,
+} from 'react';
 
 type Props = {
-  label?: string | JSX.Element;
+  label?: string | ReactElement;
   error?: ReactNode;
   className?: string;
   textareaClassNames?: string;

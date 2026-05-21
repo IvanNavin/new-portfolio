@@ -1,6 +1,6 @@
-import { AnimationControls } from 'framer-motion';
+import { LegacyAnimationControls } from 'framer-motion';
 import { createContext } from 'react';
 
-export const AnimateContext = createContext<AnimationControls | undefined>(
-  undefined,
-);
+export const AnimateContext = createContext<
+  LegacyAnimationControls | undefined
+>(undefined);

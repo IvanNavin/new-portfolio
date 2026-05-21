@@ -8,10 +8,12 @@ import { Input } from '@components/Input';
 import { Send } from '@components/svg';
 import { TextArea } from '@components/TextArea';
 import { clsxm } from '@repo/utils';
+import { use } from 'react';
 
 import styles from './style.module.css';
 
-export default function Page({ params: { lang } }: DefaultProps) {
+export default function Page({ params }: DefaultProps) {
+  const { lang } = use(params);
   const {
     t,
     onSubmit,

@@ -8,13 +8,15 @@ import { Magnetic } from '@components/Magnetic';
 import { RenderTextArea } from '@components/RenderTextArea';
 import { Css, EmptyGear, Html, Js } from '@components/svg';
 import { clsxm } from '@repo/utils';
+import { use } from 'react';
 
 import './style.css';
 
 import { cssSkills, htmlSkills, JSSkills, otherSkills } from './constants';
 import { DownloadButton } from './DownloadButton';
 
-export default function Page({ params: { lang } }: DefaultProps) {
+export default function Page({ params }: DefaultProps) {
+  const { lang } = use(params);
   const { t, isClient, currentFacts, progressValue } = useAbout();
 
   return (

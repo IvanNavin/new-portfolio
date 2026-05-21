@@ -8,9 +8,10 @@ import { VideoFrame } from '@components/VideoFrame';
 import { useTranslation } from '@i18n/client';
 import { clsxm } from '@repo/utils';
 import Link from 'next/link';
-import { useCallback } from 'react';
+import { use, useCallback } from 'react';
 
-export default function Page({ params: { lang } }: DefaultProps) {
+export default function Page({ params }: DefaultProps) {
+  const { lang } = use(params);
   const { t } = useTranslation();
   const trackVisit = useTrackVisit();
 

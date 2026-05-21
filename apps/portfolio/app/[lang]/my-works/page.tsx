@@ -3,7 +3,7 @@ import { DefaultProps } from '@app/types';
 import { Container } from '@components/Container';
 import { useTranslation } from '@i18n/client';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useState } from 'react';
 
 import { getWorks } from './constants';
 import { FilterChips } from './FilterChips';
@@ -14,7 +14,8 @@ import { WorksFilter } from './WorksFilter';
 const parseMultiParam = (param: string | null) =>
   param?.split(',').filter(Boolean) ?? [];
 
-export default function Page({ params: { lang } }: DefaultProps) {
+export default function Page({ params }: DefaultProps) {
+  const { lang } = use(params);
   const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();

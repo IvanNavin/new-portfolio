@@ -1,8 +1,8 @@
 import gsap from 'gsap';
-import { cloneElement, ReactElement, useEffect, useRef } from 'react';
+import { cloneElement, ReactElement, Ref, useEffect, useRef } from 'react';
 
 type MagneticProps = {
-  children: ReactElement;
+  children: ReactElement<{ ref?: Ref<HTMLElement> }>;
 };
 
 export function Magnetic({ children }: MagneticProps) {

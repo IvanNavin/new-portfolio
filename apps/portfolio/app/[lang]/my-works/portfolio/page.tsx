@@ -7,8 +7,10 @@ import { Container } from '@components/Container';
 import { RenderTextArea } from '@components/RenderTextArea';
 import { useTranslation } from '@i18n/client';
 import Image from 'next/image';
+import { use } from 'react';
 
-export default function Page({ params: { lang } }: DefaultProps) {
+export default function Page({ params }: DefaultProps) {
+  const { lang } = use(params);
   const { t } = useTranslation();
 
   return (

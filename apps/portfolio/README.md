@@ -15,6 +15,7 @@ A modern, multilingual personal portfolio website built with Next.js 14, featuri
 ## 🛠️ Tech Stack
 
 ### Core
+
 - **Next.js 14** - React framework with SSR/SSG
 - **React 18** - UI library
 - **TypeScript** - Type safety
@@ -22,27 +23,32 @@ A modern, multilingual personal portfolio website built with Next.js 14, featuri
 - **SASS** - CSS preprocessor
 
 ### UI & Animations
+
 - **Mantine UI** - React components library
 - **Framer Motion** - React animation library
 - **GSAP** - Professional-grade animation
 - **clsx** / **tailwind-merge** - Class name utilities
 
 ### Internationalization
+
 - **i18next** - Internationalization framework
 - **react-i18next** - React bindings for i18next
 - **next-i18n-router** - i18n routing for Next.js
 - **i18next-browser-languagedetector** - Language detection
 
 ### Database
+
 - **Prisma** - Next-generation ORM
 - **PostgreSQL** - Database
 - **@repo/prisma** - Shared Prisma schema
 
 ### Forms & Validation
+
 - **React Hook Form** - Form management
 - **@hookform/resolvers** - Validation resolvers
 
 ### Development
+
 - **ESLint** - Code linting
 - **Prettier** - Code formatting
 - **@repo/eslint-config** - Shared ESLint config
@@ -58,36 +64,42 @@ A modern, multilingual personal portfolio website built with Next.js 14, featuri
 ### Installation
 
 1. **Navigate to the portfolio directory:**
+
    ```bash
    cd apps/portfolio
    ```
 
 2. **Install dependencies:**
+
    ```bash
    yarn install
    ```
 
 3. **Setup environment variables:**
+
    ```bash
    # Create .env file
    cp .env.example .env
-   
+
    # Add your database URL
    DATABASE_URL="postgresql://user:password@localhost:5432/portfolio"
    POSTGRES_PRISMA_URL="postgresql://user:password@localhost:5432/portfolio"
    ```
 
 4. **Generate Prisma client:**
+
    ```bash
    npx prisma generate
    ```
 
 5. **Run migrations (if any):**
+
    ```bash
    npx prisma migrate dev
    ```
 
 6. **Start development server:**
+
    ```bash
    yarn dev
    ```
@@ -99,15 +111,15 @@ A modern, multilingual personal portfolio website built with Next.js 14, featuri
 
 ## 📜 Available Scripts
 
-| Script | Description |
-|--------|-------------|
-| `yarn dev` | Start development server |
-| `yarn build` | Build for production |
-| `yarn start` | Start production server |
-| `yarn lint` | Run ESLint |
-| `yarn lint:fix` | Fix ESLint errors and format |
+| Script           | Description                  |
+| ---------------- | ---------------------------- |
+| `yarn dev`       | Start development server     |
+| `yarn build`     | Build for production         |
+| `yarn start`     | Start production server      |
+| `yarn lint`      | Run ESLint                   |
+| `yarn lint:fix`  | Fix ESLint errors and format |
 | `yarn typecheck` | Run TypeScript type checking |
-| `yarn format` | Format code with Prettier |
+| `yarn format`    | Format code with Prettier    |
 
 ## 📁 Project Structure
 
@@ -144,6 +156,7 @@ The portfolio supports multiple languages. Language files are loaded dynamically
 ### Changing Language
 
 The language is detected automatically based on:
+
 - User's browser settings
 - URL locale parameter
 - Saved preference in cookies
@@ -153,19 +166,21 @@ The language is detected automatically based on:
 ### Tailwind CSS
 
 Utility-first CSS framework for rapid UI development:
+
 ```tsx
-<div className="flex items-center justify-center p-4 bg-gray-100">
-  <h1 className="text-2xl font-bold text-blue-600">Hello World</h1>
+<div className='flex items-center justify-center p-4 bg-gray-100'>
+  <h1 className='text-2xl font-bold text-blue-600'>Hello World</h1>
 </div>
 ```
 
 ### SASS/SCSS
 
 For more complex styles, use SCSS modules:
+
 ```scss
 .container {
   @apply flex items-center;
-  
+
   &:hover {
     transform: scale(1.05);
   }
@@ -175,10 +190,11 @@ For more complex styles, use SCSS modules:
 ### Mantine UI
 
 Pre-built components with Tailwind integration:
+
 ```tsx
 import { Button } from '@mantine/core';
 
-<Button variant="filled">Click me</Button>
+<Button variant='filled'>Click me</Button>;
 ```
 
 ## 🎭 Animations
@@ -186,6 +202,7 @@ import { Button } from '@mantine/core';
 ### Framer Motion
 
 Declarative animations for React:
+
 ```tsx
 <motion.div
   initial={{ opacity: 0, y: 20 }}
@@ -199,11 +216,12 @@ Declarative animations for React:
 ### GSAP
 
 Advanced timeline animations:
+
 ```tsx
 gsap.to('.element', {
   x: 100,
   duration: 1,
-  ease: 'power2.out'
+  ease: 'power2.out',
 });
 ```
 

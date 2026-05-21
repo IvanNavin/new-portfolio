@@ -40,13 +40,11 @@ export const metadata: Metadata = {
 
 type RootLayoutType = {
   children: ReactNode;
-  params: { lang: Locale };
+  params: Promise<{ lang: Locale }>;
 };
 
-export default function RootLayout({
-  children,
-  params: { lang },
-}: RootLayoutType) {
+export default async function RootLayout({ children, params }: RootLayoutType) {
+  const { lang } = await params;
   return (
     <html lang={lang} dir={dir(lang)} {...mantineHtmlProps}>
       <body

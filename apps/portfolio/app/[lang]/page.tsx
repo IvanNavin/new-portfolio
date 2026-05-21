@@ -7,9 +7,10 @@ import Fluid from '@components/Fluid';
 import { useTranslation } from '@i18n/client';
 import { clsxm, isTouchDevice } from '@repo/utils';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
-export default function Home({ params: { lang } }: DefaultProps) {
+export default function Home({ params }: DefaultProps) {
+  const { lang } = use(params);
   const [isTouch, setIsTouch] = useState(false);
   const { t } = useTranslation();
 
