@@ -3,11 +3,12 @@ import { clsxm } from '@repo/utils';
 // Real-world Lighthouse scores measured against
 // https://holovko-ivan.vercel.app. Replace these with the latest
 // numbers each time you re-run Lighthouse so the badge doesn't lie.
+// Last run: 2026-05-22 (desktop, devtools).
 const SCORES = {
-  performance: 100,
-  accessibility: 100,
-  bestPractices: 100,
-  seo: 100,
+  performance: 89,
+  accessibility: 93,
+  bestPractices: 96,
+  seo: 92,
 };
 
 const colorFor = (score: number) => {

@@ -9,10 +9,10 @@ type Props = {
 };
 
 const flags = [
-  { lng: 'en', flag: <GB /> },
-  { lng: 'de', flag: <DE /> },
-  { lng: 'ua', flag: <UA /> },
-  { lng: 'ru', flag: <RU /> },
+  { lng: 'en', flag: <GB />, label: 'English' },
+  { lng: 'de', flag: <DE />, label: 'Deutsch' },
+  { lng: 'ua', flag: <UA />, label: 'Українська' },
+  { lng: 'ru', flag: <RU />, label: 'Русский' },
 ];
 
 export const LanguageSwitcher = ({ lang }: Props) => {
@@ -34,20 +34,27 @@ export const LanguageSwitcher = ({ lang }: Props) => {
       >
         Language
       </span>
-      {flags.map(({ lng, flag }) => (
-        <button
-          key={lng}
-          className={clsxm(
-            'm-1 h-4 w-5 cursor-pointer',
-            lang === lng && 'shadow-full-glow cursor-not-allowed',
-          )}
-          onClick={() => {
-            router.replace(updateUrlLang(lng));
-          }}
-        >
-          {flag}
-        </button>
-      ))}
+      {flags.map(({ lng, flag, label }) => {
+        const isCurrent = lang === lng;
+        return (
+          <button
+            key={lng}
+            type='button'
+            aria-label={`Switch language to ${label}`}
+            aria-current={isCurrent ? 'true' : undefined}
+            disabled={isCurrent}
+            className={clsxm(
+              'm-1 h-4 w-5 cursor-pointer',
+              isCurrent && 'shadow-full-glow cursor-not-allowed',
+            )}
+            onClick={() => {
+              router.replace(updateUrlLang(lng));
+            }}
+          >
+            {flag}
+          </button>
+        );
+      })}
     </section>
   );
 };
