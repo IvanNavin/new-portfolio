@@ -8,7 +8,6 @@
   "workspaces": [
     "apps/2048",
     "apps/destructurizator",
-    "apps/im-bruhl",
     "apps/language",
     "apps/miner",
     "apps/pokedex",
