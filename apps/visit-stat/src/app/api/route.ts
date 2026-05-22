@@ -68,7 +68,7 @@ export const GET = async (req: NextRequest) => {
     const q = searchParams.get('q') || undefined;
 
     // Build where
-    const and: any[] = [];
+    const and: Record<string, unknown>[] = [];
     if (domain) and.push({ domain });
     if (path) and.push({ path: { contains: path, mode: 'insensitive' } });
     if (event) and.push({ event });

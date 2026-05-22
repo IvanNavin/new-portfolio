@@ -6,7 +6,16 @@
   "name": "with-tailwind",
   "packageManager": "yarn@1.22.19",
   "workspaces": [
-    "apps/*",
+    "apps/2048",
+    "apps/destructurizator",
+    "apps/im-bruhl",
+    "apps/language",
+    "apps/miner",
+    "apps/pokedex",
+    "apps/portfolio",
+    "apps/snake",
+    "apps/solitaire",
+    "apps/visit-stat",
     "packages/*"
   ],
   "scripts": {
