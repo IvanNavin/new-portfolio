@@ -11,24 +11,8 @@ module.exports = {
     'next/core-web-vitals',
     'plugin:@typescript-eslint/recommended',
     'prettier',
-    'plugin:tailwindcss/recommended',
   ],
   rules: {
-    'tailwindcss/no-custom-classname': [
-      'warn',
-      {
-        whitelist: ['map-container', 'mapboxgl-map', 'day-box'],
-        config: './tailwind.config.ts',
-        cssFiles: [
-          '**/*.css',
-          '**/*.scss',
-          '!**/node_modules',
-          '!**/.*',
-          '!**/dist',
-          '!**/build',
-        ],
-      },
-    ],
     'no-unused-vars': 'off',
     'no-console': 'error',
     'no-useless-catch': 'off',
