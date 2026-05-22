@@ -46,18 +46,5 @@
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
     "turbo": "^2.1.1"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "turbo run lint --filter='apps/**' -- --fix",
-      "turbo run lint --filter='packages/**' -- --fix",
-      "turbo run lint --filter='apps/**'",
-      "turbo run lint --filter='packages/**'",
-      "prettier --write"
-    ],
-    "*.json": [
-      "prettier --write"
-    ],
-    "!packages/prisma/generated/**": []
   }
 }

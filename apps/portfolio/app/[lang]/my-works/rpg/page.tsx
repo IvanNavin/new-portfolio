@@ -1,12 +1,13 @@
 'use client';
 import { ROUTES } from '@app/constants/routes';
 import { DefaultProps } from '@app/types';
-import VIDEO from '@assets/video/game_js_pro.mp4';
 import { Button } from '@components/Button';
 import { Container } from '@components/Container';
 import { RenderTextArea } from '@components/RenderTextArea';
 import { useTranslation } from '@i18n/client';
 import { use } from 'react';
+
+const VIDEO = '/video/game_js_pro.mp4';
 
 export default function Page({ params }: DefaultProps) {
   const { lang } = use(params);

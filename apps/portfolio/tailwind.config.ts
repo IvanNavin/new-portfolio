@@ -1,7 +1,4 @@
-import type { Config } from 'tailwindcss';
-import plugin from 'tailwindcss/plugin';
-
-const config: Config = {
+const config = {
   content: ['./app/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
@@ -15,12 +12,6 @@ const config: Config = {
         'white-offset': '8px 8px 0 rgba(255, 255, 255, 0.15)',
         'dark-sm': '1px 1px 4px rgba(0, 0, 0, 0.9)',
         'dark-inset': '0 0 50px rgba(0, 0, 0, 0.75) inset',
-      },
-      textShadow: {
-        sm: '0 1px 2px var(--tw-shadow-color)',
-        DEFAULT: '0 2px 4px var(--tw-shadow-color)',
-        lg: '0 8px 16px var(--tw-shadow-color)',
-        none: 'none',
       },
       keyframes: {
         slideText: {
@@ -138,17 +129,5 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    plugin(function ({ matchUtilities, theme }) {
-      matchUtilities(
-        {
-          'text-shadow': (value) => ({
-            textShadow: value,
-          }),
-        },
-        { values: theme('textShadow') },
-      );
-    }),
-  ],
 };
 export default config;

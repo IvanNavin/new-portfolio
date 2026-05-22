@@ -1,10 +1,11 @@
 import { ETrackVisitEvent } from '@app/types/trackVisitTypes';
 import { useTrackVisit } from '@app/utils/hooks/useTrackVisit';
-import CV from '@assets/cv/Ivan_Holovko_CV.pdf';
 import { Magnetic } from '@components/Magnetic';
 import { clsxm } from '@repo/utils';
 import Link from 'next/link';
 import React, { useCallback } from 'react';
+
+const CV = '/cv/Ivan_Holovko_CV.pdf';
 
 export const DownloadButton = () => {
   const trackVisit = useTrackVisit();

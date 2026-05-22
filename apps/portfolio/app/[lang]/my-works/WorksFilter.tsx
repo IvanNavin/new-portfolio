@@ -1,5 +1,6 @@
 'use client';
 import { workTypeOptions } from '@app/[lang]/my-works/constants';
+import { MantineProvider } from '@mantine/core';
 import { useMemo } from 'react';
 
 import { FilterGroup } from './FilterGroup';
@@ -40,19 +41,21 @@ export const WorksFilter = ({ filters, allStacks, onChange }: Props) => {
   };
 
   return (
-    <div className='flex flex-col gap-6'>
-      <FilterGroup
-        title='Work Type'
-        options={workTypeOptions}
-        selected={filters.workType}
-        onChange={(v) => handleChange('workType', v)}
-      />
-      <FilterGroup
-        title='Technologies'
-        options={technologyOptions}
-        selected={filters.stack}
-        onChange={(v) => handleChange('stack', v)}
-      />
-    </div>
+    <MantineProvider forceColorScheme='light'>
+      <div className='flex flex-col gap-6'>
+        <FilterGroup
+          title='Work Type'
+          options={workTypeOptions}
+          selected={filters.workType}
+          onChange={(v) => handleChange('workType', v)}
+        />
+        <FilterGroup
+          title='Technologies'
+          options={technologyOptions}
+          selected={filters.stack}
+          onChange={(v) => handleChange('stack', v)}
+        />
+      </div>
+    </MantineProvider>
   );
 };
