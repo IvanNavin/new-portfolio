@@ -13,13 +13,12 @@ export const ROUTES = {
   rpg: (lang: Locale = getLang()) => `/${lang}/my-works/rpg`,
   thanos: (lang: Locale = getLang()) => `/${lang}/my-works/thanos`,
   contact: (lang: Locale = getLang()) => `/${lang}/contact`,
-  performances: (lang: Locale = getLang()) => `/${lang}/performances`,
-  accessibility: (lang: Locale = getLang()) =>
-    `/${lang}/performances/accessibility`,
-  regexp: (lang: Locale = getLang()) => `/${lang}/performances/regexp`,
-  jest: (lang: Locale = getLang()) => `/${lang}/performances/jest`,
+  talks: (lang: Locale = getLang()) => `/${lang}/talks`,
+  accessibility: (lang: Locale = getLang()) => `/${lang}/talks/accessibility`,
+  regexp: (lang: Locale = getLang()) => `/${lang}/talks/regexp`,
+  jest: (lang: Locale = getLang()) => `/${lang}/talks/jest`,
   typeVsInterface: (lang: Locale = getLang()) =>
-    `/${lang}/performances/type-vs-interface`,
+    `/${lang}/talks/type-vs-interface`,
   solitaire: (lang: Locale = getLang()) => `/${lang}/my-works/solitaire`,
   snake: (lang: Locale = getLang()) => `/${lang}/my-works/snake`,
   game2048: (lang: Locale = getLang()) => `/${lang}/my-works/game-2048`,

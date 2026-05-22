@@ -9,10 +9,13 @@ import { clsxm, isTouchDevice } from '@repo/utils';
 import Image from 'next/image';
 import { use, useEffect, useState } from 'react';
 
+const CAREER_START_YEAR = 2018;
+
 export default function Home({ params }: DefaultProps) {
   const { lang } = use(params);
   const [isTouch, setIsTouch] = useState(false);
   const { t } = useTranslation();
+  const yearsOfExperience = new Date().getFullYear() - CAREER_START_YEAR;
 
   const navMenu = [
     {
@@ -32,8 +35,8 @@ export default function Home({ params }: DefaultProps) {
     },
     {
       first: t('main.ivan'),
-      second: t('main.performances'),
-      href: ROUTES.performances(lang),
+      second: t('main.talks'),
+      href: ROUTES.talks(lang),
     },
   ];
 
@@ -65,6 +68,16 @@ export default function Home({ params }: DefaultProps) {
           className='animate-fadeInWithScale object-contain opacity-80'
         />
       </section>
+      <p
+        className={clsxm(
+          'pointer-events-none absolute right-6 bottom-20 z-50 max-w-[50vw] text-right',
+          'text-[clamp(11px,1.6vw,18px)] tracking-wider text-white/85',
+          'animate-fadeInWithScale ease-linear duration-1000',
+        )}
+      >
+        Senior Frontend Engineer · {yearsOfExperience}+ years · Next.js /
+        TypeScript
+      </p>
       <div className='pointer-events-none absolute bottom-6 block w-full animate-bounce text-center text-[3.6vmin] text-white'>
         {`${isTouch ? 'tap' : 'slide'} anywhere`}
       </div>

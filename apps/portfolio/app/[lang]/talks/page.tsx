@@ -13,18 +13,18 @@ export default function Page({ params }: DefaultProps) {
 
   const reports = [
     {
-      first: t('performances.accessibility'),
-      second: t('performances.accessibility'),
+      first: t('talks.accessibility'),
+      second: t('talks.accessibility'),
       href: ROUTES.accessibility(lang),
     },
     {
-      first: t('performances.regexp'),
-      second: t('performances.regexp'),
+      first: t('talks.regexp'),
+      second: t('talks.regexp'),
       href: ROUTES.regexp(lang),
     },
     {
-      first: t('performances.testingWithJest'),
-      second: t('performances.testingWithJest'),
+      first: t('talks.testingWithJest'),
+      second: t('talks.testingWithJest'),
       href: ROUTES.jest(lang),
     },
     {
@@ -35,7 +35,7 @@ export default function Page({ params }: DefaultProps) {
   ];
 
   return (
-    <Container lang={lang} backText={t('ivan')} title={t('performances.title')}>
+    <Container lang={lang} backText={t('ivan')} title={t('talks.title')}>
       <nav className='absolute left-12 top-1/2 flex -translate-y-1/2 flex-col items-center md:left-[114px]'>
         {reports.map((item, idx) => (
           <NavMenuItem

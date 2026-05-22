@@ -59,14 +59,14 @@
     "my": "Ich",
     "myWorks": "Meine Arbeiten",
     "names": "heiße",
-    "performances": "Vorträge",
+    "talks": "Vorträge",
     "presPForPause": "Drücken Sie \"P\" für Pause. Drücken Sie \"Leertaste\" für einen neuen Effekt"
   },
   "myWorks": {
     "description": "Da ich in den Unternehmen, in denen ich gearbeitet habe, eine NDA (Geheimhaltungsvereinbarung) unterschrieben habe, muss ich hier meine persönlichen Projekte hochladen.",
     "myWorks": "Meine Arbeiten"
   },
-  "performances": {
+  "talks": {
     "accessibility": "Entwicklung zugänglicher Benutzeroberflächen",
     "regexp": "Habt keine Angst vor regulären Ausdrücken",
     "testingWithJest": "Testen mit Jest und Testing Library",

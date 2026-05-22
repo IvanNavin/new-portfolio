@@ -14,6 +14,16 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        // Preserve the old /[lang]/performances/... URLs after the rename to /talks.
+        source: '/:lang/performances/:path*',
+        destination: '/:lang/talks/:path*',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

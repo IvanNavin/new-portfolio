@@ -30,8 +30,8 @@ export default function Page({ params }: DefaultProps) {
   return (
     <Container
       lang={lang}
-      backText={t('performances.title')}
-      backPath={ROUTES.performances(lang)}
+      backText={t('talks.title')}
+      backPath={ROUTES.talks(lang)}
       title={t('types.title')}
     >
       <VideoFrame src='https://www.youtube.com/embed/k8V4Q1MGwro' />

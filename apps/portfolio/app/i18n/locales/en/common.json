@@ -61,18 +61,18 @@
     "my": "My",
     "myWorks": "My Works",
     "names": "Name's",
-    "performances": "Performances",
+    "talks": "Talks",
     "presPForPause": "Press \"P\" for Pause. Press \"Space\" for new effect"
   },
   "myWorks": {
     "description": "According to the regulations which I signed (NDA), working for the company, I will have to post sandbox here",
     "myWorks": "My Works"
   },
-  "performances": {
+  "talks": {
     "accessibility": "Development accessible interfaces️",
     "regexp": "Don't be afraid of regular expressions",
     "testingWithJest": "Testing with Jest and Testing Library",
-    "title": "My reports"
+    "title": "Talks & writing"
   },
   "regexp": {
     "crib": "Regular Expression Cheat Sheet",
