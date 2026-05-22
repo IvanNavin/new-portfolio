@@ -1,0 +1,87 @@
+/* 3D cube that rotates only on touch devices.
+   On desktop the front face is shown and hover swaps the text inside it. */
+
+.cubeScene {
+  perspective: 1000px;
+  display: inline-block;
+  /* keep some breathing room for the cube faces sticking out */
+  padding: 1em 0;
+}
+
+.cube {
+  position: relative;
+  display: inline-block;
+  transform-style: preserve-3d;
+  /* leading-none guarantees height === font-size, so half = 0.5em */
+  line-height: 1;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+/* invisible spacer dictates the cube's box dimensions */
+.spacer {
+  visibility: hidden;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* face 1 — first text, sitting on the front of the cube */
+.faceFront {
+  transform: translateZ(0.5em);
+}
+
+/* face 2 — second text, lying flat on the BOTTOM of the cube.
+   rotateX(-90deg) + translateZ(+) puts the face below the cube's center
+   (because CSS +Y points downward). When the cube rotates +90deg around X,
+   the front face tilts up to the top and this bottom face rises into the
+   front position. */
+.faceBottom {
+  transform: rotateX(-90deg) translateZ(0.5em);
+}
+
+/* Hide the second-text faces on desktop — they exist only for the cube
+   animation, which only runs on touch devices. The .touch class is added
+   on the parent <a> from JS so it also fires inside Chrome's device
+   emulator (which doesn't flip @media (hover: none)). */
+.touchOnly {
+  display: none;
+}
+.desktopOnly {
+  display: flex;
+}
+
+:global(.touch) .touchOnly {
+  display: flex;
+}
+:global(.touch) .desktopOnly {
+  display: none;
+}
+:global(.touch) .cube {
+  animation: cubeFlipUp 6s ease-in-out infinite;
+  animation-delay: var(--flip-delay, 0s);
+}
+
+@keyframes cubeFlipUp {
+  /* show front (first / Hello) for ~45% of the cycle */
+  0%,
+  45% {
+    transform: rotateX(0deg);
+  }
+  /* rotate +90deg around X — front face tilts up to the top,
+     bottom face rises from below into the front position (second / About Me) */
+  50%,
+  95% {
+    transform: rotateX(90deg);
+  }
+  /* rotate back to front (Hello again) */
+  100% {
+    transform: rotateX(0deg);
+  }
+}

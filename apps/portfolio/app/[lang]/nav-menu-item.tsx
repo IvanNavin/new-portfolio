@@ -2,8 +2,9 @@ import { russoOne } from '@assets/fonts';
 import { TransitionLink } from '@components/TransitionLink';
 import { useHover } from '@mantine/hooks';
 import { clsxm, isTouchDevice } from '@repo/utils';
-import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { CSSProperties, useEffect, useState } from 'react';
+
+import styles from './nav-menu-item.module.css';
 
 type NavMenuItemProps = {
   first: string;
@@ -18,9 +19,6 @@ type Props = {
   index: number;
 };
 
-const AUTO_INTERVAL_MS = 3000;
-const STAGGER_MS = 500;
-
 export const NavMenuItem = ({
   item: { first, second, href },
   className,
@@ -29,68 +27,86 @@ export const NavMenuItem = ({
 }: Props) => {
   const { hovered, ref } = useHover<HTMLAnchorElement>();
   const [isTouch, setIsTouch] = useState(false);
-  const [autoFlipped, setAutoFlipped] = useState(false);
 
   useEffect(() => {
     setIsTouch(isTouchDevice());
   }, []);
 
-  useEffect(() => {
-    if (!isTouch) return;
-
-    let intervalId: ReturnType<typeof setInterval> | undefined;
-    const initialTimeout = setTimeout(() => {
-      setAutoFlipped((prev) => !prev);
-      intervalId = setInterval(() => {
-        setAutoFlipped((prev) => !prev);
-      }, AUTO_INTERVAL_MS);
-    }, index * STAGGER_MS);
-
-    return () => {
-      clearTimeout(initialTimeout);
-      if (intervalId) clearInterval(intervalId);
-    };
-  }, [isTouch, index]);
-
-  const showSecond = isTouch ? autoFlipped : hovered;
-
-  const faceClass = clsxm(
-    'opacity-0 text-[8vw] text-white shadow-black text-shadow',
-    '[backface-visibility:hidden]',
+  const baseTextClass = clsxm(
+    'text-[8vw] text-white shadow-black text-shadow',
     russoOne.className,
     textClassName,
   );
+
+  // Spacer needs the longer string so the cube box never clips a face.
+  const spacer = first.length >= second.length ? first : second;
+
+  // Per-item delay so the four menu items flip in a wave on mobile.
+  const cubeStyle = {
+    '--flip-delay': `${index * 0.4}s`,
+    animation: `slideText 0.5s forwards ${index + 0.5}s`,
+  } as CSSProperties;
 
   return (
     <TransitionLink
       href={href}
       ref={ref}
       className={clsxm(
-        'group overflow-visible flex self-start border-transparent bg-transparent p-0 text-left',
+        'group flex self-start border-transparent bg-transparent p-0 text-left',
         'focus-within:border-transparent focus-within:outline-transparent select-none relative',
-        '[perspective:1000px]',
+        isTouch && 'touch',
         className,
       )}
     >
-      <motion.span
-        className='relative inline-block transition-[margin] duration-500 ease-in-out group-hover:ml-10'
-        style={{
-          transformStyle: 'preserve-3d',
-          animation: `slideText 0.5s forwards ${index + 0.5}s`,
-        }}
-        animate={{ rotateX: showSecond ? 180 : 0 }}
-        transition={{ duration: 0.6, ease: 'easeInOut' }}
+      <span
+        className={clsxm(
+          styles.cubeScene,
+          'opacity-0 transition-[margin] duration-500 ease-in-out group-hover:ml-10',
+        )}
+        style={cubeStyle}
       >
-        <span className={faceClass}>{first}</span>
-        <span
-          className={clsxm(
-            faceClass,
-            'absolute inset-0 [transform:rotateX(180deg)]',
-          )}
-        >
-          {second}
+        <span className={styles.cube}>
+          {/* spacer — invisible, dictates cube box size */}
+          <span className={clsxm(baseTextClass, styles.spacer)}>{spacer}</span>
+
+          {/* front face — desktop variant: hover swaps the text in place */}
+          <span
+            className={clsxm(
+              baseTextClass,
+              styles.face,
+              styles.faceFront,
+              styles.desktopOnly,
+            )}
+          >
+            {hovered ? second : first}
+          </span>
+
+          {/* front face — touch variant: always shows the first text;
+              the cube animation reveals the bottom face below */}
+          <span
+            className={clsxm(
+              baseTextClass,
+              styles.face,
+              styles.faceFront,
+              styles.touchOnly,
+            )}
+          >
+            {first}
+          </span>
+
+          {/* bottom face — only used while the cube is rotating on touch */}
+          <span
+            className={clsxm(
+              baseTextClass,
+              styles.face,
+              styles.faceBottom,
+              styles.touchOnly,
+            )}
+          >
+            {second}
+          </span>
         </span>
-      </motion.span>
+      </span>
     </TransitionLink>
   );
 };
