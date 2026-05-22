@@ -1,5 +1,5 @@
 'use client';
-/* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useGetLang } from '@app/utils/hooks/useGetLang';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
