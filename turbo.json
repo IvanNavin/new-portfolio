@@ -3,7 +3,8 @@
   "ui": "tui",
   "tasks": {
     "generate": {
-      "outputs": ["^generate"]
+      "cache": false,
+      "outputs": ["generated/**", "node_modules/.prisma/**"]
     },
     "build": {
       "dependsOn": ["generate", "^build"],

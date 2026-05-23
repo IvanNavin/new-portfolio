@@ -5,7 +5,7 @@ import { clsxm } from '@repo/utils';
 // numbers each time you re-run Lighthouse so the badge doesn't lie.
 // Last run: 2026-05-22 (desktop, devtools).
 const SCORES = {
-  performance: 89,
+  performance: 97,
   accessibility: 93,
   bestPractices: 96,
   seo: 92,
@@ -47,12 +47,12 @@ export const LighthouseBadge = ({ className }: Props) => (
     href='https://pagespeed.web.dev/analysis?url=https://holovko-ivan.vercel.app'
     target='_blank'
     rel='noopener noreferrer'
+    title='View live Lighthouse report on PageSpeed Insights'
     className={clsxm(
       'group inline-flex items-center gap-1',
       'transition-opacity duration-300 hover:opacity-100 opacity-70',
       className,
     )}
-    aria-label='View live Lighthouse report on PageSpeed Insights'
   >
     <ScoreItem label='Perf' score={SCORES.performance} />
     <ScoreItem label='A11y' score={SCORES.accessibility} />

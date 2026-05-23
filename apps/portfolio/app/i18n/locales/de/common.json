@@ -4,24 +4,8 @@
     "title": "Seite nicht gefunden"
   },
   "about": {
-    "description": "Gleichzeitig lerne ich neue Technologien und versuche, dieses Wissen mit anderen zu teilen.",
+    "careerTitle": "Karriere-Zeitleiste",
     "downloadCv": "Lebenslauf herunterladen",
-    "facts": {
-      "line0": "Ich bin ein Teamplayer",
-      "line1": "Ich genieße es, Probleme zu lösen",
-      "line10": "Gesprächig",
-      "line11": "Ich schaue gerne Serien",
-      "line12": "Gesellig",
-      "line13": "Optimist",
-      "line2": "Ich kommuniziere klar und effektiv",
-      "line3": "Ich passe mich schnell an neue Technologien an",
-      "line4": "Ich denke kreativ, um Lösungen zu finden",
-      "line5": "Ich bin organisiert und verwalte meine Zeit gut",
-      "line6": "Ich habe Führungserfahrung",
-      "line7": "Ich liebe meine Familie",
-      "line8": "Ich reise gerne",
-      "line9": "Ich bin fröhlich"
-    },
     "helloThere": "Hallo zusammen!",
     "text": {
       "line1": "Schon als Kind träumte ich davon, Programmierer zu werden und etwas Spannendes zu schaffen. Nach meinen ersten Erfahrungen mit Basic, Pascal und Delphi nahm mein Leben zunächst einen anderen Weg. Doch 15 Jahre später erkannte ich, dass Programmieren meine wahre Berufung ist.",
@@ -32,8 +16,7 @@
       "line6": "",
       "line7": "In allen Unternehmen, in denen ich gearbeitet habe, konnte ich meine Soft Skills unter Beweis stellen, gemeinsam mit dem Team Lösungen finden und meine Relevanz zeigen.",
       "line8": "Ich habe Erfahrung mit:"
-    },
-    "whoIAm": "Wer ich bin:"
+    }
   },
   "accessibility": {
     "linkName": "Link zum Vortrag",

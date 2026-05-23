@@ -1,33 +1,43 @@
 'use client';
-import { ProgressFacts } from '@app/[lang]/about/ProgressFacts';
-import { useAbout } from '@app/[lang]/about/useAbout';
 import { DefaultProps } from '@app/types';
 import { roboto, russoOne } from '@assets/fonts';
 import { Container } from '@components/Container';
 import { Magnetic } from '@components/Magnetic';
 import { RenderTextArea } from '@components/RenderTextArea';
 import { Css, EmptyGear, Html, Js } from '@components/svg';
+import { useTranslation } from '@i18n/client';
 import { clsxm } from '@repo/utils';
 import { use } from 'react';
 
 import './style.css';
 
-import { cssSkills, htmlSkills, JSSkills, otherSkills } from './constants';
+import { AchievementRings } from './AchievementRings';
+import { CareerTimeline } from './CareerTimeline';
+import {
+  achievementRings,
+  careerTimeline,
+  cssSkills,
+  htmlSkills,
+  JSSkills,
+  otherSkills,
+} from './constants';
 import { DownloadButton } from './DownloadButton';
 
 export default function Page({ params }: DefaultProps) {
   const { lang } = use(params);
-  const { t, isClient, currentFacts, progressValue } = useAbout();
+  const { t } = useTranslation();
 
   return (
     <Container lang={lang} backText={t('ivan')} title={t('about.helloThere')}>
       <section className={roboto.className}>
         <RenderTextArea t={t} tKey='about.text' />
       </section>
+      <AchievementRings rings={achievementRings} />
+      <CareerTimeline title={t('about.careerTitle')} entries={careerTimeline} />
       <section
         className={clsxm(
           roboto.className,
-          'mx-auto my-6 flex max-w-[672px] flex-col items-center',
+          'mx-auto my-10 flex max-w-[672px] flex-col items-center',
         )}
       >
         <Magnetic>
@@ -86,14 +96,6 @@ export default function Page({ params }: DefaultProps) {
           </div>
         </Magnetic>
       </section>
-      <p className={roboto.className}>{t('about.description')}</p>
-
-      <h2 className='mb-6 mt-5 text-right text-[32px]'>{t('about.whoIAm')}</h2>
-      {progressValue !== 100 && <ProgressFacts value={progressValue} />}
-      <ul className='mb-6 text-right'>
-        {isClient &&
-          currentFacts.map((line, index) => <li key={index}>{line}</li>)}
-      </ul>
 
       <DownloadButton />
     </Container>

@@ -4,24 +4,8 @@
     "title": "Page not found"
   },
   "about": {
-    "description": "At the same time, I study new technologies and try to share them with others.",
+    "careerTitle": "Career timeline",
     "downloadCv": "download CV",
-    "facts": {
-      "line0": "I am a team player",
-      "line1": "I enjoy problem solving",
-      "line10": "Talkative",
-      "line11": "I like to watch TV series",
-      "line12": "Sociable",
-      "line13": "Optimist",
-      "line2": "I communicate clearly and effectively",
-      "line3": "I adapt quickly to new technologies",
-      "line4": "I think creatively to find solutions",
-      "line5": "I am organized and manage my time well",
-      "line6": "I have leadership experience",
-      "line7": "I love my family",
-      "line8": "I like to travel",
-      "line9": "I am cheerful"
-    },
     "helloThere": "Hello There!",
     "text": {
       "line1": "Since childhood, I dreamed of becoming a programmer and creating something exciting. After my first experiences with Basic, Pascal, and Delphi, my life initially took a different path. However, 15 years later, I realized that programming is my true calling.",
@@ -32,8 +16,7 @@
       "line6": "",
       "line7": "In all companies I worked for, I managed to show my soft skills, find common solutions in the team and try to be relevant.",
       "line8": "I have experience in:"
-    },
-    "whoIAm": "Who I Am:"
+    }
   },
   "accessibility": {
     "linkName": "Link to the report",
