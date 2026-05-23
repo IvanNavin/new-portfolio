@@ -10,13 +10,19 @@ import { clsxm, isTouchDevice } from '@repo/utils';
 import Image from 'next/image';
 import { use, useEffect, useState } from 'react';
 
-const CAREER_START_YEAR = 2018;
+// Ivan started at Evoplay in October 2018. Count full years since then so we
+// don't jump to 8+ on Jan 1, 2026 — full 8 years lands in October 2026.
+const CAREER_START = new Date(2018, 9, 1);
 
 export default function Home({ params }: DefaultProps) {
   const { lang } = use(params);
   const [isTouch, setIsTouch] = useState(false);
   const { t } = useTranslation();
-  const yearsOfExperience = new Date().getFullYear() - CAREER_START_YEAR;
+  const now = new Date();
+  const monthsSinceStart =
+    (now.getFullYear() - CAREER_START.getFullYear()) * 12 +
+    (now.getMonth() - CAREER_START.getMonth());
+  const yearsOfExperience = Math.max(0, Math.floor(monthsSinceStart / 12));
 
   const navMenu = [
     {
