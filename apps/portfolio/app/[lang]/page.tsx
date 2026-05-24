@@ -4,7 +4,6 @@ import { ROUTES } from '@app/constants/routes';
 import { DefaultProps } from '@app/types';
 import myPhoto from '@assets/img/iam-wb-1.png';
 import Fluid from '@components/Fluid';
-import { LighthouseBadge } from '@components/LighthouseBadge';
 import { useTranslation } from '@i18n/client';
 import { clsxm, isTouchDevice } from '@repo/utils';
 import Image from 'next/image';
@@ -93,7 +92,6 @@ export default function Home({ params }: DefaultProps) {
       <span className='absolute bottom-0 left-0 text-[8px]'>
         {t('main.presPForPause')}
       </span>
-      <LighthouseBadge className='absolute bottom-3 left-3 z-50' />
     </main>
   );
 }

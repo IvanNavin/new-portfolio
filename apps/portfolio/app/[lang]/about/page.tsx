@@ -22,6 +22,7 @@ import {
   otherSkills,
 } from './constants';
 import { DownloadButton } from './DownloadButton';
+import { PerformanceRings } from './PerformanceRings';
 
 export default function Page({ params }: DefaultProps) {
   const { lang } = use(params);
@@ -96,6 +97,11 @@ export default function Page({ params }: DefaultProps) {
           </div>
         </Magnetic>
       </section>
+
+      <PerformanceRings
+        title={t('about.perfTitle')}
+        subtitle={t('about.perfSubtitle')}
+      />
 
       <DownloadButton />
     </Container>

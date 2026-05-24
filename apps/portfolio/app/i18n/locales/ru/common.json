@@ -7,6 +7,8 @@
     "careerTitle": "Карьерный путь",
     "downloadCv": "скачать резюме",
     "helloThere": "Всем привет!",
+    "perfTitle": "Live performance",
+    "perfSubtitle": "Lighthouse desktop · holovko-ivan.vercel.app · клик для полного отчёта PageSpeed",
     "text": {
       "line1": "Я Senior Frontend-инженер, который создаёт удобные приложения на Next.js и React. Мне нравится превращать сложные задачи в простые, элегантные и ориентированные на пользователя решения.",
       "line2": "",
