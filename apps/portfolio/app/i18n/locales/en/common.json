@@ -8,14 +8,11 @@
     "downloadCv": "download CV",
     "helloThere": "Hello There!",
     "text": {
-      "line1": "Since childhood, I dreamed of becoming a programmer and creating something exciting. After my first experiences with Basic, Pascal, and Delphi, my life initially took a different path. However, 15 years later, I realized that programming is my true calling.",
+      "line1": "I'm a Senior Frontend Engineer building user-friendly Next.js and React applications. I enjoy turning complex tasks into simple, elegant, and user-centered solutions.",
       "line2": "",
-      "line3": "Today, I am a senior front-end developer specializing in application development, creating user-friendly interfaces, and maintaining web projects. I enjoy turning complex tasks into simple, elegant, and user-centered solutions.",
+      "line3": "Day-to-day I work with React, TypeScript and Next.js, with a focus on design systems, performance and accessibility. I'm always learning and enjoy sharing what I know with the team.",
       "line4": "",
-      "line5": "My professional journey includes working with modern technologies such as Next.js, React, TypeScript, and various tools for boosting development efficiency. I am always learning, keeping up with the latest trends and technologies, and enjoy sharing my knowledge with my team. In my free time, I enjoy playing on my PlayStation, experimenting with cooking meat, and spending quality time with my family.",
-      "line6": "",
-      "line7": "In all companies I worked for, I managed to show my soft skills, find common solutions in the team and try to be relevant.",
-      "line8": "I have experience in:"
+      "line5": "Outside work I'm on the PlayStation, in the kitchen with a slab of meat, or with my family."
     }
   },
   "accessibility": {

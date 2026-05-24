@@ -8,14 +8,11 @@
     "downloadCv": "Lebenslauf herunterladen",
     "helloThere": "Hallo zusammen!",
     "text": {
-      "line1": "Schon als Kind träumte ich davon, Programmierer zu werden und etwas Spannendes zu schaffen. Nach meinen ersten Erfahrungen mit Basic, Pascal und Delphi nahm mein Leben zunächst einen anderen Weg. Doch 15 Jahre später erkannte ich, dass Programmieren meine wahre Berufung ist.",
+      "line1": "Ich bin Senior Frontend Engineer und entwickle benutzerfreundliche Anwendungen mit Next.js und React. Es bereitet mir Freude, komplexe Aufgaben in einfache, elegante und benutzerzentrierte Lösungen zu verwandeln.",
       "line2": "",
-      "line3": "Heute bin ich ein Senior-Frontend-Entwickler, spezialisiert auf die Entwicklung von Anwendungen, benutzerfreundliche Oberflächen und die Wartung von Webprojekten. Es bereitet mir Freude, komplexe Aufgaben in einfache, elegante und benutzerzentrierte Lösungen zu verwandeln.",
+      "line3": "Im Alltag arbeite ich mit React, TypeScript und Next.js — mit Fokus auf Design Systems, Performance und Barrierefreiheit. Ich lerne ständig dazu und teile mein Wissen gerne mit dem Team.",
       "line4": "",
-      "line5": "Mein beruflicher Werdegang umfasst die Arbeit mit modernen Technologien wie Next.js, React, TypeScript und verschiedenen Tools zur Effizienzsteigerung in der Entwicklung. Ich lerne ständig dazu, halte mich über die neuesten Trends und Technologien auf dem Laufenden und teile gerne mein Wissen mit meinem Team. In meiner Freizeit spiele ich gerne auf meiner PlayStation, experimentiere beim Fleischkochen und verbringe wertvolle Zeit mit meiner Familie.",
-      "line6": "",
-      "line7": "In allen Unternehmen, in denen ich gearbeitet habe, konnte ich meine Soft Skills unter Beweis stellen, gemeinsam mit dem Team Lösungen finden und meine Relevanz zeigen.",
-      "line8": "Ich habe Erfahrung mit:"
+      "line5": "Außerhalb der Arbeit bin ich an der PlayStation, in der Küche mit einem schönen Stück Fleisch oder mit meiner Familie."
     }
   },
   "accessibility": {
