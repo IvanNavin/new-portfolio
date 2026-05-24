@@ -4,17 +4,95 @@
     "title": "Seite nicht gefunden"
   },
   "about": {
+    "achievementsAriaLabel": "Karriereerfolge",
+    "career": {
+      "evoplay": {
+        "bullets": [
+          "10 Projekte (React, TS, GraphQL, Sass) und 5 Projekte (Twig, JS, jQuery, Less) mit geteilten Komponenten und verschiedenen Themes ausgeliefert.",
+          "Umfangreiche CSS- und Canvas-Animationen.",
+          "4 Junior-Engineers gementored, die später auf Mid/Senior-Level aufgestiegen sind."
+        ],
+        "companySubtitle": "Online-Gambling (iGaming)",
+        "location": "Kiew, Ukraine",
+        "period": "Okt 2018 — Apr 2021",
+        "role": "Frontend Engineer"
+      },
+      "illusionsOnlineArabia": {
+        "bullets": [
+          "Turborepo-Monorepo mit 10 Paketen und 4 Next.js-Apps aufgesetzt.",
+          "UI-Bibliothek mit über 60 Komponenten gebaut und gepflegt, eingesetzt von 4 internen Teams.",
+          "i18n mit Namespaces über alle Apps hinweg implementiert.",
+          "ARIA-Rollen, Fokus-Management und Tastaturnavigation in zentrale Flows integriert.",
+          "Docker konfiguriert, Releases über Azure DevOps durchgeführt."
+        ],
+        "location": "Dubai, VAE",
+        "period": "Aug 2023 — Heute",
+        "role": "Senior React Engineer"
+      },
+      "luxoft": {
+        "bullets": [
+          "Trading-Dashboards für Citi mit Real-time AG Grid entwickelt.",
+          "Excel-Datei-Verarbeitung im Produkt automatisiert.",
+          "Komplexe AG Grid-Ansichten mit gespeicherten Layouts, Tabs und verschiebbaren Panels mittels flexlayout-react gebaut.",
+          "Testabdeckung mit Jest auf über 50% gehoben."
+        ],
+        "location": "Kiew, Ukraine",
+        "period": "Apr 2021 — Mär 2022",
+        "role": "Middle React Engineer"
+      },
+      "octalSecurity": {
+        "bullets": [
+          "In 13 Monaten ein Admin-Projekt in Production ausgeliefert: 38 Seiten, 8 Tabellen, 16 Create/Edit-Seiten.",
+          "Authentifizierung mit MSAL React und Formulare mit React Hook Form umgesetzt.",
+          "Unit-Tests mit Jest auf Kernmodule geschrieben."
+        ],
+        "location": "Kiew, Ukraine",
+        "period": "Feb 2022 — Mär 2023",
+        "role": "Senior React Engineer"
+      },
+      "worktechLabs": {
+        "bullets": [
+          "In einem 5-monatigen Vertrag Features und UX-Fixes in einem Next.js-Produkt geliefert.",
+          "Authentifizierung mit NextAuth (Credentials) hinzugefügt.",
+          "Mit Design und Backend zusammengearbeitet — die wirkungsvollsten UX-Probleme geschlossen."
+        ],
+        "location": "Stockholm, Schweden",
+        "period": "Mär 2023 — Aug 2023",
+        "role": "Senior React Engineer"
+      }
+    },
+    "careerAriaLabel": "Karriere-Zeitleiste",
     "careerTitle": "Karriere-Zeitleiste",
     "downloadCv": "Lebenslauf herunterladen",
     "helloThere": "Hallo zusammen!",
-    "perfTitle": "Live performance",
+    "lighthouse": {
+      "a11y": "Barrierefreiheit",
+      "ariaLabel": "Aktuelle Lighthouse-Werte für diese Seite",
+      "bestPractices": "Best Practices",
+      "linkTitle": "Vollständigen Lighthouse-Bericht auf PageSpeed Insights ansehen",
+      "perf": "Leistung",
+      "seo": "SEO"
+    },
+    "now": "Heute",
     "perfSubtitle": "Lighthouse Desktop · holovko-ivan.vercel.app · für vollständigen PageSpeed-Bericht klicken",
+    "perfTitle": "Live performance",
+    "rings": {
+      "experience": "Erfahrung",
+      "mentored": "Mentoring",
+      "projects": "Projekte",
+      "technologies": "Technologien"
+    },
     "text": {
       "line1": "Ich bin Senior Frontend Engineer und entwickle benutzerfreundliche Anwendungen mit Next.js und React. Es bereitet mir Freude, komplexe Aufgaben in einfache, elegante und benutzerzentrierte Lösungen zu verwandeln.",
       "line2": "",
       "line3": "Im Alltag arbeite ich mit React, TypeScript und Next.js — mit Fokus auf Design Systems, Performance und Barrierefreiheit. Ich lerne ständig dazu und teile mein Wissen gerne mit dem Team.",
       "line4": "",
       "line5": "Außerhalb der Arbeit bin ich an der PlayStation, in der Küche mit einem schönen Stück Fleisch oder mit meiner Familie."
+    },
+    "workMode": {
+      "hybrid": "Hybrid",
+      "onSite": "Vor Ort",
+      "remote": "Remote"
     }
   },
   "accessibility": {
@@ -41,7 +119,10 @@
     "my": "Ich",
     "myWorks": "Meine Arbeiten",
     "names": "heiße",
+    "slide": "irgendwo wischen",
+    "tagline": "Senior Frontend Engineer · {{years}}+ Jahre · Next.js / TypeScript",
     "talks": "Vorträge",
+    "tap": "irgendwo tippen",
     "presPForPause": "Drücken Sie \"P\" für Pause. Drücken Sie \"Leertaste\" für einen neuen Effekt"
   },
   "myWorks": {

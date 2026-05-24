@@ -83,11 +83,10 @@ export default function Home({ params }: DefaultProps) {
           'animate-fadeInWithScale ease-linear duration-1000',
         )}
       >
-        Senior Frontend Engineer · {yearsOfExperience}+ years · Next.js /
-        TypeScript
+        {t('main.tagline', { years: yearsOfExperience })}
       </p>
       <div className='pointer-events-none absolute bottom-6 block w-full animate-bounce text-center text-[3.6vmin] text-white'>
-        {`${isTouch ? 'tap' : 'slide'} anywhere`}
+        {isTouch ? t('main.tap') : t('main.slide')}
       </div>
       <span className='absolute bottom-0 left-0 text-[8px]'>
         {t('main.presPForPause')}

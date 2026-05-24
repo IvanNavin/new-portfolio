@@ -4,17 +4,95 @@
     "title": "Страница не найдена"
   },
   "about": {
+    "achievementsAriaLabel": "Карьерные достижения",
+    "career": {
+      "evoplay": {
+        "bullets": [
+          "Выпустил 10 проектов (React, TS, GraphQL, Sass) и 5 проектов (Twig, JS, jQuery, Less) с общими компонентами и разными темами.",
+          "Расширенные CSS- и canvas-анимации.",
+          "Менторил 4 джуниор-инженеров, которые позже выросли до mid/senior уровня."
+        ],
+        "companySubtitle": "Онлайн-гэмблинг (iGaming)",
+        "location": "Киев, Украина",
+        "period": "Окт 2018 — Апр 2021",
+        "role": "Frontend Engineer"
+      },
+      "illusionsOnlineArabia": {
+        "bullets": [
+          "Настроил Turborepo-монорепо с 10 пакетами и 4 Next.js-приложениями.",
+          "Построил и поддерживаю UI-библиотеку из 60+ компонентов, используемую 4 внутренними командами.",
+          "Реализовал i18n с namespaces во всех приложениях.",
+          "Добавил ARIA-роли, управление фокусом и навигацию клавиатурой в ключевых флоу.",
+          "Настроил Docker, провожу релизы в Azure DevOps."
+        ],
+        "location": "Дубай, ОАЭ",
+        "period": "Авг 2023 — Сейчас",
+        "role": "Senior React Engineer"
+      },
+      "luxoft": {
+        "bullets": [
+          "Разрабатывал торговые дашборды для Citi с real-time AG Grid.",
+          "Автоматизировал обработку Excel-файлов в продукте.",
+          "Построил сложные AG Grid-визуализации с сохранёнными лейаутами, табами и растягивающимися панелями через flexlayout-react.",
+          "Поднял покрытие тестами Jest выше 50%."
+        ],
+        "location": "Киев, Украина",
+        "period": "Апр 2021 — Мар 2022",
+        "role": "Middle React Engineer"
+      },
+      "octalSecurity": {
+        "bullets": [
+          "За 13 месяцев выпустил админку в production: 38 страниц, 8 таблиц, 16 страниц create/edit.",
+          "Реализовал авторизацию через MSAL React и формы на React Hook Form.",
+          "Покрыл ключевые модули unit-тестами на Jest."
+        ],
+        "location": "Киев, Украина",
+        "period": "Фев 2022 — Мар 2023",
+        "role": "Senior React Engineer"
+      },
+      "worktechLabs": {
+        "bullets": [
+          "За 5-месячный контракт реализовал фичи и UX-фиксы в Next.js-продукте.",
+          "Добавил авторизацию через NextAuth (credentials).",
+          "Сотрудничал с дизайном и бэкендом — закрывал самые влиятельные UX-проблемы."
+        ],
+        "location": "Стокгольм, Швеция",
+        "period": "Мар 2023 — Авг 2023",
+        "role": "Senior React Engineer"
+      }
+    },
+    "careerAriaLabel": "Карьерный путь",
     "careerTitle": "Карьерный путь",
     "downloadCv": "скачать резюме",
     "helloThere": "Всем привет!",
-    "perfTitle": "Live performance",
+    "lighthouse": {
+      "a11y": "Доступность",
+      "ariaLabel": "Текущие оценки Lighthouse для этого сайта",
+      "bestPractices": "Лучшие практики",
+      "linkTitle": "Смотреть полный отчёт Lighthouse на PageSpeed Insights",
+      "perf": "Производительность",
+      "seo": "SEO"
+    },
+    "now": "Сейчас",
     "perfSubtitle": "Lighthouse desktop · holovko-ivan.vercel.app · клик для полного отчёта PageSpeed",
+    "perfTitle": "Live performance",
+    "rings": {
+      "experience": "Опыт",
+      "mentored": "Менторство",
+      "projects": "Проекты",
+      "technologies": "Технологии"
+    },
     "text": {
       "line1": "Я Senior Frontend-инженер, который создаёт удобные приложения на Next.js и React. Мне нравится превращать сложные задачи в простые, элегантные и ориентированные на пользователя решения.",
       "line2": "",
       "line3": "В повседневной работе — React, TypeScript и Next.js, с фокусом на design systems, performance и accessibility. Постоянно учусь новому и охотно делюсь знаниями с командой.",
       "line4": "",
       "line5": "Вне работы — за PlayStation, на кухне с хорошим куском мяса, или с семьёй."
+    },
+    "workMode": {
+      "hybrid": "Гибрид",
+      "onSite": "В офисе",
+      "remote": "Удалённо"
     }
   },
   "accessibility": {
@@ -41,7 +119,10 @@
     "my": "Меня",
     "myWorks": "Мои работы",
     "names": "зовут",
+    "slide": "проведите где угодно",
+    "tagline": "Senior Frontend Engineer · {{years}}+ лет · Next.js / TypeScript",
     "talks": "Доклады",
+    "tap": "коснитесь где угодно",
     "presPForPause": "Нажмите \"P\" для паузы. Нажмите \"Пробел\" для нового эффекта"
   },
   "myWorks": {

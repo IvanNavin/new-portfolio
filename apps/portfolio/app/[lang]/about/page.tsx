@@ -14,8 +14,8 @@ import './style.css';
 import { AchievementRings } from './AchievementRings';
 import { CareerTimeline } from './CareerTimeline';
 import {
-  achievementRings,
-  careerTimeline,
+  buildAchievementRings,
+  buildCareerTimeline,
   cssSkills,
   htmlSkills,
   JSSkills,
@@ -27,14 +27,24 @@ import { PerformanceRings } from './PerformanceRings';
 export default function Page({ params }: DefaultProps) {
   const { lang } = use(params);
   const { t } = useTranslation();
+  const achievementRings = buildAchievementRings(t);
+  const careerTimeline = buildCareerTimeline(t);
 
   return (
     <Container lang={lang} backText={t('ivan')} title={t('about.helloThere')}>
       <section className={roboto.className}>
         <RenderTextArea t={t} tKey='about.text' />
       </section>
-      <AchievementRings rings={achievementRings} />
-      <CareerTimeline title={t('about.careerTitle')} entries={careerTimeline} />
+      <AchievementRings
+        rings={achievementRings}
+        ariaLabel={t('about.achievementsAriaLabel')}
+      />
+      <CareerTimeline
+        title={t('about.careerTitle')}
+        ariaLabel={t('about.careerAriaLabel')}
+        nowLabel={t('about.now')}
+        entries={careerTimeline}
+      />
       <section
         className={clsxm(
           roboto.className,
@@ -99,6 +109,7 @@ export default function Page({ params }: DefaultProps) {
       </section>
 
       <PerformanceRings
+        t={t}
         title={t('about.perfTitle')}
         subtitle={t('about.perfSubtitle')}
       />

@@ -124,7 +124,19 @@ export const AnimatedRing = ({
           {count}
           {ring.suffix ?? ''}
         </span>
-        <span className='mt-1 max-w-[88px] text-center text-[10px] font-medium uppercase leading-tight tracking-wide text-white/60'>
+        <span
+          // Cap label width to the chord of the ring at the label's y
+          // position (~size × 0.8) so wrapped lines stay inside the
+          // circle outline. `break-words` forces single long words like
+          // "ПРОИЗВОДИТЕЛЬНОСТЬ" or "Barrierefreiheit" to wrap mid-word
+          // instead of overflowing past the ring stroke.
+          style={{ maxWidth: Math.round(size * 0.8) }}
+          className={clsxm(
+            'mt-1 text-center text-[10px] font-medium uppercase',
+            'leading-tight tracking-wide text-white/60',
+            'break-words [hyphens:auto]',
+          )}
+        >
           {ring.label}
         </span>
       </div>

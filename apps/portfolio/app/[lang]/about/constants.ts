@@ -1,4 +1,6 @@
-import type { Ring } from './AchievementRings';
+import type { TFunction } from 'i18next';
+
+import type { Ring } from './AnimatedRing';
 import type { CareerEntry } from './CareerTimeline';
 
 // Ivan started at Evoplay in October 2018. Counting full years since then,
@@ -12,59 +14,35 @@ const monthsSinceStart = (() => {
     (now.getMonth() - CAREER_START.getMonth())
   );
 })();
-const yearsOfExperience = Math.max(0, Math.floor(monthsSinceStart / 12));
+export const yearsOfExperience = Math.max(0, Math.floor(monthsSinceStart / 12));
 
-export const achievementRings: Ring[] = [
-  {
-    label: 'Experience',
-    value: yearsOfExperience,
-    max: 10,
-    suffix: '+',
-    numberClass: 'text-yellow-300',
-    stroke: '#fde047',
-  },
-  {
-    label: 'Technologies',
-    value: 42,
-    max: 60,
-    suffix: '+',
-    numberClass: 'text-sky-300',
-    stroke: '#7dd3fc',
-  },
-  {
-    label: 'Projects',
-    value: 25,
-    max: 30,
-    suffix: '+',
-    numberClass: 'text-emerald-300',
-    stroke: '#6ee7b7',
-  },
-  {
-    label: 'Mentored',
-    value: 5,
-    max: 10,
-    numberClass: 'text-pink-300',
-    stroke: '#f9a8d4',
-  },
-];
+/**
+ * Visual + structural data for each career entry that does NOT need
+ * translation. Text fields (role/period/location/bullets/companySubtitle)
+ * are looked up from i18n via the `id` matching `about.career.<id>.*`.
+ */
+type CareerMeta = {
+  id: string;
+  /** Company name — proper noun, not translated. */
+  company: string;
+  /** Workmode lookup key, resolves via `about.workMode.<key>`. */
+  workModeKey?: 'remote' | 'onSite' | 'hybrid';
+  isCurrent?: boolean;
+  /** Stack tags — product/library names, kept in English. */
+  stack: string[];
+  avatarGradient?: string;
+  /** Set to true if the entry has a `companySubtitle` key in i18n. */
+  hasCompanySubtitle?: boolean;
+};
 
 // Order is most-recent-first (top of timeline = current role).
-export const careerTimeline: CareerEntry[] = [
+const CAREER_META: CareerMeta[] = [
   {
-    period: 'Aug 2023 — Present',
-    role: 'Senior React Engineer',
+    id: 'illusionsOnlineArabia',
     company: 'Illusions Online Arabia',
-    location: 'Dubai, UAE',
-    workMode: 'Remote',
+    workModeKey: 'remote',
     isCurrent: true,
     avatarGradient: 'from-red-500/80 to-orange-500/80',
-    bullets: [
-      'Set up a Turborepo monorepo with 10 packages and 4 Next.js apps.',
-      'Built and maintained a 60+ component UI library adopted by 4 internal teams.',
-      'Implemented i18n with namespaces across apps.',
-      'Added ARIA roles, focus management and keyboard navigation across core flows.',
-      'Configured Docker, ran Azure DevOps releases.',
-    ],
     stack: [
       'Next.js',
       'TypeScript',
@@ -77,31 +55,17 @@ export const careerTimeline: CareerEntry[] = [
     ],
   },
   {
-    period: 'Mar 2023 — Aug 2023',
-    role: 'Senior React Engineer',
+    id: 'worktechLabs',
     company: 'Worktech Labs',
-    location: 'Stockholm, Sweden',
-    workMode: 'Remote',
+    workModeKey: 'remote',
     avatarGradient: 'from-purple-500/80 to-pink-500/80',
-    bullets: [
-      'Delivered features and UX fixes in a Next.js product during a 5-month contract.',
-      'Added authentication with NextAuth (credentials).',
-      'Collaborated with design and backend to close high-impact UX issues.',
-    ],
     stack: ['Next.js', 'NextAuth', 'Mantine', 'Zustand', 'Zod', 'Ramda'],
   },
   {
-    period: 'Feb 2022 — Mar 2023',
-    role: 'Senior React Engineer',
+    id: 'octalSecurity',
     company: 'Octal Security',
-    location: 'Kyiv, Ukraine',
-    workMode: 'Remote',
+    workModeKey: 'remote',
     avatarGradient: 'from-orange-600/80 to-red-600/80',
-    bullets: [
-      'Shipped a production admin project in 13 months: 38 pages, 8 tables, 16 create/edit pages.',
-      'Implemented MSAL React auth and React Hook Form.',
-      'Wrote unit tests with Jest on core modules.',
-    ],
     stack: [
       'React',
       'TypeScript',
@@ -113,18 +77,10 @@ export const careerTimeline: CareerEntry[] = [
     ],
   },
   {
-    period: 'Apr 2021 — Mar 2022',
-    role: 'Middle React Engineer',
+    id: 'luxoft',
     company: 'Luxoft',
-    location: 'Kyiv, Ukraine',
-    workMode: 'Remote',
+    workModeKey: 'remote',
     avatarGradient: 'from-blue-500/80 to-indigo-600/80',
-    bullets: [
-      'Built trading dashboards for Citi with real-time AG Grid.',
-      'Automated in-product Excel file processing.',
-      'Built complex AG Grid views with saved layouts, tabs, and resizable panes using flexlayout-react.',
-      'Raised test coverage above 50% with Jest.',
-    ],
     stack: [
       'React',
       'Redux',
@@ -136,18 +92,11 @@ export const careerTimeline: CareerEntry[] = [
     ],
   },
   {
-    period: 'Oct 2018 — Apr 2021',
-    role: 'Frontend Engineer',
+    id: 'evoplay',
     company: 'Evoplay',
-    companySubtitle: 'Online Gambling (iGaming)',
-    location: 'Kyiv, Ukraine',
-    workMode: 'On-site',
+    workModeKey: 'onSite',
+    hasCompanySubtitle: true,
     avatarGradient: 'from-amber-500/80 to-orange-600/80',
-    bullets: [
-      'Shipped 10 projects (React, TS, GraphQL, Sass) and 5 projects (Twig, JS, jQuery, Less) with shared components and different themes.',
-      'Extensive CSS and canvas animations.',
-      'Mentored 4 junior engineers who later progressed to mid/senior roles.',
-    ],
     stack: [
       'React',
       'TypeScript',
@@ -160,6 +109,62 @@ export const careerTimeline: CareerEntry[] = [
     ],
   },
 ];
+
+export const buildAchievementRings = (t: TFunction): Ring[] => [
+  {
+    label: t('about.rings.experience'),
+    value: yearsOfExperience,
+    max: 10,
+    suffix: '+',
+    numberClass: 'text-yellow-300',
+    stroke: '#fde047',
+  },
+  {
+    label: t('about.rings.technologies'),
+    value: 42,
+    max: 60,
+    suffix: '+',
+    numberClass: 'text-sky-300',
+    stroke: '#7dd3fc',
+  },
+  {
+    label: t('about.rings.projects'),
+    value: 25,
+    max: 30,
+    suffix: '+',
+    numberClass: 'text-emerald-300',
+    stroke: '#6ee7b7',
+  },
+  {
+    label: t('about.rings.mentored'),
+    value: 5,
+    max: 10,
+    numberClass: 'text-pink-300',
+    stroke: '#f9a8d4',
+  },
+];
+
+export const buildCareerTimeline = (t: TFunction): CareerEntry[] =>
+  CAREER_META.map((meta) => {
+    const base = `about.career.${meta.id}`;
+    const bullets = t(`${base}.bullets`, { returnObjects: true }) as string[];
+    return {
+      company: meta.company,
+      role: t(`${base}.role`),
+      period: t(`${base}.period`),
+      location: t(`${base}.location`),
+      workMode: meta.workModeKey
+        ? t(`about.workMode.${meta.workModeKey}`)
+        : undefined,
+      bullets,
+      stack: meta.stack,
+      isCurrent: meta.isCurrent,
+      avatarGradient: meta.avatarGradient,
+      ...(meta.hasCompanySubtitle && {
+        companySubtitle: t(`${base}.companySubtitle`),
+      }),
+    };
+  });
 
 export const htmlSkills = [
   'HTML',
