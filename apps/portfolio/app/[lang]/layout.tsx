@@ -5,7 +5,9 @@ import FAVICON16 from '@assets/img/favicons/favicon-16x16.png';
 import FAVICON32 from '@assets/img/favicons/favicon-32x32.png';
 import STARS from '@assets/img/stars.png';
 import TWINKLING from '@assets/img/twinkling.png';
+import { CommandPalette } from '@components/CommandPalette';
 import { LanguageSwitcher } from '@components/LanguageSwitcher';
+import { PWARegister } from '@components/PWARegister';
 import { Locale } from '@root/i18n-config';
 import { dir } from 'i18next';
 import type { Metadata } from 'next';
@@ -18,10 +20,16 @@ import { Providers } from './providers';
 export const metadata: Metadata = {
   title: 'Holovko Ivan Portfolio',
   description: 'Frontend developer portfolio',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    title: 'Ivan Holovko',
+    statusBarStyle: 'black-translucent',
+  },
   icons: {
     icon: FAVICON.src,
     shortcut: FAVICON.src,
-    apple: APPLE_TOUCH_ICON.src,
+    apple: '/icons/apple-touch-icon.png',
     other: [
       {
         rel: 'icon',
@@ -35,6 +43,10 @@ export const metadata: Metadata = {
       },
     ],
   },
+};
+
+export const viewport = {
+  themeColor: '#020617',
 };
 
 type RootLayoutType = {
@@ -60,6 +72,8 @@ export default async function RootLayout({ children, params }: RootLayoutType) {
         <Providers lang={lang}>
           {children}
           <LanguageSwitcher lang={lang} />
+          <CommandPalette lang={lang} />
+          <PWARegister />
         </Providers>
       </body>
     </html>
