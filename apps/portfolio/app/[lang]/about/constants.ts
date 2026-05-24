@@ -25,7 +25,7 @@ export const achievementRings: Ring[] = [
   },
   {
     label: 'Technologies',
-    value: 40,
+    value: 42,
     max: 60,
     suffix: '+',
     numberClass: 'text-sky-300',
@@ -185,6 +185,9 @@ export const JSSkills = [
   'Tanstack Query & Table',
   'TypeScript',
   'Next.js',
+  'React Router v7 / Remix',
+  'Service Worker',
+  'PWA',
   'AMPS',
   'Lodash',
   'Ramda.js',
@@ -200,4 +203,5 @@ export const otherSkills = [
   'Gulp',
   'EsLint',
   'Prettier',
+  'DataDog',
 ];
