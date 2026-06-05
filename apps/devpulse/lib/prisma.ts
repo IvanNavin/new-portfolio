@@ -19,12 +19,10 @@ declare global {
  * Requires `previewFeatures = ["driverAdapters"]` in packages/prisma/schema.
  */
 function makeClient(): PrismaClient {
-  const connectionString = process.env.POSTGRES_PRISMA_URL;
-  if (!connectionString) {
-    throw new Error(
-      "POSTGRES_PRISMA_URL is not set — devpulse cannot connect to Postgres.",
-    );
-  }
+  // Empty string is acceptable here — we'd rather get a clear Prisma error
+  // at query time than throw during build-time page data collection, where
+  // sensitive env vars aren't injected yet on Vercel.
+  const connectionString = process.env.POSTGRES_PRISMA_URL ?? "";
   const adapter = new PrismaNeon({ connectionString });
   return new PrismaClient({ adapter });
 }
