@@ -1,0 +1,13 @@
+# Next.js build output
+.next/
+out/
+
+# Production builds
+build/
+
+# Local env (covered by root .gitignore too, kept here for clarity)
+.env
+.env.local
+
+# Vercel
+.vercel

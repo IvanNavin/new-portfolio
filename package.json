@@ -8,6 +8,7 @@
   "workspaces": [
     "apps/2048",
     "apps/destructurizator",
+    "apps/devpulse",
     "apps/language",
     "apps/miner",
     "apps/pokedex",

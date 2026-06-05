@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>devpulse — offline</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      html,
+      body {
+        margin: 0;
+        background: #07090d;
+        color: #e7ecf3;
+        font-family:
+          ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+          'Helvetica Neue', Arial, sans-serif;
+        min-height: 100vh;
+      }
+      main {
+        max-width: 32rem;
+        margin: 0 auto;
+        padding: 4rem 1.25rem;
+        text-align: center;
+      }
+      h1 {
+        font-size: 2rem;
+        margin: 0 0 0.5rem;
+      }
+      p {
+        color: #8a93a3;
+        margin: 0 0 1.5rem;
+      }
+      a {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border: 1px solid rgba(125, 211, 252, 0.4);
+        background: rgba(56, 189, 248, 0.1);
+        color: #bae6fd;
+        text-decoration: none;
+        border-radius: 6px;
+      }
+      .dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #f87171;
+        margin-right: 0.5rem;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p>
+        <span class="dot"></span>
+        <span style="font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: #8a93a3">offline</span>
+      </p>
+      <h1>You&rsquo;re offline.</h1>
+      <p>
+        No saved snapshot for this page yet. Connect to the internet to load
+        the latest feed.
+      </p>
+      <a href="/">Retry home</a>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "devpulse — frontend stack news",
+  "short_name": "devpulse",
+  "description": "Curated releases, browser updates, and notes from the frontend libraries I actually use.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#07090d",
+  "theme_color": "#07090d",
+  "lang": "en",
+  "categories": ["news", "productivity", "developer"],
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

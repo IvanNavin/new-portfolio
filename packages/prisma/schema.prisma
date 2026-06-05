@@ -96,3 +96,18 @@ model VisitStat {
   @@index([domain, path, timestamp])
   @@map("visit_stat")
 }
+
+model NewsItem {
+  id          String   @id @default(cuid())
+  url         String   @unique
+  title       String
+  excerpt     String?
+  source      String
+  category    String
+  publishedAt DateTime
+  fetchedAt   DateTime @default(now())
+
+  @@index([publishedAt(sort: Desc)])
+  @@index([category, publishedAt(sort: Desc)])
+  @@map("devpulse_news_item")
+}

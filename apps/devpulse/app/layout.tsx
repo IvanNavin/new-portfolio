@@ -1,0 +1,37 @@
+import "./globals.css";
+
+import type { Metadata } from "next";
+import { ReactNode } from "react";
+
+import { PWARegister } from "@components/PWARegister";
+
+export const metadata: Metadata = {
+  title: "devpulse — frontend stack news",
+  description:
+    "Releases, browser updates, and notes from the libraries I actually use.",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "devpulse",
+    statusBarStyle: "black-translucent",
+  },
+  icons: {
+    icon: "/icons/icon.svg",
+    apple: "/icons/icon.svg",
+  },
+};
+
+export const viewport = {
+  themeColor: "#07090d",
+};
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <PWARegister />
+        {children}
+      </body>
+    </html>
+  );
+}
