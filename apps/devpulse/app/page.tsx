@@ -233,7 +233,7 @@ export default async function Page({
 
       <footer className="mt-16 border-t border-[var(--border)] pt-6 text-xs text-[var(--text-dim)]">
         Pre-releases (canary / dev / rc / beta) auto-skipped. Items older than
-        60 days are auto-pruned. Refreshes every 3 hours.
+        60 days are auto-pruned. Refreshes daily.
       </footer>
     </main>
   );
