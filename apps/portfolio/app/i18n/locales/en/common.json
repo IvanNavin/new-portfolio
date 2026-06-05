@@ -64,6 +64,7 @@
     "careerAriaLabel": "Career timeline",
     "careerTitle": "Career timeline",
     "downloadCv": "download CV",
+    "readCv": "read full CV",
     "helloThere": "Hello There!",
     "lighthouse": {
       "a11y": "Accessibility",
@@ -99,6 +100,21 @@
     "linkName": "Link to the report",
     "title": "Development accessible interfaces️"
   },
+  "cv": {
+    "close": "Close",
+    "copied": "Link copied!",
+    "copyLink": "Copy link",
+    "downloadPdf": "Download PDF",
+    "experience": "Experience",
+    "ogTitle": "Ivan Holovko · CV",
+    "print": "Print",
+    "role": "Senior Frontend Engineer",
+    "scanHint": "Scan to open on your device",
+    "share": "Share",
+    "skills": "Skills",
+    "summary": "Summary",
+    "title": "Curriculum Vitae"
+  },
   "contacts": {
     "message": "Message",
     "messageSent": "Message sent!",
@@ -122,7 +138,7 @@
     "myWorks": "My Works",
     "names": "Name's",
     "slide": "slide anywhere",
-    "tagline": "Senior Frontend Engineer · {{years}}+ years · Next.js / TypeScript",
+    "tagline": "Senior Frontend Engineer · {{years}}+ years",
     "talks": "Talks",
     "tap": "tap anywhere",
     "presPForPause": "Press \"P\" for Pause. Press \"Space\" for new effect"

@@ -114,7 +114,7 @@ export default function Page({ params }: DefaultProps) {
         subtitle={t('about.perfSubtitle')}
       />
 
-      <DownloadButton />
+      <DownloadButton lang={lang} />
     </Container>
   );
 }

@@ -64,6 +64,7 @@
     "careerAriaLabel": "Karriere-Zeitleiste",
     "careerTitle": "Karriere-Zeitleiste",
     "downloadCv": "Lebenslauf herunterladen",
+    "readCv": "Vollständigen Lebenslauf lesen",
     "helloThere": "Hallo zusammen!",
     "lighthouse": {
       "a11y": "Barrierefreiheit",
@@ -99,6 +100,21 @@
     "linkName": "Link zum Vortrag",
     "title": "Entwicklung zugänglicher Benutzeroberflächen"
   },
+  "cv": {
+    "close": "Schließen",
+    "copied": "Link kopiert!",
+    "copyLink": "Link kopieren",
+    "downloadPdf": "PDF herunterladen",
+    "experience": "Berufserfahrung",
+    "ogTitle": "Ivan Holovko · Lebenslauf",
+    "print": "Drucken",
+    "role": "Senior Frontend Engineer",
+    "scanHint": "Mit dem Handy scannen",
+    "share": "Teilen",
+    "skills": "Skills",
+    "summary": "Über mich",
+    "title": "Lebenslauf"
+  },
   "contacts": {
     "message": "Nachricht",
     "messageSent": "Nachricht wurde gesendet!",
@@ -120,7 +136,7 @@
     "myWorks": "Meine Arbeiten",
     "names": "heiße",
     "slide": "irgendwo wischen",
-    "tagline": "Senior Frontend Engineer · {{years}}+ Jahre · Next.js / TypeScript",
+    "tagline": "Senior Frontend Engineer · {{years}}+ Jahre",
     "talks": "Vorträge",
     "tap": "irgendwo tippen",
     "presPForPause": "Drücken Sie \"P\" für Pause. Drücken Sie \"Leertaste\" für einen neuen Effekt"

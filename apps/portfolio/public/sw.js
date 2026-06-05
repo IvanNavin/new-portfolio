@@ -19,7 +19,7 @@
  * Bump VERSION whenever the precache list changes — old caches are
  * cleaned up on activate.
  */
-const VERSION = 'v2';
+const VERSION = 'v4';
 const SHELL_CACHE = `shell-${VERSION}`;
 const RUNTIME_CACHE = `runtime-${VERSION}`;
 
@@ -27,6 +27,7 @@ const SHELL_ASSETS = [
   '/',
   '/en',
   '/en/about',
+  '/en/about/cv',
   '/cv/Ivan_Holovko_CV.pdf',
   '/offline',
   '/manifest.webmanifest',

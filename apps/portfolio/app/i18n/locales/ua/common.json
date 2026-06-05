@@ -64,6 +64,7 @@
     "careerAriaLabel": "Кар’єрна історія",
     "careerTitle": "Кар’єрна історія",
     "downloadCv": "завантажити резюме",
+    "readCv": "читати повне резюме",
     "helloThere": "Всім привіт!",
     "lighthouse": {
       "a11y": "Доступність",
@@ -99,6 +100,21 @@
     "linkName": "Посилання на доповідь",
     "title": "Розробка доступних інтерфейсів️"
   },
+  "cv": {
+    "close": "Закрити",
+    "copied": "Посилання скопійовано!",
+    "copyLink": "Копіювати посилання",
+    "downloadPdf": "Завантажити PDF",
+    "experience": "Досвід роботи",
+    "ogTitle": "Іван Головко · Резюме",
+    "print": "Друкувати",
+    "role": "Senior Frontend Engineer",
+    "scanHint": "Скануй з телефону",
+    "share": "Поділитися",
+    "skills": "Навички",
+    "summary": "Про мене",
+    "title": "Резюме"
+  },
   "contacts": {
     "message": "Повідомлення",
     "messageSent": "Повідомлення надіслано!",
@@ -120,7 +136,7 @@
     "myWorks": "Мої роботи",
     "names": "звати",
     "slide": "проведіть будь-де",
-    "tagline": "Senior Frontend Engineer · {{years}}+ років · Next.js / TypeScript",
+    "tagline": "Senior Frontend Engineer · {{years}}+ років",
     "talks": "Доповіді",
     "tap": "торкніться будь-де",
     "presPForPause": "Натисніть \"P\" для паузи. Натисніть \"Пробіл\" для нового ефекту"

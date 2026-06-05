@@ -13,6 +13,7 @@ export const ROUTES = {
   rpg: (lang: Locale = getLang()) => `/${lang}/my-works/rpg`,
   thanos: (lang: Locale = getLang()) => `/${lang}/my-works/thanos`,
   contact: (lang: Locale = getLang()) => `/${lang}/contact`,
+  cv: (lang: Locale = getLang()) => `/${lang}/about/cv`,
   talks: (lang: Locale = getLang()) => `/${lang}/talks`,
   accessibility: (lang: Locale = getLang()) => `/${lang}/talks/accessibility`,
   regexp: (lang: Locale = getLang()) => `/${lang}/talks/regexp`,

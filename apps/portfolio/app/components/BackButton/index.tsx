@@ -14,6 +14,7 @@ export default function BackButton({
 
   return (
     <TransitionLink
+      data-print-hide=''
       className='fixed right-1 top-1 z-[9999] overflow-hidden rounded-full'
       href={backPath}
     >

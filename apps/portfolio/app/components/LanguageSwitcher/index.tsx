@@ -26,6 +26,7 @@ export const LanguageSwitcher = ({ lang }: Props) => {
 
   return (
     <section
+      data-print-hide=''
       className={clsxm(
         'fixed top-64 z-50',
         'w-[50px] flex flex-col items-end py-2.5 justify-around shadow-custom-glow',

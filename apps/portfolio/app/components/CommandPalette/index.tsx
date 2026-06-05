@@ -30,6 +30,7 @@ const NAV_SHORTCUTS = {
   myWorks: ['G', 'W'],
   talks: ['G', 'T'],
   contact: ['G', 'C'],
+  cv: ['G', 'V'],
 } as const;
 
 const Kbd = ({ children }: { children: React.ReactNode }) => (
@@ -113,6 +114,7 @@ export const CommandPalette = ({ lang }: Props) => {
         [NAV_SHORTCUTS.myWorks[1]]: () => navigate(ROUTES.myWorks(lang)),
         [NAV_SHORTCUTS.talks[1]]: () => navigate(ROUTES.talks(lang)),
         [NAV_SHORTCUTS.contact[1]]: () => navigate(ROUTES.contact(lang)),
+        [NAV_SHORTCUTS.cv[1]]: () => navigate(ROUTES.cv(lang)),
       };
       const action = matches[key];
       if (action) {
@@ -194,6 +196,13 @@ export const CommandPalette = ({ lang }: Props) => {
               </span>
               <Shortcut keys={NAV_SHORTCUTS.contact} />
             </Command.Item>
+            <Command.Item
+              onSelect={() => runAndClose(() => router.push(ROUTES.cv(lang)))}
+            >
+              <span className='command-palette__icon'>📄</span>
+              <span className='command-palette__label'>{t('cv.title')}</span>
+              <Shortcut keys={NAV_SHORTCUTS.cv} />
+            </Command.Item>
           </Command.Group>
 
           <Command.Group heading='Language' className='command-palette__group'>
@@ -232,7 +241,7 @@ export const CommandPalette = ({ lang }: Props) => {
           </span>
           <span className='command-palette__footer-spacer' />
           <span>
-            <Kbd>G</Kbd> <Kbd>A/W/T/C</Kbd> jump from anywhere
+            <Kbd>G</Kbd> <Kbd>A/W/T/C/V</Kbd> jump from anywhere
           </span>
         </div>
       </div>

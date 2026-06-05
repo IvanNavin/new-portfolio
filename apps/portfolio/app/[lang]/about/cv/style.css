@@ -1,0 +1,450 @@
+/* CV — dual-mode stylesheet.
+ *
+ * On screen the page wears the same dark cosmic palette as the rest
+ * of the site so it doesn't feel like a separate document. When the
+ * user prints (or saves to PDF from the browser), `@media print`
+ * swaps the look to high-contrast black-on-white that survives a B/W
+ * printer, sets A4 page geometry, and hides every page-chrome
+ * element (nav, BackButton, language switcher, command palette, etc).
+ */
+
+.cv-page {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 40px 24px 120px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cv-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cv-header__name {
+  font-size: 36px;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+}
+
+.cv-header__role {
+  font-size: 16px;
+  color: rgba(253, 224, 71, 0.85);
+  letter-spacing: 0.02em;
+}
+
+.cv-header__contacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+.cv-header__contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: inherit;
+}
+.cv-header__contact-link[href]:hover {
+  color: rgb(253, 224, 71);
+}
+
+.cv-section {
+  margin-bottom: 32px;
+}
+
+.cv-section__heading {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(253, 224, 71, 0.8);
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cv-summary p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 10px;
+}
+.cv-summary p:last-child {
+  margin-bottom: 0;
+}
+
+.cv-entry {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.cv-entry:last-child {
+  border-bottom: 0;
+}
+
+.cv-entry__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+  margin-bottom: 6px;
+}
+.cv-entry__role {
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+}
+.cv-entry__company {
+  font-size: 15px;
+  color: rgba(253, 224, 71, 0.9);
+}
+.cv-entry__period {
+  font-size: 11px;
+  margin-left: auto;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.cv-entry__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+}
+.cv-entry__meta-dot {
+  opacity: 0.5;
+}
+
+.cv-entry__bullets {
+  margin: 6px 0 8px;
+  padding-left: 0;
+  list-style: none;
+}
+.cv-entry__bullets li {
+  position: relative;
+  padding-left: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 3px;
+}
+.cv-entry__bullets li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: rgba(253, 224, 71, 0.6);
+}
+
+.cv-entry__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+}
+.cv-entry__stack-item {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(253, 224, 71, 0.06);
+  border: 1px solid rgba(253, 224, 71, 0.15);
+  color: rgba(255, 255, 230, 0.75);
+}
+
+.cv-skills__group {
+  margin-bottom: 12px;
+}
+.cv-skills__group:last-child {
+  margin-bottom: 0;
+}
+.cv-skills__title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 4px;
+}
+.cv-skills__list {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   CV action bar — three Magnetic buttons that reuse the same
+   animated-border + star-blink visual language as the About page's
+   "Read full CV" CTA. The fancy spans + .star-blink are rendered
+   inside CVToolbar.tsx; this stylesheet only handles layout.
+   ============================================================ */
+.cv-toolbar {
+  margin: 48px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+
+/* ============================================================
+   QR Popover — share modal triggered by the Share button.
+
+   No close (×) button: Esc and click-on-backdrop are the only
+   ways to dismiss — keeps the modal visually clean. The hint at
+   the bottom of the modal surfaces those affordances.
+   ============================================================ */
+.qr-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  animation: qr-backdrop-in 0.18s ease-out;
+}
+
+.qr-popover {
+  position: relative;
+  width: min(360px, calc(100vw - 32px));
+  padding: 28px 24px 22px;
+  background: rgba(15, 15, 23, 0.95);
+  border: 1px solid rgba(253, 224, 71, 0.3);
+  border-radius: 16px;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(253, 224, 71, 0.12);
+  text-align: center;
+  animation: qr-pop-in 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.qr-popover__qr {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+  border: 1px solid rgba(253, 224, 71, 0.2);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  margin-bottom: 16px;
+}
+.qr-popover__qr svg {
+  width: 220px;
+  height: 220px;
+}
+.qr-popover__qr--placeholder {
+  width: 220px;
+  height: 220px;
+  background: rgba(253, 224, 71, 0.05);
+}
+
+.qr-popover__hint {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
+}
+
+.qr-popover__url {
+  font-size: 11px;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: rgba(255, 255, 255, 0.6);
+  word-break: break-all;
+  margin-bottom: 14px;
+}
+
+.qr-popover__copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background: transparent;
+  border: 1px solid rgba(253, 224, 71, 0.4);
+  border-radius: 8px;
+  color: rgba(253, 224, 71, 0.85);
+  font-size: 11px;
+  font-family: inherit;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+.qr-popover__copy:hover {
+  background: rgba(253, 224, 71, 0.1);
+  color: rgb(253, 224, 71);
+  border-color: rgb(253, 224, 71);
+}
+
+@keyframes qr-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes qr-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qr-backdrop,
+  .qr-popover {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   PRINT MODE — black on white, A4, hide all chrome.
+   ============================================================ */
+@media print {
+  /* A4 with conservative margins recruiters can ATS-scan cleanly. */
+  @page {
+    size: A4;
+    margin: 14mm 14mm 16mm;
+  }
+
+  /* Reset the body background star pattern + global text colors. */
+  html,
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  /* The twinkling stars div in layout.tsx is decorative; kill it
+     along with the body's star-tiled background-image. */
+  body > div[style*='twinkling'] {
+    display: none !important;
+  }
+  body {
+    background-image: none !important;
+  }
+
+  /* Page chrome that should never print. Components opt-in by
+     setting `data-print-hide` on their root element (LanguageSwitcher,
+     BackButton, CommandPalette dialog, our own toolbar, etc.) so
+     this stays a single, explicit allow-list — no brittle class
+     matching. */
+  [data-print-hide],
+  [cmdk-overlay],
+  [cmdk-root],
+  .command-palette {
+    display: none !important;
+  }
+
+  /* Container component sets weird min-height + heavy padding — neutralize. */
+  main {
+    max-width: 100% !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: black !important;
+  }
+
+  .cv-page {
+    max-width: 100%;
+    padding: 0;
+    color: black !important;
+    font-size: 11pt;
+  }
+
+  .cv-header {
+    border-bottom-color: black;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+  .cv-header__name {
+    font-size: 22pt;
+    color: black !important;
+  }
+  .cv-header__role {
+    font-size: 12pt;
+    color: #444 !important;
+  }
+  .cv-header__contacts,
+  .cv-header__contact-link {
+    color: #222 !important;
+    font-size: 9.5pt;
+  }
+  .cv-header__contact-link[href]:hover {
+    color: #222 !important;
+  }
+
+  .cv-section {
+    margin-bottom: 14px;
+  }
+  .cv-section__heading {
+    color: black !important;
+    border-bottom-color: black;
+    font-size: 10pt;
+  }
+
+  .cv-summary p {
+    color: #222 !important;
+    font-size: 10.5pt;
+  }
+
+  .cv-entry {
+    border-bottom-color: rgba(0, 0, 0, 0.15);
+    padding: 8px 0;
+  }
+  .cv-entry__role {
+    color: black !important;
+    font-size: 11pt;
+  }
+  .cv-entry__company {
+    color: #555 !important;
+    font-size: 11pt;
+    font-weight: 600;
+  }
+  .cv-entry__period {
+    color: #555 !important;
+    font-size: 9pt;
+  }
+  .cv-entry__meta {
+    color: #666 !important;
+    font-size: 8.5pt;
+  }
+  .cv-entry__bullets li {
+    color: #222 !important;
+    font-size: 9.5pt;
+  }
+  .cv-entry__bullets li::before {
+    color: black;
+  }
+  .cv-entry__stack-item {
+    background: transparent !important;
+    border: 1px solid #999 !important;
+    color: #333 !important;
+    font-size: 8.5pt;
+  }
+
+  .cv-skills__title {
+    color: black !important;
+  }
+  .cv-skills__list {
+    color: #222 !important;
+    font-size: 10pt;
+  }
+}

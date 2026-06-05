@@ -1,28 +1,40 @@
+'use client';
+import { ROUTES } from '@app/constants/routes';
 import { ETrackVisitEvent } from '@app/types/trackVisitTypes';
 import { useTrackVisit } from '@app/utils/hooks/useTrackVisit';
 import { Magnetic } from '@components/Magnetic';
+import { useTranslation } from '@i18n/client';
 import { clsxm } from '@repo/utils';
+import { Locale } from '@root/i18n-config';
 import Link from 'next/link';
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 
-const CV = '/cv/Ivan_Holovko_CV.pdf';
+type Props = {
+  lang: Locale;
+};
 
-export const DownloadButton = () => {
+/**
+ * Big animated-border CTA on the About page that opens the full
+ * interactive CV at /[lang]/about/cv. The standalone PDF is still
+ * downloadable from the CV page itself (toolbar), so we keep the
+ * track-visit event for parity but tag it as a navigation, not a
+ * file fetch.
+ */
+export const DownloadButton = ({ lang }: Props) => {
+  const { t } = useTranslation();
   const trackVisit = useTrackVisit();
 
   const handleClick = useCallback(async () => {
     await trackVisit({
       event: ETrackVisitEvent.CLICK,
-      extra: { file: 'Ivan_Holovko_CV.pdf' },
+      extra: { target: 'about-cv' },
     });
   }, [trackVisit]);
 
   return (
     <Magnetic>
       <Link
-        href={CV}
-        target='_blank'
-        rel='noopener noreferrer'
+        href={ROUTES.cv(lang)}
         onClick={handleClick}
         className={clsxm(
           'download text-gold relative inline-block cursor-pointer ',
@@ -36,7 +48,7 @@ export const DownloadButton = () => {
         <span className='star-blink'>
           <div />
         </span>
-        <b>Download CV</b>
+        <b>{t('about.readCv')}</b>
       </Link>
     </Magnetic>
   );
