@@ -1,7 +1,12 @@
 generator client {
-  provider      = "prisma-client-js"
-  output        = "./generated/prisma-client"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  provider        = "prisma-client-js"
+  output          = "./generated/prisma-client"
+  binaryTargets   = ["native", "rhel-openssl-3.0.x"]
+  // Enables `new PrismaClient({ adapter })` so apps that ship to serverless
+  // (devpulse on Vercel Functions) can use @prisma/adapter-neon instead of
+  // shipping the Linux engine .so. Apps that don't pass an adapter continue
+  // to use the legacy engine path — no behaviour change for them.
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
