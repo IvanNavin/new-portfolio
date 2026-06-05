@@ -4,20 +4,18 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbo --port 3010",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint app --max-warnings=0",
     "lint:fix": "eslint app --fix",
     "typecheck": "tsc --noEmit --incremental false",
-    "format": "prettier -w ."
+    "format": "prettier -w .",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.1.0",
-    "@prisma/adapter-neon": "^6.18.0",
-    "@prisma/client": "^6.18.0",
-    "@repo/prisma": "*",
+    "@prisma/client": "^6.19.3",
     "next": "^16.2.6",
-    "prisma": "^6.18.0",
+    "prisma": "^6.19.3",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },
@@ -29,7 +27,6 @@
     "@types/node": "^20.19.41",
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
-    "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "^8.59.4",
     "@typescript-eslint/parser": "^8.59.4",
     "eslint": "^9.39.4",
@@ -41,7 +38,6 @@
     "postcss": "^8.5.15",
     "prettier": "^3.8.3",
     "tailwindcss": "^4.3.0",
-    "typescript": "^5.9.3",
-    "ws": "^8.21.0"
+    "typescript": "^5.9.3"
   }
 }

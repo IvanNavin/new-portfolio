@@ -1,0 +1,28 @@
+// Schema lives inside the app (rather than the shared @repo/prisma) so
+// Vercel's standard Prisma postinstall flow handles engine bundling.
+// Model definitions must stay in sync with packages/prisma/schema.prisma
+// — that's where migrations are managed. Don't run `prisma migrate` here.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+}
+
+model NewsItem {
+  id          String   @id @default(cuid())
+  url         String   @unique
+  title       String
+  excerpt     String?
+  source      String
+  category    String
+  publishedAt DateTime
+  fetchedAt   DateTime @default(now())
+
+  @@index([publishedAt(sort: Desc)])
+  @@index([category, publishedAt(sort: Desc)])
+  @@map("devpulse_news_item")
+}
