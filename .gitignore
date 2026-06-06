@@ -42,3 +42,5 @@ dist/
 **/*.env
 
 packages/prisma/generated/
+# Vercel
+.vercel

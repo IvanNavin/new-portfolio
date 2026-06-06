@@ -1,0 +1,31 @@
+# Build caches that bloat upload size — Vercel rebuilds these on its side.
+node_modules
+.next
+.turbo
+.swc
+.DS_Store
+coverage
+
+# Other apps in the monorepo — devpulse doesn't depend on them at build time
+# and shipping their sources just slows the upload. Workspace packages
+# (@repo/*) live in packages/ and are resolved by yarn workspaces.
+apps/2048
+apps/destructurizator
+apps/gantt-chart
+apps/language
+apps/miner
+apps/pokedex
+apps/portfolio
+apps/rpg-game
+apps/snake
+apps/solitaire
+apps/visit-stat
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# Editor / OS noise
+.idea
+.vscode
