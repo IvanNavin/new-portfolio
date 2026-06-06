@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@lib/auth";
+import { prisma } from "@lib/prisma";
 import { Category } from "@lib/sources";
 import {
   addCustomSource,
@@ -60,6 +61,20 @@ export async function removeSourceAction(formData: FormData): Promise<void> {
   const sourceId = String(formData.get("sourceId") ?? "");
   if (!sourceId) return;
   await removeCustomSource(session.user.id, sourceId);
+  revalidatePath("/");
+  revalidatePath("/settings");
+}
+
+export async function setShowPreReleasesAction(
+  formData: FormData,
+): Promise<void> {
+  const session = await auth();
+  if (!session?.user?.id) return;
+  const show = formData.get("show") === "true";
+  await prisma.devpulseUser.update({
+    where: { id: session.user.id },
+    data: { showPreReleases: show },
+  });
   revalidatePath("/");
   revalidatePath("/settings");
 }

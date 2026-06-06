@@ -15,6 +15,7 @@ import { prisma } from "@lib/prisma";
 import { scoreItem } from "@lib/score";
 import { Category } from "@lib/sources";
 import { getSourceWeightMap } from "@lib/sourcesDb";
+import { DEFAULT_PREFS, getUserPrefs } from "@lib/userPrefs";
 import { getUserEnabledSourceNames } from "@lib/userSources";
 import Link from "next/link";
 
@@ -50,14 +51,19 @@ type FeedWhere = {
   category?: string;
   source?: string | { in: string[] };
   publishedAt?: { gte: Date };
+  isPreRelease?: boolean;
   OR?: Array<{ title?: object; excerpt?: object }>;
 };
 
 function buildWhere(
   params: FeedParams,
   enabledSourceNames: string[] | null,
+  showPreReleases: boolean,
 ): FeedWhere {
   const where: FeedWhere = {};
+  if (!showPreReleases) {
+    where.isPreRelease = false;
+  }
   if (
     params.category &&
     VALID_CATEGORIES.includes(params.category as Category)
@@ -91,8 +97,9 @@ function buildWhere(
 async function getFeed(
   params: FeedParams,
   enabledSourceNames: string[] | null,
+  showPreReleases: boolean,
 ) {
-  const where = buildWhere(params, enabledSourceNames);
+  const where = buildWhere(params, enabledSourceNames, showPreReleases);
   const [items, groups] = await Promise.all([
     prisma.newsItem.findMany({
       where,
@@ -176,11 +183,14 @@ export default async function Page({
   const raw = await searchParams;
   const params = normalizeParams(raw);
   const session = await auth();
-  const enabledSourceNames = session?.user?.id
-    ? await getUserEnabledSourceNames(session.user.id)
-    : null;
+  const [enabledSourceNames, prefs] = session?.user?.id
+    ? await Promise.all([
+        getUserEnabledSourceNames(session.user.id),
+        getUserPrefs(session.user.id),
+      ])
+    : [null, DEFAULT_PREFS];
   const [{ items, counts }, weights] = await Promise.all([
-    getFeed(params, enabledSourceNames),
+    getFeed(params, enabledSourceNames, prefs.showPreReleases),
     getSourceWeightMap(),
   ]);
   const scored: ScoredItem[] = items.map((item) => ({

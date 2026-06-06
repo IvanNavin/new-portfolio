@@ -1,11 +1,13 @@
 import { auth } from "@lib/auth";
 import { Category, CATEGORY_LABELS } from "@lib/sources";
+import { getUserPrefs } from "@lib/userPrefs";
 import { listUserSettingsSources, SourceWithToggle } from "@lib/userSources";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { removeSourceAction } from "./actions";
 import { AddSourceForm } from "./AddSourceForm";
+import { PreReleaseToggle } from "./PreReleaseToggle";
 import { SourceToggle } from "./SourceToggle";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +19,10 @@ export default async function SettingsPage() {
     redirect("/");
   }
 
-  const sources = await listUserSettingsSources(session.user.id);
+  const [sources, prefs] = await Promise.all([
+    listUserSettingsSources(session.user.id),
+    getUserPrefs(session.user.id),
+  ]);
   const grouped = groupByCategory(sources);
   const customCount = sources.filter((s) => !s.isBuiltIn).length;
   const enabledCount = sources.filter((s) => s.enabled).length;
@@ -47,6 +52,10 @@ export default async function SettingsPage() {
           {enabledCount} active.
         </p>
       </header>
+
+      <section className="mb-6">
+        <PreReleaseToggle current={prefs.showPreReleases} />
+      </section>
 
       <section className="mb-10">
         <AddSourceForm />

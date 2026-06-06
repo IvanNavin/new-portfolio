@@ -14,17 +14,19 @@ datasource db {
 }
 
 model NewsItem {
-  id          String   @id @default(cuid())
-  url         String   @unique
-  title       String
-  excerpt     String?
-  source      String
-  category    String
-  publishedAt DateTime
-  fetchedAt   DateTime @default(now())
+  id           String   @id @default(cuid())
+  url          String   @unique
+  title        String
+  excerpt      String?
+  source       String
+  category     String
+  publishedAt  DateTime
+  fetchedAt    DateTime @default(now())
+  isPreRelease Boolean  @default(false)
 
   @@index([publishedAt(sort: Desc)])
   @@index([category, publishedAt(sort: Desc)])
+  @@index([isPreRelease, publishedAt(sort: Desc)])
   @@map("devpulse_news_item")
 }
 
@@ -48,16 +50,17 @@ model DevpulseSource {
 }
 
 model DevpulseUser {
-  id             String                  @id @default(cuid())
-  email          String                  @unique
-  name           String?
-  image          String?
-  lastVisitAt    DateTime?
-  createdAt      DateTime                @default(now())
-  addedSources   DevpulseSource[]
-  preferences    DevpulseUserSourcePref[]
-  savedItems     DevpulseSavedItem[]
-  dismissedItems DevpulseDismissedItem[]
+  id              String                  @id @default(cuid())
+  email           String                  @unique
+  name            String?
+  image           String?
+  lastVisitAt     DateTime?
+  showPreReleases Boolean                 @default(false)
+  createdAt       DateTime                @default(now())
+  addedSources    DevpulseSource[]
+  preferences     DevpulseUserSourcePref[]
+  savedItems      DevpulseSavedItem[]
+  dismissedItems  DevpulseDismissedItem[]
 
   @@map("devpulse_user")
 }

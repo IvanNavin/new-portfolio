@@ -37,8 +37,14 @@ export async function GET(req: NextRequest) {
     category?: string;
     source?: string;
     publishedAt?: { gte: Date };
+    isPreRelease?: boolean;
     OR?: Array<{ title?: object; excerpt?: object }>;
-  } = {};
+  } = {
+    // RSS-reader subscribers don't want canary noise by default. Pass
+    // ?prereleases=1 to include them.
+    isPreRelease:
+      url.searchParams.get("prereleases") === "1" ? undefined : false,
+  };
   if (
     params.category &&
     VALID_CATEGORIES.includes(params.category as Category)

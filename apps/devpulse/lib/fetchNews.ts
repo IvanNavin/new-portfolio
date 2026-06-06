@@ -45,14 +45,14 @@ async function fetchSource(source: DbSource): Promise<SourceReport> {
     }
 
     const xml = await res.text();
-    // Drop pre-releases at ingest and anything older than the prune window —
-    // otherwise the next prune sweep would just re-evict them and the cron
-    // churns the same rows in/out every run.
+    // Drop items older than the prune window (otherwise prune just re-evicts
+    // them next run and the cron churns the same rows). Pre-releases now
+    // stay — flagged at ingest, hidden at view time by the user pref.
     const pruneCutoff = new Date();
     pruneCutoff.setDate(pruneCutoff.getDate() - PRUNE_AFTER_DAYS);
     const items = parseFeed(xml)
-      .filter((i) => !isPreRelease(i.title))
       .filter((i) => i.publishedAt >= pruneCutoff)
+      .map((i) => ({ ...i, isPreRelease: isPreRelease(i.title) }))
       .slice(0, MAX_ITEMS_PER_SOURCE_PER_RUN);
     if (items.length === 0) {
       return {
@@ -94,6 +94,7 @@ async function fetchSource(source: DbSource): Promise<SourceReport> {
           source: source.name,
           category: source.category,
           publishedAt: item.publishedAt,
+          isPreRelease: item.isPreRelease,
         })),
         skipDuplicates: true,
       });
@@ -140,7 +141,6 @@ export type RunReport = {
   totalInserted: number;
   totalUpdated: number;
   pruned: number;
-  preReleasesCleaned: number;
   seedInserted: number;
   reports: SourceReport[];
   startedAt: string;
@@ -155,23 +155,6 @@ export async function runFetch(): Promise<RunReport> {
   // that, the DB is the source of truth — including any user-added URLs.
   const { inserted: seedInserted } = await ensureSourcesSeeded();
   const sources = await getAllSources();
-
-  // One-time hygiene pass: evict pre-release rows from earlier runs that
-  // landed before isPreRelease() existed. Idempotent — subsequent calls
-  // find nothing to clean. Cheap because the table is tiny (~few hundred).
-  const allTitles = await prisma.newsItem.findMany({
-    select: { url: true, title: true },
-  });
-  const preReleaseUrls = allTitles
-    .filter((r) => isPreRelease(r.title))
-    .map((r) => r.url);
-  let preReleasesCleaned = 0;
-  if (preReleaseUrls.length > 0) {
-    const result = await prisma.newsItem.deleteMany({
-      where: { url: { in: preReleaseUrls } },
-    });
-    preReleasesCleaned = result.count;
-  }
 
   // Sources are independent — parallelize but bound concurrency so we don't
   // open 20 sockets at once. Promise.allSettled never rejects so one stuck
@@ -205,7 +188,6 @@ export async function runFetch(): Promise<RunReport> {
     totalInserted: reports.reduce((acc, r) => acc + r.inserted, 0),
     totalUpdated: reports.reduce((acc, r) => acc + r.updated, 0),
     pruned,
-    preReleasesCleaned,
     seedInserted,
     reports,
     startedAt: startedAt.toISOString(),
