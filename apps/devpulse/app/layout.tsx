@@ -3,7 +3,9 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 
+import { OneTap } from "@components/OneTap";
 import { PWARegister } from "@components/PWARegister";
+import { SessionProviderClient } from "@components/SessionProviderClient";
 
 export const metadata: Metadata = {
   title: "devpulse — frontend stack news",
@@ -29,8 +31,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <PWARegister />
-        {children}
+        <SessionProviderClient>
+          <PWARegister />
+          <OneTap />
+          {children}
+        </SessionProviderClient>
       </body>
     </html>
   );

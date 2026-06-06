@@ -1,11 +1,11 @@
 import Link from "next/link";
 
-import { AuthButton } from "@components/AuthButton";
 import { CategoryTabs } from "@components/CategoryTabs";
 import { FiltersBar } from "@components/FiltersBar";
 import { KeyboardNav } from "@components/KeyboardNav";
 import { NewsCard } from "@components/NewsCard";
 import { PostMountFilters } from "@components/PostMountFilters";
+import { UserChip } from "@components/UserChip";
 import {
   FeedParams,
   isFiltered,
@@ -190,7 +190,7 @@ export default async function Page({
             >
               ★ Saved
             </Link>
-            <AuthButton />
+            <UserChip />
           </div>
         </div>
         <h1 className="mb-2 text-4xl font-semibold tracking-tight">devpulse</h1>
