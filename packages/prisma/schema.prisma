@@ -57,27 +57,6 @@ model Card {
   @@map("language_card")
 }
 
-model Apartment {
-  id              String        @id @default(cuid())
-  name            String
-  startDate       DateTime
-  endDate         DateTime?
-  apartmentListId String
-  apartmentList   ApartmentList @relation(fields: [apartmentListId], references: [id])
-
-  @@map("apartment")
-}
-
-model ApartmentList {
-  id         String      @id @default(cuid())
-  name       String
-  apartments Apartment[]
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-
-  @@map("apartment_list")
-}
-
 model VisitStat {
   id         String   @id @default(cuid())
   domain     String
