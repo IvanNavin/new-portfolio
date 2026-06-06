@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 
+import { AuthedStateSync } from "@components/AuthedStateSync";
 import { OneTap } from "@components/OneTap";
 import { PWARegister } from "@components/PWARegister";
 import { SessionProviderClient } from "@components/SessionProviderClient";
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <SessionProviderClient>
           <PWARegister />
           <OneTap />
+          <AuthedStateSync />
           {children}
         </SessionProviderClient>
       </body>

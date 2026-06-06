@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 import {
@@ -15,6 +16,34 @@ type Props = {
 };
 
 /**
+ * Write-through to the DB when authenticated. Fire-and-forget — the
+ * localStorage write already happened so the UI doesn't wait. A failed
+ * sync just means the next AuthedStateSync mount will re-fetch.
+ */
+async function syncSaved(url: string, saved: boolean): Promise<void> {
+  try {
+    await fetch("/api/saved", {
+      method: saved ? "POST" : "DELETE",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ url }),
+    });
+  } catch {
+    /* offline / transient — best-effort */
+  }
+}
+async function syncDismissed(url: string): Promise<void> {
+  try {
+    await fetch("/api/dismissed", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ url }),
+    });
+  } catch {
+    /* ignore */
+  }
+}
+
+/**
  * Per-card client overlay: save star, dismiss ×, and the NEW pill.
  *
  * Reads localStorage on mount. Keeps in sync with other CardActions on the
@@ -25,9 +54,11 @@ type Props = {
  * buttons — the rest of the card link still opens the story.
  */
 export function CardActions({ url, publishedAtIso }: Props) {
+  const { data: session } = useSession();
   const [saved, setSaved] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [isNew, setIsNew] = useState(false);
+  const isAuthed = Boolean(session?.user);
 
   useEffect(() => {
     setHydrated(true);
@@ -56,12 +87,14 @@ export function CardActions({ url, publishedAtIso }: Props) {
     e.stopPropagation();
     const willSave = toggleSaved(url);
     setSaved(willSave);
+    if (isAuthed) void syncSaved(url, willSave);
   };
 
   const onDismiss = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     dismissItem(url);
+    if (isAuthed) void syncDismissed(url);
     // Fade the card out — PostMountFilters will hide it on next paint.
     const li = (e.currentTarget as HTMLElement).closest("li");
     if (li) {

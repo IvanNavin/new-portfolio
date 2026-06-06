@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { auth } from "@lib/auth";
 import { CategoryTabs } from "@components/CategoryTabs";
 import { FiltersBar } from "@components/FiltersBar";
 import { KeyboardNav } from "@components/KeyboardNav";
@@ -16,6 +17,7 @@ import { prisma } from "@lib/prisma";
 import { scoreItem } from "@lib/score";
 import { Category } from "@lib/sources";
 import { getSourceWeightMap } from "@lib/sourcesDb";
+import { getUserEnabledSourceNames } from "@lib/userSources";
 
 export const dynamic = "force-dynamic";
 
@@ -45,13 +47,18 @@ const VALID_CATEGORIES: ReadonlyArray<Category> = [
   "community",
 ];
 
-function buildWhere(params: FeedParams) {
-  const where: {
-    category?: string;
-    source?: string;
-    publishedAt?: { gte: Date };
-    OR?: Array<{ title?: object; excerpt?: object }>;
-  } = {};
+type FeedWhere = {
+  category?: string;
+  source?: string | { in: string[] };
+  publishedAt?: { gte: Date };
+  OR?: Array<{ title?: object; excerpt?: object }>;
+};
+
+function buildWhere(
+  params: FeedParams,
+  enabledSourceNames: string[] | null,
+): FeedWhere {
+  const where: FeedWhere = {};
   if (
     params.category &&
     VALID_CATEGORIES.includes(params.category as Category)
@@ -59,7 +66,15 @@ function buildWhere(params: FeedParams) {
     where.category = params.category;
   }
   if (params.source) {
+    // Explicit single-source filter wins over the per-user enabled list —
+    // the user is asking for one source specifically, respect that even
+    // if they had it disabled in settings.
     where.source = params.source;
+  } else if (enabledSourceNames) {
+    // Signed-in: scope to whatever the user has enabled in /settings.
+    // Empty list → nothing matches, which is the right "I disabled
+    // everything" answer.
+    where.source = { in: enabledSourceNames };
   }
   const cutoff = windowCutoff(params.window);
   if (cutoff) {
@@ -74,8 +89,11 @@ function buildWhere(params: FeedParams) {
   return where;
 }
 
-async function getFeed(params: FeedParams) {
-  const where = buildWhere(params);
+async function getFeed(
+  params: FeedParams,
+  enabledSourceNames: string[] | null,
+) {
+  const where = buildWhere(params, enabledSourceNames);
   const [items, groups] = await Promise.all([
     prisma.newsItem.findMany({
       where,
@@ -158,8 +176,12 @@ export default async function Page({
 }) {
   const raw = await searchParams;
   const params = normalizeParams(raw);
+  const session = await auth();
+  const enabledSourceNames = session?.user?.id
+    ? await getUserEnabledSourceNames(session.user.id)
+    : null;
   const [{ items, counts }, weights] = await Promise.all([
-    getFeed(params),
+    getFeed(params, enabledSourceNames),
     getSourceWeightMap(),
   ]);
   const scored: ScoredItem[] = items.map((item) => ({
