@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { prisma } from "@lib/prisma";
-import { SOURCES, sourceWeight } from "@lib/sources";
+import { getAllSources } from "@lib/sourcesDb";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -27,6 +27,8 @@ export default async function AdminPage({
   const now = Date.now();
   const day = new Date(now - DAY_MS);
   const week = new Date(now - 7 * DAY_MS);
+
+  const sources = await getAllSources();
 
   // One groupBy per window. Cheap because the table is small.
   const [latestPerSource, last24h, last7d] = await Promise.all([
@@ -68,7 +70,7 @@ export default async function AdminPage({
     flag: "ok" | "quiet" | "stale" | "silent";
   };
 
-  const rows: Row[] = SOURCES.map((s) => {
+  const rows: Row[] = sources.map((s) => {
     const latest = latestMap.get(s.name);
     const last = latest?.last ?? null;
     const total = latest?.total ?? 0;
@@ -80,7 +82,7 @@ export default async function AdminPage({
     else if (last7d === 0) flag = "quiet";
     return {
       name: s.name,
-      weight: sourceWeight(s.name),
+      weight: s.weight,
       category: s.category,
       total,
       last24h,
@@ -117,7 +119,7 @@ export default async function AdminPage({
           Source health
         </h1>
         <p className="text-sm text-[var(--text-dim)]">
-          {SOURCES.length} sources · {counts.ok} ok · {counts.quiet} quiet ·{" "}
+          {sources.length} sources · {counts.ok} ok · {counts.quiet} quiet ·{" "}
           {counts.stale} stale · {counts.silent} silent
         </p>
       </header>

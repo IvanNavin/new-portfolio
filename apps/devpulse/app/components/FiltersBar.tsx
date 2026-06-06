@@ -6,14 +6,15 @@ import {
   isFiltered,
   TIME_WINDOWS,
 } from "@lib/feedParams";
-import { SOURCES } from "@lib/sources";
+import { getSourceFilterList } from "@lib/sourcesDb";
 
 type Props = {
   params: FeedParams;
 };
 
-export function FiltersBar({ params }: Props) {
+export async function FiltersBar({ params }: Props) {
   const activeWindow = params.window ?? "all";
+  const sources = await getSourceFilterList();
 
   return (
     <div className="flex flex-col gap-3">
@@ -47,7 +48,7 @@ export function FiltersBar({ params }: Props) {
           className="rounded-md border border-[var(--border)] bg-[var(--bg-elev)]/60 px-3 py-2 text-sm focus-visible:border-sky-400/60 focus-visible:ring-2 focus-visible:ring-sky-400/40 focus-visible:outline-none"
         >
           <option value="">All sources</option>
-          {SOURCES.map((s) => (
+          {sources.map((s) => (
             <option key={s.name} value={s.name}>
               {s.name}
             </option>

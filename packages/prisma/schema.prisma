@@ -116,3 +116,74 @@ model NewsItem {
   @@index([category, publishedAt(sort: Desc)])
   @@map("devpulse_news_item")
 }
+
+// Mirrors apps/devpulse/prisma/schema.prisma so migrations stay centralized
+// here while the app keeps its own Prisma client (avoids workspace + Vercel
+// File Tracing edge cases). Edit both schemas when changing any of the
+// devpulse_* models below.
+
+model DevpulseSource {
+  id              String                   @id @default(cuid())
+  name            String
+  url             String                   @unique
+  category        String
+  weight          Int                      @default(5)
+  isBuiltIn       Boolean                  @default(false)
+  createdByUserId String?
+  createdBy       DevpulseUser?            @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
+  preferences     DevpulseUserSourcePref[]
+  createdAt       DateTime                 @default(now())
+
+  @@index([isBuiltIn])
+  @@map("devpulse_source")
+}
+
+model DevpulseUser {
+  id             String                   @id @default(cuid())
+  email          String                   @unique
+  name           String?
+  image          String?
+  lastVisitAt    DateTime?
+  createdAt      DateTime                 @default(now())
+  addedSources   DevpulseSource[]
+  preferences    DevpulseUserSourcePref[]
+  savedItems     DevpulseSavedItem[]
+  dismissedItems DevpulseDismissedItem[]
+
+  @@map("devpulse_user")
+}
+
+model DevpulseUserSourcePref {
+  id       String         @id @default(cuid())
+  userId   String
+  sourceId String
+  enabled  Boolean        @default(true)
+  user     DevpulseUser   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  source   DevpulseSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, sourceId])
+  @@map("devpulse_user_source_pref")
+}
+
+model DevpulseSavedItem {
+  id        String       @id @default(cuid())
+  userId    String
+  url       String
+  createdAt DateTime     @default(now())
+  user      DevpulseUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, url])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("devpulse_saved_item")
+}
+
+model DevpulseDismissedItem {
+  id        String       @id @default(cuid())
+  userId    String
+  url       String
+  createdAt DateTime     @default(now())
+  user      DevpulseUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, url])
+  @@map("devpulse_dismissed_item")
+}

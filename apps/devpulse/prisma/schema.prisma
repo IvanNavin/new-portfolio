@@ -1,7 +1,8 @@
-// Schema lives inside the app (rather than the shared @repo/prisma) so
-// Vercel's standard Prisma postinstall flow handles engine bundling.
-// Model definitions must stay in sync with packages/prisma/schema.prisma
-// — that's where migrations are managed. Don't run `prisma migrate` here.
+// Schema lives inside the app so Vercel's standard Prisma postinstall flow
+// handles engine bundling. Model definitions must stay in sync with
+// packages/prisma/schema.prisma — that's where migrations are managed.
+// To add/change a model: edit both schemas, then run prisma migrate dev
+// from packages/prisma.
 
 generator client {
   provider = "prisma-client-js"
@@ -25,4 +26,75 @@ model NewsItem {
   @@index([publishedAt(sort: Desc)])
   @@index([category, publishedAt(sort: Desc)])
   @@map("devpulse_news_item")
+}
+
+// A feed the cron fetches from. Curated entries (isBuiltIn=true) are seeded
+// once and live forever; user-added entries reference the creator. Items
+// reference this by name (not FK) so the news_item table stays denormalized.
+model DevpulseSource {
+  id              String   @id @default(cuid())
+  name            String
+  url             String   @unique
+  category        String
+  weight          Int      @default(5)
+  isBuiltIn       Boolean  @default(false)
+  createdByUserId String?
+  createdBy       DevpulseUser?            @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
+  preferences     DevpulseUserSourcePref[]
+  createdAt       DateTime @default(now())
+
+  @@index([isBuiltIn])
+  @@map("devpulse_source")
+}
+
+model DevpulseUser {
+  id             String                  @id @default(cuid())
+  email          String                  @unique
+  name           String?
+  image          String?
+  lastVisitAt    DateTime?
+  createdAt      DateTime                @default(now())
+  addedSources   DevpulseSource[]
+  preferences    DevpulseUserSourcePref[]
+  savedItems     DevpulseSavedItem[]
+  dismissedItems DevpulseDismissedItem[]
+
+  @@map("devpulse_user")
+}
+
+// Per-user toggle of a source. Absence = use default (enabled). A row with
+// enabled=false means the user explicitly hid the source from their feed.
+model DevpulseUserSourcePref {
+  id       String         @id @default(cuid())
+  userId   String
+  sourceId String
+  enabled  Boolean        @default(true)
+  user     DevpulseUser   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  source   DevpulseSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, sourceId])
+  @@map("devpulse_user_source_pref")
+}
+
+model DevpulseSavedItem {
+  id        String       @id @default(cuid())
+  userId    String
+  url       String
+  createdAt DateTime     @default(now())
+  user      DevpulseUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, url])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("devpulse_saved_item")
+}
+
+model DevpulseDismissedItem {
+  id        String       @id @default(cuid())
+  userId    String
+  url       String
+  createdAt DateTime     @default(now())
+  user      DevpulseUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, url])
+  @@map("devpulse_dismissed_item")
 }

@@ -29,10 +29,13 @@ export type Source = {
  * Next.js / React / Tailwind / TypeScript / Prisma / Vite / Bun
  * plus the platforms (Vercel, Node) and browsers that move the floor.
  *
- * Adding a source: drop a feed URL here, pick a category, deploy.
- * The fetcher handles dedupe + pruning so no other wiring is needed.
+ * Used ONLY to seed the devpulse_source table on first cron run via
+ * lib/sourcesDb.ts. Once seeded, the DB is the source of truth — adding
+ * a feed at runtime happens through /settings (per-user), not by editing
+ * this file. Edit here if you want to change the curated baseline for
+ * brand-new users (existing users keep their toggled state).
  */
-export const SOURCES: Source[] = [
+export const SEED_SOURCES: Source[] = [
   // Frameworks & UI libraries
   {
     name: "Next.js Blog",
@@ -236,15 +239,7 @@ export const SOURCES: Source[] = [
   },
 ];
 
-export const SOURCE_BY_NAME: Map<string, Source> = new Map(
-  SOURCES.map((s) => [s.name, s]),
-);
-
 export const DEFAULT_SOURCE_WEIGHT = 5;
-
-export function sourceWeight(name: string): number {
-  return SOURCE_BY_NAME.get(name)?.weight ?? DEFAULT_SOURCE_WEIGHT;
-}
 
 export const CATEGORY_LABELS: Record<Category, string> = {
   framework: "Frameworks",

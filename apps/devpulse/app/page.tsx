@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { AuthButton } from "@components/AuthButton";
 import { CategoryTabs } from "@components/CategoryTabs";
 import { FiltersBar } from "@components/FiltersBar";
 import { KeyboardNav } from "@components/KeyboardNav";
@@ -14,6 +15,7 @@ import {
 import { prisma } from "@lib/prisma";
 import { scoreItem } from "@lib/score";
 import { Category } from "@lib/sources";
+import { getSourceWeightMap } from "@lib/sourcesDb";
 
 export const dynamic = "force-dynamic";
 
@@ -156,10 +158,13 @@ export default async function Page({
 }) {
   const raw = await searchParams;
   const params = normalizeParams(raw);
-  const { items, counts } = await getFeed(params);
+  const [{ items, counts }, weights] = await Promise.all([
+    getFeed(params),
+    getSourceWeightMap(),
+  ]);
   const scored: ScoredItem[] = items.map((item) => ({
     ...item,
-    ...scoreItem(item),
+    ...scoreItem(item, weights),
   }));
   const buckets = bucketByDay(scored);
   const activeCategory =
@@ -177,13 +182,16 @@ export default async function Page({
             <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
             <span>live feed</span>
           </div>
-          <Link
-            href="/saved"
-            prefetch={false}
-            className="rounded-md border border-[var(--border)] px-2 py-1 text-[var(--text-dim)] normal-case tracking-normal hover:border-amber-300/40 hover:text-amber-200"
-          >
-            ★ Saved
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/saved"
+              prefetch={false}
+              className="rounded-md border border-[var(--border)] px-2 py-1 text-[var(--text-dim)] normal-case tracking-normal hover:border-amber-300/40 hover:text-amber-200"
+            >
+              ★ Saved
+            </Link>
+            <AuthButton />
+          </div>
         </div>
         <h1 className="mb-2 text-4xl font-semibold tracking-tight">devpulse</h1>
         <p className="max-w-xl text-[var(--text-dim)]">

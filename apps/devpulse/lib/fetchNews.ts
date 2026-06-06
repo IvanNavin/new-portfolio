@@ -1,6 +1,6 @@
 import { isPreRelease, parseFeed } from "./parseFeed";
 import { prisma } from "./prisma";
-import { Source, SOURCES } from "./sources";
+import { DbSource, ensureSourcesSeeded, getAllSources } from "./sourcesDb";
 
 const FETCH_TIMEOUT_MS = 15_000;
 const PRUNE_AFTER_DAYS = 60;
@@ -15,7 +15,7 @@ export type SourceReport = {
   error?: string;
 };
 
-async function fetchSource(source: Source): Promise<SourceReport> {
+async function fetchSource(source: DbSource): Promise<SourceReport> {
   try {
     const ac = new AbortController();
     const timer = setTimeout(() => ac.abort(), FETCH_TIMEOUT_MS);
@@ -141,6 +141,7 @@ export type RunReport = {
   totalUpdated: number;
   pruned: number;
   preReleasesCleaned: number;
+  seedInserted: number;
   reports: SourceReport[];
   startedAt: string;
   durationMs: number;
@@ -148,6 +149,12 @@ export type RunReport = {
 
 export async function runFetch(): Promise<RunReport> {
   const startedAt = new Date();
+
+  // Bring the curated baseline into the DB if it's not there yet (first cron
+  // run after the migration, or after manually clearing the table). After
+  // that, the DB is the source of truth — including any user-added URLs.
+  const { inserted: seedInserted } = await ensureSourcesSeeded();
+  const sources = await getAllSources();
 
   // One-time hygiene pass: evict pre-release rows from earlier runs that
   // landed before isPreRelease() existed. Idempotent — subsequent calls
@@ -169,12 +176,12 @@ export async function runFetch(): Promise<RunReport> {
   // Sources are independent — parallelize but bound concurrency so we don't
   // open 20 sockets at once. Promise.allSettled never rejects so one stuck
   // source doesn't take the whole run down.
-  const results = await Promise.allSettled(SOURCES.map(fetchSource));
+  const results = await Promise.allSettled(sources.map(fetchSource));
   const reports: SourceReport[] = results.map((r, i) =>
     r.status === "fulfilled"
       ? r.value
       : {
-          source: SOURCES[i].name,
+          source: sources[i].name,
           ok: false,
           inserted: 0,
           updated: 0,
@@ -193,12 +200,13 @@ export async function runFetch(): Promise<RunReport> {
   });
 
   return {
-    totalSources: SOURCES.length,
+    totalSources: sources.length,
     okSources: reports.filter((r) => r.ok).length,
     totalInserted: reports.reduce((acc, r) => acc + r.inserted, 0),
     totalUpdated: reports.reduce((acc, r) => acc + r.updated, 0),
     pruned,
     preReleasesCleaned,
+    seedInserted,
     reports,
     startedAt: startedAt.toISOString(),
     durationMs: Date.now() - startedAt.getTime(),
