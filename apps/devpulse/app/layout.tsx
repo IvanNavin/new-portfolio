@@ -1,12 +1,11 @@
 import "./globals.css";
 
-import type { Metadata } from "next";
-import { ReactNode } from "react";
-
 import { AuthedStateSync } from "@components/AuthedStateSync";
 import { OneTap } from "@components/OneTap";
 import { PWARegister } from "@components/PWARegister";
 import { SessionProviderClient } from "@components/SessionProviderClient";
+import type { Metadata } from "next";
+import { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "devpulse — frontend stack news",

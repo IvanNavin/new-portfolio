@@ -1,8 +1,7 @@
-import { NextRequest } from "next/server";
-
 import { normalizeParams, windowCutoff } from "@lib/feedParams";
 import { prisma } from "@lib/prisma";
 import { Category } from "@lib/sources";
+import { NextRequest } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

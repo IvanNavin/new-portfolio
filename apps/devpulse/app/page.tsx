@@ -1,12 +1,10 @@
-import Link from "next/link";
-
-import { auth } from "@lib/auth";
 import { CategoryTabs } from "@components/CategoryTabs";
 import { FiltersBar } from "@components/FiltersBar";
 import { KeyboardNav } from "@components/KeyboardNav";
 import { NewsCard } from "@components/NewsCard";
 import { PostMountFilters } from "@components/PostMountFilters";
 import { UserChip } from "@components/UserChip";
+import { auth } from "@lib/auth";
 import {
   FeedParams,
   isFiltered,
@@ -18,6 +16,7 @@ import { scoreItem } from "@lib/score";
 import { Category } from "@lib/sources";
 import { getSourceWeightMap } from "@lib/sourcesDb";
 import { getUserEnabledSourceNames } from "@lib/userSources";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 

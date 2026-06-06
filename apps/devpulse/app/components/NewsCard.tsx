@@ -1,4 +1,4 @@
-import { CATEGORY_LABELS, Category } from "@lib/sources";
+import { Category, CATEGORY_LABELS } from "@lib/sources";
 
 import { CardActions } from "./CardActions";
 import { timeAgo } from "./timeAgo";

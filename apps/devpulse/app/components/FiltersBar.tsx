@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import {
   buildHref,
   FeedParams,
@@ -7,6 +5,7 @@ import {
   TIME_WINDOWS,
 } from "@lib/feedParams";
 import { getSourceFilterList } from "@lib/sourcesDb";
+import Link from "next/link";
 
 type Props = {
   params: FeedParams;

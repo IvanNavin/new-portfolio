@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-
 import { readAndBumpLastVisit, readDismissed } from "@lib/storage";
+import { useEffect } from "react";
 
 /**
  * Runs once after hydration to apply client-only state to the

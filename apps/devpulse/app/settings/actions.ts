@@ -1,7 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-
 import { auth } from "@lib/auth";
 import { Category } from "@lib/sources";
 import {
@@ -9,6 +7,7 @@ import {
   removeCustomSource,
   toggleSource,
 } from "@lib/userSources";
+import { revalidatePath } from "next/cache";
 
 /**
  * Server actions for /settings. All operations require a signed-in

@@ -32,6 +32,18 @@ export default [
       "no-console": "warn",
       "@typescript-eslint/no-unused-vars": "off",
       "react/no-unescaped-entities": "off",
+      // react-hooks 7 (Next 16 / React 19) added strict rules that fire on
+      // patterns that are legitimate in server components — e.g. Date.now()
+      // is "impure" but server components render once per request, so it's
+      // deterministic for that render. Mirror the portfolio app's stance:
+      // turn the noisy ones off and re-enable case by case if needed.
+      "react-hooks/purity": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/set-state-in-render": "off",
+      "react-hooks/refs": "off",
+      "react-hooks/static-components": "off",
+      "react-hooks/unsupported-syntax": "off",
+      "react-hooks/preserve-manual-memoization": "off",
       "unused-imports/no-unused-imports": "warn",
       "unused-imports/no-unused-vars": [
         "warn",

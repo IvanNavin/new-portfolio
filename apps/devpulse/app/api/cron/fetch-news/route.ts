@@ -1,6 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-
 import { runFetch } from "@lib/fetchNews";
+import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

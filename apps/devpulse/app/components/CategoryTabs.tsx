@@ -1,7 +1,6 @@
-import Link from "next/link";
-
 import { buildHref, FeedParams } from "@lib/feedParams";
-import { CATEGORY_LABELS, Category } from "@lib/sources";
+import { Category, CATEGORY_LABELS } from "@lib/sources";
+import Link from "next/link";
 
 type Tab = { key: Category | "all"; label: string };
 

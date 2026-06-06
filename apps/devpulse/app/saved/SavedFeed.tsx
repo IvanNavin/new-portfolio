@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import { NewsCard } from "@components/NewsCard";
 import { onStorageChange, readSaved } from "@lib/storage";
+import { useEffect, useState } from "react";
 
 type Item = {
   id: string;

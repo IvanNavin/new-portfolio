@@ -1,8 +1,7 @@
 "use client";
 
+import { Category, CATEGORY_LABELS } from "@lib/sources";
 import { useActionState, useEffect, useRef } from "react";
-
-import { CATEGORY_LABELS, Category } from "@lib/sources";
 
 import { addSourceAction, AddSourceFormState } from "./actions";
 

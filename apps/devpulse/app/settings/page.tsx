@@ -1,9 +1,8 @@
+import { auth } from "@lib/auth";
+import { Category, CATEGORY_LABELS } from "@lib/sources";
+import { listUserSettingsSources, SourceWithToggle } from "@lib/userSources";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-
-import { auth } from "@lib/auth";
-import { CATEGORY_LABELS, Category } from "@lib/sources";
-import { listUserSettingsSources, SourceWithToggle } from "@lib/userSources";
 
 import { removeSourceAction } from "./actions";
 import { AddSourceForm } from "./AddSourceForm";

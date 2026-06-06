@@ -1,7 +1,6 @@
-import { notFound } from "next/navigation";
-
 import { prisma } from "@lib/prisma";
 import { getAllSources } from "@lib/sourcesDb";
+import { notFound } from "next/navigation";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
