@@ -87,8 +87,16 @@ ${items.map((item) => renderEntry(item)).join("\n")}
   return new Response(xml, {
     headers: {
       "content-type": "application/atom+xml; charset=utf-8",
-      // Cheap edge cache: identical params + same cron cadence → reuse 5min.
-      "cache-control": "public, max-age=300, stale-while-revalidate=600",
+      // Aggressive CDN caching is our rate-limit substitute on the
+      // Hobby tier (where Vercel Firewall's rate_limit action isn't
+      // available). s-maxage=900 → edge serves the same response for
+      // 15 minutes, so a bot hammering /feed.xml gets 1 function
+      // invocation and 999 cheap CDN hits. Cron runs daily, so 15min
+      // staleness on a freshly-updated feed is invisible to the user.
+      // stale-while-revalidate keeps the response served for an hour
+      // while the next fetch happens in the background.
+      "cache-control":
+        "public, s-maxage=900, max-age=300, stale-while-revalidate=3600",
     },
   });
 }
