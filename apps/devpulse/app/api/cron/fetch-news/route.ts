@@ -3,7 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+// Bumped from 60s — the AI summary + tag pass adds ~500ms per item,
+// so a 200-item backfill needs ~100s on top of normal fetch work.
+// Vercel raised the cap to 300s on all plans (including Hobby) in
+// the 2026 platform update.
+export const maxDuration = 300;
 
 /**
  * Cron entry point. Two auth modes:
