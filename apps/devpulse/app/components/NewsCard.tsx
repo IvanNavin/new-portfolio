@@ -1,6 +1,7 @@
 import { Category, CATEGORY_LABELS } from "@lib/sources";
 
 import { CardActions } from "./CardActions";
+import { NewBadge } from "./NewBadge";
 import { timeAgo } from "./timeAgo";
 
 type Item = {
@@ -34,13 +35,14 @@ export function NewsCard({ item }: { item: Item }) {
           : "border-[var(--border)] hover:border-sky-400/40 hover:bg-[var(--bg-elev)]",
       ].join(" ")}
     >
-      <CardActions url={item.url} publishedAtIso={isoDate} />
+      <CardActions url={item.url} />
       <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
         <span className="rounded-md bg-white/5 px-2 py-0.5 text-[var(--text-dim)]">
           {item.source}
         </span>
         <span className="text-[var(--text-dim)]">·</span>
         <span className="text-[var(--text-dim)]">{categoryLabel}</span>
+        <NewBadge publishedAtIso={isoDate} />
         {item.matches?.slice(0, 3).map((label) => (
           <span
             key={label}

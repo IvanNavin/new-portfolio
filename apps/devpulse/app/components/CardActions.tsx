@@ -43,7 +43,9 @@ async function syncDismissed(url: string): Promise<void> {
 }
 
 /**
- * Per-card client overlay: save star, dismiss ×, and the NEW pill.
+ * Per-card client overlay: save star and dismiss ×. The NEW pill lives in
+ * the meta row (NewBadge component) so the overlay doesn't compete with
+ * the time-ago label for the top-right corner.
  *
  * Reads localStorage on mount. Keeps in sync with other CardActions on the
  * page (e.g. when you save from Saved view) via the custom storage event.
@@ -52,34 +54,19 @@ async function syncDismissed(url: string): Promise<void> {
  * card. We `e.preventDefault()` on the wrapping `<a>` only for the action
  * buttons — the rest of the card link still opens the story.
  */
-export function CardActions({ url, publishedAtIso }: Props) {
+export function CardActions({ url }: Pick<Props, "url">) {
   const { data: session } = useSession();
   const [saved, setSaved] = useState(false);
   const [hydrated, setHydrated] = useState(false);
-  const [isNew, setIsNew] = useState(false);
   const isAuthed = Boolean(session?.user);
 
   useEffect(() => {
     setHydrated(true);
     setSaved(readSaved().has(url));
-    // NEW = published since previous visit. lastVisit is read+written once
-    // per page mount by PostMountFilters; here we just compare.
-    try {
-      const lastVisit = parseInt(
-        localStorage.getItem("devpulse.lastVisit.prev") ?? "0",
-        10,
-      );
-      if (lastVisit > 0) {
-        const pub = new Date(publishedAtIso).getTime();
-        setIsNew(pub > lastVisit);
-      }
-    } catch {
-      /* ignore */
-    }
     return onStorageChange(() => {
       setSaved(readSaved().has(url));
     });
-  }, [url, publishedAtIso]);
+  }, [url]);
 
   const onSave = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -109,11 +96,6 @@ export function CardActions({ url, publishedAtIso }: Props) {
 
   return (
     <div className="absolute top-3 right-3 flex items-center gap-1.5">
-      {isNew && (
-        <span className="rounded-full bg-emerald-400/20 px-2 py-0.5 text-[10px] font-medium tracking-wide text-emerald-300 uppercase">
-          new
-        </span>
-      )}
       <button
         type="button"
         onClick={onSave}
