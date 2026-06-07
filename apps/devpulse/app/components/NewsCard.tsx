@@ -57,11 +57,12 @@ export function NewsCard({ item }: { item: Item }) {
       ].join(" ")}
     >
       <CardActions url={item.url} title={item.title} />
-      {/* First meta row stays slim — source / category / NEW / time —
-          so wrapping never strands the time on its own line. Tags and
-          engagement live in the footer below the excerpt. */}
-      <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
-        <span className="inline-flex items-center gap-1.5 rounded-md bg-white/5 px-2 py-0.5 text-[var(--text-dim)]">
+      {/* Meta row. Mobile: smaller font, tighter gap, truncated source
+          name so source pill + category + time stay on a single line.
+          Desktop: full size + full source name. Wrapping is allowed as
+          a safety net, but with these constraints it shouldn't trigger. */}
+      <div className="mb-3 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] sm:gap-x-2 sm:text-xs">
+        <span className="inline-flex max-w-[60%] items-center gap-1.5 rounded-md bg-white/5 px-1.5 py-0.5 text-[var(--text-dim)] sm:max-w-none sm:px-2">
           {hostname && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -77,9 +78,9 @@ export function NewsCard({ item }: { item: Item }) {
               className="h-[14px] w-[14px] shrink-0 rounded-[3px]"
             />
           )}
-          {item.source}
+          <span className="truncate">{item.source}</span>
         </span>
-        <span className="text-[var(--text-dim)]">·</span>
+        <span className="hidden text-[var(--text-dim)] sm:inline">·</span>
         <span className="text-[var(--text-dim)]">{categoryLabel}</span>
         <NewBadge publishedAtIso={isoDate} />
         <span className="ml-auto">
