@@ -150,7 +150,7 @@ function ThemeBtn({
           "flex h-[22px] w-[22px] items-center justify-center rounded transition-colors",
           "focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none",
           active
-            ? "bg-sky-400/20 text-sky-200"
+            ? "bg-[var(--c-accent-soft)] text-[var(--c-accent-fg)]"
             : "text-[var(--text-dim)] hover:text-[var(--text)]",
         ].join(" ")}
       >

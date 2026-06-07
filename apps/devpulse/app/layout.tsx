@@ -38,7 +38,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <ThemeScript />
       </head>
-      <body>
+      {/* suppressHydrationWarning on <body> is for Grammarly + similar
+          extensions that mutate body attributes between SSR and client
+          paint (data-new-gr-c-s-check-loaded, data-gr-ext-installed).
+          Without this, React 19 throws hydration error #418 on any
+          machine where the user has Grammarly installed. */}
+      <body suppressHydrationWarning>
         <SessionProviderClient>
           <TooltipProvider>
             <PWARegister />

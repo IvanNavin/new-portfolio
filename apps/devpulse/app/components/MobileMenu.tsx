@@ -76,20 +76,11 @@ export function MobileMenu() {
             </div>
           )}
           <Link
-            href="/"
-            prefetch={false}
-            onClick={() => setOpen(false)}
-            role="menuitem"
-            className="block rounded-md px-3 py-2 text-sm text-[var(--text)] hover:bg-sky-400/10 hover:text-sky-200"
-          >
-            🟢 Live feed
-          </Link>
-          <Link
             href="/hidden"
             prefetch={false}
             onClick={() => setOpen(false)}
             role="menuitem"
-            className="block rounded-md px-3 py-2 text-sm text-[var(--text)] hover:bg-red-400/10 hover:text-red-300"
+            className="block rounded-md px-3 py-2 text-sm text-[var(--text)] hover:bg-[var(--c-danger-soft)] hover:text-[var(--c-danger-fg)]"
           >
             ↩ Hidden
           </Link>
@@ -98,7 +89,7 @@ export function MobileMenu() {
             prefetch={false}
             onClick={() => setOpen(false)}
             role="menuitem"
-            className="block rounded-md px-3 py-2 text-sm text-[var(--text)] hover:bg-amber-300/10 hover:text-amber-200"
+            className="block rounded-md px-3 py-2 text-sm text-[var(--text)] hover:bg-[var(--c-save-soft)] hover:text-[var(--c-save-fg)]"
           >
             ★ Saved
           </Link>
@@ -108,7 +99,7 @@ export function MobileMenu() {
               prefetch={false}
               onClick={() => setOpen(false)}
               role="menuitem"
-              className="block rounded-md px-3 py-2 text-sm text-[var(--text)] hover:bg-sky-400/10 hover:text-sky-200"
+              className="block rounded-md px-3 py-2 text-sm text-[var(--text)] hover:bg-[var(--c-accent-soft)] hover:text-[var(--c-accent-fg)]"
             >
               ⚙ Settings
             </Link>
@@ -121,7 +112,7 @@ export function MobileMenu() {
             <button
               type="button"
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="mt-2 w-full rounded-md border-t border-[var(--border)] px-3 py-2 pt-3 text-left text-sm text-red-300 hover:bg-red-400/10"
+              className="mt-2 w-full rounded-md border-t border-[var(--border)] px-3 py-2 pt-3 text-left text-sm font-medium text-[var(--c-danger-fg)] hover:bg-[var(--c-danger-soft)]"
             >
               Sign out
             </button>

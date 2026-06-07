@@ -259,7 +259,7 @@ export default async function Page({
               href="/hidden"
               prefetch={false}
               aria-label="Hidden stories"
-              className="rounded-md border border-[var(--border)] px-2 py-1 text-[var(--text-dim)] normal-case tracking-normal hover:border-red-400/40 hover:text-red-300"
+              className="rounded-md border border-[var(--border)] px-2 py-1 text-[var(--text)] normal-case tracking-normal hover:border-[var(--c-danger-fg)] hover:bg-[var(--c-danger-soft)] hover:text-[var(--c-danger-fg)]"
             >
               <span aria-hidden="true">↩</span>
               <span className="ml-1">Hidden</span>
@@ -268,7 +268,7 @@ export default async function Page({
               href="/saved"
               prefetch={false}
               aria-label="Saved stories"
-              className="rounded-md border border-[var(--border)] px-2 py-1 text-[var(--text-dim)] normal-case tracking-normal hover:border-amber-300/40 hover:text-amber-200"
+              className="rounded-md border border-[var(--border)] px-2 py-1 text-[var(--text)] normal-case tracking-normal hover:border-[var(--c-save-fg)] hover:bg-[var(--c-save-soft)] hover:text-[var(--c-save-fg)]"
             >
               <span aria-hidden="true">★</span>
               <span className="ml-1">Saved</span>

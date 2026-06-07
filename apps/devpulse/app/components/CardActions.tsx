@@ -234,7 +234,8 @@ export function CardActions({ url, title }: Props) {
       </p>
       <p className="mb-3 text-xs text-[var(--text-dim)]">
         Restore it any time from the{" "}
-        <span className="text-red-300">Hidden</span> tab.
+        <span className="font-medium text-[var(--c-danger-fg)]">Hidden</span>{" "}
+        tab.
       </p>
       <div className="flex justify-end gap-2">
         <button
@@ -243,14 +244,14 @@ export function CardActions({ url, title }: Props) {
             stop(e);
             setConfirmOpen(false);
           }}
-          className="rounded-md border border-[var(--border)] px-3 py-1 text-xs text-[var(--text-dim)] hover:text-[var(--text)]"
+          className="rounded-md border border-[var(--border)] px-3 py-1 text-xs text-[var(--text)] hover:bg-[var(--bg)]"
         >
           Cancel
         </button>
         <button
           type="button"
           onClick={confirmHide}
-          className="rounded-md border border-red-400/60 bg-red-400/15 px-3 py-1 text-xs font-medium text-red-100 hover:bg-red-400/25"
+          className="rounded-md border border-[var(--c-danger-fg)] bg-[var(--c-danger-soft)] px-3 py-1 text-xs font-medium text-[var(--c-danger-fg)] hover:brightness-110"
           autoFocus
         >
           Hide
@@ -269,7 +270,7 @@ export function CardActions({ url, title }: Props) {
               type="button"
               onClick={onShare}
               aria-label={`Share: ${title}`}
-              className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text)] transition-colors hover:border-sky-400/40 hover:text-sky-200 focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none"
+              className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text)] transition-colors hover:border-[var(--c-accent-fg)] hover:text-[var(--c-accent-fg)] focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none"
             >
               {ShareIcon}
             </button>
@@ -285,8 +286,8 @@ export function CardActions({ url, title }: Props) {
               "flex h-7 w-7 items-center justify-center rounded-md border transition-colors",
               "focus-visible:ring-2 focus-visible:ring-amber-300/50 focus-visible:outline-none",
               saved
-                ? "border-amber-300/60 bg-amber-300/15 text-amber-200 hover:bg-amber-300/25"
-                : "border-[var(--border)] text-[var(--text)] hover:border-amber-300/40 hover:text-amber-200",
+                ? "border-[var(--c-save-fg)] bg-[var(--c-save-soft)] text-[var(--c-save-fg)]"
+                : "border-[var(--border)] text-[var(--text)] hover:border-[var(--c-save-fg)] hover:text-[var(--c-save-fg)]",
             ].join(" ")}
           >
             {StarIcon}
@@ -300,7 +301,7 @@ export function CardActions({ url, title }: Props) {
               aria-label="Hide this story"
               aria-expanded={confirmOpen}
               aria-haspopup="dialog"
-              className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text)] transition-colors hover:border-red-400/40 hover:text-red-300 focus-visible:ring-2 focus-visible:ring-red-400/50 focus-visible:outline-none"
+              className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text)] transition-colors hover:border-[var(--c-danger-fg)] hover:text-[var(--c-danger-fg)] focus-visible:ring-2 focus-visible:ring-red-400/50 focus-visible:outline-none"
             >
               {XIcon}
             </button>
@@ -336,7 +337,7 @@ export function CardActions({ url, title }: Props) {
                 type="button"
                 onClick={onShare}
                 role="menuitem"
-                className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-sky-400/10 hover:text-sky-200"
+                className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-[var(--c-accent-soft)] hover:text-[var(--c-accent-fg)]"
               >
                 <span aria-hidden="true">{ShareIcon}</span>
                 Share
@@ -346,7 +347,7 @@ export function CardActions({ url, title }: Props) {
               type="button"
               onClick={onSave}
               role="menuitem"
-              className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-amber-300/10 hover:text-amber-200"
+              className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-[var(--c-save-soft)] hover:text-[var(--c-save-fg)]"
             >
               <span aria-hidden="true">{StarIcon}</span>
               {saved ? "Remove from Saved" : "Save for later"}
@@ -355,7 +356,7 @@ export function CardActions({ url, title }: Props) {
               type="button"
               onClick={onDismissClick}
               role="menuitem"
-              className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-red-400/10 hover:text-red-300"
+              className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-[var(--c-danger-soft)] hover:text-[var(--c-danger-fg)]"
             >
               <span aria-hidden="true">{XIcon}</span>
               Hide

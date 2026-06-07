@@ -3,6 +3,10 @@
 /* Default = dark. Light variant lives under [data-theme="light"] AND
    prefers-color-scheme: light (when no manual override). The order
    below intentionally puts the manual override LAST so it always wins. */
+/* Default = dark. Every accent (--c-*) has both an `fg` (text/icon use)
+   and a `soft` (background-tint use) so a single Tailwind class set
+   stays readable across themes — light shades only work on dark BG,
+   dark shades only work on light BG. */
 :root,
 [data-theme='dark'] {
   color-scheme: dark;
@@ -16,6 +20,17 @@
   --good: #4ade80;
   --bg-glow-1: rgba(56, 189, 248, 0.08);
   --bg-glow-2: rgba(125, 211, 252, 0.06);
+
+  --c-accent-fg: #bae6fd; /* sky-200  */
+  --c-accent-soft: rgba(56, 189, 248, 0.15);
+  --c-save-fg: #fde68a; /* amber-200 */
+  --c-save-soft: rgba(251, 191, 36, 0.15);
+  --c-danger-fg: #fca5a5; /* red-300   */
+  --c-danger-soft: rgba(248, 113, 113, 0.12);
+  --c-engage-fg: #fdba74; /* orange-300*/
+  --c-engage-soft: rgba(251, 146, 60, 0.15);
+  --c-good-fg: #86efac; /* emerald-300*/
+  --c-good-soft: rgba(74, 222, 128, 0.15);
 }
 
 @media (prefers-color-scheme: light) {
@@ -23,17 +38,28 @@
     color-scheme: light;
     --bg: #f4f6fa;
     --bg-elev: #ffffff;
-    /* Pulled the dim text and border further toward slate-800/600 — at
-       8:1 it was technically AAA but visually faded next to bright
-       accent chips. Now reads as a real "secondary text" tier. */
     --border: #94a3b8;
-    --text: #0b1320;
+    --text: #000000;
     --text-dim: #1e293b;
-    --accent: #0284c7;
-    --accent-dim: #0369a1;
+    --accent: #0369a1;
+    --accent-dim: #0c4a6e;
     --good: #15803d;
     --bg-glow-1: rgba(56, 189, 248, 0.18);
     --bg-glow-2: rgba(125, 211, 252, 0.14);
+
+    /* On white, light tailwind shades (200/300) disappear — flip every
+       accent to its 700/800 cousin so the same className paints a real
+       readable color. */
+    --c-accent-fg: #0369a1; /* sky-700  */
+    --c-accent-soft: rgba(2, 132, 199, 0.12);
+    --c-save-fg: #92400e; /* amber-800 */
+    --c-save-soft: rgba(202, 138, 4, 0.18);
+    --c-danger-fg: #b91c1c; /* red-700   */
+    --c-danger-soft: rgba(220, 38, 38, 0.12);
+    --c-engage-fg: #9a3412; /* orange-800*/
+    --c-engage-soft: rgba(234, 88, 12, 0.18);
+    --c-good-fg: #15803d; /* emerald-700*/
+    --c-good-soft: rgba(22, 163, 74, 0.15);
   }
 }
 
@@ -42,13 +68,24 @@
   --bg: #f4f6fa;
   --bg-elev: #ffffff;
   --border: #94a3b8;
-  --text: #0b1320;
+  --text: #000000;
   --text-dim: #1e293b;
-  --accent: #0284c7;
-  --accent-dim: #0369a1;
+  --accent: #0369a1;
+  --accent-dim: #0c4a6e;
   --good: #15803d;
   --bg-glow-1: rgba(56, 189, 248, 0.18);
   --bg-glow-2: rgba(125, 211, 252, 0.14);
+
+  --c-accent-fg: #0369a1;
+  --c-accent-soft: rgba(2, 132, 199, 0.12);
+  --c-save-fg: #92400e;
+  --c-save-soft: rgba(202, 138, 4, 0.18);
+  --c-danger-fg: #b91c1c;
+  --c-danger-soft: rgba(220, 38, 38, 0.12);
+  --c-engage-fg: #9a3412;
+  --c-engage-soft: rgba(234, 88, 12, 0.18);
+  --c-good-fg: #15803d;
+  --c-good-soft: rgba(22, 163, 74, 0.15);
 }
 
 * {

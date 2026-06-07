@@ -57,17 +57,14 @@ export function NewsCard({ item }: { item: Item }) {
       ].join(" ")}
     >
       <CardActions url={item.url} title={item.title} />
-      {/* Meta row. Mobile: smaller font, tighter gap, truncated source
-          name so source pill + category + time stay on a single line.
-          Desktop: full size + full source name. Wrapping is allowed as
-          a safety net, but with these constraints it shouldn't trigger. */}
-      <div className="mb-3 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] sm:gap-x-2 sm:text-xs">
-        <span className="inline-flex max-w-[60%] items-center gap-1.5 rounded-md bg-white/5 px-1.5 py-0.5 text-[var(--text-dim)] sm:max-w-none sm:px-2">
+      {/* Meta row. Single-line nowrap on mobile — favicon + truncated
+          source + small "·" + truncated category + time pinned right.
+          Desktop relaxes to wrap + full source name. */}
+      <div className="mb-3 flex min-w-0 items-center gap-1.5 overflow-hidden text-[11px] sm:flex-wrap sm:gap-2 sm:overflow-visible sm:text-xs">
+        <span className="inline-flex min-w-0 shrink items-center gap-1.5 rounded-md bg-white/5 px-1.5 py-0.5 text-[var(--text-dim)] sm:px-2">
           {hostname && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              // Routed through our own /api/favicon proxy so failed
-              // upstreams (DDG / Google) don't 404-spam the console.
               src={`/api/favicon?host=${encodeURIComponent(hostname)}`}
               alt=""
               width={14}
@@ -81,9 +78,11 @@ export function NewsCard({ item }: { item: Item }) {
           <span className="truncate">{item.source}</span>
         </span>
         <span className="hidden text-[var(--text-dim)] sm:inline">·</span>
-        <span className="text-[var(--text-dim)]">{categoryLabel}</span>
+        <span className="shrink truncate text-[var(--text-dim)]">
+          {categoryLabel}
+        </span>
         <NewBadge publishedAtIso={isoDate} />
-        <span className="ml-auto">
+        <span className="ml-auto shrink-0 whitespace-nowrap">
           <PrettyTime iso={isoDate} />
         </span>
       </div>
@@ -105,7 +104,7 @@ export function NewsCard({ item }: { item: Item }) {
               label={`${item.engagement} points on ${item.source} — used by the Trending sort`}
             >
               <span
-                className="rounded-md bg-orange-400/15 px-2 py-0.5 text-[10px] tracking-wide text-orange-200"
+                className="rounded-md bg-[var(--c-engage-soft)] px-2 py-0.5 text-[10px] font-medium tracking-wide text-[var(--c-engage-fg)]"
                 aria-label={`${item.engagement} engagement points on ${item.source}`}
               >
                 <span aria-hidden="true">▲ {item.engagement}</span>

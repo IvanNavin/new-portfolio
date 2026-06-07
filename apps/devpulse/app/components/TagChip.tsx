@@ -15,7 +15,7 @@ export function TagChip({ label }: { label: string }) {
       href={`/?tag=${encodeURIComponent(label)}`}
       prefetch={false}
       onClick={(e) => e.stopPropagation()}
-      className="relative z-10 rounded-md bg-sky-400/15 px-2 py-0.5 text-[10px] tracking-wide text-sky-200 uppercase hover:bg-sky-400/30"
+      className="relative z-10 rounded-md bg-[var(--c-accent-soft)] px-2 py-0.5 text-[10px] font-medium tracking-wide text-[var(--c-accent-fg)] uppercase hover:brightness-110"
     >
       ★ {label}
     </Link>
