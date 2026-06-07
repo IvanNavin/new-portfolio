@@ -4,6 +4,7 @@ import { CardActions } from "./CardActions";
 import { NewBadge } from "./NewBadge";
 import { TagChip } from "./TagChip";
 import { timeAgo } from "./timeAgo";
+import { Tooltip } from "./Tooltip";
 
 type Item = {
   id: string;
@@ -79,20 +80,28 @@ export function NewsCard({ item }: { item: Item }) {
           <TagChip key={label} label={label} />
         ))}
         {typeof item.engagement === "number" && item.engagement > 0 && (
-          <span
-            className="rounded-md bg-orange-400/15 px-2 py-0.5 text-[10px] tracking-wide text-orange-200"
-            title={`${item.engagement} points`}
+          <Tooltip
+            label={`${item.engagement} points on ${item.source} — used by the Trending sort`}
           >
-            ▲ {item.engagement}
-          </span>
+            <span
+              className="rounded-md bg-orange-400/15 px-2 py-0.5 text-[10px] tracking-wide text-orange-200"
+              aria-label={`${item.engagement} engagement points on ${item.source}`}
+            >
+              <span aria-hidden="true">▲ {item.engagement}</span>
+            </span>
+          </Tooltip>
         )}
-        <time
-          dateTime={isoDate}
-          title={isoDate}
-          className="ml-auto text-[var(--text-dim)]"
-        >
-          {timeAgo(item.publishedAt)}
-        </time>
+        <span className="ml-auto">
+          <Tooltip label={isoDate} side="bottom">
+            <time
+              dateTime={isoDate}
+              className="text-[var(--text-dim)]"
+              aria-label={`Published ${isoDate}`}
+            >
+              {timeAgo(item.publishedAt)}
+            </time>
+          </Tooltip>
+        </span>
       </div>
       <h2 className="mb-2 text-lg leading-snug font-medium text-[var(--text)] group-hover:text-sky-200">
         {item.title}

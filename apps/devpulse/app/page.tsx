@@ -247,18 +247,20 @@ export default async function Page({
       <PostMountFilters />
       <KeyboardNav />
       <header className="mb-10">
-        <div className="mb-3 flex items-center justify-between gap-2 text-xs tracking-widest text-[var(--text-dim)] uppercase">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-2 text-[10px] tracking-widest text-[var(--text-dim)] uppercase sm:text-xs">
           <div className="flex items-center gap-2">
             <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
             <span>live feed</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <Link
               href="/saved"
               prefetch={false}
+              aria-label="Saved stories"
               className="rounded-md border border-[var(--border)] px-2 py-1 text-[var(--text-dim)] normal-case tracking-normal hover:border-amber-300/40 hover:text-amber-200"
             >
-              ★ Saved
+              <span aria-hidden="true">★</span>
+              <span className="ml-1 hidden sm:inline">Saved</span>
             </Link>
             <ThemeToggle />
             <UserChip />

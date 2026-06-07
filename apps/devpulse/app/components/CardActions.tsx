@@ -14,6 +14,8 @@ import { showToast } from "@lib/toasts";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
+import { Tooltip } from "./Tooltip";
+
 type Props = {
   url: string;
   title: string;
@@ -154,7 +156,7 @@ export function CardActions({ url, title }: Props) {
     }
 
     showToast({
-      message: "Hidden.",
+      message: "Hidden — you won't see this story again.",
       undo: () => {
         // Pull URL out of the (already-modified) dismissed set and revive
         // the card. The state revert is permanent — even if the toast
@@ -173,43 +175,105 @@ export function CardActions({ url, title }: Props) {
 
   if (!hydrated) return null;
 
+  const readLabel = read ? "Mark as unread" : "Mark as read";
+  const saveLabel = saved ? "Remove from Saved" : "Save for later";
+  // Tooltip text spells out the consequence — user explicitly asked
+  // for "what happens next" copy before pressing destructive-ish buttons.
+  const dismissLabel = "Hide this story (you have 8 seconds to undo)";
+
   return (
     <div className="absolute top-3 right-3 flex items-center gap-1.5">
-      <button
-        type="button"
-        onClick={onToggleRead}
-        aria-label={read ? "Mark as unread" : "Mark as read"}
-        aria-pressed={read}
-        title={read ? "Read — click to unread" : "Mark as read"}
-        className={[
-          "flex h-7 w-7 items-center justify-center rounded-md border transition-colors",
-          "focus-visible:ring-2 focus-visible:ring-emerald-300/50 focus-visible:outline-none",
-          read
-            ? "border-emerald-400/50 bg-emerald-400/15 text-emerald-200 hover:bg-emerald-400/25"
-            : "border-[var(--border)] text-[var(--text-dim)] hover:border-emerald-400/40 hover:text-emerald-200",
-        ].join(" ")}
-      >
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <polyline points="20 6 9 17 4 12" />
-        </svg>
-      </button>
-      {canShare && (
+      <Tooltip label={read ? "Read — click to mark unread" : readLabel}>
         <button
           type="button"
-          onClick={onShare}
-          aria-label="Share"
-          title="Share"
-          className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text-dim)] transition-colors hover:border-sky-400/40 hover:text-sky-200 focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none"
+          onClick={onToggleRead}
+          aria-label={readLabel}
+          aria-pressed={read}
+          className={[
+            "flex h-7 w-7 items-center justify-center rounded-md border transition-colors",
+            "focus-visible:ring-2 focus-visible:ring-emerald-300/50 focus-visible:outline-none",
+            read
+              ? "border-emerald-400/50 bg-emerald-400/15 text-emerald-200 hover:bg-emerald-400/25"
+              : "border-[var(--border)] text-[var(--text-dim)] hover:border-emerald-400/40 hover:text-emerald-200",
+          ].join(" ")}
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </button>
+      </Tooltip>
+      {canShare && (
+        <Tooltip label="Share this story">
+          <button
+            type="button"
+            onClick={onShare}
+            aria-label={`Share: ${title}`}
+            className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text-dim)] transition-colors hover:border-sky-400/40 hover:text-sky-200 focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="18" cy="5" r="3" />
+              <circle cx="6" cy="12" r="3" />
+              <circle cx="18" cy="19" r="3" />
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            </svg>
+          </button>
+        </Tooltip>
+      )}
+      <Tooltip label={saved ? "Saved — click to remove" : "Save for later"}>
+        <button
+          type="button"
+          onClick={onSave}
+          aria-label={saveLabel}
+          aria-pressed={saved}
+          className={[
+            "flex h-7 w-7 items-center justify-center rounded-md border transition-colors",
+            "focus-visible:ring-2 focus-visible:ring-amber-300/50 focus-visible:outline-none",
+            saved
+              ? "border-amber-300/60 bg-amber-300/15 text-amber-200 hover:bg-amber-300/25"
+              : "border-[var(--border)] text-[var(--text-dim)] hover:border-amber-300/40 hover:text-amber-200",
+          ].join(" ")}
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill={saved ? "currentColor" : "none"}
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z" />
+          </svg>
+        </button>
+      </Tooltip>
+      <Tooltip label={dismissLabel}>
+        <button
+          type="button"
+          onClick={onDismiss}
+          aria-label={dismissLabel}
+          className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text-dim)] transition-colors hover:border-red-400/40 hover:text-red-300 focus-visible:ring-2 focus-visible:ring-red-400/50 focus-visible:outline-none"
         >
           <svg
             width="14"
@@ -219,64 +283,12 @@ export function CardActions({ url, title }: Props) {
             stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
-            strokeLinejoin="round"
             aria-hidden="true"
           >
-            <circle cx="18" cy="5" r="3" />
-            <circle cx="6" cy="12" r="3" />
-            <circle cx="18" cy="19" r="3" />
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            <path d="M6 6l12 12M18 6L6 18" />
           </svg>
         </button>
-      )}
-      <button
-        type="button"
-        onClick={onSave}
-        aria-label={saved ? "Unsave" : "Save for later"}
-        aria-pressed={saved}
-        title={saved ? "Saved" : "Save"}
-        className={[
-          "flex h-7 w-7 items-center justify-center rounded-md border transition-colors",
-          "focus-visible:ring-2 focus-visible:ring-amber-300/50 focus-visible:outline-none",
-          saved
-            ? "border-amber-300/60 bg-amber-300/15 text-amber-200 hover:bg-amber-300/25"
-            : "border-[var(--border)] text-[var(--text-dim)] hover:border-amber-300/40 hover:text-amber-200",
-        ].join(" ")}
-      >
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill={saved ? "currentColor" : "none"}
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z" />
-        </svg>
-      </button>
-      <button
-        type="button"
-        onClick={onDismiss}
-        aria-label="Hide"
-        title="Hide (with undo)"
-        className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text-dim)] transition-colors hover:border-red-400/40 hover:text-red-300 focus-visible:ring-2 focus-visible:ring-red-400/50 focus-visible:outline-none"
-      >
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          aria-hidden="true"
-        >
-          <path d="M6 6l12 12M18 6L6 18" />
-        </svg>
-      </button>
+      </Tooltip>
     </div>
   );
 }

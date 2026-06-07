@@ -7,6 +7,10 @@ import { useCallback, useEffect, useState } from "react";
  * Bottom-of-screen toast stack. Mounted once in the root layout.
  * Toasts auto-dismiss after their duration; clicking "Undo" cancels the
  * dismissal AND runs the callback so the source state can be restored.
+ *
+ * A thin progress bar across the bottom of each toast visually counts
+ * down the undo window so users see how much time they have left to
+ * react.
  */
 export function Toaster() {
   const [toasts, setToasts] = useState<Toast[]>([]);
@@ -33,8 +37,9 @@ export function Toaster() {
       {toasts.map((t) => (
         <div
           key={t.id}
-          className="pointer-events-auto flex max-w-md items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-elev)] px-4 py-2.5 text-sm shadow-lg shadow-black/30"
+          className="pointer-events-auto relative flex w-full max-w-md items-center gap-3 overflow-hidden rounded-lg border border-sky-400/40 bg-[var(--bg-elev)] px-4 py-3 text-sm shadow-2xl shadow-black/40"
           role="status"
+          aria-live="polite"
         >
           <span className="flex-1 text-[var(--text)]">{t.message}</span>
           {t.undo && (
@@ -44,7 +49,7 @@ export function Toaster() {
                 t.undo?.();
                 remove(t.id);
               }}
-              className="text-sky-300 underline-offset-4 hover:underline focus-visible:rounded focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none"
+              className="rounded-md border border-sky-400/40 bg-sky-400/15 px-3 py-1 text-sm font-medium text-sky-100 hover:bg-sky-400/25 focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none"
             >
               Undo
             </button>
@@ -52,11 +57,21 @@ export function Toaster() {
           <button
             type="button"
             onClick={() => remove(t.id)}
-            aria-label="Dismiss"
+            aria-label="Dismiss notification"
             className="text-[var(--text-dim)] hover:text-[var(--text)]"
           >
             ×
           </button>
+          {/* Progress bar — animated by CSS keyframe matched to durationMs */}
+          {t.durationMs ? (
+            <span
+              aria-hidden="true"
+              className="absolute right-0 bottom-0 left-0 h-0.5 origin-left bg-sky-400/50"
+              style={{
+                animation: `toastCountdown ${t.durationMs}ms linear forwards`,
+              }}
+            />
+          ) : null}
         </div>
       ))}
     </div>

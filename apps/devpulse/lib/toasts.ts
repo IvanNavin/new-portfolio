@@ -20,7 +20,10 @@ export function showToast(toast: Omit<Toast, "id">): void {
   if (typeof window === "undefined") return;
   const full: Toast = {
     id: Math.random().toString(36).slice(2, 10),
-    durationMs: 5000,
+    // 8s default — long enough that a thumb-on-phone user has time to
+    // notice the Undo button and react, but short enough that a stack
+    // of toasts doesn't pile up.
+    durationMs: 8000,
     ...toast,
   };
   window.dispatchEvent(new CustomEvent(TOAST_EVENT, { detail: full }));

@@ -105,6 +105,15 @@ a {
   animation: pulseDot 1.6s ease-in-out infinite;
 }
 
+@keyframes toastCountdown {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
 /* Read items are desaturated and slightly dimmed so the eye skips them
    naturally. Marked via data-read="true" by PostMountFilters / CardActions. */
 [data-card-url][data-read='true'] {
