@@ -1,8 +1,8 @@
 import { Category, CATEGORY_LABELS } from "@lib/sources";
-import Link from "next/link";
 
 import { CardActions } from "./CardActions";
 import { NewBadge } from "./NewBadge";
+import { TagChip } from "./TagChip";
 import { timeAgo } from "./timeAgo";
 
 type Item = {
@@ -76,15 +76,7 @@ export function NewsCard({ item }: { item: Item }) {
         <span className="text-[var(--text-dim)]">{categoryLabel}</span>
         <NewBadge publishedAtIso={isoDate} />
         {item.matches?.slice(0, 3).map((label) => (
-          <Link
-            key={label}
-            href={`/?tag=${encodeURIComponent(label)}`}
-            prefetch={false}
-            onClick={(e) => e.stopPropagation()}
-            className="relative z-10 rounded-md bg-sky-400/15 px-2 py-0.5 text-[10px] tracking-wide text-sky-200 uppercase hover:bg-sky-400/30"
-          >
-            ★ {label}
-          </Link>
+          <TagChip key={label} label={label} />
         ))}
         {typeof item.engagement === "number" && item.engagement > 0 && (
           <span
