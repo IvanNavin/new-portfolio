@@ -31,6 +31,14 @@ export async function addUserMute(
     select: { id: true },
   });
   if (existing) return { ok: true, id: existing.id };
+  // Anti-abuse cap.
+  const MAX_MUTES = 100;
+  if ((await prisma.devpulseMute.count({ where: { userId } })) >= MAX_MUTES) {
+    return {
+      ok: false,
+      error: `You've hit the ${MAX_MUTES}-mute cap. Remove one before adding another.`,
+    };
+  }
   const created = await prisma.devpulseMute.create({
     data: { userId, pattern: p },
     select: { id: true },

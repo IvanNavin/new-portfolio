@@ -46,6 +46,18 @@ export async function addUserBoost(
   }
   const weight = Math.max(1, Math.min(10, Math.floor(input.weight) || 3));
 
+  // Anti-abuse cap. Far above any sane personal-tuning workload.
+  const MAX_BOOSTS = 50;
+  if (
+    (await prisma.devpulseKeywordBoost.count({ where: { userId } })) >=
+    MAX_BOOSTS
+  ) {
+    return {
+      ok: false,
+      error: `You've hit the ${MAX_BOOSTS}-boost cap. Remove one before adding another.`,
+    };
+  }
+
   const created = await prisma.devpulseKeywordBoost.create({
     data: { userId, label, terms, weight },
     select: { id: true },

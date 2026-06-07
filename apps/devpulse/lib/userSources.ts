@@ -206,6 +206,23 @@ export async function addCustomSource(
     return { ok: false, error: "Pick a valid category." };
   }
 
+  // Per-user cap: a malicious (or just over-enthusiastic) signup
+  // could otherwise add 10k garbage feeds, each of which the cron
+  // dutifully fetches on every run, blowing through the Hobby DB
+  // quota and outbound bandwidth. 25 is generous for a personal
+  // reader — the curated built-in list is ~30 and most users add a
+  // handful.
+  const MAX_CUSTOM_SOURCES = 25;
+  const myCount = await prisma.devpulseSource.count({
+    where: { isBuiltIn: false, createdByUserId: userId },
+  });
+  if (myCount >= MAX_CUSTOM_SOURCES) {
+    return {
+      ok: false,
+      error: `You've hit the ${MAX_CUSTOM_SOURCES}-feed cap. Remove one before adding another.`,
+    };
+  }
+
   // Per-user uniqueness: reject built-in dupes globally (they're
   // curated), but for custom sources only check against THIS user's
   // rows. We never leak whether some other user added the same URL —
