@@ -49,7 +49,7 @@ export function Toaster() {
                 t.undo?.();
                 remove(t.id);
               }}
-              className="rounded-md border border-sky-400/40 bg-sky-400/15 px-3 py-1 text-sm font-medium text-sky-100 hover:bg-sky-400/25 focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none"
+              className="rounded-md border border-[var(--c-accent-fg)] bg-[var(--c-accent-soft)] px-3 py-1 text-sm font-medium text-[var(--c-accent-fg)] hover:brightness-110 focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none"
             >
               Undo
             </button>

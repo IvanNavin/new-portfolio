@@ -34,7 +34,7 @@ export function CategoryTabs({ active, counts, params }: Props) {
               "inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm transition-colors",
               "focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none",
               isActive
-                ? "border-sky-400/60 bg-sky-400/10 text-sky-100"
+                ? "border-[var(--c-accent-fg)] bg-[var(--c-accent-soft)] text-[var(--c-accent-fg)] font-medium"
                 : "border-[var(--border)] text-[var(--text-dim)] hover:border-sky-400/40 hover:text-[var(--text)]",
             ].join(" ")}
           >

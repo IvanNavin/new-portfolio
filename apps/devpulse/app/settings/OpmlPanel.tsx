@@ -65,7 +65,7 @@ export function OpmlPanel() {
           <button
             type="submit"
             disabled={pending}
-            className="rounded-md border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-sm text-sky-100 hover:bg-sky-400/20 disabled:opacity-50"
+            className="rounded-md border border-[var(--c-accent-fg)] bg-[var(--c-accent-soft)] px-3 py-1.5 text-sm font-medium text-[var(--c-accent-fg)] hover:brightness-110 disabled:opacity-50"
           >
             {pending ? "Importing…" : "Import"}
           </button>

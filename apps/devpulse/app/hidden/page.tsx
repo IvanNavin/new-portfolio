@@ -94,7 +94,7 @@ export default async function HiddenPage() {
                   <input type="hidden" name="url" value={d.url} />
                   <button
                     type="submit"
-                    className="rounded-md border border-emerald-400/40 bg-emerald-400/10 px-3 py-1.5 text-sm text-emerald-100 hover:bg-emerald-400/20 focus-visible:ring-2 focus-visible:ring-emerald-400/50 focus-visible:outline-none"
+                    className="rounded-md border border-[var(--c-good-fg)] bg-[var(--c-good-soft)] px-3 py-1.5 text-sm font-medium text-[var(--c-good-fg)] hover:brightness-110 focus-visible:ring-2 focus-visible:ring-emerald-400/50 focus-visible:outline-none"
                   >
                     Restore
                   </button>

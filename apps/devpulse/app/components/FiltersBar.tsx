@@ -57,7 +57,7 @@ export async function FiltersBar({ params }: Props) {
         </select>
         <button
           type="submit"
-          className="rounded-md border border-sky-400/40 bg-sky-400/10 px-3 py-2 text-sm text-sky-100 hover:bg-sky-400/20 focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none"
+          className="rounded-md border border-[var(--c-accent-fg)] bg-[var(--c-accent-soft)] px-3 py-2 text-sm font-medium text-[var(--c-accent-fg)] hover:brightness-110 focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none"
         >
           Apply
         </button>
@@ -89,7 +89,7 @@ export async function FiltersBar({ params }: Props) {
                 "inline-flex items-center rounded-full border px-3 py-1 text-xs transition-colors",
                 "focus-visible:ring-2 focus-visible:ring-emerald-400/50 focus-visible:outline-none",
                 isActive
-                  ? "border-emerald-400/60 bg-emerald-400/10 text-emerald-100"
+                  ? "border-[var(--c-good-fg)] bg-[var(--c-good-soft)] text-[var(--c-good-fg)] font-medium"
                   : "border-[var(--border)] text-[var(--text-dim)] hover:border-emerald-400/40 hover:text-[var(--text)]",
               ].join(" ")}
             >
@@ -114,7 +114,7 @@ export async function FiltersBar({ params }: Props) {
                 "inline-flex items-center rounded-full border px-3 py-1 text-xs transition-colors",
                 "focus-visible:ring-2 focus-visible:ring-orange-400/50 focus-visible:outline-none",
                 isActive
-                  ? "border-orange-400/60 bg-orange-400/10 text-orange-100"
+                  ? "border-[var(--c-engage-fg)] bg-[var(--c-engage-soft)] text-[var(--c-engage-fg)] font-medium"
                   : "border-[var(--border)] text-[var(--text-dim)] hover:border-orange-400/40 hover:text-[var(--text)]",
               ].join(" ")}
             >

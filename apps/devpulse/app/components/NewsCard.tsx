@@ -57,11 +57,12 @@ export function NewsCard({ item }: { item: Item }) {
       ].join(" ")}
     >
       <CardActions url={item.url} title={item.title} />
-      {/* Meta row. Single-line nowrap on mobile — favicon + truncated
-          source + small "·" + truncated category + time pinned right.
-          Desktop relaxes to wrap + full source name. */}
-      <div className="mb-3 flex min-w-0 items-center gap-1.5 overflow-hidden text-[11px] sm:flex-wrap sm:gap-2 sm:overflow-visible sm:text-xs">
-        <span className="inline-flex min-w-0 shrink items-center gap-1.5 rounded-md bg-white/5 px-1.5 py-0.5 text-[var(--text-dim)] sm:px-2">
+      {/* Meta row. flex-wrap on every breakpoint — when content doesn't
+          fit, the left half (source / category / NEW) wraps to a new
+          row and stays left-aligned, while the time stays right-aligned
+          on its row via ml-auto. */}
+      <div className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] sm:text-xs">
+        <span className="inline-flex max-w-full items-center gap-1.5 rounded-md bg-white/5 px-1.5 py-0.5 text-[var(--text-dim)] sm:px-2">
           {hostname && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -77,12 +78,10 @@ export function NewsCard({ item }: { item: Item }) {
           )}
           <span className="truncate">{item.source}</span>
         </span>
-        <span className="hidden text-[var(--text-dim)] sm:inline">·</span>
-        <span className="shrink truncate text-[var(--text-dim)]">
-          {categoryLabel}
-        </span>
+        <span className="text-[var(--text-dim)]">·</span>
+        <span className="text-[var(--text-dim)]">{categoryLabel}</span>
         <NewBadge publishedAtIso={isoDate} />
-        <span className="ml-auto shrink-0 whitespace-nowrap">
+        <span className="ml-auto whitespace-nowrap">
           <PrettyTime iso={isoDate} />
         </span>
       </div>
