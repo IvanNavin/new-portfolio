@@ -4,6 +4,7 @@ import { KeyboardNav } from "@components/KeyboardNav";
 import { MobileMenu } from "@components/MobileMenu";
 import { NewsCard } from "@components/NewsCard";
 import { PostMountFilters } from "@components/PostMountFilters";
+import { SwipeableCard } from "@components/SwipeableCard";
 import { ThemeToggle } from "@components/ThemeToggle";
 import { UserChip } from "@components/UserChip";
 import { auth } from "@lib/auth";
@@ -35,6 +36,7 @@ type Item = {
   publishedAt: Date;
   tags: string[];
   engagement: number | null;
+  summary: string | null;
 };
 
 type ScoredItem = Item & {
@@ -314,7 +316,9 @@ export default async function Page({
               <ul className="flex flex-col gap-3">
                 {bucket.items.map((item) => (
                   <li key={item.id}>
-                    <NewsCard item={item} />
+                    <SwipeableCard url={item.url}>
+                      <NewsCard item={item} />
+                    </SwipeableCard>
                   </li>
                 ))}
               </ul>

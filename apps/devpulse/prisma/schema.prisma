@@ -25,6 +25,7 @@ model NewsItem {
   isPreRelease Boolean  @default(false)
   engagement   Int?
   tags         String[] @default([])
+  summary      String?
 
   @@index([publishedAt(sort: Desc)])
   @@index([category, publishedAt(sort: Desc)])

@@ -171,6 +171,22 @@ a {
   }
 }
 
+@keyframes savedFlash {
+  0% {
+    box-shadow: 0 0 0 0 var(--c-save-soft);
+  }
+  50% {
+    box-shadow: 0 0 0 6px var(--c-save-soft);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.animate-saved-flash {
+  animation: savedFlash 700ms ease-out;
+}
+
 /* Read items are desaturated and slightly dimmed so the eye skips them
    naturally. Marked via data-read="true" by PostMountFilters / CardActions. */
 [data-card-url][data-read='true'] {

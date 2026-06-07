@@ -97,6 +97,11 @@ model NewsItem {
   /// Match labels from KEYWORD_BOOSTS at ingest time. Surfaced as
   /// clickable tag chips on the card; filter by ?tag=label.
   tags         String[] @default([])
+  /// AI-generated 1-2 sentence TLDR. Generated lazily at ingest via
+  /// Google Gemini Flash (free tier) — null when generation failed
+  /// or the model wasn't reachable; null cards just fall back to the
+  /// excerpt rendering they always had.
+  summary      String?
 
   @@index([publishedAt(sort: Desc)])
   @@index([category, publishedAt(sort: Desc)])

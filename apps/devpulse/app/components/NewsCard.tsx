@@ -22,6 +22,9 @@ type Item = {
   tags?: string[];
   /** HN points / Lobsters score when the feed provides one. */
   engagement?: number | null;
+  /** AI-generated 1-2 sentence TLDR. When present, replaces the raw
+   *  excerpt as the card's preview. Null = AI was offline or skipped. */
+  summary?: string | null;
 };
 
 function safeHostname(url: string): string | null {
@@ -87,10 +90,29 @@ export function NewsCard({ item }: { item: Item }) {
       <h2 className="mb-2 text-lg leading-snug font-medium text-[var(--text)] group-hover:text-sky-200">
         {item.title}
       </h2>
-      {item.excerpt && (
-        <p className="line-clamp-3 text-sm text-[var(--text-dim)]">
-          {item.excerpt}
-        </p>
+      {item.summary ? (
+        <div className="space-y-2">
+          <p className="text-sm leading-snug text-[var(--text)]">
+            <span
+              aria-hidden="true"
+              className="mr-1.5 inline-block rounded bg-[var(--c-accent-soft)] px-1 py-0.5 text-[9px] font-semibold tracking-wide text-[var(--c-accent-fg)] uppercase"
+            >
+              TLDR
+            </span>
+            {item.summary}
+          </p>
+          {item.excerpt && (
+            <p className="line-clamp-2 text-xs text-[var(--text-dim)]">
+              {item.excerpt}
+            </p>
+          )}
+        </div>
+      ) : (
+        item.excerpt && (
+          <p className="line-clamp-3 text-sm text-[var(--text-dim)]">
+            {item.excerpt}
+          </p>
+        )
       )}
       {hasFooter && (
         <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">

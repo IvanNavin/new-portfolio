@@ -1,3 +1,4 @@
+import { generateSummary } from "./aiSummary";
 import { KEYWORD_BOOSTS } from "./keywords";
 import { isPreRelease, parseFeed } from "./parseFeed";
 import { prisma } from "./prisma";
@@ -166,6 +167,8 @@ export type RunReport = {
   totalUpdated: number;
   pruned: number;
   seedInserted: number;
+  /** Items whose summary column flipped from null → text this run. */
+  aiSummarized: number;
   reports: SourceReport[];
   startedAt: string;
   durationMs: number;
@@ -222,6 +225,12 @@ export async function runFetch(): Promise<RunReport> {
     },
   });
 
+  // AI summary backfill — runs after fetch + prune so we generate
+  // exactly once per row, including stragglers from previous runs
+  // where Gemini was down. Capped per-run so a quota-exhausted day
+  // doesn't burn an entire cron budget on one feature.
+  const aiSummarized = await backfillSummaries();
+
   return {
     totalSources: sources.length,
     okSources: reports.filter((r) => r.ok).length,
@@ -229,8 +238,34 @@ export async function runFetch(): Promise<RunReport> {
     totalUpdated: reports.reduce((acc, r) => acc + r.updated, 0),
     pruned,
     seedInserted,
+    aiSummarized,
     reports,
     startedAt: startedAt.toISOString(),
     durationMs: Date.now() - startedAt.getTime(),
   };
+}
+
+/** Pull up to MAX_PER_RUN items that lack a summary and generate one.
+ *  Sequenced (not parallel) so we naturally stay within Gemini's
+ *  free-tier 15-RPM ceiling and don't trip rate limits mid-run. */
+async function backfillSummaries(): Promise<number> {
+  if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) return 0;
+  const MAX_PER_RUN = 200;
+  const rows = await prisma.newsItem.findMany({
+    where: { summary: null },
+    select: { id: true, title: true, excerpt: true },
+    orderBy: { publishedAt: "desc" },
+    take: MAX_PER_RUN,
+  });
+  let done = 0;
+  for (const r of rows) {
+    const summary = await generateSummary(r.title, r.excerpt);
+    if (!summary) continue;
+    await prisma.newsItem.update({
+      where: { id: r.id },
+      data: { summary },
+    });
+    done++;
+  }
+  return done;
 }
