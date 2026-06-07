@@ -2,8 +2,8 @@ import { Category, CATEGORY_LABELS } from "@lib/sources";
 
 import { CardActions } from "./CardActions";
 import { NewBadge } from "./NewBadge";
+import { PrettyTime } from "./PrettyTime";
 import { TagChip } from "./TagChip";
-import { timeAgo } from "./timeAgo";
 import { Tooltip } from "./Tooltip";
 
 type Item = {
@@ -44,7 +44,7 @@ export function NewsCard({ item }: { item: Item }) {
       rel="noreferrer noopener"
       data-card-url={item.url}
       className={[
-        "group relative block rounded-xl border bg-[var(--bg-elev)]/60 p-5 pr-36 transition-all",
+        "group relative block rounded-xl border bg-[var(--bg-elev)]/60 p-5 pr-44 transition-all",
         "focus:ring-2 focus:ring-sky-400/40 focus:outline-none",
         item.boosted
           ? "border-sky-400/40 bg-sky-400/[0.04] hover:border-sky-300/70 hover:bg-sky-400/10"
@@ -92,15 +92,7 @@ export function NewsCard({ item }: { item: Item }) {
           </Tooltip>
         )}
         <span className="ml-auto">
-          <Tooltip label={isoDate} side="bottom">
-            <time
-              dateTime={isoDate}
-              className="text-[var(--text-dim)]"
-              aria-label={`Published ${isoDate}`}
-            >
-              {timeAgo(item.publishedAt)}
-            </time>
-          </Tooltip>
+          <PrettyTime iso={isoDate} />
         </span>
       </div>
       <h2 className="mb-2 text-lg leading-snug font-medium text-[var(--text)] group-hover:text-sky-200">

@@ -254,6 +254,15 @@ export default async function Page({
           </div>
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <Link
+              href="/hidden"
+              prefetch={false}
+              aria-label="Hidden stories"
+              className="rounded-md border border-[var(--border)] px-2 py-1 text-[var(--text-dim)] normal-case tracking-normal hover:border-red-400/40 hover:text-red-300"
+            >
+              <span aria-hidden="true">↩</span>
+              <span className="ml-1 hidden sm:inline">Hidden</span>
+            </Link>
+            <Link
               href="/saved"
               prefetch={false}
               aria-label="Saved stories"

@@ -199,10 +199,26 @@ export async function runFetch(): Promise<RunReport> {
 
   // Prune rows older than the retention window to keep DB footprint small —
   // the user's storage budget is the binding constraint here, not query speed.
+  // But items referenced by any user's saved or dismissed list stay forever:
+  // a saved story should survive the prune cutoff, and a dismissed one needs
+  // to stick around so the /hidden view can offer to restore it.
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - PRUNE_AFTER_DAYS);
+  const [savedUrls, dismissedUrls] = await Promise.all([
+    prisma.devpulseSavedItem.findMany({ select: { url: true } }),
+    prisma.devpulseDismissedItem.findMany({ select: { url: true } }),
+  ]);
+  const protectedUrls = Array.from(
+    new Set([
+      ...savedUrls.map((r) => r.url),
+      ...dismissedUrls.map((r) => r.url),
+    ]),
+  );
   const { count: pruned } = await prisma.newsItem.deleteMany({
-    where: { publishedAt: { lt: cutoff } },
+    where: {
+      publishedAt: { lt: cutoff },
+      url: { notIn: protectedUrls },
+    },
   });
 
   return {

@@ -3,6 +3,9 @@ import Link from "next/link";
 
 import { Tooltip } from "./Tooltip";
 
+// Tooltip still used on the avatar/settings link below; sign-out
+// intentionally has no tooltip because the visible text is enough.
+
 /**
  * Compact avatar + auth controls for the header. Layout adapts:
  * - On md+ screens: avatar · name · separate sign-out text link
@@ -47,31 +50,29 @@ export async function UserChip() {
           await signOut({ redirectTo: "/" });
         }}
       >
-        <Tooltip label="Sign out" side="bottom">
-          <button
-            type="submit"
-            aria-label="Sign out"
-            className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text-dim)] hover:border-red-400/40 hover:text-red-200 focus-visible:ring-2 focus-visible:ring-red-400/50 focus-visible:outline-none sm:h-auto sm:w-auto sm:border-0 sm:px-1 sm:text-xs sm:normal-case sm:tracking-normal sm:hover:underline sm:underline-offset-4"
+        <button
+          type="submit"
+          aria-label="Sign out"
+          className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text-dim)] hover:border-red-400/40 hover:text-red-300 focus-visible:ring-2 focus-visible:ring-red-400/50 focus-visible:outline-none sm:h-auto sm:w-auto sm:border-0 sm:px-1 sm:text-xs sm:normal-case sm:tracking-normal sm:hover:underline sm:underline-offset-4"
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="sm:hidden"
           >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-              className="sm:hidden"
-            >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-            <span className="hidden sm:inline">sign out</span>
-          </button>
-        </Tooltip>
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          <span className="hidden sm:inline">sign out</span>
+        </button>
       </form>
     </div>
   );

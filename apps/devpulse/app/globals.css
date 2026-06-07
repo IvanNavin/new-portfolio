@@ -21,35 +21,51 @@
 @media (prefers-color-scheme: light) {
   :root:not([data-theme='dark']) {
     color-scheme: light;
-    --bg: #fafbfd;
+    --bg: #f4f6fa;
     --bg-elev: #ffffff;
-    --border: #e2e6ee;
-    --text: #0f1620;
-    --text-dim: #5a6373;
+    /* Darker than before so card outlines and icon-only buttons read
+       properly on the near-white background. Previous #e2e6ee gave
+       a ~1.05:1 contrast — buttons looked ghosted. */
+    --border: #c2cad5;
+    --text: #0b1320;
+    --text-dim: #404a5b;
     --accent: #0284c7;
     --accent-dim: #0369a1;
-    --good: #16a34a;
-    --bg-glow-1: rgba(56, 189, 248, 0.07);
-    --bg-glow-2: rgba(125, 211, 252, 0.05);
+    --good: #15803d;
+    --bg-glow-1: rgba(56, 189, 248, 0.18);
+    --bg-glow-2: rgba(125, 211, 252, 0.14);
   }
 }
 
 [data-theme='light'] {
   color-scheme: light;
-  --bg: #fafbfd;
+  --bg: #f4f6fa;
   --bg-elev: #ffffff;
-  --border: #e2e6ee;
-  --text: #0f1620;
-  --text-dim: #5a6373;
+  --border: #c2cad5;
+  --text: #0b1320;
+  --text-dim: #404a5b;
   --accent: #0284c7;
   --accent-dim: #0369a1;
-  --good: #16a34a;
-  --bg-glow-1: rgba(56, 189, 248, 0.07);
-  --bg-glow-2: rgba(125, 211, 252, 0.05);
+  --good: #15803d;
+  --bg-glow-1: rgba(56, 189, 248, 0.18);
+  --bg-glow-2: rgba(125, 211, 252, 0.14);
 }
 
 * {
   box-sizing: border-box;
+}
+
+/* Tailwind v4 dropped the implicit cursor-pointer on <button>. Restore it
+   for any clickable non-disabled control so hover feels right. */
+button:not(:disabled),
+[role='button']:not([aria-disabled='true']),
+a[href],
+label[for],
+summary,
+select,
+input[type='submit'],
+input[type='button'] {
+  cursor: pointer;
 }
 
 html,
