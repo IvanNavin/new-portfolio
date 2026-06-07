@@ -171,20 +171,86 @@ a {
   }
 }
 
-@keyframes savedFlash {
-  0% {
-    box-shadow: 0 0 0 0 var(--c-save-soft);
-  }
-  50% {
-    box-shadow: 0 0 0 6px var(--c-save-soft);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-  }
-}
 
-.animate-saved-flash {
-  animation: savedFlash 700ms ease-out;
+/* Article reader prose. Keeps body width comfortable; styles inline
+   markup that Mozilla Readability passed through. */
+.reader-prose {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+.reader-prose h1,
+.reader-prose h2,
+.reader-prose h3 {
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.reader-prose h1 {
+  font-size: 1.75rem;
+}
+.reader-prose h2 {
+  font-size: 1.35rem;
+}
+.reader-prose h3 {
+  font-size: 1.15rem;
+}
+.reader-prose p {
+  margin: 0.9em 0;
+}
+.reader-prose a {
+  color: var(--c-accent-fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.reader-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 1em 0;
+}
+.reader-prose pre {
+  overflow-x: auto;
+  padding: 0.9em 1em;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.85em;
+}
+.reader-prose code {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: var(--bg-elev);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.reader-prose pre code {
+  background: transparent;
+  padding: 0;
+}
+.reader-prose blockquote {
+  border-left: 3px solid var(--c-accent-fg);
+  padding-left: 1em;
+  margin: 1em 0;
+  color: var(--text-dim);
+  font-style: italic;
+}
+.reader-prose ul,
+.reader-prose ol {
+  margin: 0.9em 0;
+  padding-left: 1.6em;
+}
+.reader-prose li {
+  margin: 0.3em 0;
+}
+.reader-prose figure {
+  margin: 1.2em 0;
+}
+.reader-prose figcaption {
+  text-align: center;
+  font-size: 0.85em;
+  color: var(--text-dim);
 }
 
 /* Read items are desaturated and slightly dimmed so the eye skips them

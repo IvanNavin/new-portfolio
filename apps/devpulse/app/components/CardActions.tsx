@@ -14,6 +14,9 @@ import { Tooltip } from "./Tooltip";
 type Props = {
   url: string;
   title: string;
+  /** Optional — wired by NewsCard to open its ReaderDrawer. Without
+   *  this prop the Reader button is hidden. */
+  onOpenReader?: (e: React.MouseEvent) => void;
 };
 
 async function syncSaved(url: string, saved: boolean): Promise<void> {
@@ -50,7 +53,7 @@ async function syncDismissed(url: string): Promise<void> {
  * the /hidden tab is the recovery path, but the confirm step stops
  * accidental thumb-taps from removing a story without warning.
  */
-export function CardActions({ url, title }: Props) {
+export function CardActions({ url, title, onOpenReader }: Props) {
   const { data: session } = useSession();
   const [saved, setSaved] = useState(false);
   const [hydrated, setHydrated] = useState(false);
@@ -219,6 +222,22 @@ export function CardActions({ url, title }: Props) {
       <circle cx="12" cy="19" r="1.6" />
     </svg>
   );
+  const BookIcon = (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+    </svg>
+  );
 
   const ConfirmPopover = (
     <div
@@ -264,6 +283,18 @@ export function CardActions({ url, title }: Props) {
     <>
       {/* ── Desktop: inline buttons ──────────────────────────────── */}
       <div className="absolute top-3 right-3 hidden items-center gap-1.5 sm:flex">
+        {onOpenReader && (
+          <Tooltip label="Read on devpulse">
+            <button
+              type="button"
+              onClick={onOpenReader}
+              aria-label="Open in reader"
+              className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text)] transition-colors hover:border-[var(--c-accent-fg)] hover:text-[var(--c-accent-fg)] focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none"
+            >
+              {BookIcon}
+            </button>
+          </Tooltip>
+        )}
         {canShare && (
           <Tooltip label="Share this story">
             <button
@@ -332,6 +363,20 @@ export function CardActions({ url, title }: Props) {
             onMouseDown={(e) => e.stopPropagation()}
             className="absolute right-0 z-40 mt-2 w-44 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-elev)] py-1 normal-case shadow-2xl"
           >
+            {onOpenReader && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  setMobileOpen(false);
+                  onOpenReader(e);
+                }}
+                role="menuitem"
+                className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-[var(--c-accent-soft)] hover:text-[var(--c-accent-fg)]"
+              >
+                <span aria-hidden="true">{BookIcon}</span>
+                Read on devpulse
+              </button>
+            )}
             {canShare && (
               <button
                 type="button"

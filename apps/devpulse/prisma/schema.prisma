@@ -26,6 +26,8 @@ model NewsItem {
   engagement   Int?
   tags         String[] @default([])
   summary      String?
+  cleanedHtml  String?
+  referrers    String[] @default([])
 
   @@index([publishedAt(sort: Desc)])
   @@index([category, publishedAt(sort: Desc)])
@@ -50,6 +52,8 @@ model DevpulseSource {
   createdBy       DevpulseUser?            @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
   preferences     DevpulseUserSourcePref[]
   createdAt       DateTime @default(now())
+  failureCount    Int       @default(0)
+  disabledAt      DateTime?
 
   @@index([isBuiltIn])
   @@index([url])

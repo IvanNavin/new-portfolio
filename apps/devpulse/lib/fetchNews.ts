@@ -1,9 +1,11 @@
-import { generateSummary } from "./aiSummary";
+import { analyzeItem } from "./aiAnalyze";
 import { KEYWORD_BOOSTS } from "./keywords";
 import { isPreRelease, parseFeed } from "./parseFeed";
 import { prisma } from "./prisma";
 import { safeFetch } from "./safeFetch";
 import { DbSource, ensureSourcesSeeded, getAllSources } from "./sourcesDb";
+
+const DEAD_SOURCE_THRESHOLD = 7;
 
 /**
  * Pre-compute tag labels at ingest from the curated KEYWORD_BOOSTS.
@@ -95,7 +97,14 @@ async function fetchSource(source: DbSource): Promise<SourceReport> {
     // any manual DB intervention.
     const existing = await prisma.newsItem.findMany({
       where: { url: { in: items.map((i) => i.url) } },
-      select: { url: true, title: true, excerpt: true },
+      select: {
+        id: true,
+        url: true,
+        title: true,
+        excerpt: true,
+        source: true,
+        referrers: true,
+      },
     });
     const existingByUrl = new Map(existing.map((e) => [e.url, e]));
 
@@ -105,6 +114,17 @@ async function fetchSource(source: DbSource): Promise<SourceReport> {
       if (!prev) return false;
       const incomingExcerpt = i.excerpt || null;
       return prev.title !== i.title || prev.excerpt !== incomingExcerpt;
+    });
+    // Cross-source clustering: existing rows whose primary source !=
+    // this feed get tracked as referrers. UI surfaces this as a
+    // "+ HN, + Lobsters" pill on the card so users see the same
+    // story shared across sources without three duplicate entries.
+    const toCluster = items.filter((i) => {
+      const prev = existingByUrl.get(i.url);
+      if (!prev) return false;
+      if (prev.source === source.name) return false;
+      if (prev.referrers.includes(source.name)) return false;
+      return true;
     });
 
     let inserted = 0;
@@ -141,6 +161,21 @@ async function fetchSource(source: DbSource): Promise<SourceReport> {
       updated = results.filter((r) => r.status === "fulfilled").length;
     }
 
+    if (toCluster.length > 0) {
+      // Push this feed's name into referrers[] of every existing row
+      // whose URL we're also serving. Idempotent because we filtered
+      // out rows that already have the source in either primary or
+      // referrers.
+      await Promise.allSettled(
+        toCluster.map((item) =>
+          prisma.newsItem.update({
+            where: { url: item.url },
+            data: { referrers: { push: source.name } },
+          }),
+        ),
+      );
+    }
+
     return {
       source: source.name,
       ok: true,
@@ -167,8 +202,10 @@ export type RunReport = {
   totalUpdated: number;
   pruned: number;
   seedInserted: number;
-  /** Items whose summary column flipped from null → text this run. */
-  aiSummarized: number;
+  /** Items whose summary + tags filled in via Gemini this run. */
+  aiAnalyzed: number;
+  /** Sources that crossed the failure threshold and got auto-disabled. */
+  autoDisabled: number;
   reports: SourceReport[];
   startedAt: string;
   durationMs: number;
@@ -183,15 +220,19 @@ export async function runFetch(): Promise<RunReport> {
   const { inserted: seedInserted } = await ensureSourcesSeeded();
   const sources = await getAllSources();
 
+  // Skip sources that prior runs auto-disabled. They stay in the table
+  // (so admin can re-enable from /settings) but the cron ignores them.
+  const liveSources = sources.filter((s) => !s.disabledAt);
+
   // Sources are independent — parallelize but bound concurrency so we don't
   // open 20 sockets at once. Promise.allSettled never rejects so one stuck
   // source doesn't take the whole run down.
-  const results = await Promise.allSettled(sources.map(fetchSource));
+  const results = await Promise.allSettled(liveSources.map(fetchSource));
   const reports: SourceReport[] = results.map((r, i) =>
     r.status === "fulfilled"
       ? r.value
       : {
-          source: sources[i].name,
+          source: liveSources[i].name,
           ok: false,
           inserted: 0,
           updated: 0,
@@ -200,6 +241,38 @@ export async function runFetch(): Promise<RunReport> {
             r.reason instanceof Error ? r.reason.message : String(r.reason),
         },
   );
+
+  // Dead-source bookkeeping. Increment failureCount on any source whose
+  // fetch returned ok:false, reset to 0 on success. Cross the threshold
+  // → set disabledAt so next run skips it entirely.
+  const reportBySource = new Map(reports.map((r) => [r.source, r]));
+  const sourceUpdates = liveSources.map(async (s) => {
+    const r = reportBySource.get(s.name);
+    if (!r) return false;
+    if (r.ok) {
+      if (s.failureCount > 0) {
+        await prisma.devpulseSource.update({
+          where: { id: s.id },
+          data: { failureCount: 0 },
+        });
+      }
+      return false;
+    }
+    const next = s.failureCount + 1;
+    const disable = next >= DEAD_SOURCE_THRESHOLD;
+    await prisma.devpulseSource.update({
+      where: { id: s.id },
+      data: {
+        failureCount: next,
+        disabledAt: disable ? new Date() : null,
+      },
+    });
+    return disable;
+  });
+  const disableResults = await Promise.allSettled(sourceUpdates);
+  const autoDisabled = disableResults.filter(
+    (r) => r.status === "fulfilled" && r.value,
+  ).length;
 
   // Prune rows older than the retention window to keep DB footprint small —
   // the user's storage budget is the binding constraint here, not query speed.
@@ -225,11 +298,10 @@ export async function runFetch(): Promise<RunReport> {
     },
   });
 
-  // AI summary backfill — runs after fetch + prune so we generate
-  // exactly once per row, including stragglers from previous runs
-  // where Gemini was down. Capped per-run so a quota-exhausted day
-  // doesn't burn an entire cron budget on one feature.
-  const aiSummarized = await backfillSummaries();
+  // Single Gemini pass that fills both summary + AI tags for every
+  // row that's still missing a summary. Runs after fetch + prune so
+  // we hit it once per row, including stragglers from previous runs.
+  const aiAnalyzed = await backfillAnalysis();
 
   return {
     totalSources: sources.length,
@@ -238,32 +310,35 @@ export async function runFetch(): Promise<RunReport> {
     totalUpdated: reports.reduce((acc, r) => acc + r.updated, 0),
     pruned,
     seedInserted,
-    aiSummarized,
+    aiAnalyzed,
+    autoDisabled,
     reports,
     startedAt: startedAt.toISOString(),
     durationMs: Date.now() - startedAt.getTime(),
   };
 }
 
-/** Pull up to MAX_PER_RUN items that lack a summary and generate one.
- *  Sequenced (not parallel) so we naturally stay within Gemini's
- *  free-tier 15-RPM ceiling and don't trip rate limits mid-run. */
-async function backfillSummaries(): Promise<number> {
+/** Pull up to MAX_PER_RUN items that lack a summary and run them
+ *  through the Gemini analyzer — fills summary + tags in one call.
+ *  Existing curated tags merge with AI tags (deduped); the AI doesn't
+ *  overwrite a curated match. */
+async function backfillAnalysis(): Promise<number> {
   if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) return 0;
   const MAX_PER_RUN = 200;
   const rows = await prisma.newsItem.findMany({
     where: { summary: null },
-    select: { id: true, title: true, excerpt: true },
+    select: { id: true, title: true, excerpt: true, tags: true },
     orderBy: { publishedAt: "desc" },
     take: MAX_PER_RUN,
   });
   let done = 0;
   for (const r of rows) {
-    const summary = await generateSummary(r.title, r.excerpt);
-    if (!summary) continue;
+    const analysis = await analyzeItem(r.title, r.excerpt);
+    if (!analysis) continue;
+    const mergedTags = Array.from(new Set([...r.tags, ...analysis.tags]));
     await prisma.newsItem.update({
       where: { id: r.id },
-      data: { summary },
+      data: { summary: analysis.summary, tags: mergedTags },
     });
     done++;
   }

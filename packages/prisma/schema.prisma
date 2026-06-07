@@ -102,6 +102,15 @@ model NewsItem {
   /// or the model wasn't reachable; null cards just fall back to the
   /// excerpt rendering they always had.
   summary      String?
+  /// Cleaned article HTML extracted via Mozilla Readability for the
+  /// in-app reader drawer. Lazily fetched on first /api/article hit
+  /// and cached. Null until a user actually opens the reader.
+  cleanedHtml  String?
+  /// Other sources that point to the same URL. Populated when a
+  /// dedupe hit during ingest finds an existing row from a different
+  /// feed — HN + Lobsters often share the same article. UI shows the
+  /// extra sources as a "+ N more" pill.
+  referrers    String[] @default([])
 
   @@index([publishedAt(sort: Desc)])
   @@index([category, publishedAt(sort: Desc)])
@@ -130,6 +139,14 @@ model DevpulseSource {
   createdBy       DevpulseUser?            @relation(fields: [createdByUserId], references: [id], onDelete: SetNull)
   preferences     DevpulseUserSourcePref[]
   createdAt       DateTime                 @default(now())
+  /// Consecutive cron failures (HTTP error, parse error, timeout).
+  /// Reset to 0 on every successful fetch. Used by the dead-source
+  /// auto-disable logic.
+  failureCount    Int                      @default(0)
+  /// When the source got automatically disabled after too many
+  /// consecutive failures. Null = healthy. Skipped by the cron until
+  /// this is cleared manually.
+  disabledAt      DateTime?
 
   @@index([isBuiltIn])
   @@index([url])

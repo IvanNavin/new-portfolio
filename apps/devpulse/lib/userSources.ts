@@ -78,6 +78,8 @@ export async function listUserSettingsSources(
     weight: r.weight,
     isBuiltIn: r.isBuiltIn,
     createdByUserId: r.createdByUserId,
+    disabledAt: r.disabledAt,
+    failureCount: r.failureCount,
     enabled,
   });
   return [

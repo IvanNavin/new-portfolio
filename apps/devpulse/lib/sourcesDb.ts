@@ -9,6 +9,11 @@ export type DbSource = {
   weight: number;
   isBuiltIn: boolean;
   createdByUserId: string | null;
+  /** Set when the cron's dead-source detector pulled this source dark. */
+  disabledAt: Date | null;
+  /** Consecutive fetch failures since the last success. Reset on every
+   *  successful pull; threshold for auto-disable lives in fetchNews. */
+  failureCount: number;
 };
 
 /**
@@ -62,6 +67,8 @@ export async function getAllSources(): Promise<DbSource[]> {
     weight: r.weight,
     isBuiltIn: r.isBuiltIn,
     createdByUserId: r.createdByUserId,
+    disabledAt: r.disabledAt,
+    failureCount: r.failureCount,
   }));
 }
 
