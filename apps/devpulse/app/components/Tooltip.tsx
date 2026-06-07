@@ -29,14 +29,18 @@ type Props = {
  */
 export function Tooltip({ label, side = "top", children }: Props) {
   return (
-    <span className="group relative inline-flex">
+    // Named group `tt` so `group-hover/tt:` only matches THIS tooltip's
+    // wrapper, never an outer card or section. Without the name, every
+    // tooltip inside any element marked `group` (like the NewsCard <a>)
+    // would fire together on a hover anywhere in that ancestor.
+    <span className="group/tt relative inline-flex">
       {children}
       <span
         aria-hidden="true"
         role="presentation"
         className={[
           "pointer-events-none absolute left-1/2 z-30 -translate-x-1/2 whitespace-nowrap rounded-md border border-[var(--border)] bg-[var(--bg-elev)] px-2 py-1 text-xs text-[var(--text)] opacity-0 shadow-lg transition-opacity delay-150 duration-150",
-          "group-hover:opacity-100 group-hover:delay-0 group-focus-within:opacity-100 group-focus-within:delay-0",
+          "group-hover/tt:opacity-100 group-hover/tt:delay-0 group-focus-within/tt:opacity-100 group-focus-within/tt:delay-0",
           side === "top" ? "-top-1 -translate-y-full" : "top-full mt-1",
         ].join(" ")}
       >
