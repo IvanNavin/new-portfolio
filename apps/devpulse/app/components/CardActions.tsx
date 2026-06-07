@@ -40,14 +40,15 @@ async function syncDismissed(url: string): Promise<void> {
 }
 
 /**
- * Per-card client overlay: share, save, dismiss. Read-state used to live
- * here too as a manual ✓ button — the auto-mark-as-read on click made it
- * redundant.
+ * Per-card overlay. Two layouts:
+ *  - Desktop (≥sm): inline icon row (share, save, hide).
+ *  - Mobile (<sm): single ⋮ button that opens a dropdown with the same
+ *    three actions. Reclaims the right margin so the card title and
+ *    excerpt have full width on phones.
  *
- * Dismiss now opens an inline confirm popover instead of firing a toast
- * with undo: users asked for an explicit "are you sure?" prompt before
- * removing a story from the feed. The /hidden tab is the recovery path
- * if they change their mind later.
+ * Hide always opens an inline confirm popover regardless of layout —
+ * the /hidden tab is the recovery path, but the confirm step stops
+ * accidental thumb-taps from removing a story without warning.
  */
 export function CardActions({ url, title }: Props) {
   const { data: session } = useSession();
@@ -55,7 +56,9 @@ export function CardActions({ url, title }: Props) {
   const [hydrated, setHydrated] = useState(false);
   const [canShare, setCanShare] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const confirmRef = useRef<HTMLDivElement>(null);
+  const mobileRef = useRef<HTMLDivElement>(null);
   const isAuthed = Boolean(session?.user);
 
   useEffect(() => {
@@ -69,19 +72,30 @@ export function CardActions({ url, title }: Props) {
     });
   }, [url]);
 
-  // Close confirm when clicking outside or pressing Escape.
+  // Close confirm + mobile menu on outside click / Escape.
   useEffect(() => {
-    if (!confirmOpen) return;
+    if (!confirmOpen && !mobileOpen) return;
     const onDoc = (e: MouseEvent) => {
       if (
+        confirmOpen &&
         confirmRef.current &&
         !confirmRef.current.contains(e.target as Node)
       ) {
         setConfirmOpen(false);
       }
+      if (
+        mobileOpen &&
+        mobileRef.current &&
+        !mobileRef.current.contains(e.target as Node)
+      ) {
+        setMobileOpen(false);
+      }
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setConfirmOpen(false);
+      if (e.key === "Escape") {
+        setConfirmOpen(false);
+        setMobileOpen(false);
+      }
     };
     document.addEventListener("mousedown", onDoc);
     document.addEventListener("keydown", onKey);
@@ -89,19 +103,23 @@ export function CardActions({ url, title }: Props) {
       document.removeEventListener("mousedown", onDoc);
       document.removeEventListener("keydown", onKey);
     };
-  }, [confirmOpen]);
+  }, [confirmOpen, mobileOpen]);
 
-  const onSave = (e: React.MouseEvent) => {
+  const stop = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+  };
+
+  const onSave = (e: React.MouseEvent) => {
+    stop(e);
     const willSave = toggleSaved(url);
     setSaved(willSave);
     if (isAuthed) void syncSaved(url, willSave);
   };
 
   const onShare = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+    stop(e);
+    setMobileOpen(false);
     if (navigator.share) {
       try {
         await navigator.share({ url, title });
@@ -118,14 +136,13 @@ export function CardActions({ url, title }: Props) {
   };
 
   const onDismissClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+    stop(e);
+    setMobileOpen(false);
     setConfirmOpen(true);
   };
 
   const confirmHide = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+    stop(e);
     setConfirmOpen(false);
     const li = (e.currentTarget as HTMLElement).closest("li");
     dismissItem(url);
@@ -141,133 +158,212 @@ export function CardActions({ url, title }: Props) {
 
   if (!hydrated) return null;
 
-  return (
-    <div className="absolute top-3 right-3 flex items-center gap-1.5">
-      {canShare && (
-        <Tooltip label="Share this story">
-          <button
-            type="button"
-            onClick={onShare}
-            aria-label={`Share: ${title}`}
-            className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text-dim)] transition-colors hover:border-sky-400/40 hover:text-sky-200 focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <circle cx="18" cy="5" r="3" />
-              <circle cx="6" cy="12" r="3" />
-              <circle cx="18" cy="19" r="3" />
-              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-            </svg>
-          </button>
-        </Tooltip>
-      )}
-      <Tooltip label={saved ? "Remove from Saved" : "Save for later"}>
+  // ── Icons ─────────────────────────────────────────────────────────
+  const ShareIcon = (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="18" cy="5" r="3" />
+      <circle cx="6" cy="12" r="3" />
+      <circle cx="18" cy="19" r="3" />
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+    </svg>
+  );
+  const StarIcon = (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill={saved ? "currentColor" : "none"}
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z" />
+    </svg>
+  );
+  const XIcon = (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+  const DotsIcon = (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="5" r="1.6" />
+      <circle cx="12" cy="12" r="1.6" />
+      <circle cx="12" cy="19" r="1.6" />
+    </svg>
+  );
+
+  const ConfirmPopover = (
+    <div
+      ref={confirmRef}
+      role="dialog"
+      aria-label="Confirm hide"
+      onClick={stop}
+      onMouseDown={(e) => e.stopPropagation()}
+      className="absolute right-0 z-40 mt-2 w-60 rounded-lg border border-[var(--border)] bg-[var(--bg-elev)] p-3 normal-case shadow-2xl"
+    >
+      <p className="mb-2 text-sm text-[var(--text)]">
+        Hide this story from your feed?
+      </p>
+      <p className="mb-3 text-xs text-[var(--text-dim)]">
+        Restore it any time from the{" "}
+        <span className="text-red-300">Hidden</span> tab.
+      </p>
+      <div className="flex justify-end gap-2">
         <button
           type="button"
-          onClick={onSave}
-          aria-label={saved ? "Remove from Saved" : "Save for later"}
-          aria-pressed={saved}
-          className={[
-            "flex h-7 w-7 items-center justify-center rounded-md border transition-colors",
-            "focus-visible:ring-2 focus-visible:ring-amber-300/50 focus-visible:outline-none",
-            saved
-              ? "border-amber-300/60 bg-amber-300/15 text-amber-200 hover:bg-amber-300/25"
-              : "border-[var(--border)] text-[var(--text-dim)] hover:border-amber-300/40 hover:text-amber-200",
-          ].join(" ")}
+          onClick={(e) => {
+            stop(e);
+            setConfirmOpen(false);
+          }}
+          className="rounded-md border border-[var(--border)] px-3 py-1 text-xs text-[var(--text-dim)] hover:text-[var(--text)]"
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill={saved ? "currentColor" : "none"}
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z" />
-          </svg>
+          Cancel
         </button>
-      </Tooltip>
-      <div className="relative">
-        <Tooltip label="Hide">
-          <button
-            type="button"
-            onClick={onDismissClick}
-            aria-label="Hide this story"
-            aria-expanded={confirmOpen}
-            aria-haspopup="dialog"
-            className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text-dim)] transition-colors hover:border-red-400/40 hover:text-red-300 focus-visible:ring-2 focus-visible:ring-red-400/50 focus-visible:outline-none"
-          >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              aria-hidden="true"
-            >
-              <path d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </button>
-        </Tooltip>
-        {confirmOpen && (
-          <div
-            ref={confirmRef}
-            role="dialog"
-            aria-label="Confirm hide"
-            // Stop the document-level ReadOnClick handler from firing
-            // when interacting with the popover.
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-            }}
-            onMouseDown={(e) => e.stopPropagation()}
-            className="absolute right-0 z-40 mt-2 w-60 rounded-lg border border-[var(--border)] bg-[var(--bg-elev)] p-3 normal-case shadow-2xl"
-          >
-            <p className="mb-3 text-sm text-[var(--text)]">
-              Hide this story from your feed?
-            </p>
-            <p className="mb-3 text-xs text-[var(--text-dim)]">
-              You can bring it back from the{" "}
-              <span className="text-red-300">Hidden</span> tab.
-            </p>
-            <div className="flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setConfirmOpen(false);
-                }}
-                className="rounded-md border border-[var(--border)] px-3 py-1 text-xs text-[var(--text-dim)] hover:text-[var(--text)]"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={confirmHide}
-                className="rounded-md border border-red-400/60 bg-red-400/15 px-3 py-1 text-xs font-medium text-red-100 hover:bg-red-400/25"
-                autoFocus
-              >
-                Hide
-              </button>
-            </div>
-          </div>
-        )}
+        <button
+          type="button"
+          onClick={confirmHide}
+          className="rounded-md border border-red-400/60 bg-red-400/15 px-3 py-1 text-xs font-medium text-red-100 hover:bg-red-400/25"
+          autoFocus
+        >
+          Hide
+        </button>
       </div>
     </div>
+  );
+
+  return (
+    <>
+      {/* ── Desktop: inline buttons ──────────────────────────────── */}
+      <div className="absolute top-3 right-3 hidden items-center gap-1.5 sm:flex">
+        {canShare && (
+          <Tooltip label="Share this story">
+            <button
+              type="button"
+              onClick={onShare}
+              aria-label={`Share: ${title}`}
+              className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text)] transition-colors hover:border-sky-400/40 hover:text-sky-200 focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none"
+            >
+              {ShareIcon}
+            </button>
+          </Tooltip>
+        )}
+        <Tooltip label={saved ? "Remove from Saved" : "Save for later"}>
+          <button
+            type="button"
+            onClick={onSave}
+            aria-label={saved ? "Remove from Saved" : "Save for later"}
+            aria-pressed={saved}
+            className={[
+              "flex h-7 w-7 items-center justify-center rounded-md border transition-colors",
+              "focus-visible:ring-2 focus-visible:ring-amber-300/50 focus-visible:outline-none",
+              saved
+                ? "border-amber-300/60 bg-amber-300/15 text-amber-200 hover:bg-amber-300/25"
+                : "border-[var(--border)] text-[var(--text)] hover:border-amber-300/40 hover:text-amber-200",
+            ].join(" ")}
+          >
+            {StarIcon}
+          </button>
+        </Tooltip>
+        <div className="relative">
+          <Tooltip label="Hide">
+            <button
+              type="button"
+              onClick={onDismissClick}
+              aria-label="Hide this story"
+              aria-expanded={confirmOpen}
+              aria-haspopup="dialog"
+              className="flex h-7 w-7 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text)] transition-colors hover:border-red-400/40 hover:text-red-300 focus-visible:ring-2 focus-visible:ring-red-400/50 focus-visible:outline-none"
+            >
+              {XIcon}
+            </button>
+          </Tooltip>
+          {confirmOpen && ConfirmPopover}
+        </div>
+      </div>
+
+      {/* ── Mobile: single ⋮ button + dropdown menu ──────────────── */}
+      <div className="absolute top-3 right-3 sm:hidden" ref={mobileRef}>
+        <button
+          type="button"
+          onClick={(e) => {
+            stop(e);
+            setMobileOpen((v) => !v);
+          }}
+          aria-label="Story actions"
+          aria-expanded={mobileOpen}
+          aria-haspopup="menu"
+          className="flex h-8 w-8 items-center justify-center rounded-md border border-[var(--border)] text-[var(--text)] focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:outline-none"
+        >
+          {DotsIcon}
+        </button>
+        {mobileOpen && (
+          <div
+            role="menu"
+            onClick={stop}
+            onMouseDown={(e) => e.stopPropagation()}
+            className="absolute right-0 z-40 mt-2 w-44 overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-elev)] py-1 normal-case shadow-2xl"
+          >
+            {canShare && (
+              <button
+                type="button"
+                onClick={onShare}
+                role="menuitem"
+                className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-sky-400/10 hover:text-sky-200"
+              >
+                <span aria-hidden="true">{ShareIcon}</span>
+                Share
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={onSave}
+              role="menuitem"
+              className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-amber-300/10 hover:text-amber-200"
+            >
+              <span aria-hidden="true">{StarIcon}</span>
+              {saved ? "Remove from Saved" : "Save for later"}
+            </button>
+            <button
+              type="button"
+              onClick={onDismissClick}
+              role="menuitem"
+              className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-[var(--text)] hover:bg-red-400/10 hover:text-red-300"
+            >
+              <span aria-hidden="true">{XIcon}</span>
+              Hide
+            </button>
+          </div>
+        )}
+        {confirmOpen && ConfirmPopover}
+      </div>
+    </>
   );
 }

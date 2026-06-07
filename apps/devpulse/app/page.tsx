@@ -1,6 +1,7 @@
 import { CategoryTabs } from "@components/CategoryTabs";
 import { FiltersBar } from "@components/FiltersBar";
 import { KeyboardNav } from "@components/KeyboardNav";
+import { MobileMenu } from "@components/MobileMenu";
 import { NewsCard } from "@components/NewsCard";
 import { PostMountFilters } from "@components/PostMountFilters";
 import { ThemeToggle } from "@components/ThemeToggle";
@@ -252,7 +253,8 @@ export default async function Page({
             <span className="pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
             <span>live feed</span>
           </div>
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          <MobileMenu />
+          <div className="hidden flex-wrap items-center gap-2 sm:flex">
             <Link
               href="/hidden"
               prefetch={false}
@@ -260,7 +262,7 @@ export default async function Page({
               className="rounded-md border border-[var(--border)] px-2 py-1 text-[var(--text-dim)] normal-case tracking-normal hover:border-red-400/40 hover:text-red-300"
             >
               <span aria-hidden="true">↩</span>
-              <span className="ml-1 hidden sm:inline">Hidden</span>
+              <span className="ml-1">Hidden</span>
             </Link>
             <Link
               href="/saved"
@@ -269,7 +271,7 @@ export default async function Page({
               className="rounded-md border border-[var(--border)] px-2 py-1 text-[var(--text-dim)] normal-case tracking-normal hover:border-amber-300/40 hover:text-amber-200"
             >
               <span aria-hidden="true">★</span>
-              <span className="ml-1 hidden sm:inline">Saved</span>
+              <span className="ml-1">Saved</span>
             </Link>
             <ThemeToggle />
             <UserChip />

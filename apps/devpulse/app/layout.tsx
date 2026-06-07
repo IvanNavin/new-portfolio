@@ -8,6 +8,7 @@ import { SessionProviderClient } from "@components/SessionProviderClient";
 import { ShortcutsOverlay } from "@components/ShortcutsOverlay";
 import { ThemeScript } from "@components/ThemeScript";
 import { Toaster } from "@components/Toaster";
+import { TooltipProvider } from "@components/TooltipProvider";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 
@@ -39,13 +40,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <SessionProviderClient>
-          <PWARegister />
-          <OneTap />
-          <AuthedStateSync />
-          <ReadOnClick />
-          {children}
-          <Toaster />
-          <ShortcutsOverlay />
+          <TooltipProvider>
+            <PWARegister />
+            <OneTap />
+            <AuthedStateSync />
+            <ReadOnClick />
+            {children}
+            <Toaster />
+            <ShortcutsOverlay />
+          </TooltipProvider>
         </SessionProviderClient>
       </body>
     </html>

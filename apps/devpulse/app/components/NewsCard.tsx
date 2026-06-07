@@ -49,7 +49,7 @@ export function NewsCard({ item }: { item: Item }) {
       rel="noreferrer noopener"
       data-card-url={item.url}
       className={[
-        "group relative block rounded-xl border bg-[var(--bg-elev)]/60 p-5 pr-44 transition-all",
+        "group relative block rounded-xl border bg-[var(--bg-elev)]/60 p-5 pr-14 transition-all sm:pr-36",
         "focus:ring-2 focus:ring-sky-400/40 focus:outline-none",
         item.boosted
           ? "border-sky-400/40 bg-sky-400/[0.04] hover:border-sky-300/70 hover:bg-sky-400/10"
@@ -65,7 +65,9 @@ export function NewsCard({ item }: { item: Item }) {
           {hostname && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={`https://icons.duckduckgo.com/ip3/${encodeURIComponent(hostname)}.ico`}
+              // Routed through our own /api/favicon proxy so failed
+              // upstreams (DDG / Google) don't 404-spam the console.
+              src={`/api/favicon?host=${encodeURIComponent(hostname)}`}
               alt=""
               width={14}
               height={14}
