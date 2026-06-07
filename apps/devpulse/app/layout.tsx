@@ -38,12 +38,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <ThemeScript />
       </head>
-      {/* suppressHydrationWarning on <body> is for Grammarly + similar
-          extensions that mutate body attributes between SSR and client
-          paint (data-new-gr-c-s-check-loaded, data-gr-ext-installed).
-          Without this, React 19 throws hydration error #418 on any
-          machine where the user has Grammarly installed. */}
-      <body suppressHydrationWarning>
+      {/* data-gramm / data-gramm_editor / data-enable-grammarly disable
+          Grammarly globally on the page. Grammarly otherwise injects
+          attributes on body AND every input/textarea after SSR, which
+          React 19 raises as hydration error #418. suppressHydrationWarning
+          covers body itself; disabling the extension covers descendants
+          (which suppressHydrationWarning can't reach, it's one-level only).
+          Hydration failure also wipes <html data-theme="light"> that
+          ThemeScript set inline, which is why "light selected but page
+          dark" kept happening — fix #418 and the theme switch sticks. */}
+      <body
+        suppressHydrationWarning
+        data-gramm="false"
+        data-gramm_editor="false"
+        data-enable-grammarly="false"
+      >
         <SessionProviderClient>
           <TooltipProvider>
             <PWARegister />

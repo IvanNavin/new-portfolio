@@ -57,11 +57,10 @@ export function NewsCard({ item }: { item: Item }) {
       ].join(" ")}
     >
       <CardActions url={item.url} title={item.title} />
-      {/* Meta row. flex-wrap on every breakpoint — when content doesn't
-          fit, the left half (source / category / NEW) wraps to a new
-          row and stays left-aligned, while the time stays right-aligned
-          on its row via ml-auto. */}
-      <div className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] sm:text-xs">
+      {/* Mobile: flex-col stacks source / category / time vertically,
+          each left-aligned on its own line. Desktop: flex-row + flex-
+          wrap, time pinned right via sm:ml-auto. */}
+      <div className="mb-3 flex flex-col items-start gap-1 text-[11px] sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-2 sm:gap-y-1 sm:text-xs">
         <span className="inline-flex max-w-full items-center gap-1.5 rounded-md bg-white/5 px-1.5 py-0.5 text-[var(--text-dim)] sm:px-2">
           {hostname && (
             // eslint-disable-next-line @next/next/no-img-element
@@ -78,10 +77,10 @@ export function NewsCard({ item }: { item: Item }) {
           )}
           <span className="truncate">{item.source}</span>
         </span>
-        <span className="text-[var(--text-dim)]">·</span>
+        <span className="hidden text-[var(--text-dim)] sm:inline">·</span>
         <span className="text-[var(--text-dim)]">{categoryLabel}</span>
         <NewBadge publishedAtIso={isoDate} />
-        <span className="ml-auto whitespace-nowrap">
+        <span className="whitespace-nowrap sm:ml-auto">
           <PrettyTime iso={isoDate} />
         </span>
       </div>
