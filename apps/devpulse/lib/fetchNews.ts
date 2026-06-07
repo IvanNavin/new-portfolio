@@ -1,6 +1,27 @@
+import { KEYWORD_BOOSTS } from "./keywords";
 import { isPreRelease, parseFeed } from "./parseFeed";
 import { prisma } from "./prisma";
 import { DbSource, ensureSourcesSeeded, getAllSources } from "./sourcesDb";
+
+/**
+ * Pre-compute tag labels at ingest from the curated KEYWORD_BOOSTS.
+ * Stored on the row so we can render clickable chips without re-scoring
+ * every render and the SQL planner can use a GIN index someday if the
+ * table grows enormous.
+ */
+function computeTags(title: string, excerpt: string): string[] {
+  const haystack = (title + " " + excerpt).toLowerCase();
+  const tags: string[] = [];
+  for (const boost of KEYWORD_BOOSTS) {
+    for (const term of boost.terms) {
+      if (haystack.includes(term)) {
+        tags.push(boost.label);
+        break;
+      }
+    }
+  }
+  return tags;
+}
 
 const FETCH_TIMEOUT_MS = 15_000;
 const PRUNE_AFTER_DAYS = 60;
@@ -95,6 +116,8 @@ async function fetchSource(source: DbSource): Promise<SourceReport> {
           category: source.category,
           publishedAt: item.publishedAt,
           isPreRelease: item.isPreRelease,
+          engagement: item.engagement,
+          tags: computeTags(item.title, item.excerpt),
         })),
         skipDuplicates: true,
       });

@@ -1,6 +1,7 @@
+import { parseFeed } from "./parseFeed";
+import { prisma } from "./prisma";
 import { Category } from "./sources";
 import { DbSource } from "./sourcesDb";
-import { prisma } from "./prisma";
 
 /**
  * Per-user source resolution.
@@ -90,6 +91,67 @@ export type AddSourceInput = {
   category: Category;
 };
 
+/**
+ * If the URL doesn't immediately look like a feed (parseFeed returns 0
+ * items from its HTML body), fetch it and look for the canonical
+ *   <link rel="alternate" type="application/rss+xml" href="..."> tag
+ * that every reasonable blog/CMS emits in its <head>. Returns the
+ * resolved feed URL, or the original URL if discovery fails — addCustom-
+ * Source's normal parseFeed validation will then surface the error.
+ */
+export async function resolveFeedUrl(rawUrl: string): Promise<string> {
+  let initialUrl: URL;
+  try {
+    initialUrl = new URL(rawUrl);
+  } catch {
+    return rawUrl;
+  }
+
+  let html: string;
+  try {
+    const res = await fetch(rawUrl, {
+      headers: {
+        "user-agent": "devpulse-bot/0.1 (+https://github.com/holovkoivan)",
+        accept:
+          "application/atom+xml, application/rss+xml, text/html;q=0.9, */*;q=0.5",
+      },
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!res.ok) return rawUrl;
+    const contentType = res.headers.get("content-type") ?? "";
+    html = await res.text();
+    // If the URL already returns a parseable feed, skip discovery.
+    if (
+      /xml|rss|atom/i.test(contentType) ||
+      /<(rss|feed)\b/i.test(html.slice(0, 1000))
+    ) {
+      if (parseFeed(html).length > 0) return rawUrl;
+    }
+  } catch {
+    return rawUrl;
+  }
+
+  // Look for any RSS/Atom <link> alternate. Take the first match — most
+  // sites only declare one anyway, and ranking RSS-vs-Atom isn't worth
+  // the complexity.
+  const re =
+    /<link\b[^>]*rel=["']alternate["'][^>]*type=["'](application\/(?:rss|atom)\+xml)["'][^>]*href=["']([^"']+)["']/gi;
+  // <link href="..."> with type/rel ordering reversed shows up in the wild too.
+  const reAlt =
+    /<link\b[^>]*type=["'](application\/(?:rss|atom)\+xml)["'][^>]*rel=["']alternate["'][^>]*href=["']([^"']+)["']/gi;
+  for (const r of [re, reAlt]) {
+    const m = r.exec(html);
+    if (m) {
+      try {
+        return new URL(m[2], initialUrl).toString();
+      } catch {
+        /* malformed href — try the other regex */
+      }
+    }
+  }
+  return rawUrl;
+}
+
 export type AddSourceResult =
   | { ok: true; sourceId: string }
   | { ok: false; error: string };
@@ -102,16 +164,20 @@ export async function addCustomSource(
   input: AddSourceInput,
 ): Promise<AddSourceResult> {
   const name = input.name.trim().slice(0, 80);
-  const url = input.url.trim();
+  const rawUrl = input.url.trim();
   if (!name) return { ok: false, error: "Give it a short name." };
   try {
-    const u = new URL(url);
+    const u = new URL(rawUrl);
     if (u.protocol !== "https:" && u.protocol !== "http:") {
       return { ok: false, error: "URL must be http(s)." };
     }
   } catch {
     return { ok: false, error: "That URL doesn't look valid." };
   }
+
+  // Auto-discover: pasting "https://antfu.me" should land the RSS feed
+  // at /feed/index.xml, not the homepage HTML.
+  const url = await resolveFeedUrl(rawUrl);
 
   const VALID_CATEGORIES = new Set<Category>([
     "framework",

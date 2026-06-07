@@ -23,10 +23,13 @@ model NewsItem {
   publishedAt  DateTime
   fetchedAt    DateTime @default(now())
   isPreRelease Boolean  @default(false)
+  engagement   Int?
+  tags         String[] @default([])
 
   @@index([publishedAt(sort: Desc)])
   @@index([category, publishedAt(sort: Desc)])
   @@index([isPreRelease, publishedAt(sort: Desc)])
+  @@index([engagement(sort: Desc)])
   @@map("devpulse_news_item")
 }
 
@@ -61,8 +64,47 @@ model DevpulseUser {
   preferences     DevpulseUserSourcePref[]
   savedItems      DevpulseSavedItem[]
   dismissedItems  DevpulseDismissedItem[]
+  keywordBoosts   DevpulseKeywordBoost[]
+  mutes           DevpulseMute[]
+  readItems       DevpulseReadItem[]
 
   @@map("devpulse_user")
+}
+
+model DevpulseKeywordBoost {
+  id        String       @id @default(cuid())
+  userId    String
+  label     String
+  terms     String[]
+  weight    Int          @default(3)
+  createdAt DateTime     @default(now())
+  user      DevpulseUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("devpulse_keyword_boost")
+}
+
+model DevpulseMute {
+  id        String       @id @default(cuid())
+  userId    String
+  pattern   String
+  createdAt DateTime     @default(now())
+  user      DevpulseUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("devpulse_mute")
+}
+
+model DevpulseReadItem {
+  id     String       @id @default(cuid())
+  userId String
+  url    String
+  readAt DateTime     @default(now())
+  user   DevpulseUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, url])
+  @@index([userId, readAt(sort: Desc)])
+  @@map("devpulse_read_item")
 }
 
 // Per-user toggle of a source. Absence = use default (enabled). A row with

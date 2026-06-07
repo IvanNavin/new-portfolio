@@ -10,6 +10,7 @@
 const KEYS = {
   saved: "devpulse.saved",
   dismissed: "devpulse.dismissed",
+  read: "devpulse.read",
   lastVisit: "devpulse.lastVisit",
 } as const;
 
@@ -84,6 +85,21 @@ export function undismissItem(url: string): void {
   const set = readSet(KEYS.dismissed);
   set.delete(url);
   writeSet(KEYS.dismissed, set);
+}
+
+// ---- Read -----------------------------------------------------------------
+
+export function readReadSet(): Set<string> {
+  return readSet(KEYS.read);
+}
+
+export function toggleRead(url: string): boolean {
+  const set = readSet(KEYS.read);
+  const willRead = !set.has(url);
+  if (willRead) set.add(url);
+  else set.delete(url);
+  writeSet(KEYS.read, set);
+  return willRead;
 }
 
 // ---- Last visit -----------------------------------------------------------

@@ -1,5 +1,7 @@
 import { auth } from "@lib/auth";
 import { Category, CATEGORY_LABELS } from "@lib/sources";
+import { listUserBoosts } from "@lib/userBoosts";
+import { listUserMutes } from "@lib/userMutes";
 import { getUserPrefs } from "@lib/userPrefs";
 import { listUserSettingsSources, SourceWithToggle } from "@lib/userSources";
 import Link from "next/link";
@@ -7,6 +9,9 @@ import { redirect } from "next/navigation";
 
 import { removeSourceAction } from "./actions";
 import { AddSourceForm } from "./AddSourceForm";
+import { BoostsPanel } from "./BoostsPanel";
+import { MutesPanel } from "./MutesPanel";
+import { OpmlPanel } from "./OpmlPanel";
 import { PreReleaseToggle } from "./PreReleaseToggle";
 import { SourceToggle } from "./SourceToggle";
 
@@ -19,9 +24,11 @@ export default async function SettingsPage() {
     redirect("/");
   }
 
-  const [sources, prefs] = await Promise.all([
+  const [sources, prefs, boosts, mutes] = await Promise.all([
     listUserSettingsSources(session.user.id),
     getUserPrefs(session.user.id),
+    listUserBoosts(session.user.id),
+    listUserMutes(session.user.id),
   ]);
   const grouped = groupByCategory(sources);
   const customCount = sources.filter((s) => !s.isBuiltIn).length;
@@ -55,6 +62,18 @@ export default async function SettingsPage() {
 
       <section className="mb-6">
         <PreReleaseToggle current={prefs.showPreReleases} />
+      </section>
+
+      <section className="mb-6">
+        <BoostsPanel boosts={boosts} />
+      </section>
+
+      <section className="mb-6">
+        <MutesPanel mutes={mutes} />
+      </section>
+
+      <section className="mb-6">
+        <OpmlPanel />
       </section>
 
       <section className="mb-10">

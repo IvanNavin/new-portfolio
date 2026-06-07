@@ -12,6 +12,8 @@ export type ParsedItem = {
   title: string;
   excerpt: string;
   publishedAt: Date;
+  /** HN points / Lobsters score when the feed emits one; null otherwise. */
+  engagement: number | null;
 };
 
 const HTML_ENTITIES: Record<string, string> = {
@@ -119,6 +121,29 @@ export function isPreRelease(title: string): boolean {
   return PRE_RELEASE_MARKERS.test(title);
 }
 
+/**
+ * Pulls a HN/Lobsters engagement score out of the raw description text.
+ * hnrss.org includes "Points: N" lines, Lobsters embeds a numeric vote
+ * count. Returns the higher of the two so a single helper handles both
+ * without source-specific branches in the caller.
+ */
+function extractEngagement(rawText: string | null): number | null {
+  if (!rawText) return null;
+  let best: number | null = null;
+  for (const re of [
+    /Points:\s*(\d+)/i,
+    /\bScore[:\s]+(\d+)/i,
+    /\bUpvotes?:\s*(\d+)/i,
+  ]) {
+    const m = rawText.match(re);
+    if (m) {
+      const n = parseInt(m[1], 10);
+      if (Number.isFinite(n) && (best === null || n > best)) best = n;
+    }
+  }
+  return best;
+}
+
 export function parseFeed(xml: string): ParsedItem[] {
   // Atom first — looks for <entry>; RSS uses <item>.
   const isAtom = /<feed[\s>]/i.test(xml) && /<entry[\s>]/i.test(xml);
@@ -152,6 +177,7 @@ export function parseFeed(xml: string): ParsedItem[] {
       title,
       excerpt: cleanText(summaryRaw),
       publishedAt,
+      engagement: extractEngagement(summaryRaw),
     });
   }
   return items;

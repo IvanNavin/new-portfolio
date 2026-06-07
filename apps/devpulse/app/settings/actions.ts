@@ -3,6 +3,8 @@
 import { auth } from "@lib/auth";
 import { prisma } from "@lib/prisma";
 import { Category } from "@lib/sources";
+import { addUserBoost, removeUserBoost } from "@lib/userBoosts";
+import { addUserMute, removeUserMute } from "@lib/userMutes";
 import {
   addCustomSource,
   removeCustomSource,
@@ -77,4 +79,119 @@ export async function setShowPreReleasesAction(
   });
   revalidatePath("/");
   revalidatePath("/settings");
+}
+
+export type AddBoostFormState = { error?: string; ok?: boolean };
+
+export async function addBoostAction(
+  _prev: AddBoostFormState,
+  formData: FormData,
+): Promise<AddBoostFormState> {
+  const session = await auth();
+  if (!session?.user?.id) return { error: "Sign in to add boosts." };
+  const label = String(formData.get("label") ?? "");
+  const termsRaw = String(formData.get("terms") ?? "");
+  const weight = parseInt(String(formData.get("weight") ?? "3"), 10);
+  const result = await addUserBoost(session.user.id, {
+    label,
+    termsRaw,
+    weight,
+  });
+  if (!result.ok) return { error: result.error };
+  revalidatePath("/");
+  revalidatePath("/settings");
+  return { ok: true };
+}
+
+export async function removeBoostAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  if (!session?.user?.id) return;
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  await removeUserBoost(session.user.id, id);
+  revalidatePath("/");
+  revalidatePath("/settings");
+}
+
+export type AddMuteFormState = { error?: string; ok?: boolean };
+
+export async function addMuteAction(
+  _prev: AddMuteFormState,
+  formData: FormData,
+): Promise<AddMuteFormState> {
+  const session = await auth();
+  if (!session?.user?.id) return { error: "Sign in to add mute patterns." };
+  const pattern = String(formData.get("pattern") ?? "");
+  const result = await addUserMute(session.user.id, pattern);
+  if (!result.ok) return { error: result.error };
+  revalidatePath("/");
+  revalidatePath("/settings");
+  return { ok: true };
+}
+
+export async function removeMuteAction(formData: FormData): Promise<void> {
+  const session = await auth();
+  if (!session?.user?.id) return;
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  await removeUserMute(session.user.id, id);
+  revalidatePath("/");
+  revalidatePath("/settings");
+}
+
+export type ImportOpmlState = {
+  imported?: number;
+  skipped?: number;
+  error?: string;
+};
+
+export async function importOpmlAction(
+  _prev: ImportOpmlState,
+  formData: FormData,
+): Promise<ImportOpmlState> {
+  const session = await auth();
+  if (!session?.user?.id) return { error: "Sign in to import." };
+  const file = formData.get("file");
+  let xml = "";
+  if (file instanceof File) {
+    if (file.size > 1_000_000) return { error: "File too large (>1 MB)." };
+    xml = await file.text();
+  } else {
+    const text = formData.get("text");
+    if (typeof text === "string") xml = text;
+  }
+  if (!xml.trim()) return { error: "Empty OPML payload." };
+
+  const { parseOpml } = await import("@lib/opml");
+  const entries = parseOpml(xml);
+  if (entries.length === 0) {
+    return { error: "No <outline xmlUrl=…> entries found." };
+  }
+
+  const existing = await prisma.devpulseSource.findMany({
+    where: { url: { in: entries.map((e) => e.url) } },
+    select: { url: true },
+  });
+  const seen = new Set(existing.map((r) => r.url));
+  const fresh = entries.filter((e) => !seen.has(e.url));
+  if (fresh.length > 0) {
+    await prisma.devpulseSource.createMany({
+      data: fresh.map((e) => ({
+        name: e.name,
+        url: e.url,
+        category: e.category,
+        weight: 5,
+        isBuiltIn: false,
+        createdByUserId: session.user.id,
+      })),
+      skipDuplicates: true,
+    });
+  }
+
+  revalidatePath("/");
+  revalidatePath("/settings");
+  return {
+    imported: fresh.length,
+    skipped: entries.length - fresh.length,
+  };
 }

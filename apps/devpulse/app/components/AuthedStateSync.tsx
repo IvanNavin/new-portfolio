@@ -40,7 +40,10 @@ export function AuthedStateSync() {
       fetch("/api/dismissed", { cache: "no-store" })
         .then((r) => (r.ok ? r.json() : { urls: [] }))
         .catch(() => ({ urls: [] })),
-    ]).then(([savedRes, dismissedRes]) => {
+      fetch("/api/read", { cache: "no-store" })
+        .then((r) => (r.ok ? r.json() : { urls: [] }))
+        .catch(() => ({ urls: [] })),
+    ]).then(([savedRes, dismissedRes, readRes]) => {
       try {
         const savedUrls: string[] = Array.isArray(savedRes.urls)
           ? savedRes.urls
@@ -48,22 +51,25 @@ export function AuthedStateSync() {
         const dismissedUrls: string[] = Array.isArray(dismissedRes.urls)
           ? dismissedRes.urls
           : [];
+        const readUrls: string[] = Array.isArray(readRes.urls)
+          ? readRes.urls
+          : [];
         localStorage.setItem("devpulse.saved", JSON.stringify(savedUrls));
         localStorage.setItem(
           "devpulse.dismissed",
           JSON.stringify(dismissedUrls),
         );
+        localStorage.setItem("devpulse.read", JSON.stringify(readUrls));
         localStorage.setItem(SYNCED_KEY, sessionEmail);
-        window.dispatchEvent(
-          new CustomEvent("devpulse:storage", {
-            detail: { key: "devpulse.saved" },
-          }),
-        );
-        window.dispatchEvent(
-          new CustomEvent("devpulse:storage", {
-            detail: { key: "devpulse.dismissed" },
-          }),
-        );
+        for (const k of [
+          "devpulse.saved",
+          "devpulse.dismissed",
+          "devpulse.read",
+        ]) {
+          window.dispatchEvent(
+            new CustomEvent("devpulse:storage", { detail: { key: k } }),
+          );
+        }
       } catch {
         /* ignore */
       }

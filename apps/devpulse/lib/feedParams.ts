@@ -3,7 +3,17 @@ export type FeedParams = {
   source?: string;
   window?: string;
   q?: string;
+  tag?: string;
+  sort?: string;
 };
+
+export const SORT_MODES = [
+  { key: "date", label: "Latest" },
+  { key: "trending", label: "Trending" },
+] as const;
+
+export type SortMode = (typeof SORT_MODES)[number]["key"];
+const VALID_SORTS = new Set(SORT_MODES.map((s) => s.key));
 
 export const TIME_WINDOWS = [
   { key: "all", label: "All time", hours: 0 },
@@ -33,6 +43,12 @@ export function normalizeParams(raw: {
     out.window = win;
   const q = pick("q")?.trim().slice(0, 100);
   if (q) out.q = q;
+  const tag = pick("tag")?.trim().slice(0, 40);
+  if (tag) out.tag = tag;
+  const sort = pick("sort");
+  if (sort && VALID_SORTS.has(sort as SortMode) && sort !== "date") {
+    out.sort = sort;
+  }
   return out;
 }
 
@@ -52,6 +68,7 @@ export function buildHref(
     if (!v) continue;
     if (k === "category" && v === "all") continue;
     if (k === "window" && v === "all") continue;
+    if (k === "sort" && v === "date") continue;
     sp.set(k, v);
   }
   const qs = sp.toString();
@@ -59,7 +76,7 @@ export function buildHref(
 }
 
 export function isFiltered(p: FeedParams): boolean {
-  return Boolean(p.category || p.source || p.window || p.q);
+  return Boolean(p.category || p.source || p.window || p.q || p.tag || p.sort);
 }
 
 export function windowCutoff(key: string | undefined): Date | null {

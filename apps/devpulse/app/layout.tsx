@@ -4,6 +4,9 @@ import { AuthedStateSync } from "@components/AuthedStateSync";
 import { OneTap } from "@components/OneTap";
 import { PWARegister } from "@components/PWARegister";
 import { SessionProviderClient } from "@components/SessionProviderClient";
+import { ShortcutsOverlay } from "@components/ShortcutsOverlay";
+import { ThemeScript } from "@components/ThemeScript";
+import { Toaster } from "@components/Toaster";
 import type { Metadata } from "next";
 import { ReactNode } from "react";
 
@@ -29,13 +32,18 @@ export const viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body>
         <SessionProviderClient>
           <PWARegister />
           <OneTap />
           <AuthedStateSync />
           {children}
+          <Toaster />
+          <ShortcutsOverlay />
         </SessionProviderClient>
       </body>
     </html>

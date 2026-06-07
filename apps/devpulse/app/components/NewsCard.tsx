@@ -1,4 +1,5 @@
 import { Category, CATEGORY_LABELS } from "@lib/sources";
+import Link from "next/link";
 
 import { CardActions } from "./CardActions";
 import { NewBadge } from "./NewBadge";
@@ -15,12 +16,26 @@ type Item = {
   /** Optional score metadata — when present, the card gets visual emphasis. */
   boosted?: boolean;
   matches?: string[];
+  /** Pre-computed tags (curated keyword matches at ingest). Rendered as
+   *  clickable Links to ?tag=label. */
+  tags?: string[];
+  /** HN points / Lobsters score when the feed provides one. */
+  engagement?: number | null;
 };
+
+function safeHostname(url: string): string | null {
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return null;
+  }
+}
 
 export function NewsCard({ item }: { item: Item }) {
   const categoryLabel =
     CATEGORY_LABELS[item.category as Category] ?? item.category;
   const isoDate = item.publishedAt.toISOString();
+  const hostname = safeHostname(item.url);
   return (
     <a
       href={item.url}
@@ -28,29 +43,57 @@ export function NewsCard({ item }: { item: Item }) {
       rel="noreferrer noopener"
       data-card-url={item.url}
       className={[
-        "group relative block rounded-xl border bg-[var(--bg-elev)]/60 p-5 pr-20 transition-all",
+        "group relative block rounded-xl border bg-[var(--bg-elev)]/60 p-5 pr-36 transition-all",
         "focus:ring-2 focus:ring-sky-400/40 focus:outline-none",
         item.boosted
           ? "border-sky-400/40 bg-sky-400/[0.04] hover:border-sky-300/70 hover:bg-sky-400/10"
           : "border-[var(--border)] hover:border-sky-400/40 hover:bg-[var(--bg-elev)]",
       ].join(" ")}
     >
-      <CardActions url={item.url} />
+      <CardActions url={item.url} title={item.title} />
       <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
-        <span className="rounded-md bg-white/5 px-2 py-0.5 text-[var(--text-dim)]">
+        <span className="inline-flex items-center gap-1.5 rounded-md bg-white/5 px-2 py-0.5 text-[var(--text-dim)]">
+          {/* Google's s2 favicon endpoint — free, no API key, falls back
+              to a generic globe glyph if the source has none. eslint-img
+              is ok here: 16×16 raster is smaller than any next/image
+              optimization overhead. */}
+          {hostname && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(hostname)}&sz=32`}
+              alt=""
+              width={14}
+              height={14}
+              loading="lazy"
+              decoding="async"
+              referrerPolicy="no-referrer"
+              className="h-[14px] w-[14px] shrink-0 rounded-[3px]"
+            />
+          )}
           {item.source}
         </span>
         <span className="text-[var(--text-dim)]">·</span>
         <span className="text-[var(--text-dim)]">{categoryLabel}</span>
         <NewBadge publishedAtIso={isoDate} />
         {item.matches?.slice(0, 3).map((label) => (
-          <span
+          <Link
             key={label}
-            className="rounded-md bg-sky-400/15 px-2 py-0.5 text-[10px] tracking-wide text-sky-200 uppercase"
+            href={`/?tag=${encodeURIComponent(label)}`}
+            prefetch={false}
+            onClick={(e) => e.stopPropagation()}
+            className="relative z-10 rounded-md bg-sky-400/15 px-2 py-0.5 text-[10px] tracking-wide text-sky-200 uppercase hover:bg-sky-400/30"
           >
             ★ {label}
-          </span>
+          </Link>
         ))}
+        {typeof item.engagement === "number" && item.engagement > 0 && (
+          <span
+            className="rounded-md bg-orange-400/15 px-2 py-0.5 text-[10px] tracking-wide text-orange-200"
+            title={`${item.engagement} points`}
+          >
+            ▲ {item.engagement}
+          </span>
+        )}
         <time
           dateTime={isoDate}
           title={isoDate}

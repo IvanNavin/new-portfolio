@@ -91,10 +91,17 @@ model NewsItem {
   publishedAt  DateTime
   fetchedAt    DateTime @default(now())
   isPreRelease Boolean  @default(false)
+  /// Engagement signal (HN points, Lobsters score). Null when the source
+  /// doesn't expose one. Used by the Trending sort.
+  engagement   Int?
+  /// Match labels from KEYWORD_BOOSTS at ingest time. Surfaced as
+  /// clickable tag chips on the card; filter by ?tag=label.
+  tags         String[] @default([])
 
   @@index([publishedAt(sort: Desc)])
   @@index([category, publishedAt(sort: Desc)])
   @@index([isPreRelease, publishedAt(sort: Desc)])
+  @@index([engagement(sort: Desc)])
   @@map("devpulse_news_item")
 }
 
@@ -131,8 +138,56 @@ model DevpulseUser {
   preferences     DevpulseUserSourcePref[]
   savedItems      DevpulseSavedItem[]
   dismissedItems  DevpulseDismissedItem[]
+  keywordBoosts   DevpulseKeywordBoost[]
+  mutes           DevpulseMute[]
+  readItems       DevpulseReadItem[]
 
   @@map("devpulse_user")
+}
+
+/// User-defined keyword boost. Same shape as the curated KEYWORD_BOOSTS
+/// in lib/keywords.ts; merged into the scoring pass at render time so
+/// items matching personal keywords get bumped up within their day bucket.
+model DevpulseKeywordBoost {
+  id        String       @id @default(cuid())
+  userId    String
+  label     String
+  terms     String[]
+  weight    Int          @default(3)
+  createdAt DateTime     @default(now())
+  user      DevpulseUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("devpulse_keyword_boost")
+}
+
+/// Personal "hide anything matching this substring" pattern. Cheaper than
+/// regex on the SQL side; matched case-insensitively against title +
+/// excerpt at view time. Like dismiss × but proactive.
+model DevpulseMute {
+  id        String       @id @default(cuid())
+  userId    String
+  pattern   String
+  createdAt DateTime     @default(now())
+  user      DevpulseUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("devpulse_mute")
+}
+
+/// Marks an item as read without hiding it. Separate from dismiss: dismiss
+/// is permanent "I never want to see this", read is "I already saw it".
+/// The card shows a subtle desaturation when read.
+model DevpulseReadItem {
+  id     String       @id @default(cuid())
+  userId String
+  url    String
+  readAt DateTime     @default(now())
+  user   DevpulseUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, url])
+  @@index([userId, readAt(sort: Desc)])
+  @@map("devpulse_read_item")
 }
 
 model DevpulseUserSourcePref {

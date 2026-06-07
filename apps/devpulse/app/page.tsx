@@ -3,6 +3,7 @@ import { FiltersBar } from "@components/FiltersBar";
 import { KeyboardNav } from "@components/KeyboardNav";
 import { NewsCard } from "@components/NewsCard";
 import { PostMountFilters } from "@components/PostMountFilters";
+import { ThemeToggle } from "@components/ThemeToggle";
 import { UserChip } from "@components/UserChip";
 import { auth } from "@lib/auth";
 import {
@@ -12,9 +13,11 @@ import {
   windowCutoff,
 } from "@lib/feedParams";
 import { prisma } from "@lib/prisma";
-import { scoreItem } from "@lib/score";
+import { mergeBoosts, scoreItem } from "@lib/score";
 import { Category } from "@lib/sources";
 import { getSourceWeightMap } from "@lib/sourcesDb";
+import { listUserBoosts } from "@lib/userBoosts";
+import { listUserMutes } from "@lib/userMutes";
 import { DEFAULT_PREFS, getUserPrefs } from "@lib/userPrefs";
 import { getUserEnabledSourceNames } from "@lib/userSources";
 import Link from "next/link";
@@ -29,6 +32,8 @@ type Item = {
   source: string;
   category: string;
   publishedAt: Date;
+  tags: string[];
+  engagement: number | null;
 };
 
 type ScoredItem = Item & {
@@ -52,6 +57,8 @@ type FeedWhere = {
   source?: string | { in: string[] };
   publishedAt?: { gte: Date };
   isPreRelease?: boolean;
+  tags?: { has: string };
+  engagement?: { gt: number };
   OR?: Array<{ title?: object; excerpt?: object }>;
 };
 
@@ -91,6 +98,14 @@ function buildWhere(
       { excerpt: { contains: params.q, mode: "insensitive" } },
     ];
   }
+  if (params.tag) {
+    where.tags = { has: params.tag };
+  }
+  if (params.sort === "trending") {
+    // Trending only makes sense for items that carry an engagement signal
+    // (HN points, Lobsters score). Everything else fades.
+    where.engagement = { gt: 0 };
+  }
   return where;
 }
 
@@ -100,10 +115,14 @@ async function getFeed(
   showPreReleases: boolean,
 ) {
   const where = buildWhere(params, enabledSourceNames, showPreReleases);
+  const orderBy =
+    params.sort === "trending"
+      ? [{ engagement: "desc" as const }, { publishedAt: "desc" as const }]
+      : { publishedAt: "desc" as const };
   const [items, groups] = await Promise.all([
     prisma.newsItem.findMany({
       where,
-      orderBy: { publishedAt: "desc" },
+      orderBy,
       take: 200,
     }),
     // Counts per category are computed without the category filter applied
@@ -183,21 +202,41 @@ export default async function Page({
   const raw = await searchParams;
   const params = normalizeParams(raw);
   const session = await auth();
-  const [enabledSourceNames, prefs] = session?.user?.id
+  const userId = session?.user?.id ?? null;
+  const [enabledSourceNames, prefs, userBoosts, userMutes] = userId
     ? await Promise.all([
-        getUserEnabledSourceNames(session.user.id),
-        getUserPrefs(session.user.id),
+        getUserEnabledSourceNames(userId),
+        getUserPrefs(userId),
+        listUserBoosts(userId),
+        listUserMutes(userId),
       ])
-    : [null, DEFAULT_PREFS];
+    : [null, DEFAULT_PREFS, [], []];
   const [{ items, counts }, weights] = await Promise.all([
     getFeed(params, enabledSourceNames, prefs.showPreReleases),
     getSourceWeightMap(),
   ]);
-  const scored: ScoredItem[] = items.map((item) => ({
+
+  // Mute filter — runs in JS over the already-trimmed result set so we
+  // don't have to build a dynamic NOT-ILIKE chain in SQL. With 200-item
+  // pages and maybe 10 patterns per user this is sub-millisecond.
+  const mutePatterns = userMutes.map((m) => m.pattern.toLowerCase());
+  const visibleItems =
+    mutePatterns.length === 0
+      ? items
+      : items.filter((it) => {
+          const hay = (it.title + " " + (it.excerpt ?? "")).toLowerCase();
+          return !mutePatterns.some((p) => hay.includes(p));
+        });
+
+  const boosts = mergeBoosts(userBoosts);
+  const scored: ScoredItem[] = visibleItems.map((item) => ({
     ...item,
-    ...scoreItem(item, weights),
+    ...scoreItem(item, weights, boosts),
   }));
-  const buckets = bucketByDay(scored);
+  const trendingMode = params.sort === "trending";
+  const buckets = trendingMode
+    ? [{ key: "all", label: "Trending now", items: scored }]
+    : bucketByDay(scored);
   const activeCategory =
     params.category && VALID_CATEGORIES.includes(params.category as Category)
       ? (params.category as Category)
@@ -221,6 +260,7 @@ export default async function Page({
             >
               ★ Saved
             </Link>
+            <ThemeToggle />
             <UserChip />
           </div>
         </div>

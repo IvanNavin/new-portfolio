@@ -2,6 +2,7 @@ import {
   buildHref,
   FeedParams,
   isFiltered,
+  SORT_MODES,
   TIME_WINDOWS,
 } from "@lib/feedParams";
 import { getSourceFilterList } from "@lib/sourcesDb";
@@ -13,6 +14,7 @@ type Props = {
 
 export async function FiltersBar({ params }: Props) {
   const activeWindow = params.window ?? "all";
+  const activeSort = params.sort ?? "date";
   const sources = await getSourceFilterList();
 
   return (
@@ -70,7 +72,10 @@ export async function FiltersBar({ params }: Props) {
         )}
       </form>
 
-      <nav className="flex flex-wrap gap-2" aria-label="Time window filter">
+      <nav
+        className="flex flex-wrap items-center gap-2"
+        aria-label="Time window and sort"
+      >
         {TIME_WINDOWS.map((w) => {
           const isActive = activeWindow === w.key;
           const href = buildHref(params, { window: w.key });
@@ -89,6 +94,31 @@ export async function FiltersBar({ params }: Props) {
               ].join(" ")}
             >
               {w.label}
+            </Link>
+          );
+        })}
+        <span
+          className="mx-1 hidden h-4 w-px bg-[var(--border)] sm:inline-block"
+          aria-hidden="true"
+        />
+        {SORT_MODES.map((s) => {
+          const isActive = activeSort === s.key;
+          const href = buildHref(params, { sort: s.key });
+          return (
+            <Link
+              key={s.key}
+              href={href}
+              prefetch={false}
+              aria-current={isActive ? "page" : undefined}
+              className={[
+                "inline-flex items-center rounded-full border px-3 py-1 text-xs transition-colors",
+                "focus-visible:ring-2 focus-visible:ring-orange-400/50 focus-visible:outline-none",
+                isActive
+                  ? "border-orange-400/60 bg-orange-400/10 text-orange-100"
+                  : "border-[var(--border)] text-[var(--text-dim)] hover:border-orange-400/40 hover:text-[var(--text)]",
+              ].join(" ")}
+            >
+              {s.label}
             </Link>
           );
         })}

@@ -1,6 +1,10 @@
 @import 'tailwindcss';
 
-:root {
+/* Default = dark. Light variant lives under [data-theme="light"] AND
+   prefers-color-scheme: light (when no manual override). The order
+   below intentionally puts the manual override LAST so it always wins. */
+:root,
+[data-theme='dark'] {
   color-scheme: dark;
   --bg: #07090d;
   --bg-elev: #0d1117;
@@ -10,6 +14,38 @@
   --accent: #7dd3fc;
   --accent-dim: #38bdf8;
   --good: #4ade80;
+  --bg-glow-1: rgba(56, 189, 248, 0.08);
+  --bg-glow-2: rgba(125, 211, 252, 0.06);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    color-scheme: light;
+    --bg: #fafbfd;
+    --bg-elev: #ffffff;
+    --border: #e2e6ee;
+    --text: #0f1620;
+    --text-dim: #5a6373;
+    --accent: #0284c7;
+    --accent-dim: #0369a1;
+    --good: #16a34a;
+    --bg-glow-1: rgba(56, 189, 248, 0.07);
+    --bg-glow-2: rgba(125, 211, 252, 0.05);
+  }
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+  --bg: #fafbfd;
+  --bg-elev: #ffffff;
+  --border: #e2e6ee;
+  --text: #0f1620;
+  --text-dim: #5a6373;
+  --accent: #0284c7;
+  --accent-dim: #0369a1;
+  --good: #16a34a;
+  --bg-glow-1: rgba(56, 189, 248, 0.07);
+  --bg-glow-2: rgba(125, 211, 252, 0.05);
 }
 
 * {
@@ -33,12 +69,12 @@ body {
   background-image:
     radial-gradient(
       circle at 20% -10%,
-      rgba(56, 189, 248, 0.08),
+      var(--bg-glow-1),
       transparent 40%
     ),
     radial-gradient(
       circle at 100% 0%,
-      rgba(125, 211, 252, 0.06),
+      var(--bg-glow-2),
       transparent 35%
     );
 }
@@ -50,7 +86,7 @@ a {
 
 ::selection {
   background: rgba(125, 211, 252, 0.35);
-  color: #fff;
+  color: var(--text);
 }
 
 @keyframes pulseDot {
@@ -67,4 +103,17 @@ a {
 
 .pulse-dot {
   animation: pulseDot 1.6s ease-in-out infinite;
+}
+
+/* Read items are desaturated and slightly dimmed so the eye skips them
+   naturally. Marked via data-read="true" by PostMountFilters / CardActions. */
+[data-card-url][data-read='true'] {
+  filter: saturate(0.45);
+  opacity: 0.55;
+  transition: filter 200ms, opacity 200ms;
+}
+[data-card-url][data-read='true']:hover,
+[data-card-url][data-read='true']:focus-visible {
+  filter: none;
+  opacity: 1;
 }

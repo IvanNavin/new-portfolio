@@ -1,6 +1,11 @@
 "use client";
 
-import { readAndBumpLastVisit, readDismissed } from "@lib/storage";
+import {
+  onStorageChange,
+  readAndBumpLastVisit,
+  readDismissed,
+  readReadSet,
+} from "@lib/storage";
 import { useEffect } from "react";
 
 /**
@@ -10,8 +15,12 @@ import { useEffect } from "react";
  *  1. Stamps the previous lastVisit into `devpulse.lastVisit.prev` so each
  *     CardActions can read it synchronously without racing.
  *  2. Hides every card whose URL is in the dismissed set.
+ *  3. Tags read cards with data-read="true" so CSS can desaturate them.
  *
- * Renders nothing. Lives once per page.
+ * Re-runs on storage events so AuthedStateSync's cross-device pull is
+ * reflected without a page reload.
+ *
+ * Renders nothing.
  */
 export function PostMountFilters() {
   useEffect(() => {
@@ -22,15 +31,25 @@ export function PostMountFilters() {
       /* ignore */
     }
 
-    const dismissed = readDismissed();
-    if (dismissed.size === 0) return;
-    document.querySelectorAll<HTMLElement>("[data-card-url]").forEach((el) => {
-      const url = el.getAttribute("data-card-url");
-      if (url && dismissed.has(url)) {
-        const li = el.closest("li");
-        if (li) (li as HTMLElement).style.display = "none";
-      }
-    });
+    const apply = () => {
+      const dismissed = readDismissed();
+      const read = readReadSet();
+      document
+        .querySelectorAll<HTMLElement>("[data-card-url]")
+        .forEach((el) => {
+          const url = el.getAttribute("data-card-url");
+          if (!url) return;
+          const li = el.closest("li");
+          if (li) {
+            (li as HTMLElement).style.display = dismissed.has(url)
+              ? "none"
+              : "";
+          }
+          el.dataset.read = read.has(url) ? "true" : "";
+        });
+    };
+    apply();
+    return onStorageChange(apply);
   }, []);
 
   return null;
