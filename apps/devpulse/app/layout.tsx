@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthedStateSync } from "@components/AuthedStateSync";
 import { OneTap } from "@components/OneTap";
 import { PWARegister } from "@components/PWARegister";
+import { ReadOnClick } from "@components/ReadOnClick";
 import { SessionProviderClient } from "@components/SessionProviderClient";
 import { ShortcutsOverlay } from "@components/ShortcutsOverlay";
 import { ThemeScript } from "@components/ThemeScript";
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <PWARegister />
           <OneTap />
           <AuthedStateSync />
+          <ReadOnClick />
           {children}
           <Toaster />
           <ShortcutsOverlay />

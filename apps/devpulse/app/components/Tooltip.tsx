@@ -38,8 +38,13 @@ export function Tooltip({ label, side = "top", children }: Props) {
       <span
         aria-hidden="true"
         role="presentation"
+        // max-w + whitespace-normal keeps long tooltip text (the email
+        // attribution on the avatar chip, the canary-version aria-label)
+        // from blowing out horizontally and forcing the page to scroll.
+        // normal-case overrides parent .uppercase from the live-feed
+        // header so labels read in regular sentence case.
         className={[
-          "pointer-events-none absolute left-1/2 z-30 -translate-x-1/2 whitespace-nowrap rounded-md border border-[var(--border)] bg-[var(--bg-elev)] px-2 py-1 text-xs text-[var(--text)] opacity-0 shadow-lg transition-opacity delay-150 duration-150",
+          "pointer-events-none absolute left-1/2 z-30 max-w-[min(80vw,240px)] -translate-x-1/2 rounded-md border border-[var(--border)] bg-[var(--bg-elev)] px-2 py-1 text-xs tracking-normal whitespace-normal text-[var(--text)] normal-case opacity-0 shadow-lg transition-opacity delay-150 duration-150",
           "group-hover/tt:opacity-100 group-hover/tt:delay-0 group-focus-within/tt:opacity-100 group-focus-within/tt:delay-0",
           side === "top" ? "-top-1 -translate-y-full" : "top-full mt-1",
         ].join(" ")}

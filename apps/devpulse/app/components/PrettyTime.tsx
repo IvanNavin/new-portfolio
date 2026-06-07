@@ -36,6 +36,11 @@ export function PrettyTime({ iso }: Props) {
         dateTime={iso}
         className="text-[var(--text-dim)]"
         aria-label={`Published ${pretty}`}
+        // Server's Date.now and client's Date.now differ — the relative
+        // string can read "5d ago" on the server and "5d 1s ago" on
+        // the client, which React 19 raises as hydration error #418.
+        // suppressHydrationWarning is the canonical fix for date display.
+        suppressHydrationWarning
       >
         {timeAgo(new Date(iso))}
       </time>

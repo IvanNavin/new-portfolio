@@ -37,6 +37,11 @@ export function NewsCard({ item }: { item: Item }) {
     CATEGORY_LABELS[item.category as Category] ?? item.category;
   const isoDate = item.publishedAt.toISOString();
   const hostname = safeHostname(item.url);
+  const tagLabels = (item.matches ?? []).slice(0, 3);
+  const hasEngagement =
+    typeof item.engagement === "number" && item.engagement > 0;
+  const hasFooter = tagLabels.length > 0 || hasEngagement;
+
   return (
     <a
       href={item.url}
@@ -52,16 +57,15 @@ export function NewsCard({ item }: { item: Item }) {
       ].join(" ")}
     >
       <CardActions url={item.url} title={item.title} />
+      {/* First meta row stays slim — source / category / NEW / time —
+          so wrapping never strands the time on its own line. Tags and
+          engagement live in the footer below the excerpt. */}
       <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
         <span className="inline-flex items-center gap-1.5 rounded-md bg-white/5 px-2 py-0.5 text-[var(--text-dim)]">
-          {/* Google's s2 favicon endpoint — free, no API key, falls back
-              to a generic globe glyph if the source has none. eslint-img
-              is ok here: 16×16 raster is smaller than any next/image
-              optimization overhead. */}
           {hostname && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(hostname)}&sz=32`}
+              src={`https://icons.duckduckgo.com/ip3/${encodeURIComponent(hostname)}.ico`}
               alt=""
               width={14}
               height={14}
@@ -76,21 +80,6 @@ export function NewsCard({ item }: { item: Item }) {
         <span className="text-[var(--text-dim)]">·</span>
         <span className="text-[var(--text-dim)]">{categoryLabel}</span>
         <NewBadge publishedAtIso={isoDate} />
-        {item.matches?.slice(0, 3).map((label) => (
-          <TagChip key={label} label={label} />
-        ))}
-        {typeof item.engagement === "number" && item.engagement > 0 && (
-          <Tooltip
-            label={`${item.engagement} points on ${item.source} — used by the Trending sort`}
-          >
-            <span
-              className="rounded-md bg-orange-400/15 px-2 py-0.5 text-[10px] tracking-wide text-orange-200"
-              aria-label={`${item.engagement} engagement points on ${item.source}`}
-            >
-              <span aria-hidden="true">▲ {item.engagement}</span>
-            </span>
-          </Tooltip>
-        )}
         <span className="ml-auto">
           <PrettyTime iso={isoDate} />
         </span>
@@ -102,6 +91,25 @@ export function NewsCard({ item }: { item: Item }) {
         <p className="line-clamp-3 text-sm text-[var(--text-dim)]">
           {item.excerpt}
         </p>
+      )}
+      {hasFooter && (
+        <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+          {tagLabels.map((label) => (
+            <TagChip key={label} label={label} />
+          ))}
+          {hasEngagement && (
+            <Tooltip
+              label={`${item.engagement} points on ${item.source} — used by the Trending sort`}
+            >
+              <span
+                className="rounded-md bg-orange-400/15 px-2 py-0.5 text-[10px] tracking-wide text-orange-200"
+                aria-label={`${item.engagement} engagement points on ${item.source}`}
+              >
+                <span aria-hidden="true">▲ {item.engagement}</span>
+              </span>
+            </Tooltip>
+          )}
+        </div>
       )}
     </a>
   );

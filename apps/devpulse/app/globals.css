@@ -74,6 +74,10 @@ body {
   color: var(--text);
   min-height: 100vh;
   margin: 0;
+  /* Belt-and-braces against tooltips/popovers that overshoot a viewport
+     edge — without this an off-screen tooltip would force a horizontal
+     scrollbar and shift the layout. */
+  overflow-x: hidden;
   font-family:
     ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Inter,
     'Helvetica Neue', Arial, sans-serif;
