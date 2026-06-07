@@ -1,5 +1,6 @@
 import { parseFeed } from "./parseFeed";
 import { prisma } from "./prisma";
+import { isBlockedHost, safeFetch } from "./safeFetch";
 import { Category } from "./sources";
 import { DbSource } from "./sourcesDb";
 
@@ -107,15 +108,21 @@ export async function resolveFeedUrl(rawUrl: string): Promise<string> {
     return rawUrl;
   }
 
+  // SSRF guard: refuse to even probe URLs that point at our own
+  // network — RFC1918, loopback, link-local, cloud metadata. Otherwise
+  // a user could add `http://169.254.169.254/...` as a "custom feed"
+  // and trick our server into fetching internal endpoints.
+  if (isBlockedHost(initialUrl.hostname)) return rawUrl;
+
   let html: string;
   try {
-    const res = await fetch(rawUrl, {
+    const res = await safeFetch(rawUrl, {
       headers: {
         "user-agent": "devpulse-bot/0.1 (+https://github.com/holovkoivan)",
         accept:
           "application/atom+xml, application/rss+xml, text/html;q=0.9, */*;q=0.5",
       },
-      signal: AbortSignal.timeout(10_000),
+      timeoutMs: 10_000,
     });
     if (!res.ok) return rawUrl;
     const contentType = res.headers.get("content-type") ?? "";
@@ -166,13 +173,20 @@ export async function addCustomSource(
   const name = input.name.trim().slice(0, 80);
   const rawUrl = input.url.trim();
   if (!name) return { ok: false, error: "Give it a short name." };
+  let parsed: URL;
   try {
-    const u = new URL(rawUrl);
-    if (u.protocol !== "https:" && u.protocol !== "http:") {
+    parsed = new URL(rawUrl);
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
       return { ok: false, error: "URL must be http(s)." };
     }
   } catch {
     return { ok: false, error: "That URL doesn't look valid." };
+  }
+  // SSRF guard at the create path. Final defence is in the fetch
+  // helper, but rejecting up-front gives the user a clear message
+  // rather than silently failing in cron.
+  if (isBlockedHost(parsed.hostname)) {
+    return { ok: false, error: "That URL is on a private network." };
   }
 
   // Auto-discover: pasting "https://antfu.me" should land the RSS feed
@@ -192,19 +206,23 @@ export async function addCustomSource(
     return { ok: false, error: "Pick a valid category." };
   }
 
-  // Reject if URL already exists — shared across users, so adding a
-  // duplicate doesn't make sense (you'd just toggle the existing row).
-  const existing = await prisma.devpulseSource.findUnique({
-    where: { url },
-    select: { id: true, isBuiltIn: true },
+  // Per-user uniqueness: reject built-in dupes globally (they're
+  // curated), but for custom sources only check against THIS user's
+  // rows. We never leak whether some other user added the same URL —
+  // they get their own row with their own name/category.
+  const builtinDup = await prisma.devpulseSource.findFirst({
+    where: { url, isBuiltIn: true },
+    select: { id: true },
   });
-  if (existing) {
-    return {
-      ok: false,
-      error: existing.isBuiltIn
-        ? "That feed is already in the curated list."
-        : "Someone already added that feed.",
-    };
+  if (builtinDup) {
+    return { ok: false, error: "That feed is already in the curated list." };
+  }
+  const mineDup = await prisma.devpulseSource.findFirst({
+    where: { url, isBuiltIn: false, createdByUserId: userId },
+    select: { id: true },
+  });
+  if (mineDup) {
+    return { ok: false, error: "You already added this feed." };
   }
 
   const created = await prisma.devpulseSource.create({

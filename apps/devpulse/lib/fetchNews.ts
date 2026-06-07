@@ -1,6 +1,7 @@
 import { KEYWORD_BOOSTS } from "./keywords";
 import { isPreRelease, parseFeed } from "./parseFeed";
 import { prisma } from "./prisma";
+import { safeFetch } from "./safeFetch";
 import { DbSource, ensureSourcesSeeded, getAllSources } from "./sourcesDb";
 
 /**
@@ -38,10 +39,10 @@ export type SourceReport = {
 
 async function fetchSource(source: DbSource): Promise<SourceReport> {
   try {
-    const ac = new AbortController();
-    const timer = setTimeout(() => ac.abort(), FETCH_TIMEOUT_MS);
-    const res = await fetch(source.url, {
-      signal: ac.signal,
+    // SSRF guard inside the cron too. A user could have managed to insert
+    // a private-network URL before assertSafeUrl was added at the create
+    // path; this ensures the runtime never reaches such a host.
+    const res = await safeFetch(source.url, {
       headers: {
         // Some hosts 403 the default Node UA; identifying ourselves keeps them happy.
         "user-agent": "devpulse-bot/0.1 (+https://github.com/holovkoivan)",
@@ -51,8 +52,8 @@ async function fetchSource(source: DbSource): Promise<SourceReport> {
       // Atom/RSS responses are tiny and don't need caching at the fetch layer
       // — Next's per-request cache won't help a cron run anyway.
       cache: "no-store",
+      timeoutMs: FETCH_TIMEOUT_MS,
     });
-    clearTimeout(timer);
 
     if (!res.ok) {
       return {

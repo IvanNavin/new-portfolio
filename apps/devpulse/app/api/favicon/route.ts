@@ -1,3 +1,4 @@
+import { isBlockedHost } from "@lib/safeFetch";
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -52,7 +53,13 @@ async function tryFetch(url: string): Promise<Response | null> {
  */
 export async function GET(req: NextRequest) {
   const host = req.nextUrl.searchParams.get("host")?.trim() ?? "";
-  if (!host || !/^[a-z0-9.-]+$/i.test(host)) {
+  if (
+    !host ||
+    !/^[a-z0-9.-]+$/i.test(host) ||
+    // SSRF guard: reject internal/loopback/cloud-metadata hosts before
+    // we make any outbound request on the caller's behalf.
+    isBlockedHost(host)
+  ) {
     return new NextResponse(FALLBACK_SVG, {
       headers: { "content-type": "image/svg+xml", ...CACHE_HEADERS },
     });

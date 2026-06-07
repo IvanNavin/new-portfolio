@@ -113,7 +113,11 @@ model NewsItem {
 model DevpulseSource {
   id              String                   @id @default(cuid())
   name            String
-  url             String                   @unique
+  /// URL is unique per (createdByUserId, isBuiltIn) — enforced via a
+  /// pair of partial indexes in the migration. Two users adding the
+  /// same URL each get their own row with their own name, and we
+  /// stop leaking "someone else added that feed" errors across users.
+  url             String
   category        String
   weight          Int                      @default(5)
   isBuiltIn       Boolean                  @default(false)
@@ -123,6 +127,7 @@ model DevpulseSource {
   createdAt       DateTime                 @default(now())
 
   @@index([isBuiltIn])
+  @@index([url])
   @@map("devpulse_source")
 }
 
