@@ -324,7 +324,11 @@ export async function runFetch(): Promise<RunReport> {
  *  overwrite a curated match. */
 async function backfillAnalysis(): Promise<number> {
   if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) return 0;
-  const MAX_PER_RUN = 200;
+  // 30 fits Gemini 2.0 Flash Lite's 30 RPM free-tier ceiling inside
+  // a single minute of wall-clock time. Stragglers come back on the
+  // next cron run — first launch needs ~7 daily cron firings or a
+  // few manual pings to clear the existing 200+ row backlog.
+  const MAX_PER_RUN = 30;
   const rows = await prisma.newsItem.findMany({
     where: { summary: null },
     select: { id: true, title: true, excerpt: true, tags: true },
