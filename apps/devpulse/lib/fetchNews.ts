@@ -332,12 +332,21 @@ async function backfillAnalysis(): Promise<number> {
   const BATCH = 3;
   // Hold off between batches so Gemini's per-minute window resets.
   const PAUSE_MS = 4_000;
-  const rows = await prisma.newsItem.findMany({
-    where: { summary: null },
-    select: { id: true, title: true, excerpt: true, tags: true },
-    orderBy: { publishedAt: "desc" },
-    take: MAX_PER_RUN,
-  });
+  // Filter eligibles at SQL level — most null-summary items are HN
+  // link posts whose excerpt was stripped to nothing, or release
+  // notes that are just version strings. Skipping them in the query
+  // means the per-run budget isn't wasted on rows analyzeItem would
+  // immediately reject.
+  type R = { id: string; title: string; excerpt: string; tags: string[] };
+  const rows = await prisma.$queryRaw<R[]>`
+    SELECT id, title, excerpt, tags
+    FROM devpulse_news_item
+    WHERE summary IS NULL
+      AND excerpt IS NOT NULL
+      AND LENGTH(excerpt) >= 40
+    ORDER BY "publishedAt" DESC
+    LIMIT ${MAX_PER_RUN}
+  `;
   let done = 0;
   for (let i = 0; i < rows.length; i += BATCH) {
     const chunk = rows.slice(i, i + BATCH);
