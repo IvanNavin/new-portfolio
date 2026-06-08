@@ -324,12 +324,14 @@ export async function runFetch(): Promise<RunReport> {
  *  overwrite a curated match. */
 async function backfillAnalysis(): Promise<number> {
   if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) return 0;
-  // Parallel batches of 6 against Gemini Flash Lite. 30 RPM ceiling
-  // → 6 in flight at once respects the limit while keeping wall-clock
-  // bounded (~8s per batch, max 4 batches = 32s for 24 items). Old
-  // sequential loop hit 240s on slow rows and blew the cron budget.
+  // Parallel batches of 3 against Gemini Flash Lite. The 30 RPM
+  // free-tier ceiling is per-minute, not per-second; with retries
+  // disabled (see aiAnalyze) a batch of 3 gives 30+ s of headroom
+  // before the next batch hits and we coast under the limit.
   const MAX_PER_RUN = 24;
-  const BATCH = 6;
+  const BATCH = 3;
+  // Hold off between batches so Gemini's per-minute window resets.
+  const PAUSE_MS = 4_000;
   const rows = await prisma.newsItem.findMany({
     where: { summary: null },
     select: { id: true, title: true, excerpt: true, tags: true },
@@ -354,6 +356,10 @@ async function backfillAnalysis(): Promise<number> {
     done += results.filter(
       (x) => x.status === "fulfilled" && x.value === true,
     ).length;
+    // Pause between batches except the last one.
+    if (i + BATCH < rows.length) {
+      await new Promise((r) => setTimeout(r, PAUSE_MS));
+    }
   }
   return done;
 }

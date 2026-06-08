@@ -44,10 +44,12 @@ export async function analyzeItem(
       schema: Schema,
       temperature: 0.2,
       maxOutputTokens: 200,
-      // Without an abort signal, generateObject hangs indefinitely
-      // when Gemini is slow or has hit our quota — that's how the
-      // cron blew its 300s budget on the first try.
       abortSignal: AbortSignal.timeout(8_000),
+      // The default 3 retries triple our effective request count
+      // against Gemini's 30 RPM free tier — a single batch of 6 can
+      // burst to 18 RPS during retry storms and 429 the rest of the
+      // run. Skip retries; failed rows come back next cron pass.
+      maxRetries: 0,
       system:
         "You annotate developer-focused news items. For each item return " +
         "a crisp 1-2 sentence TLDR plus 1-3 topical tags (lowercase " +
