@@ -112,29 +112,27 @@ export function NewsCard({ item }: { item: Item }) {
         <h2 className="mb-2 text-lg leading-snug font-medium text-[var(--text)] group-hover:text-sky-200">
           {item.title}
         </h2>
+        {/* Description cascade: AI TLDR if present, else the raw RSS
+            excerpt, else a placeholder. Never show both — the duplicate
+            read like a bug. */}
         {item.summary ? (
-          <div className="space-y-2">
-            <p className="text-sm leading-snug text-[var(--text)]">
-              <span
-                aria-hidden="true"
-                className="mr-1.5 inline-block rounded bg-[var(--c-accent-soft)] px-1 py-0.5 text-[9px] font-semibold tracking-wide text-[var(--c-accent-fg)] uppercase"
-              >
-                TLDR
-              </span>
-              {item.summary}
-            </p>
-            {item.excerpt && (
-              <p className="line-clamp-2 text-xs text-[var(--text-dim)]">
-                {item.excerpt}
-              </p>
-            )}
-          </div>
+          <p className="text-sm leading-snug text-[var(--text)]">
+            <span
+              aria-hidden="true"
+              className="mr-1.5 inline-block rounded bg-[var(--c-accent-soft)] px-1 py-0.5 text-[9px] font-semibold tracking-wide text-[var(--c-accent-fg)] uppercase"
+            >
+              TLDR
+            </span>
+            {item.summary}
+          </p>
+        ) : item.excerpt ? (
+          <p className="line-clamp-3 text-sm text-[var(--text-dim)]">
+            {item.excerpt}
+          </p>
         ) : (
-          item.excerpt && (
-            <p className="line-clamp-3 text-sm text-[var(--text-dim)]">
-              {item.excerpt}
-            </p>
-          )
+          <p className="text-xs italic text-[var(--text-dim)] opacity-70">
+            Open the story to read →
+          </p>
         )}
         {hasFooter && (
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">

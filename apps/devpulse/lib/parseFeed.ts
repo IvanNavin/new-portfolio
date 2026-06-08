@@ -111,10 +111,9 @@ function cleanText(raw: string | null, max = 280): string {
   // were inside the now-removed HTML (e.g. &nbsp; that survived).
   const decoded = decodeEntities(stripHtml(decodeEntities(raw)));
   const cleaned = stripFeedBoilerplate(decoded);
-  // If everything was boilerplate, return empty so the card doesn't
-  // show a 1-word fragment like "Comments" and the AI helper skips
-  // generation rather than hallucinating from nothing.
-  if (cleaned.length < 30) return "";
+  // Keep whatever survives — even a short remnant is more useful as
+  // a card preview than the "Open the story to read" placeholder.
+  // The AI helper applies its own 60-char floor before spending tokens.
   return truncate(cleaned, max);
 }
 
