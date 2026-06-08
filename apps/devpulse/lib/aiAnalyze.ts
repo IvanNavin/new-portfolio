@@ -72,7 +72,12 @@ export async function analyzeItem(
       .slice(0, 3);
 
     return { summary: trimmedSummary, tags };
-  } catch {
+  } catch (err) {
+    // Surface the error class once per failure so we can tell quota
+    // exhaustion from auth issues from schema-validation drift. Single
+    // line so 24-batch logs stay readable.
+    const msg = err instanceof Error ? err.message : String(err);
+    console.warn("[aiAnalyze] failed:", msg.slice(0, 160));
     return null;
   }
 }
