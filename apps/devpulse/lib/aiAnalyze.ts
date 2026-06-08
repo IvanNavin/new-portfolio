@@ -39,10 +39,10 @@ export async function analyzeItem(
   if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) return null;
   if (!title || title.length < 12) return null;
   const body = (excerpt ?? "").trim();
-  // 60-char floor (was 40) so we don't burn quota on items whose
-  // entire RSS body was HN boilerplate that parseFeed stripped down
-  // to a fragment. AI can't summarize what isn't there.
-  if (body.length < 60) return null;
+  // 40-char floor — release-note excerpts like "7.9.0-dev.13" or HN
+  // "Comments" remnants below this aren't summarizable, but real
+  // changelog bodies and most blog post excerpts clear it easily.
+  if (body.length < 40) return null;
 
   try {
     const { object } = await generateObject({
