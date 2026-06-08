@@ -13,7 +13,10 @@ import { z } from "zod";
  * filtered before the call so we don't waste tokens on stubs.
  */
 
-const MODEL = "gemini-2.0-flash-lite";
+// 2.5-flash-lite has the highest daily free-tier quota of any current
+// Gemini model — 1000 requests/day vs 200 on 2.0 — which matters when
+// the cron sweeps the backlog over several runs.
+const MODEL = "gemini-2.5-flash-lite";
 const MAX_SUMMARY_CHARS = 220;
 
 const Schema = z.object({
