@@ -39,7 +39,10 @@ export async function analyzeItem(
   if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) return null;
   if (!title || title.length < 12) return null;
   const body = (excerpt ?? "").trim();
-  if (body.length < 40) return null;
+  // 60-char floor (was 40) so we don't burn quota on items whose
+  // entire RSS body was HN boilerplate that parseFeed stripped down
+  // to a fragment. AI can't summarize what isn't there.
+  if (body.length < 60) return null;
 
   try {
     const { object } = await generateObject({
@@ -54,18 +57,38 @@ export async function analyzeItem(
       // run. Skip retries; failed rows come back next cron pass.
       maxRetries: 0,
       system:
-        "You annotate developer-focused news items. For each item return " +
-        "a crisp 1-2 sentence TLDR plus 1-3 topical tags (lowercase " +
-        "kebab-case, single words or short phrases — e.g. server-actions, " +
-        "compiler, accessibility, performance). No markdown, no emojis, " +
-        "no preamble. Tags should NOT repeat the source name or category.",
+        "You annotate developer-focused news items. Return a 1-2 " +
+        "sentence TLDR plus 1-3 topical tags.\n\n" +
+        "TLDR rules — these are non-negotiable:\n" +
+        '- NEVER start with "This article", "This post", "The author", ' +
+        '"The piece", "It explains", "It discusses", or any other meta ' +
+        "phrase describing the writing.\n" +
+        "- Open with the SUBJECT or the FACT itself.\n" +
+        '  Bad:  "This article explains the concept of dopamine fracking."\n' +
+        '  Good: "Dopamine fracking is the design pattern where apps ' +
+        'exploit reward loops to keep users hooked."\n' +
+        "- Plain text, no markdown, no quotes around the whole thing, " +
+        "no emojis.\n" +
+        "- If the excerpt is too thin to make a real claim, output an " +
+        'empty string for summary — don\'t pad with "This describes…".\n\n' +
+        "Tags rules:\n" +
+        "- 1-3 lowercase kebab-case items (e.g. server-actions, wasm, " +
+        "type-narrowing, accessibility, performance).\n" +
+        "- Don't repeat the source name, the platform, or the category.",
       prompt: `Title: ${title}\n\nExcerpt:\n${body.slice(0, 1500)}`,
     });
 
-    const summary = (object.summary ?? "")
-      .trim()
-      .replace(/^["'`]+|["'`]+$/g, "");
-    if (!summary) return null;
+    let summary = (object.summary ?? "").trim().replace(/^["'`]+|["'`]+$/g, "");
+    // Defence in depth: even with the explicit system prompt the model
+    // occasionally falls back to "This article…" / "The post…" framing.
+    // Strip the meta-opener and capitalize the next word so a punchy
+    // SUBJECT-first sentence remains.
+    summary = summary.replace(
+      /^(this (article|post|piece)|the (article|post|piece|author)|it)\s+(explains|describes|discusses|covers|introduces|presents|examines|details|argues)\s+/i,
+      "",
+    );
+    if (summary) summary = summary[0].toUpperCase() + summary.slice(1);
+    if (!summary || summary.length < 20) return null;
     const trimmedSummary =
       summary.length > MAX_SUMMARY_CHARS
         ? summary.slice(0, MAX_SUMMARY_CHARS - 1).trimEnd() + "…"

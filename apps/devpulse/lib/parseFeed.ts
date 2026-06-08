@@ -82,6 +82,25 @@ function parseDate(raw: string | null): Date | null {
   return isNaN(d.getTime()) ? null : d;
 }
 
+/**
+ * HN-style RSS bodies are mostly link-submission boilerplate. The
+ * actual story content lives behind the URL, not in the feed body —
+ * the body just repeats the URLs and the score. Strip these so the
+ * card excerpt stops showing "Article URL: ... Comments URL: ...
+ * Points: 298 # Comments: 69" and the AI summary doesn't waste
+ * tokens summarizing a metadata blob.
+ */
+function stripFeedBoilerplate(s: string): string {
+  return s
+    .replace(/Article URL:\s*\S+/gi, "")
+    .replace(/Comments URL:\s*\S+/gi, "")
+    .replace(/Points:\s*\d+/gi, "")
+    .replace(/#\s*Comments:\s*\d+/gi, "")
+    .replace(/\bhope you enjoy\b/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function cleanText(raw: string | null, max = 280): string {
   if (!raw) return "";
   // Decode entities FIRST: GitHub/Atom feeds often ship content as
@@ -90,7 +109,13 @@ function cleanText(raw: string | null, max = 280): string {
   // them entirely and the page shows raw "<h3>...</h3>" text.
   // Then strip tags. Then decode again to catch any nested entities that
   // were inside the now-removed HTML (e.g. &nbsp; that survived).
-  return truncate(decodeEntities(stripHtml(decodeEntities(raw))), max);
+  const decoded = decodeEntities(stripHtml(decodeEntities(raw)));
+  const cleaned = stripFeedBoilerplate(decoded);
+  // If everything was boilerplate, return empty so the card doesn't
+  // show a 1-word fragment like "Comments" and the AI helper skips
+  // generation rather than hallucinating from nothing.
+  if (cleaned.length < 30) return "";
+  return truncate(cleaned, max);
 }
 
 function cleanTitle(raw: string | null): string {
