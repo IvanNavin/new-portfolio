@@ -324,11 +324,12 @@ export async function runFetch(): Promise<RunReport> {
  *  overwrite a curated match. */
 async function backfillAnalysis(): Promise<number> {
   if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) return 0;
-  // 30 fits Gemini 2.0 Flash Lite's 30 RPM free-tier ceiling inside
-  // a single minute of wall-clock time. Stragglers come back on the
-  // next cron run — first launch needs ~7 daily cron firings or a
-  // few manual pings to clear the existing 200+ row backlog.
-  const MAX_PER_RUN = 30;
+  // Parallel batches of 6 against Gemini Flash Lite. 30 RPM ceiling
+  // → 6 in flight at once respects the limit while keeping wall-clock
+  // bounded (~8s per batch, max 4 batches = 32s for 24 items). Old
+  // sequential loop hit 240s on slow rows and blew the cron budget.
+  const MAX_PER_RUN = 24;
+  const BATCH = 6;
   const rows = await prisma.newsItem.findMany({
     where: { summary: null },
     select: { id: true, title: true, excerpt: true, tags: true },
@@ -336,15 +337,23 @@ async function backfillAnalysis(): Promise<number> {
     take: MAX_PER_RUN,
   });
   let done = 0;
-  for (const r of rows) {
-    const analysis = await analyzeItem(r.title, r.excerpt);
-    if (!analysis) continue;
-    const mergedTags = Array.from(new Set([...r.tags, ...analysis.tags]));
-    await prisma.newsItem.update({
-      where: { id: r.id },
-      data: { summary: analysis.summary, tags: mergedTags },
-    });
-    done++;
+  for (let i = 0; i < rows.length; i += BATCH) {
+    const chunk = rows.slice(i, i + BATCH);
+    const results = await Promise.allSettled(
+      chunk.map(async (r) => {
+        const analysis = await analyzeItem(r.title, r.excerpt);
+        if (!analysis) return false;
+        const mergedTags = Array.from(new Set([...r.tags, ...analysis.tags]));
+        await prisma.newsItem.update({
+          where: { id: r.id },
+          data: { summary: analysis.summary, tags: mergedTags },
+        });
+        return true;
+      }),
+    );
+    done += results.filter(
+      (x) => x.status === "fulfilled" && x.value === true,
+    ).length;
   }
   return done;
 }
