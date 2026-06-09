@@ -114,12 +114,11 @@
     "title": "Lebenslauf"
   },
   "contacts": {
-    "message": "Nachricht",
-    "messageSent": "Nachricht wurde gesendet!",
-    "name": "Name",
-    "oopsError": "Upps! Beim Senden der Nachricht ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.",
-    "sayHi": "Let's work together",
-    "sendMessage": "Nachricht senden"
+    "bookCall": "Einen Call buchen",
+    "changeDuration": "Andere Dauer wählen",
+    "email": "E-Mail",
+    "intro": "Wähl einen Slot oder schreib mir direkt — wie's dir lieber ist.",
+    "sayHi": "Let's work together"
   },
   "jest": {
     "title": "Testen mit Jest und Testing Library",

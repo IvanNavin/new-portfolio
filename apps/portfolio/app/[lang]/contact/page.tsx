@@ -1,33 +1,35 @@
 'use client';
-import { RotateStar } from '@app/[lang]/contact/RotateStar';
-import { SocialLinks } from '@app/[lang]/contact/SocialLinks';
-import { useContact } from '@app/[lang]/contact/useContact';
 import { DefaultProps } from '@app/types';
 import { Container } from '@components/Container';
-import { Input } from '@components/Input';
-import { Send } from '@components/svg';
-import { TextArea } from '@components/TextArea';
-import { clsxm } from '@repo/utils';
+import { useTranslation } from '@i18n/client';
 import { use } from 'react';
 
-import styles from './style.module.css';
+import { BookingEmbed } from './BookingEmbed';
+import {
+  CAL_BOOKING_LINK,
+  CAL_EMBED_SCRIPT_SRC,
+  CAL_ORIGIN,
+} from './contactConfig';
+import { ContactLinks } from './ContactLinks';
+import { RotateStar } from './RotateStar';
 
+/**
+ * Contact page — replaced the old name/message form (which routed
+ * to a Telegram bot) with a richer two-track surface:
+ *
+ *   1. Direct contact links (mail, LinkedIn, GitHub) for folks who
+ *      already know what they want to say.
+ *   2. A Cal.com inline embed for booking a real call — feels more
+ *      "open for work" than a blind contact form would. Cal.com over
+ *      Calendly because its free tier covers unlimited event types
+ *      and lets us drop the third-party watermark.
+ *
+ * The cosmic RotateStar background stays — it's signature to this
+ * page and doesn't conflict with the new layout.
+ */
 export default function Page({ params }: DefaultProps) {
   const { lang } = use(params);
-  const {
-    t,
-    onSubmit,
-    name,
-    setName,
-    errorName,
-    message,
-    errorMessage,
-    setMessage,
-    ref,
-    sent,
-    success,
-    hovered,
-  } = useContact();
+  const { t } = useTranslation();
 
   return (
     <Container
@@ -37,50 +39,19 @@ export default function Page({ params }: DefaultProps) {
       titleClassName='text-center'
     >
       <RotateStar />
-      <SocialLinks />
-      <form
-        onSubmit={onSubmit}
-        className='mx-auto flex w-[300px] flex-col gap-y-4'
-      >
-        <Input
-          label={t('contacts.name')}
-          value={name}
-          onChange={({ target: { value } }) => {
-            setName(value);
-          }}
-          error={errorName}
+      <div className='relative z-10 mx-auto flex max-w-[820px] flex-col items-center gap-10'>
+        <p className='max-w-[520px] text-center text-sm leading-relaxed text-white/70'>
+          {t('contacts.intro')}
+        </p>
+        <ContactLinks t={t} />
+        <BookingEmbed
+          calLink={CAL_BOOKING_LINK}
+          origin={CAL_ORIGIN}
+          scriptSrc={CAL_EMBED_SCRIPT_SRC}
+          caption={t('contacts.bookCall')}
+          resetLabel={t('contacts.changeDuration')}
         />
-        <TextArea
-          label={t('contacts.message')}
-          value={message}
-          error={errorMessage}
-          onChange={({ target: { value } }) => {
-            setMessage(value);
-          }}
-        />
-        <button
-          ref={ref as React.Ref<HTMLButtonElement>}
-          type='submit'
-          className={clsxm(
-            'relative h-12 border border-white/50 bg-transparent px-4 py-2 text-white',
-            sent && 'cursor-not-allowed',
-          )}
-          disabled={sent}
-        >
-          {!sent && !success && t('contacts.sendMessage')}
-          {success && t('contacts.messageSent')}
-          <Send
-            width={20}
-            height={20}
-            className={clsxm(
-              'absolute right-[15px] top-3 origin-center transition-all duration-200 ease-in-out',
-              styles.rotateAirplane,
-              hovered && styles.hoveredAirplane,
-              sent && 'animate-flyGrid',
-            )}
-          />
-        </button>
-      </form>
+      </div>
     </Container>
   );
 }

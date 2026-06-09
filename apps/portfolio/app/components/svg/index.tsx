@@ -5,4 +5,5 @@ export * from './Html';
 export * from './Instagram';
 export * from './Js';
 export * from './LinkedIn';
+export * from './Mail';
 export * from './Send';

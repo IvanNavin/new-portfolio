@@ -114,12 +114,11 @@
     "title": "Резюме"
   },
   "contacts": {
-    "message": "Повідомлення",
-    "messageSent": "Повідомлення надіслано!",
-    "name": "Ім'я",
-    "oopsError": "Упс! Сталася помилка під час відправлення повідомлення. Будь ласка, спробуйте пізніше.",
-    "sayHi": "Let's work together",
-    "sendMessage": "Надіслати повідомлення"
+    "bookCall": "Забронюй дзвінок",
+    "changeDuration": "Обрати іншу тривалість",
+    "email": "Email",
+    "intro": "Обери час або напиши напряму — як зручніше.",
+    "sayHi": "Let's work together"
   },
   "jest": {
     "title": "Тестування за допомогою Jest та Testing Library",

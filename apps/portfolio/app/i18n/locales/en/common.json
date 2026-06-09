@@ -114,12 +114,11 @@
     "title": "Curriculum Vitae"
   },
   "contacts": {
-    "message": "Message",
-    "messageSent": "Message sent!",
-    "name": "Name",
-    "oopsError": "Oops! An error occurred while sending the message. Please try again later.",
-    "sayHi": "Let's work together",
-    "sendMessage": "Send Message"
+    "bookCall": "Book a call",
+    "changeDuration": "Choose a different duration",
+    "email": "Email",
+    "intro": "Pick a slot or reach out directly — whichever's easier.",
+    "sayHi": "Let's work together"
   },
   "ivan": "Ivan",
   "jest": {

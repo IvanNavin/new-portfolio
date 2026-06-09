@@ -114,12 +114,11 @@
     "title": "Резюме"
   },
   "contacts": {
-    "message": "Сообщение",
-    "messageSent": "Сообщение отправлено!",
-    "name": "Имя",
-    "oopsError": "Упс! Произошла ошибка при отправке сообщения. Пожалуйста, попробуйте позже.",
-    "sayHi": "Let's work together",
-    "sendMessage": "Отправить сообщение"
+    "bookCall": "Забронируй звонок",
+    "changeDuration": "Выбрать другую длительность",
+    "email": "Email",
+    "intro": "Выбери время или напиши напрямую — как удобнее.",
+    "sayHi": "Let's work together"
   },
   "jest": {
     "title": "Тестирование с использованием Jest и Testing Library",
