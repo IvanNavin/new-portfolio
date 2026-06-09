@@ -2,7 +2,6 @@
 import { DefaultProps } from '@app/types';
 import { roboto, russoOne } from '@assets/fonts';
 import { Container } from '@components/Container';
-import { Magnetic } from '@components/Magnetic';
 import { RenderTextArea } from '@components/RenderTextArea';
 import { Css, EmptyGear, Html, Js } from '@components/svg';
 import { useTranslation } from '@i18n/client';
@@ -23,12 +22,54 @@ import {
 } from './constants';
 import { DownloadButton } from './DownloadButton';
 import { PerformanceRings } from './PerformanceRings';
+import { SkillBlock, SkillsSection } from './SkillsSection';
+
+// Four skill blocks alternating left/right — the SkillsSection slides
+// each one in from its own side and rolls the inner hashtags in as a
+// sine-wave. The Other-block icon is the only non-trivial one (custom
+// circle inside a gear), so it stays inlined here as JSX.
+const buildSkillBlocks = (): SkillBlock[] => [
+  {
+    side: 'left',
+    icon: <Html className='mx-auto mb-2' />,
+    skills: htmlSkills,
+  },
+  {
+    side: 'right',
+    icon: <Css className='mx-auto mb-2' />,
+    skills: cssSkills,
+  },
+  {
+    side: 'left',
+    icon: <Js className='mx-auto mb-2' />,
+    skills: JSSkills,
+  },
+  {
+    side: 'right',
+    icon: (
+      <div className='relative mx-auto mb-2 size-[100px]'>
+        <div
+          className={clsxm(
+            russoOne.className,
+            'flex items-center justify-center',
+            'absolute left-1/2 top-1/2 size-[47px] rounded-full bg-white',
+            '-translate-x-1/2 -translate-y-1/2 text-black',
+            "before:content-['{_OTHER_}'] text-[9px]",
+          )}
+        />
+        <EmptyGear />
+      </div>
+    ),
+    skills: otherSkills,
+  },
+];
 
 export default function Page({ params }: DefaultProps) {
   const { lang } = use(params);
   const { t } = useTranslation();
   const achievementRings = buildAchievementRings(t);
   const careerTimeline = buildCareerTimeline(t);
+  const skillBlocks = buildSkillBlocks();
 
   return (
     <Container lang={lang} backText={t('ivan')} title={t('about.helloThere')}>
@@ -45,68 +86,7 @@ export default function Page({ params }: DefaultProps) {
         nowLabel={t('about.now')}
         entries={careerTimeline}
       />
-      <section
-        className={clsxm(
-          roboto.className,
-          'mx-auto my-10 flex max-w-[672px] flex-col items-center',
-        )}
-      >
-        <Magnetic>
-          <div className='m-2 w-[320px] self-start'>
-            <Html className='mx-auto mb-2' />
-            <ul className='flex flex-wrap justify-center gap-2'>
-              {htmlSkills.map((skill) => (
-                <li key={skill}>{`#${skill}`}</li>
-              ))}
-            </ul>
-          </div>
-        </Magnetic>
-
-        <Magnetic>
-          <div className='m-2 w-[320px] self-end'>
-            <Css className='mx-auto mb-2' />
-
-            <ul className='flex flex-wrap justify-center gap-2'>
-              {cssSkills.map((skill) => (
-                <li key={skill}>{`#${skill}`}</li>
-              ))}
-            </ul>
-          </div>
-        </Magnetic>
-
-        <Magnetic>
-          <div className='m-2 w-[320px] self-start'>
-            <Js className='mx-auto mb-2' />
-            <ul className='flex flex-wrap justify-center gap-2'>
-              {JSSkills.map((skill) => (
-                <li key={skill}>{`#${skill}`}</li>
-              ))}
-            </ul>
-          </div>
-        </Magnetic>
-
-        <Magnetic>
-          <div className='m-2 w-[320px] self-end'>
-            <div className='relative mx-auto mb-2 size-[100px]'>
-              <div
-                className={clsxm(
-                  russoOne.className,
-                  'flex items-center justify-center',
-                  'absolute left-1/2 top-1/2 size-[47px] rounded-full bg-white',
-                  '-translate-x-1/2 -translate-y-1/2 text-black',
-                  "before:content-['{_OTHER_}'] text-[9px]",
-                )}
-              />
-              <EmptyGear />
-            </div>
-            <ul className='flex flex-wrap justify-center gap-2'>
-              {otherSkills.map((skill) => (
-                <li key={skill}>{`#${skill}`}</li>
-              ))}
-            </ul>
-          </div>
-        </Magnetic>
-      </section>
+      <SkillsSection blocks={skillBlocks} />
 
       <PerformanceRings
         t={t}

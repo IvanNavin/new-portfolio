@@ -1,10 +1,16 @@
 'use client';
+import { ROUTES } from '@app/constants/routes';
 import { DefaultProps } from '@app/types';
 import { russoOne } from '@assets/fonts';
+import BackButton from '@components/BackButton';
 import { useTranslation } from '@i18n/client';
 import { clsxm } from '@repo/utils';
 import { use } from 'react';
 
+import './style.css';
+
+import { CV_CONTACTS } from './contacts';
+import { CVToolbar } from './CVToolbar';
 import {
   buildCareerTimeline,
   cssSkills,
@@ -13,11 +19,6 @@ import {
   otherSkills,
   yearsOfExperience,
 } from '../constants';
-
-import './style.css';
-
-import { CV_CONTACTS } from './contacts';
-import { CVToolbar } from './CVToolbar';
 
 export default function CVPage({ params }: DefaultProps) {
   const { lang } = use(params);
@@ -31,6 +32,11 @@ export default function CVPage({ params }: DefaultProps) {
 
   return (
     <main className='cv-page' lang={lang}>
+      {/* BackButton uses `position: fixed` so it floats independently
+          of the cv-page max-width container. Hidden from print via its
+          built-in data-print-hide. */}
+      <BackButton backPath={ROUTES.about(lang)} text={t('main.about')} />
+
       <header className='cv-header'>
         <h1 className={clsxm(russoOne.className, 'cv-header__name')}>
           Ivan Holovko
@@ -134,7 +140,6 @@ export default function CVPage({ params }: DefaultProps) {
         labels={{
           print: t('cv.print'),
           share: t('cv.share'),
-          copyLink: t('cv.copyLink'),
           copied: t('cv.copied'),
           scanHint: t('cv.scanHint'),
           downloadPdf: t('cv.downloadPdf'),

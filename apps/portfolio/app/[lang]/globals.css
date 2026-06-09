@@ -25,6 +25,13 @@ html,
 body {
   height: max-content;
   min-height: 100vh;
+  /* `overflow-x: clip` swallows horizontal overflow from any element
+     that briefly extends past the viewport edge — like the About
+     skills section's ±X slide-in. Unlike `overflow-x: hidden` it does
+     NOT create a scroll container or stacking context, so sticky
+     positioning, smooth-scroll, and BackButton's fixed positioning
+     still behave normally. */
+  overflow-x: clip;
 }
 
 @keyframes slideText {

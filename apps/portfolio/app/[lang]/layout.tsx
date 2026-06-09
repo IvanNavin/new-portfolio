@@ -1,5 +1,4 @@
 import { russoOne } from '@assets/fonts';
-import APPLE_TOUCH_ICON from '@assets/img/favicons/apple-touch-icon.png';
 import FAVICON from '@assets/img/favicons/favicon.ico';
 import FAVICON16 from '@assets/img/favicons/favicon-16x16.png';
 import FAVICON32 from '@assets/img/favicons/favicon-32x32.png';

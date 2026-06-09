@@ -227,8 +227,22 @@
     0 0 40px rgba(253, 224, 71, 0.12);
   text-align: center;
   animation: qr-pop-in 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Smooth size growth when the QR enlarges for scanning. */
+  transition:
+    width 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+    padding 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.qr-popover--enlarged {
+  /* Shrink-wrap around the QR. The QR itself caps at 80vmin (80% of
+     the smaller viewport side) so the card sizes naturally. */
+  width: fit-content;
+  max-width: calc(100vw - 24px);
+  padding: 16px;
 }
 
+/* The QR itself is the button — click to zoom for scanning, click
+   again to shrink. Reset native button chrome so it reads as a tile,
+   not as a control. */
 .qr-popover__qr {
   display: flex;
   justify-content: center;
@@ -237,12 +251,43 @@
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.4);
   margin-bottom: 16px;
+  cursor: zoom-in;
+  font: inherit;
+  color: inherit;
+  width: 100%;
+  transition:
+    border-color 0.15s ease,
+    padding 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+    margin-bottom 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.qr-popover__qr:hover,
+.qr-popover__qr:focus-visible {
+  border-color: rgba(253, 224, 71, 0.5);
+  outline: none;
 }
 .qr-popover__qr svg {
   width: 220px;
   height: 220px;
+  transition:
+    width 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+    height 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.qr-popover__qr--placeholder {
+.qr-popover__qr--enlarged {
+  cursor: zoom-out;
+  margin-bottom: 0;
+  padding: 12px;
+}
+.qr-popover__qr--enlarged svg {
+  /* Cap the QR at 80vmin — 80% of the smaller viewport side, so
+     landscape AND portrait both stay scannable. The second clamp
+     (`100vw - 80px`) keeps room for the popover + button padding so
+     the card stays inside the visible viewport on small phones. */
+  width: min(80vmin, calc(100vw - 80px));
+  height: min(80vmin, calc(100vw - 80px));
+  display: block;
+}
+.qr-popover__qr-placeholder {
+  display: block;
   width: 220px;
   height: 220px;
   background: rgba(253, 224, 71, 0.05);
@@ -256,38 +301,35 @@
   margin-bottom: 8px;
 }
 
+/* The URL line is also a button — click to copy. Reset chrome so it
+   stays visually a line of monospace text; a faint dashed border on
+   hover surfaces the affordance without screaming for attention. */
 .qr-popover__url {
+  display: inline-block;
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px dashed transparent;
+  border-radius: 6px;
   font-size: 11px;
   font-family:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   color: rgba(255, 255, 255, 0.6);
   word-break: break-all;
-  margin-bottom: 14px;
-}
-
-.qr-popover__copy {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 20px;
-  background: transparent;
-  border: 1px solid rgba(253, 224, 71, 0.4);
-  border-radius: 8px;
-  color: rgba(253, 224, 71, 0.85);
-  font-size: 11px;
-  font-family: inherit;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
   cursor: pointer;
+  text-align: center;
+  letter-spacing: 0;
+  text-transform: none;
   transition:
-    background 0.15s ease,
     color 0.15s ease,
-    border-color 0.15s ease;
+    border-color 0.15s ease,
+    background 0.15s ease;
 }
-.qr-popover__copy:hover {
-  background: rgba(253, 224, 71, 0.1);
+.qr-popover__url:hover,
+.qr-popover__url:focus-visible {
   color: rgb(253, 224, 71);
-  border-color: rgb(253, 224, 71);
+  border-color: rgba(253, 224, 71, 0.4);
+  background: rgba(253, 224, 71, 0.05);
+  outline: none;
 }
 
 @keyframes qr-backdrop-in {

@@ -9,7 +9,6 @@ type Props = {
   labels: {
     print: string;
     share: string;
-    copyLink: string;
     copied: string;
     scanHint: string;
     downloadPdf: string;
@@ -105,7 +104,6 @@ export const CVToolbar = ({ labels }: Props) => {
         <QRPopover
           url={shareUrl}
           labels={{
-            copyLink: labels.copyLink,
             copied: labels.copied,
             scanHint: labels.scanHint,
           }}

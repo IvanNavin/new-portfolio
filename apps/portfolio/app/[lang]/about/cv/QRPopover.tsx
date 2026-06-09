@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 type Props = {
   url: string;
   labels: {
-    copyLink: string;
     copied: string;
     scanHint: string;
   };
@@ -17,18 +16,26 @@ type Props = {
 /**
  * Centered glass modal with a yellow QR encoding the current page URL.
  * Generated client-side via `qrcode` so the QR follows whatever locale
- * the visitor is reading (`/en/about/cv` vs `/uk/about/cv` etc.) and
- * any future domain move stays in sync without re-baking images.
+ * the visitor is reading (`/en/about/cv` vs `/uk/about/cv`) and any
+ * future domain move stays in sync without re-baking images.
  *
- * No close (×) button by design: clicking the backdrop or pressing
- * Esc closes — keeps the modal visually clean. A small kbd hint at
- * the bottom of the card surfaces both options.
+ * Two affordances, no dedicated buttons:
+ *   • Click the QR → it grows to ~320px so a phone camera can lock on
+ *     even when the laptop is half a metre away. Click again to shrink.
+ *   • Click the URL → it's copied to the clipboard and the link text
+ *     is momentarily replaced with the localized "Copied" label.
  *
- * Hidden from print via data-print-hide on the root backdrop.
+ * Close: backdrop click or Esc. If the QR is enlarged Esc shrinks it
+ * first and only closes the modal on a second press — matches the
+ * unwind-then-dismiss flow you get from any lightbox.
+ *
+ * No × close button by design — keeps the card visually clean. Hidden
+ * from print via data-print-hide on the root backdrop.
  */
 export const QRPopover = ({ url, labels, onClose }: Props) => {
   const [qrSvg, setQrSvg] = useState<string>('');
   const [copied, setCopied] = useState(false);
+  const [enlarged, setEnlarged] = useState(false);
 
   useEffect(() => {
     QRCode.toString(url, {
@@ -42,19 +49,21 @@ export const QRPopover = ({ url, labels, onClose }: Props) => {
     })
       .then(setQrSvg)
       .catch(() => {
-        /* QR fallback handled by Copy link below if generation fails. */
+        /* If QR generation fails the URL below is still copyable. */
       });
   }, [url]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key !== 'Escape') return;
+      if (enlarged) setEnlarged(false);
+      else onClose();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  }, [onClose, enlarged]);
 
-  const handleCopy = async () => {
+  const copyUrl = async () => {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -72,33 +81,51 @@ export const QRPopover = ({ url, labels, onClose }: Props) => {
       role='presentation'
     >
       <div
-        className={clsxm(russoOne.className, 'qr-popover')}
+        className={clsxm(
+          russoOne.className,
+          'qr-popover',
+          enlarged && 'qr-popover--enlarged',
+        )}
         role='dialog'
         aria-modal='true'
         aria-label='Share CV via QR code'
         onClick={(e) => e.stopPropagation()}
       >
-        {qrSvg ? (
-          <div
-            className='qr-popover__qr'
-            // qrcode lib outputs trusted SVG markup we generated locally.
-            dangerouslySetInnerHTML={{ __html: qrSvg }}
-          />
-        ) : (
-          <div className='qr-popover__qr qr-popover__qr--placeholder' />
-        )}
-        <p className='qr-popover__hint'>{labels.scanHint}</p>
-        <p className='qr-popover__url' title={url}>
-          {url}
-        </p>
         <button
           type='button'
-          onClick={handleCopy}
-          className='qr-popover__copy'
-          aria-live='polite'
+          onClick={() => setEnlarged((v) => !v)}
+          aria-label={
+            enlarged ? 'Shrink QR code' : 'Enlarge QR code for scanning'
+          }
+          className={clsxm(
+            'qr-popover__qr',
+            enlarged && 'qr-popover__qr--enlarged',
+          )}
         >
-          {copied ? labels.copied : labels.copyLink}
+          {qrSvg ? (
+            // qrcode lib outputs trusted SVG markup we generated locally.
+            <span dangerouslySetInnerHTML={{ __html: qrSvg }} />
+          ) : (
+            <span className='qr-popover__qr-placeholder' />
+          )}
         </button>
+
+        {/* In enlarged mode we hide the chrome so the QR is the only
+            thing in view — easier for the scanner to find the symbol. */}
+        {!enlarged && (
+          <>
+            <p className='qr-popover__hint'>{labels.scanHint}</p>
+            <button
+              type='button'
+              onClick={copyUrl}
+              className='qr-popover__url'
+              title={url}
+              aria-live='polite'
+            >
+              {copied ? labels.copied : url}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
