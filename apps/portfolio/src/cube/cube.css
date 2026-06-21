@@ -12,7 +12,13 @@
   inset: 0;
   transform-style: preserve-3d;
   transform-origin: 50% 50%;
-  will-change: transform;
+  /*
+   * Intentionally NO `will-change: transform`. Promoting the cube to a
+   * persistent composited layer makes the browser update its pointer hit-region
+   * lazily, so right after a rotation the active face can be briefly unclickable
+   * (stale hit-test tree). The single-transform transition composites fine
+   * without the hint, and dropping it keeps hit-testing in sync with the visuals.
+   */
   transition: transform 1000ms cubic-bezier(0.76, 0, 0.24, 1);
 }
 

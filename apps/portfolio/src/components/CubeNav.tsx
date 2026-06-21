@@ -4,6 +4,8 @@ const LINKS = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
   { to: "/works", label: "Works" },
+  { to: "/talks", label: "Talks" },
+  { to: "/contact", label: "Contact" },
 ];
 
 /** Pill nav shared across the fake pages to drive cube transitions. */

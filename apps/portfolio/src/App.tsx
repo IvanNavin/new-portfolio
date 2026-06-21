@@ -3,6 +3,8 @@ import { useRouter } from "@/router/router";
 import { HomePage } from "@/pages/HomePage";
 import { AboutPage } from "@/pages/AboutPage";
 import { WorksPage } from "@/pages/WorksPage";
+import { TalksPage } from "@/pages/TalksPage";
+import { ContactPage } from "@/pages/ContactPage";
 
 export function App() {
   const { path } = useRouter();
@@ -13,6 +15,8 @@ export function App() {
       <HomePage path="/" />
       <AboutPage path="/about" />
       <WorksPage path="/works" />
+      <TalksPage path="/talks" />
+      <ContactPage path="/contact" />
     </CubeWrapper>
   );
 }
