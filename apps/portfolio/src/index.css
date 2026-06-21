@@ -14,6 +14,18 @@
   font-family: 'Russo One', sans-serif;
 }
 
+@utility shadow-custom-glow {
+  box-shadow:
+    0 0 1.5em #ffeacc,
+    0 1.25em 1.5em rgba(0, 0, 0, 0.2);
+}
+@utility shadow-full-glow {
+  box-shadow:
+    0 0 1.5em #ffeacc,
+    0 0 2em rgba(0, 0, 0, 0.2),
+    0 0 5px #ffeacc;
+}
+
 html,
 body,
 #root {
@@ -25,8 +37,10 @@ body {
   overflow: hidden;
   background: #0a0a0f;
   color: #fff;
+  /* Matches the original: Russo One is the brand default; reading-heavy
+     sections (e.g. the About copy) opt into Roboto where needed. */
   font-family:
-    Roboto,
+    'Russo One',
     system-ui,
     -apple-system,
     'Segoe UI',
