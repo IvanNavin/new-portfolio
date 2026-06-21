@@ -1,3 +1,4 @@
+import { clsxm } from "@/lib/utils";
 import { Link, useRouter } from "@/router/router";
 
 const LINKS = [
@@ -8,11 +9,20 @@ const LINKS = [
   { to: "/contact", label: "Contact" },
 ];
 
-/** Pill nav shared across the fake pages to drive cube transitions. */
-export function CubeNav() {
+/** Pill nav shared across pages to drive cube transitions. */
+export function CubeNav({
+  position = "bottom",
+}: {
+  position?: "top" | "bottom";
+}) {
   const { path } = useRouter();
   return (
-    <nav className="absolute bottom-10 left-1/2 flex -translate-x-1/2 gap-1 rounded-full border border-white/15 bg-black/30 p-1.5 backdrop-blur-md">
+    <nav
+      className={clsxm(
+        "absolute left-1/2 z-50 flex -translate-x-1/2 gap-1 rounded-full border border-white/15 bg-black/30 p-1.5 backdrop-blur-md",
+        position === "top" ? "top-8" : "bottom-10",
+      )}
+    >
       {LINKS.map((l) => {
         const isActive = path === l.to;
         return (

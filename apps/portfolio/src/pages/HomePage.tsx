@@ -1,20 +1,58 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { CubeNav } from "@/components/CubeNav";
+import Fluid from "@/components/Fluid";
+import { clsxm, isTouchDevice } from "@/lib/utils";
+import myPhoto from "@/assets/iam-wb-1.png";
 import type { PageProps } from "./types";
 
+// Ivan started at Evoplay in October 2018. Count full years since then so we
+// don't jump a year on Jan 1 — full N years lands in October.
+const CAREER_START = new Date(2018, 9, 1);
+
 export function HomePage(_props: PageProps) {
+  const { t } = useTranslation();
+  // Client-only SPA: window always exists, so detect at first render.
+  const [isTouch] = useState(() => isTouchDevice());
+
+  const now = new Date();
+  const monthsSinceStart =
+    (now.getFullYear() - CAREER_START.getFullYear()) * 12 +
+    (now.getMonth() - CAREER_START.getMonth());
+  const yearsOfExperience = Math.max(0, Math.floor(monthsSinceStart / 12));
+
   return (
-    <main className="relative grid h-full w-full place-items-center bg-[radial-gradient(circle_at_30%_20%,#312e81,transparent_60%),radial-gradient(circle_at_80%_80%,#6d28d9,transparent_55%)] bg-[#0a0a0f]">
-      <div className="text-center">
-        <p className="mb-4 text-sm font-medium tracking-[0.3em] text-indigo-300/80 uppercase">
-          Front face · /
-        </p>
-        <h1 className="text-7xl font-bold tracking-tight text-white">Home</h1>
-        <p className="mt-4 max-w-md text-balance text-white/60">
-          Cube prototype. Use the nav to spin to another face — both pages stay
-          live and visible mid-rotation.
-        </p>
+    <main className="relative h-full w-full overflow-hidden bg-black">
+      <Fluid />
+
+      <section
+        className={clsxm(
+          "animate-fade-in-scale pointer-events-none absolute right-0 bottom-0 z-40",
+          "max-h-full w-1/2 max-w-[666px] opacity-80",
+        )}
+      >
+        <img
+          alt="Ivan Holovko"
+          src={myPhoto}
+          draggable={false}
+          className="h-full w-full object-contain object-bottom"
+        />
+      </section>
+
+      <p
+        className={clsxm(
+          "animate-fade-in-scale pointer-events-none absolute right-6 bottom-20 z-50 max-w-[50vw] text-right",
+          "text-[clamp(11px,1.6vw,18px)] tracking-wider text-white/85",
+        )}
+      >
+        {t("main.tagline", { years: yearsOfExperience })}
+      </p>
+
+      <div className="pointer-events-none absolute bottom-6 z-50 block w-full animate-bounce text-center text-[3.6vmin] text-white">
+        {isTouch ? t("main.tap") : t("main.slide")}
       </div>
-      <CubeNav />
+
+      <CubeNav position="top" />
     </main>
   );
 }
