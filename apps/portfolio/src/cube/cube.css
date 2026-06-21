@@ -1,0 +1,68 @@
+.cube-scene {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  /* Camera distance. Tuned in vmax so it scales with the cube edge. */
+  perspective: 140vmax;
+  perspective-origin: 50% 50%;
+}
+
+.cube {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+  will-change: transform;
+  transition: transform 1000ms cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.cube-face {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100vmax;
+  height: 100vmax;
+  margin-left: -50vmax;
+  margin-top: -50vmax;
+  /*
+   * Do NOT set `overflow: hidden` here. On a face it creates a clip/flatten
+   * context that breaks pointer hit-testing for the rotated side faces — the
+   * active page ends up visually centred but clickable nowhere. Clipping to the
+   * viewport is already handled by `.cube-scene { overflow: hidden }`, and the
+   * viewport-sized `.cube-face__inner` always fits inside the 100vmax face, so
+   * there is nothing to clip here anyway.
+   */
+  backface-visibility: hidden;
+  transform-origin: 50% 50%;
+}
+
+/*
+ * CRITICAL: hit-testing inside preserve-3d is unreliable — the browser tests an
+ * inactive face's flat (un-rotated) layout box, which still covers the whole
+ * viewport, so a parked face would sit on top in hit order and swallow every
+ * click meant for the active face. `inert` stops it responding but NOT
+ * intercepting. Making parked faces transparent to pointer events lets clicks
+ * fall through to the only interactive face.
+ */
+.cube-face[inert] {
+  pointer-events: none;
+}
+
+/*
+ * A real viewport-sized canvas centred inside the oversized face, so pages can
+ * pin headers/footers to true screen edges instead of the 100vmax face edges.
+ */
+.cube-face__inner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100vw;
+  height: 100vh;
+  transform: translate(-50%, -50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cube {
+    transition-duration: 1ms;
+  }
+}

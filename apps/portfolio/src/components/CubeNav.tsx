@@ -1,0 +1,33 @@
+import { Link, useRouter } from "@/router/router";
+
+const LINKS = [
+  { to: "/", label: "Home" },
+  { to: "/about", label: "About" },
+  { to: "/works", label: "Works" },
+];
+
+/** Pill nav shared across the fake pages to drive cube transitions. */
+export function CubeNav() {
+  const { path } = useRouter();
+  return (
+    <nav className="absolute bottom-10 left-1/2 flex -translate-x-1/2 gap-1 rounded-full border border-white/15 bg-black/30 p-1.5 backdrop-blur-md">
+      {LINKS.map((l) => {
+        const isActive = path === l.to;
+        return (
+          <Link
+            key={l.to}
+            to={l.to}
+            aria-current={isActive ? "page" : undefined}
+            className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${
+              isActive
+                ? "bg-white text-black"
+                : "text-white/70 hover:text-white"
+            }`}
+          >
+            {l.label}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
