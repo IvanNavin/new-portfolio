@@ -41,10 +41,10 @@ body {
   overflow: hidden;
   background: #0a0a0f;
   color: #fff;
-  /* Matches the original: Russo One is the brand default; reading-heavy
-     sections (e.g. the About copy) opt into Roboto where needed. */
+  /* Clean Roboto for body/reading text; brand display elements (nav, page
+     headings, back button) opt into Russo One via `font-russo`. */
   font-family:
-    'Russo One',
+    Roboto,
     system-ui,
     -apple-system,
     'Segoe UI',
@@ -63,18 +63,6 @@ body {
   }
 }
 
-@keyframes move-twink-back {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: -10000px 5000px;
-  }
-}
-
-.animate-move-twink-back {
-  animation: move-twink-back 200s linear infinite;
-}
 
 /* Ported from the old portfolio — hero photo/tagline entrance. */
 @keyframes fadeInWithScale {

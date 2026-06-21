@@ -4,11 +4,9 @@ import { BackButton } from "@/components/BackButton";
 import { RenderTextArea } from "@/components/RenderTextArea";
 import { Css, EmptyGear, Html, Js } from "@/components/svg";
 import { clsxm } from "@/lib/utils";
-import stars from "@/assets/stars.png";
-import twinkling from "@/assets/twinkling.png";
+import ShapeGrid from "@/components/reactbits/ShapeGrid";
 import type { PageProps } from "./types";
 
-import "./about/style.css";
 import { AchievementRings } from "./about/AchievementRings";
 import { CareerTimeline } from "./about/CareerTimeline";
 import {
@@ -56,22 +54,30 @@ export function AboutPage(_props: PageProps) {
   return (
     <div
       ref={scrollRef}
-      className="relative h-full w-full overflow-x-clip overflow-y-auto text-white"
-      style={{ background: `#000 url(${stars}) repeat top center` }}
+      className="relative h-full w-full overflow-x-clip overflow-y-auto bg-black text-white"
     >
-      {/* Twinkling layer pinned to the viewport while content scrolls. */}
+      {/* Hexagon shape-grid background, pinned to the viewport while content
+          scrolls. Kept interactive (no pointer-events:none) so the hover trail
+          reacts to the cursor in the margins around the content column. */}
       <div
         aria-hidden="true"
-        className="animate-move-twink-back pointer-events-none sticky top-0 left-0 -mb-[100dvh] h-[100dvh] w-full"
-        style={{
-          background: `transparent url(${twinkling}) repeat top center`,
-        }}
-      />
+        className="sticky top-0 left-0 -mb-[100dvh] h-[100dvh] w-full"
+      >
+        <ShapeGrid
+          shape="hexagon"
+          squareSize={50}
+          hoverTrailAmount={3}
+          borderColor="#2c2c2c"
+          hoverFillColor="#4a4a4a"
+        />
+      </div>
 
       <main className="relative z-10 mx-auto min-h-full max-w-[1000px] p-8 pb-[100px]">
         <BackButton text={t("ivan")} />
 
-        <h2 className="mt-5 mb-10 text-[32px]">{t("about.helloThere")}</h2>
+        <h2 className="font-russo mt-5 mb-10 text-[32px]">
+          {t("about.helloThere")}
+        </h2>
 
         <section className="font-roboto space-y-4 text-white/85">
           <RenderTextArea t={t} tKey="about.text" />

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  AnimatePresence,
   motion,
   useMotionValueEvent,
   useReducedMotion,
@@ -8,6 +7,7 @@ import {
 } from "framer-motion";
 import { clsxm } from "@/lib/utils";
 import { useScrollProgress } from "@/lib/useScrollProgress";
+import Orb from "@/components/reactbits/Orb";
 
 export type CareerEntry = {
   company: string;
@@ -31,7 +31,7 @@ type Props = {
   scrollRef: React.RefObject<HTMLElement | null>;
 };
 
-const BLOB_SIZE = 56;
+const BLOB_SIZE = 84;
 
 const Chip = ({ children }: { children: React.ReactNode }) => (
   <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-2 py-0.5 text-[10px] font-medium tracking-wider text-white/70 uppercase">
@@ -45,41 +45,13 @@ const StackPill = ({ children }: { children: React.ReactNode }) => (
   </span>
 );
 
-const computeInitials = (company: string): string =>
-  company
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word) => word[0])
-    .join("")
-    .toUpperCase();
-
-/** Dark-matter blob riding the leading edge of the timeline fill. */
-const MorphingBlob = ({ initials }: { initials: string }) => (
+/** Glowing WebGL orb that rides the leading edge of the timeline fill. */
+const OrbTraveler = () => (
   <div
-    className="pointer-events-none relative"
+    className="pointer-events-none"
     style={{ width: BLOB_SIZE, height: BLOB_SIZE }}
   >
-    <div
-      aria-hidden="true"
-      className="absolute -inset-3 rounded-full bg-white/15 blur-xl"
-    />
-    <div
-      aria-hidden="true"
-      className="timeline-blob absolute inset-0 bg-slate-950 shadow-[0_0_28px_rgba(255,255,255,0.35),inset_0_2px_8px_rgba(255,255,255,0.08)]"
-    />
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={initials}
-        initial={{ opacity: 0, scale: 0.7 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.7 }}
-        transition={{ duration: 0.22, ease: "easeOut" }}
-        className="font-russo absolute inset-0 flex items-center justify-center text-sm font-bold tracking-wide text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]"
-      >
-        {initials}
-      </motion.div>
-    </AnimatePresence>
+    <Orb hue={359} forceHoverState hoverIntensity={1} />
   </div>
 );
 
@@ -131,8 +103,6 @@ export const CareerTimeline = ({
     setActiveIndex((prev) => (prev === idx ? prev : idx));
   });
 
-  const activeEntry = entries[activeIndex];
-
   return (
     <section className="my-12" aria-label={ariaLabel}>
       <h2 className="font-russo mb-8 text-[28px] tracking-wide text-white">
@@ -153,7 +123,7 @@ export const CareerTimeline = ({
               style={{ y: blobY, opacity: blobOpacity, left: -BLOB_SIZE / 2 }}
               className="pointer-events-none absolute top-0 will-change-transform"
             >
-              <MorphingBlob initials={computeInitials(activeEntry.company)} />
+              <OrbTraveler />
             </motion.div>
           </>
         )}
