@@ -10,14 +10,15 @@ function Lettering({ text }: { text: string }) {
   useFrame((state) => {
     const g = group.current;
     if (!g) return;
+    // Gentle tilt toward the cursor; kept small so the text reads centred.
     g.rotation.y = THREE.MathUtils.lerp(
       g.rotation.y,
-      state.pointer.x * 0.5,
+      state.pointer.x * 0.28,
       0.08,
     );
     g.rotation.x = THREE.MathUtils.lerp(
       g.rotation.x,
-      -state.pointer.y * 0.3,
+      -state.pointer.y * 0.18,
       0.08,
     );
   });
