@@ -1,12 +1,19 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@/router/router";
 import { ReadCvText3D } from "@/components/ReadCvText3D";
 
 /**
  * "Read full CV" 3D button. A dark card sits behind, the volumetric gold text
- * floats in front (translateZ), and the whole thing tilts toward the cursor so
- * the viewing angle of both the card and the text shifts in perspective.
+ * floats in front, and the whole thing tilts toward the cursor so the viewing
+ * angle of both the card and the text shifts in perspective.
+ *
+ * Two layouts:
+ *  - desktop (≥900px) → one line that spills PAST the card edges (the canvas is
+ *    larger than the card; on a wide viewport it neither clips nor skews on the
+ *    rotated cube face).
+ *  - narrow (<900px)  → each word on its own line, stacked on a diagonal inside
+ *    the card (so it can't overflow the phone viewport / cube face).
  *
  * TODO(next iteration): on click, scale this card up seamlessly INTO the full
  * CV page (igloo.inc-style zoom) instead of the instant overlay.
@@ -14,6 +21,17 @@ import { ReadCvText3D } from "@/components/ReadCvText3D";
 export function DownloadButton() {
   const { t } = useTranslation();
   const innerRef = useRef<HTMLDivElement>(null);
+
+  // Desktop spills the lettering past the card; narrow screens stack it.
+  const [wide, setWide] = useState(
+    () => window.matchMedia("(min-width: 900px)").matches,
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 900px)");
+    const onChange = () => setWide(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   const handleMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const el = innerRef.current;
@@ -61,13 +79,22 @@ export function DownloadButton() {
             />
           </div>
 
-          {/* Real extruded 3D text filling the card. Canvas = card (inset-0):
-              an oversized canvas gets skewed/clipped on the rotated cube face
-              and overflows narrow viewports, so we keep it card-sized and fill
-              it. No CSS translateZ for the same skew reason — depth comes from
-              the Text3D geometry + the card's tilt. */}
-          <div className="pointer-events-none absolute inset-0">
-            <ReadCvText3D text={t("about.readCv").toUpperCase()} />
+          {/* Real extruded 3D text. On desktop the canvas is larger than the
+              card so the lettering spills over its edges; on narrow screens it
+              stays card-sized (inset-0) so the diagonal word-stack can't clip
+              or skew on the rotated cube face. No CSS translateZ — depth comes
+              from the Text3D geometry + the card's tilt. */}
+          <div
+            className={
+              wide
+                ? "pointer-events-none absolute -inset-[22%]"
+                : "pointer-events-none absolute inset-0"
+            }
+          >
+            <ReadCvText3D
+              text={t("about.readCv").toUpperCase()}
+              mode={wide ? "line" : "stack"}
+            />
           </div>
         </div>
       </Link>
