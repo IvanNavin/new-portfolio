@@ -61,9 +61,11 @@ export function DownloadButton() {
             />
           </div>
 
-          {/* Real extruded 3D text (in front), tilts toward the cursor. */}
+          {/* Real extruded 3D text (in front), tilts toward the cursor.
+              The canvas extends beyond the card so the bigger letters can spill
+              over its edges without being clipped by the WebGL viewport. */}
           <div
-            className="absolute inset-0"
+            className="pointer-events-none absolute -inset-[40%]"
             style={{ transform: "translateZ(40px)" }}
           >
             <ReadCvText3D text={t("about.readCv").toUpperCase()} />

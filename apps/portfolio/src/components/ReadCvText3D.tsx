@@ -27,8 +27,8 @@ function Lettering({ text }: { text: string }) {
       <Center>
         <Text3D
           font="/fonts/helvetiker_bold.typeface.json"
-          size={0.42}
-          height={0.2}
+          size={0.34}
+          height={0.18}
           curveSegments={8}
           bevelEnabled
           bevelThickness={0.025}
