@@ -28,17 +28,19 @@ export function HomePage(_props: PageProps) {
       {/* Left scrim keeps the white nav legible whatever the fluid is doing. */}
       <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-2/3 bg-gradient-to-r from-black/55 via-black/20 to-transparent" />
 
+      {/* Hero portrait: anchored to the bottom-right, height-driven so Ivan
+          stands in the scene; transparent cutout blends onto the fluid. */}
       <section
         className={clsxm(
           "animate-fade-in-scale pointer-events-none absolute right-0 bottom-0 z-40",
-          "max-h-full w-1/2 max-w-[666px] opacity-80",
+          "h-[88vh] max-h-[940px] w-[clamp(300px,48vw,620px)]",
         )}
       >
         <img
           alt="Ivan Holovko"
           src={myPhoto}
           draggable={false}
-          className="h-full w-full object-contain object-bottom"
+          className="h-full w-full object-contain object-right-bottom drop-shadow-[0_8px_40px_rgba(0,0,0,0.55)]"
         />
       </section>
 
