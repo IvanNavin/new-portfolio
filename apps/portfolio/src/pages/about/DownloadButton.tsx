@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useRouter } from "@/router/router";
 import ProfileCard from "@/components/reactbits/ProfileCard";
-import myPhoto from "@/assets/ivan.png";
+import myPhoto from "@/assets/iam-wb-1.png";
 
 /**
  * "Read CV" entry point — a 3D tilt ProfileCard (React Bits). Its contact
