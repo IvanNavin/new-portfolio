@@ -1,17 +1,11 @@
 import { Suspense, useLayoutEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import {
-  Text3D,
-  Center,
-  MeshTransmissionMaterial,
-  Environment,
-  Lightformer,
-} from "@react-three/drei";
+import { Text3D, Center, Environment, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
 
 const FONT = "/fonts/helvetiker_bold.typeface.json";
 
-// Deep extrusion so the lettering reads as a solid block of glass.
+// Deep extrusion so the lettering reads as a solid 3D block.
 const GLYPH = {
   size: 1,
   height: 0.6,
@@ -23,47 +17,44 @@ const GLYPH = {
   letterSpacing: 0.02,
 } as const;
 
-/** Bright amber glass — refracts the card behind it, gold-tinted by thickness. */
-function Glass() {
+// Fixed 3D viewing angle so the extruded sides catch light even at rest (and
+// even on mobile, where there's no cursor to tilt it).
+const VIEW = { pitch: -0.1, yaw: 0.16 };
+
+/** Bright metallic gold — has a small emissive floor so it never goes black. */
+function Gold() {
   return (
-    <MeshTransmissionMaterial
-      transmission={1}
-      thickness={0.9}
-      roughness={0.08}
-      ior={1.5}
-      chromaticAberration={0.06}
-      anisotropy={0.3}
-      distortion={0.12}
-      distortionScale={0.25}
-      temporalDistortion={0.06}
-      attenuationColor="#f0b53a"
-      attenuationDistance={1.8}
-      color="#fff1cf"
-      samples={6}
-      resolution={512}
-      backside
+    <meshStandardMaterial
+      color="#e7a92c"
+      metalness={0.6}
+      roughness={0.28}
+      emissive="#6b4a12"
+      emissiveIntensity={0.3}
+      envMapIntensity={1.3}
     />
   );
 }
 
 /**
  * Auto-fitting 3D lettering.
- *  - "line"  → one line ("READ FULL CV"), scaled to spill past the card.
+ *  - "line"  → one line ("READ FULL CV"), scaled to spill past the card; tilts
+ *              toward the cursor.
  *  - "stack" → each word centered on its own line, the whole block rotated 45°,
- *              fit inside the card (phones only).
+ *              fit inside the card. Static (phones have no hover).
  */
 function Lettering({ text, mode }: { text: string; mode: "line" | "stack" }) {
   const { viewport } = useThree();
-  const tilt = useRef<THREE.Group>(null);
-  const fit = useRef<THREE.Group>(null);
+  const tilt = useRef<THREE.Group>(null); // interactive cursor delta (0 at rest)
+  const fit = useRef<THREE.Group>(null); // scale + center (measured)
+  const interactive = mode === "line";
   const words = useMemo(() => text.split(/\s+/).filter(Boolean), [text]);
 
   useLayoutEffect(() => {
     const t = tilt.current;
     const g = fit.current;
     if (!t || !g) return;
-    // Measure with the resting tilt removed; the 45° stack rotation stays since
-    // it lives on an inner group, so the box reflects the rotated extent.
+    // Reset the interactive tilt + fit, but keep the inner VIEW/45° rotations so
+    // the measured box (and thus the centering) matches what's on screen.
     t.rotation.set(0, 0, 0);
     g.scale.setScalar(1);
     g.position.set(0, 0, 0);
@@ -82,51 +73,46 @@ function Lettering({ text, mode }: { text: string; mode: "line" | "stack" }) {
     g.position.set(-cx * s, -cy * s, 0);
   }, [text, mode, words, viewport.width, viewport.height]);
 
-  // Rest at a slight angle so the extruded sides are always visible (= reads as
-  // 3D even with the cursor centered), then lean toward the pointer.
+  // Desktop leans toward the pointer; mobile stays put.
   useFrame((state) => {
     const t = tilt.current;
     if (!t) return;
-    t.rotation.y = THREE.MathUtils.lerp(
-      t.rotation.y,
-      0.18 + state.pointer.x * 0.22,
-      0.08,
-    );
-    t.rotation.x = THREE.MathUtils.lerp(
-      t.rotation.x,
-      -0.08 - state.pointer.y * 0.16,
-      0.08,
-    );
+    const ty = interactive ? state.pointer.x * 0.22 : 0;
+    const tx = interactive ? -state.pointer.y * 0.16 : 0;
+    t.rotation.y = THREE.MathUtils.lerp(t.rotation.y, ty, 0.08);
+    t.rotation.x = THREE.MathUtils.lerp(t.rotation.x, tx, 0.08);
   });
 
   return (
     <group ref={tilt}>
       <group ref={fit}>
-        {mode === "line" ? (
-          <Center>
-            <Text3D font={FONT} {...GLYPH}>
-              {text}
-              <Glass />
-            </Text3D>
-          </Center>
-        ) : (
-          <group rotation={[0, 0, Math.PI / 4]}>
-            {words.map((word, i) => (
-              <Center key={`${word}-${i}`} position={[0, (1 - i) * 1.5, 0]}>
-                <Text3D font={FONT} {...GLYPH}>
-                  {word}
-                  <Glass />
-                </Text3D>
-              </Center>
-            ))}
-          </group>
-        )}
+        <group rotation={[VIEW.pitch, VIEW.yaw, 0]}>
+          {mode === "line" ? (
+            <Center>
+              <Text3D font={FONT} {...GLYPH}>
+                {text}
+                <Gold />
+              </Text3D>
+            </Center>
+          ) : (
+            <group rotation={[0, 0, Math.PI / 4]}>
+              {words.map((word, i) => (
+                <Center key={`${word}-${i}`} position={[0, (1 - i) * 1.5, 0]}>
+                  <Text3D font={FONT} {...GLYPH}>
+                    {word}
+                    <Gold />
+                  </Text3D>
+                </Center>
+              ))}
+            </group>
+          )}
+        </group>
       </group>
     </group>
   );
 }
 
-/** Transparent r3f canvas hosting the auto-fit beveled glass "Read full CV". */
+/** Transparent r3f canvas hosting the auto-fit beveled gold "Read full CV". */
 export function ReadCvText3D({
   text,
   mode,
@@ -140,10 +126,10 @@ export function ReadCvText3D({
       gl={{ alpha: true, antialias: true }}
       dpr={[1, 2]}
     >
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[4, 6, 5]} intensity={1.6} />
-      <pointLight position={[-5, -3, 4]} intensity={1.0} color="#ffcf6b" />
-      {/* Procedural env (no network HDR) — gives the glass its reflections. */}
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[4, 6, 5]} intensity={2.2} />
+      <pointLight position={[-5, -3, 4]} intensity={1.3} color="#ffcf6b" />
+      {/* Procedural env (no network HDR) — gives the gold its reflections. */}
       <Environment resolution={256} background={false}>
         <Lightformer
           intensity={2.4}
