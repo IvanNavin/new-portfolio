@@ -1,4 +1,5 @@
 import type { TFunction } from "i18next";
+import { Magnetic } from "@/components/Magnetic";
 import { AnimatedRing, type Ring } from "./AnimatedRing";
 
 // Real Lighthouse scores (desktop) for holovko-ivan.vercel.app.
@@ -63,9 +64,11 @@ export const PerformanceRings = ({ t, title, subtitle }: Props) => {
         className="grid w-full grid-cols-2 gap-6 sm:grid-cols-4"
       >
         {scores.map((ring, i) => (
-          <div key={ring.label} className="flex items-center justify-center">
-            <AnimatedRing ring={ring} delay={i * 120} />
-          </div>
+          <Magnetic key={ring.label}>
+            <div className="flex items-center justify-center">
+              <AnimatedRing ring={ring} delay={i * 120} />
+            </div>
+          </Magnetic>
         ))}
       </a>
     </section>

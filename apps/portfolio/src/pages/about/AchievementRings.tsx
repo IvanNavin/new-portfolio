@@ -1,3 +1,4 @@
+import { Magnetic } from "@/components/Magnetic";
 import { AnimatedRing, type Ring } from "./AnimatedRing";
 
 export type { Ring };
@@ -13,9 +14,11 @@ export const AchievementRings = ({ rings, ariaLabel }: Props) => (
     aria-label={ariaLabel}
   >
     {rings.map((ring, i) => (
-      <div key={ring.label} className="flex items-center justify-center">
-        <AnimatedRing ring={ring} delay={i * 120} />
-      </div>
+      <Magnetic key={ring.label}>
+        <div className="flex items-center justify-center">
+          <AnimatedRing ring={ring} delay={i * 120} />
+        </div>
+      </Magnetic>
     ))}
   </section>
 );

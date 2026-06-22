@@ -7,6 +7,7 @@ import {
 } from "framer-motion";
 import { clsxm } from "@/lib/utils";
 import { useScrollProgress } from "@/lib/useScrollProgress";
+import { Magnetic } from "@/components/Magnetic";
 
 export type SkillBlock = {
   /** Which edge the block lives on / slides in from. */
@@ -18,19 +19,21 @@ export type SkillBlock = {
 type ScrollRef = React.RefObject<HTMLElement | null>;
 
 const StaticBlock = ({ block }: { block: SkillBlock }) => (
-  <div
-    className={clsxm(
-      "m-2 w-[320px]",
-      block.side === "left" ? "self-start" : "self-end",
-    )}
-  >
-    {block.icon}
-    <ul className="flex flex-wrap justify-center gap-2">
-      {block.skills.map((skill) => (
-        <li key={skill}>{`#${skill}`}</li>
-      ))}
-    </ul>
-  </div>
+  <Magnetic>
+    <div
+      className={clsxm(
+        "m-2 w-[320px]",
+        block.side === "left" ? "self-start" : "self-end",
+      )}
+    >
+      {block.icon}
+      <ul className="flex flex-wrap justify-center gap-2">
+        {block.skills.map((skill) => (
+          <li key={skill}>{`#${skill}`}</li>
+        ))}
+      </ul>
+    </div>
+  </Magnetic>
 );
 
 /**
@@ -58,23 +61,25 @@ const AnimatedBlock = ({
   const opacity = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
 
   return (
-    <div
-      className={clsxm(
-        "m-2 w-[320px]",
-        block.side === "left" ? "self-start" : "self-end",
-      )}
-    >
-      <motion.div ref={ref} style={{ x, opacity }}>
-        {block.icon}
-        <ul className="flex flex-wrap justify-center gap-2">
-          {block.skills.map((skill, i) => (
-            <AnimatedTag key={skill} index={i} progress={scrollYProgress}>
-              {`#${skill}`}
-            </AnimatedTag>
-          ))}
-        </ul>
-      </motion.div>
-    </div>
+    <Magnetic>
+      <div
+        className={clsxm(
+          "m-2 w-[320px]",
+          block.side === "left" ? "self-start" : "self-end",
+        )}
+      >
+        <motion.div ref={ref} style={{ x, opacity }}>
+          {block.icon}
+          <ul className="flex flex-wrap justify-center gap-2">
+            {block.skills.map((skill, i) => (
+              <AnimatedTag key={skill} index={i} progress={scrollYProgress}>
+                {`#${skill}`}
+              </AnimatedTag>
+            ))}
+          </ul>
+        </motion.div>
+      </div>
+    </Magnetic>
   );
 };
 
