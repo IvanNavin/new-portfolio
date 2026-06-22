@@ -1,6 +1,7 @@
 import QRCode from "qrcode";
 import { useEffect, useState } from "react";
 import { clsxm } from "@/lib/utils";
+import ElectricBorder from "@/components/reactbits/ElectricBorder";
 
 type Props = {
   url: string;
@@ -62,47 +63,49 @@ export const QRPopover = ({ url, labels, onClose }: Props) => {
       onClick={onClose}
       role="presentation"
     >
-      <div
-        className={clsxm(
-          "font-russo qr-popover",
-          enlarged && "qr-popover--enlarged",
-        )}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Share CV via QR code"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          type="button"
-          onClick={() => setEnlarged((v) => !v)}
-          aria-label={enlarged ? "Shrink QR code" : "Enlarge QR code"}
+      <ElectricBorder color="#fde047" speed={1} chaos={0.3} borderRadius={20}>
+        <div
           className={clsxm(
-            "qr-popover__qr",
-            enlarged && "qr-popover__qr--enlarged",
+            "font-russo qr-popover",
+            enlarged && "qr-popover--enlarged",
           )}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Share CV via QR code"
+          onClick={(e) => e.stopPropagation()}
         >
-          {qrSvg ? (
-            <span dangerouslySetInnerHTML={{ __html: qrSvg }} />
-          ) : (
-            <span className="qr-popover__qr-placeholder" />
-          )}
-        </button>
+          <button
+            type="button"
+            onClick={() => setEnlarged((v) => !v)}
+            aria-label={enlarged ? "Shrink QR code" : "Enlarge QR code"}
+            className={clsxm(
+              "qr-popover__qr",
+              enlarged && "qr-popover__qr--enlarged",
+            )}
+          >
+            {qrSvg ? (
+              <span dangerouslySetInnerHTML={{ __html: qrSvg }} />
+            ) : (
+              <span className="qr-popover__qr-placeholder" />
+            )}
+          </button>
 
-        {!enlarged && (
-          <>
-            <p className="qr-popover__hint">{labels.scanHint}</p>
-            <button
-              type="button"
-              onClick={copyUrl}
-              className="qr-popover__url"
-              title={url}
-              aria-live="polite"
-            >
-              {copied ? labels.copied : url}
-            </button>
-          </>
-        )}
-      </div>
+          {!enlarged && (
+            <>
+              <p className="qr-popover__hint">{labels.scanHint}</p>
+              <button
+                type="button"
+                onClick={copyUrl}
+                className="qr-popover__url"
+                title={url}
+                aria-live="polite"
+              >
+                {copied ? labels.copied : url}
+              </button>
+            </>
+          )}
+        </div>
+      </ElectricBorder>
     </div>
   );
 };
