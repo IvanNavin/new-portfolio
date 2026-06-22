@@ -35,7 +35,7 @@ function Lettering({ text }: { text: string }) {
           bevelThickness={0.025}
           bevelSize={0.018}
           bevelSegments={5}
-          letterSpacing={-0.02}
+          letterSpacing={0.06}
         >
           {text}
           <meshStandardMaterial
