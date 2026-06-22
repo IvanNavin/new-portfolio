@@ -546,7 +546,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
             <div
               className="overflow-visible"
               style={{
-                mixBlendMode: "luminosity",
+                mixBlendMode: "normal",
                 transform: "translateZ(2px)",
                 gridArea: "1 / -1",
                 borderRadius: cardRadius,

@@ -40,7 +40,7 @@ export function HomePage(_props: PageProps) {
           alt="Ivan Holovko"
           src={myPhoto}
           draggable={false}
-          className="h-full w-full object-contain object-right-bottom drop-shadow-[0_8px_40px_rgba(0,0,0,0.55)]"
+          className="h-full w-full object-contain object-right-bottom grayscale contrast-110 drop-shadow-[0_8px_40px_rgba(0,0,0,0.55)]"
         />
       </section>
 
