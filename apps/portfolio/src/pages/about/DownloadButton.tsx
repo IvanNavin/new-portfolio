@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@/router/router";
+import { ReadCvText3D } from "@/components/ReadCvText3D";
 
 /**
  * "Read full CV" 3D button. A dark card sits behind, the volumetric gold text
@@ -60,14 +61,12 @@ export function DownloadButton() {
             />
           </div>
 
-          {/* Volumetric text (in front) */}
+          {/* Real extruded 3D text (in front), tilts toward the cursor. */}
           <div
-            className="absolute inset-0 flex items-center justify-center px-8 text-center"
-            style={{ transform: "translateZ(64px)" }}
+            className="absolute inset-0"
+            style={{ transform: "translateZ(40px)" }}
           >
-            <span className="cv-cta-text font-russo text-[clamp(28px,4vw,44px)] leading-[1.05] tracking-wide uppercase">
-              {t("about.readCv")}
-            </span>
+            <ReadCvText3D text={t("about.readCv").toUpperCase()} />
           </div>
         </div>
       </Link>
