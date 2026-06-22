@@ -28,14 +28,14 @@ function Lettering({ text }: { text: string }) {
       <Center>
         <Text3D
           font="/fonts/helvetiker_bold.typeface.json"
-          size={0.34}
-          height={0.18}
+          size={0.3}
+          height={0.16}
           curveSegments={8}
           bevelEnabled
-          bevelThickness={0.025}
-          bevelSize={0.018}
+          bevelThickness={0.022}
+          bevelSize={0.016}
           bevelSegments={5}
-          letterSpacing={0.06}
+          letterSpacing={0.04}
         >
           {text}
           <meshStandardMaterial

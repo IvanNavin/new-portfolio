@@ -61,13 +61,12 @@ export function DownloadButton() {
             />
           </div>
 
-          {/* Real extruded 3D text (in front), tilts toward the cursor.
-              The canvas extends beyond the card so the bigger letters can spill
-              over its edges without being clipped by the WebGL viewport. */}
-          <div
-            className="pointer-events-none absolute -inset-[40%]"
-            style={{ transform: "translateZ(40px)" }}
-          >
+          {/* Real extruded 3D text filling the card. Canvas = card (inset-0):
+              an oversized canvas gets skewed/clipped on the rotated cube face
+              and overflows narrow viewports, so we keep it card-sized and fill
+              it. No CSS translateZ for the same skew reason — depth comes from
+              the Text3D geometry + the card's tilt. */}
+          <div className="pointer-events-none absolute inset-0">
             <ReadCvText3D text={t("about.readCv").toUpperCase()} />
           </div>
         </div>
