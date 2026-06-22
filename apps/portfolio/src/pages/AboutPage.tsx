@@ -67,8 +67,10 @@ export function AboutPage(_props: PageProps) {
           shape="hexagon"
           squareSize={50}
           hoverTrailAmount={3}
-          borderColor="#2c2c2c"
-          hoverFillColor="#4a4a4a"
+          direction="diagonal"
+          speed={0.8}
+          borderColor="#5a5a66"
+          hoverFillColor="#fde047"
         />
       </div>
 

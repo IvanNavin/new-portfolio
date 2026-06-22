@@ -48,10 +48,15 @@ const StackPill = ({ children }: { children: React.ReactNode }) => (
 /** Glowing WebGL orb that rides the leading edge of the timeline fill. */
 const OrbTraveler = () => (
   <div
-    className="pointer-events-none"
+    className="pointer-events-none overflow-hidden rounded-full bg-black"
     style={{ width: BLOB_SIZE, height: BLOB_SIZE }}
   >
-    <Orb hue={359} forceHoverState hoverIntensity={1} />
+    <Orb
+      hue={359}
+      forceHoverState
+      hoverIntensity={1}
+      backgroundColor="#000000"
+    />
   </div>
 );
 
