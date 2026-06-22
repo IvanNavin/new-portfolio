@@ -427,15 +427,18 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
       hoveredSquareRef.current = null;
     };
 
-    canvas.addEventListener("mousemove", handleMouseMove);
-    canvas.addEventListener("mouseleave", handleMouseLeave);
+    // Track the cursor globally (not just over the canvas) so the hover trail
+    // also reacts where page content sits on top of the grid, showing through
+    // the translucent cards instead of only working in the side margins.
+    window.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseleave", handleMouseLeave);
     requestRef.current = requestAnimationFrame(updateAnimation);
 
     return () => {
       window.removeEventListener("resize", resizeCanvas);
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
-      canvas.removeEventListener("mousemove", handleMouseMove);
-      canvas.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, [
     direction,
