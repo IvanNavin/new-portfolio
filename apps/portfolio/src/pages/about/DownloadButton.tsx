@@ -9,11 +9,11 @@ import { ReadCvText3D } from "@/components/ReadCvText3D";
  * angle of both the card and the text shifts in perspective.
  *
  * Two layouts:
- *  - desktop (≥900px) → one line that spills PAST the card edges (the canvas is
- *    larger than the card; on a wide viewport it neither clips nor skews on the
- *    rotated cube face).
- *  - narrow (<900px)  → each word on its own line, stacked on a diagonal inside
- *    the card (so it can't overflow the phone viewport / cube face).
+ *  - tablet/desktop (≥768px) → one line that spills PAST the card edges (the
+ *    canvas is larger than the card; on these widths it neither clips nor skews
+ *    on the rotated cube face).
+ *  - phones (<768px) → each word centered on its own line, the whole block
+ *    rotated 45°, fit inside the card (so it can't overflow the viewport).
  *
  * TODO(next iteration): on click, scale this card up seamlessly INTO the full
  * CV page (igloo.inc-style zoom) instead of the instant overlay.
@@ -22,12 +22,12 @@ export function DownloadButton() {
   const { t } = useTranslation();
   const innerRef = useRef<HTMLDivElement>(null);
 
-  // Desktop spills the lettering past the card; narrow screens stack it.
+  // Phones get the rotated word-stack; tablet+ spills a single line.
   const [wide, setWide] = useState(
-    () => window.matchMedia("(min-width: 900px)").matches,
+    () => window.matchMedia("(min-width: 768px)").matches,
   );
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 900px)");
+    const mq = window.matchMedia("(min-width: 768px)");
     const onChange = () => setWide(mq.matches);
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
@@ -87,7 +87,7 @@ export function DownloadButton() {
           <div
             className={
               wide
-                ? "pointer-events-none absolute -inset-[22%]"
+                ? "pointer-events-none absolute -inset-[18%]"
                 : "pointer-events-none absolute inset-0"
             }
           >
