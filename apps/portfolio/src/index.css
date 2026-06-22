@@ -1,5 +1,19 @@
 @import 'tailwindcss';
 
+/* Volumetric gold extrusion for the "Read full CV" 3D button. */
+.cv-cta-text {
+  color: #ffe9a8;
+  text-shadow:
+    0 1px 0 #e6c45c,
+    0 2px 0 #d4af37,
+    0 3px 0 #bd9a30,
+    0 4px 0 #a5852a,
+    0 5px 0 #8d7123,
+    0 6px 1px rgba(0, 0, 0, 0.35),
+    0 7px 8px rgba(0, 0, 0, 0.4),
+    0 10px 16px rgba(0, 0, 0, 0.45);
+}
+
 @utility text-gold {
   color: #e8b923;
 }
