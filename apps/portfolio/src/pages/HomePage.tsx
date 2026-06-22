@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { HomeNav } from "@/components/HomeNav";
 import Fluid from "@/components/Fluid";
 import { clsxm, isTouchDevice } from "@/lib/utils";
-import myPhoto from "@/assets/iam-wb-1.png";
+import myPhoto from "@/assets/ivan.png";
 import type { PageProps } from "./types";
 
 // Ivan started at Evoplay in October 2018. Count full years since then so we
