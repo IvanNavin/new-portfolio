@@ -40,7 +40,7 @@ export function DownloadButton() {
         aria-label={t("about.readCv")}
         onMouseMove={handleMove}
         onMouseLeave={handleLeave}
-        className="group block h-[280px] w-[440px] max-w-[88vw]"
+        className="group block aspect-[1.6] w-[clamp(300px,80vw,520px)]"
       >
         <div
           ref={innerRef}
