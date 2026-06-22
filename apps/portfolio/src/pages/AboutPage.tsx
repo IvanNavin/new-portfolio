@@ -19,6 +19,7 @@ import {
 } from "./about/constants";
 import { PerformanceRings } from "./about/PerformanceRings";
 import { SkillsSection, type SkillBlock } from "./about/SkillsSection";
+import { DownloadButton } from "./about/DownloadButton";
 
 const buildSkillBlocks = (): SkillBlock[] => [
   { side: "left", icon: <Html className="mx-auto mb-2" />, skills: htmlSkills },
@@ -105,6 +106,8 @@ export function AboutPage(_props: PageProps) {
           title={t("about.perfTitle")}
           subtitle={t("about.perfSubtitle")}
         />
+
+        <DownloadButton />
       </main>
     </div>
   );
