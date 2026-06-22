@@ -63,7 +63,7 @@ export const QRPopover = ({ url, labels, onClose }: Props) => {
       onClick={onClose}
       role="presentation"
     >
-      <ElectricBorder color="#fde047" speed={1} chaos={0.3} borderRadius={20}>
+      <ElectricBorder color="#fde047" speed={1} chaos={0.1} borderRadius={20}>
         <div
           className={clsxm(
             "font-russo qr-popover",
