@@ -1,22 +1,60 @@
-import { CubeNav } from "@/components/CubeNav";
+import { useTranslation } from "react-i18next";
+import { useRouter } from "@/router/router";
+import { BackButton } from "@/components/BackButton";
 import type { PageProps } from "./types";
 
+import { RotateStar } from "./contact/RotateStar";
+import { ContactLinks } from "./contact/ContactLinks";
+import { BookingEmbed } from "./contact/BookingEmbed";
+import {
+  CAL_BOOKING_LINK,
+  CAL_EMBED_SCRIPT_SRC,
+  CAL_ORIGIN,
+} from "./contact/contactConfig";
+
+/**
+ * Contact page (cube "top" face). Two tracks over the signature cosmic
+ * RotateStar background: direct links (mail / LinkedIn / GitHub) and a Cal.com
+ * inline booking embed.
+ */
 export function ContactPage(_props: PageProps) {
+  const { t } = useTranslation();
+  const { path } = useRouter();
+
   return (
-    <main className="relative grid h-full w-full place-items-center bg-[radial-gradient(circle_at_30%_20%,#78350f,transparent_60%),radial-gradient(circle_at_75%_80%,#d97706,transparent_55%)] bg-[#140d04]">
-      <div className="text-center">
-        <p className="mb-4 text-sm font-medium tracking-[0.3em] text-amber-300/80 uppercase">
-          Top face · /contact
-        </p>
-        <h1 className="text-7xl font-bold tracking-tight text-white">
-          Contact
-        </h1>
-        <p className="mt-4 max-w-md text-balance text-white/60">
-          Arrives from the top (vertical roll). Placeholder for the Cal.com
-          booking + direct links, ported later.
-        </p>
+    <div className="relative h-full w-full overflow-x-clip overflow-y-auto bg-black text-white">
+      {/* Cosmic light-dots background, pinned to the viewport while content
+          scrolls. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none sticky top-0 left-0 -mb-[100dvh] h-[100dvh] w-full overflow-hidden"
+      >
+        <RotateStar />
       </div>
-      <CubeNav />
-    </main>
+
+      {/* Fixed to the viewport corner → only while Contact is the live route
+          (all faces stay mounted, otherwise it leaks onto other pages). */}
+      {path === "/contact" && <BackButton text={t("ivan")} />}
+
+      <main className="relative z-10 mx-auto flex min-h-full max-w-[820px] flex-col items-center gap-10 p-8 pb-[100px]">
+        <h1 className="font-russo mt-6 text-center text-[clamp(28px,5vw,44px)]">
+          {t("contacts.sayHi")}
+        </h1>
+
+        <p className="max-w-[520px] text-center text-sm leading-relaxed text-white/70">
+          {t("contacts.intro")}
+        </p>
+
+        <ContactLinks t={t} />
+
+        <BookingEmbed
+          calLink={CAL_BOOKING_LINK}
+          origin={CAL_ORIGIN}
+          scriptSrc={CAL_EMBED_SCRIPT_SRC}
+          caption={t("contacts.bookCall")}
+          resetLabel={t("contacts.changeDuration")}
+        />
+      </main>
+    </div>
   );
 }

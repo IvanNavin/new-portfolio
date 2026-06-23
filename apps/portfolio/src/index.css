@@ -84,6 +84,22 @@ body {
   animation: fadeInWithScale 1s forwards;
 }
 
+/* Contact page cosmic background — two counter-rotating light-dot layers. */
+@keyframes rotateStar {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(1turn);
+  }
+}
+.animate-rotateStar {
+  animation: rotateStar 60s linear infinite alternate;
+}
+.animate-reRotateStar {
+  animation: rotateStar 30s linear infinite normal;
+}
+
 /* WebGL fluid background canvas fills its cube face. */
 #fluid {
   position: absolute;
