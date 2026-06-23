@@ -137,23 +137,12 @@ export function DownloadButton() {
     animate(cardY, target.y, GROW);
     animate(radius, 0, GROW);
     animate(cvBlur, 0, GROW);
-    const grow = animate(cardScale, target.scale, GROW);
-
-    // In the last stretch of the grow, mount the real CV overlay (it fades in)
-    // beneath the card and dissolve the card into it — a crossfade, not a hard
-    // swap, so it resolves smoothly into the real page.
-    const handoff = window.setTimeout(
-      () => {
-        if (cardRef.current) cardRef.current.style.zIndex = "90";
-        navigate("/about/cv");
-        animate(cardOpacity, 0, { duration: 0.32, ease: "easeOut" });
-      },
-      GROW.duration * 1000 * 0.82,
-    );
-
-    await grow.finished;
-    await new Promise((r) => window.setTimeout(r, 240)); // let the dissolve finish
-    window.clearTimeout(handoff);
+    await animate(cardScale, target.scale, GROW).finished;
+    // Hand off: bring the (now full-screen) card ABOVE the real CV overlay and
+    // dissolve it into it — masks any residual seam.
+    if (cardRef.current) cardRef.current.style.zIndex = "90";
+    navigate("/about/cv");
+    await animate(cardOpacity, 0, { duration: 0.25, ease: "easeOut" }).finished;
     // Reset the card behind the overlay.
     cardScale.set(1);
     cardX.set(0);
