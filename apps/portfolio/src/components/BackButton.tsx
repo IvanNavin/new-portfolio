@@ -11,7 +11,16 @@ const SIZE = RADIUS * 2;
  * instead of gsap. `position: fixed` is relative to the transformed cube
  * ancestor, so it sticks within the page's scroll container instead.
  */
-export function BackButton({ text, to = "/" }: { text: string; to?: string }) {
+export function BackButton({
+  text,
+  to = "/",
+  onBack,
+}: {
+  text: string;
+  to?: string;
+  /** Intercept the click (e.g. to play a close animation) instead of navigating. */
+  onBack?: () => void;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [hovered, setHovered] = useState(false);
 
@@ -83,6 +92,14 @@ export function BackButton({ text, to = "/" }: { text: string; to?: string }) {
       <Link
         to={to}
         aria-label="Back to home"
+        onClick={
+          onBack
+            ? (e) => {
+                e.preventDefault();
+                onBack();
+              }
+            : undefined
+        }
         className={`relative block size-[100px] overflow-hidden rounded-full ${
           hovered ? "cursor-pointer" : ""
         }`}

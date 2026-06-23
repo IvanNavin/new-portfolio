@@ -19,8 +19,16 @@ import {
  * @param preview  Render as an inert thumbnail (the "Read full CV" card
  *   background): drop the interactive chrome — BackButton + toolbar/QR — and
  *   keep only the readable document so it scales down cleanly.
+ * @param onBack  Intercept the BackButton (so the overlay can play its
+ *   shrink-to-card animation before navigating).
  */
-export function CvPage({ preview = false }: { preview?: boolean }) {
+export function CvPage({
+  preview = false,
+  onBack,
+}: {
+  preview?: boolean;
+  onBack?: () => void;
+}) {
   const { t } = useTranslation();
   const career = buildCareerTimeline(t);
 
@@ -30,7 +38,9 @@ export function CvPage({ preview = false }: { preview?: boolean }) {
 
   return (
     <main className="cv-page">
-      {!preview && <BackButton text={t("main.about")} to="/about" />}
+      {!preview && (
+        <BackButton text={t("main.about")} to="/about" onBack={onBack} />
+      )}
 
       <header className="cv-header">
         <h1 className={clsxm("font-russo", "cv-header__name")}>Ivan Holovko</h1>

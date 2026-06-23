@@ -5,9 +5,9 @@ import { ReadCvText3D, type Pointer } from "@/components/ReadCvText3D";
 import { CvPage } from "@/pages/about/cv/CvPage";
 import { useCvZoom } from "@/pages/about/cvZoom";
 
-// The CV preview is rendered at this design width, then scaled down to the
-// card. Close to the CV's 880px max-width so the mini reads as the full page.
-const PREVIEW_W = 860;
+// CV preview design width — must match CvOverlay's so the card→page zoom seam
+// is exact (clamped to the viewport for mobile, like the overlay).
+const DESIGN_W = 860;
 
 /**
  * "Read full CV" 3D button. A dark card sits behind, the volumetric gold text
@@ -45,17 +45,26 @@ export function DownloadButton() {
     setOrigin({ x: r.left, y: r.top, w: r.width, h: r.height });
   };
 
-  // Scale of the mini CV thumbnail = card width / its design width. Tracked so
-  // the thumbnail stays sharp/sized across viewport changes.
+  // Mini CV thumbnail: rendered at the design width (clamped to viewport, like
+  // the overlay) then scaled to the card. Tracked so it stays sized across
+  // viewport changes.
   const [cardW, setCardW] = useState(0);
+  const [designW, setDesignW] = useState(DESIGN_W);
   useLayoutEffect(() => {
     const el = cardRef.current;
     if (!el) return;
-    const update = () => setCardW(el.getBoundingClientRect().width);
+    const update = () => {
+      setCardW(el.getBoundingClientRect().width);
+      setDesignW(Math.min(DESIGN_W, window.innerWidth));
+    };
     update();
     const ro = new ResizeObserver(update);
     ro.observe(el);
-    return () => ro.disconnect();
+    window.addEventListener("resize", update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", update);
+    };
   }, []);
 
   // Phones get the rotated word-stack; tablet+ spills a single line.
@@ -134,8 +143,8 @@ export function DownloadButton() {
                 aria-hidden="true"
                 className="absolute top-0 left-0 origin-top-left"
                 style={{
-                  width: PREVIEW_W,
-                  transform: `scale(${cardW ? cardW / PREVIEW_W : 0.5})`,
+                  width: designW,
+                  transform: `scale(${cardW ? cardW / designW : 0.5})`,
                 }}
               >
                 <CvPage preview />
