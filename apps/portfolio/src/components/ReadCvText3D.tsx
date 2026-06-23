@@ -97,13 +97,14 @@ function Lettering({
     // Fly-through: accelerate the lettering straight at the camera (z=6) so we
     // pass through it. The constant VIEW angle keeps the extruded side faces in
     // view as a letter rushes past.
-    if (progress) {
-      const p = progress.get();
-      const e = p * p; // ease-in: slow start, rushes past at the end
+    const fly = progress ? progress.get() : 0;
+    if (fly > 0.0001) {
+      const e = fly * fly; // ease-in: slow start, rushes past at the end
       t.rotation.set(0, 0, 0);
       t.position.z = e * 7.4;
       return;
     }
+    t.position.z = 0;
     const pt = pointer.current;
     const ty = interactive ? pt.x * 0.22 : 0;
     const tx = interactive ? -pt.y * 0.16 : 0;

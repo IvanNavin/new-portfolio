@@ -1,24 +1,33 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
 
-/** The "Read full CV" card's on-screen rect, captured at click time. */
-export type ZoomOrigin = { x: number; y: number; w: number; h: number };
-
 type CvZoomValue = {
-  /** Set while a card→page zoom is in flight; null for a plain CV open. */
-  origin: ZoomOrigin | null;
-  setOrigin: (o: ZoomOrigin | null) => void;
+  /** True while the CV page is shrinking back into the card (Back pressed). */
+  closing: boolean;
+  /** CV overlay's Back → ask the card to play the reverse zoom. */
+  startClose: () => void;
+  /** Card → reverse zoom finished. */
+  endClose: () => void;
 };
 
 const CvZoomContext = createContext<CvZoomValue | null>(null);
 
 /**
- * Shares the zoom origin between the "Read full CV" card (which measures it on
- * click) and the CV overlay (which animates the page growing out of it).
+ * Bridges the CV overlay's Back button and the "Read full CV" card: the card
+ * owns the zoom animation (it animates its own real elements), the overlay just
+ * flips `closing` to trigger the reverse.
  */
 export function CvZoomProvider({ children }: { children: ReactNode }) {
-  const [origin, setOrigin] = useState<ZoomOrigin | null>(null);
+  const [closing, setClosing] = useState(false);
   return (
-    <CvZoomContext value={{ origin, setOrigin }}>{children}</CvZoomContext>
+    <CvZoomContext
+      value={{
+        closing,
+        startClose: () => setClosing(true),
+        endClose: () => setClosing(false),
+      }}
+    >
+      {children}
+    </CvZoomContext>
   );
 }
 
