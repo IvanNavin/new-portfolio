@@ -101,8 +101,7 @@ function Lettering({
     if (fly > 0.0001) {
       const e = fly * fly; // ease-in: slow start, rushes past at the end
       t.rotation.set(0, 0, 0);
-      // Start far (z=-7 → small, ~card size) and rush THROUGH the camera (z=6).
-      t.position.z = -7 + e * 16;
+      t.position.z = e * 9; // flies well past the camera (z=6) → big lead
       return;
     }
     t.position.z = 0;
