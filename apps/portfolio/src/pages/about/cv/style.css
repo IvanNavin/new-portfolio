@@ -383,6 +383,22 @@
     background-image: none !important;
   }
 
+  /* Only the CV prints — hide the whole cube (all portfolio pages behind the
+     overlay) so it can't bleed onto the page. */
+  .cube-scene {
+    display: none !important;
+  }
+
+  /* On screen the CV overlay is position:fixed with internal scroll, so the
+     browser only prints the visible scroll slice (the top of the CV went
+     missing). Make it flow normally in print so every section paginates. */
+  .cv-overlay {
+    position: static !important;
+    overflow: visible !important;
+    height: auto !important;
+    background: white !important;
+  }
+
   /* Page chrome that should never print. Components opt-in by
      setting `data-print-hide` on their root element (LanguageSwitcher,
      BackButton, CommandPalette dialog, our own toolbar, etc.) so

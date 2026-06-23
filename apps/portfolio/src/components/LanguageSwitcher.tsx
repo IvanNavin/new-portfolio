@@ -24,6 +24,7 @@ export function LanguageSwitcher() {
 
   return (
     <section
+      data-print-hide=""
       className={clsxm(
         "shadow-custom-glow fixed top-64 z-[60] flex w-[50px] flex-col items-end justify-around rounded-l py-2.5",
         "transition-all duration-300 ease-linear md:hover:right-0",

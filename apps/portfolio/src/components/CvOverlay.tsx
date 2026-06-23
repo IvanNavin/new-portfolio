@@ -10,7 +10,7 @@ import { useCvZoom } from "@/pages/about/cvZoom";
 export function CvOverlay() {
   const { startClose } = useCvZoom();
   return (
-    <div className="fixed inset-0 z-[80] overflow-y-auto bg-[#0a0a0f]">
+    <div className="cv-overlay fixed inset-0 z-[80] overflow-y-auto bg-[#0a0a0f]">
       <CvPage onBack={startClose} />
     </div>
   );
