@@ -38,13 +38,10 @@ export function CvPage({
 
   return (
     <main className="cv-page">
-      {preview ? (
-        // Just reserve the BackButton's vertical space so the content lines up
-        // with the real page (don't draw a button — it wouldn't match).
-        <div aria-hidden="true" className="flex justify-end pt-2">
-          <div className="size-[100px]" />
-        </div>
-      ) : (
+      {/* The BackButton is fixed to the viewport corner (no flow space), so the
+          preview and the real page have content at the same top → seam stays
+          aligned; only the real (non-preview) page shows the button. */}
+      {!preview && (
         <BackButton text={t("main.about")} to="/about" onBack={onBack} />
       )}
 

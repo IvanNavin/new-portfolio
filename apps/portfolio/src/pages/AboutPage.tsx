@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "@/router/router";
 import { BackButton } from "@/components/BackButton";
 import { RenderTextArea } from "@/components/RenderTextArea";
 import { Css, EmptyGear, Html, Js } from "@/components/svg";
@@ -46,6 +47,7 @@ const buildSkillBlocks = (): SkillBlock[] => [
 
 export function AboutPage(_props: PageProps) {
   const { t } = useTranslation();
+  const { path } = useRouter();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const achievementRings = buildAchievementRings(t);
@@ -76,7 +78,9 @@ export function AboutPage(_props: PageProps) {
       </div>
 
       <main className="relative z-10 mx-auto min-h-full max-w-[1000px] p-8 pb-[100px]">
-        <BackButton text={t("ivan")} />
+        {/* Fixed to the viewport corner → render only while About is the live
+            route, otherwise it leaks onto other pages (all faces stay mounted). */}
+        {path === "/about" && <BackButton text={t("ivan")} />}
 
         <h2 className="font-russo mt-5 mb-10 text-[32px]">
           {t("about.helloThere")}

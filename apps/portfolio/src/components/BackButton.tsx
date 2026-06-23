@@ -88,7 +88,7 @@ export function BackButton({
   }, []);
 
   return (
-    <div data-print-hide="" className="sticky top-0 z-50 flex justify-end pt-2">
+    <div data-print-hide="" className="fixed top-4 right-6 z-[55]">
       <Link
         to={to}
         aria-label="Back to home"
