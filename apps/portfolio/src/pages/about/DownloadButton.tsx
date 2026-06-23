@@ -54,12 +54,14 @@ export function DownloadButton() {
   // across viewport changes.
   const [cardW, setCardW] = useState(0);
   const [designW, setDesignW] = useState(() => window.innerWidth);
+  const [designH, setDesignH] = useState(() => window.innerHeight);
   useLayoutEffect(() => {
     const el = cardRef.current;
     if (!el) return;
     const update = () => {
       setCardW(el.getBoundingClientRect().width);
       setDesignW(window.innerWidth);
+      setDesignH(window.innerHeight);
     };
     update();
     const ro = new ResizeObserver(update);
@@ -82,8 +84,9 @@ export function DownloadButton() {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // Transform that grows the card from its current rect to fill the viewport,
-  // centred — uniform scale (cover) + translate of its centre to screen centre.
+  // Grow the card to fill the viewport, centred. The card matches the viewport
+  // aspect, so a single uniform scale (W / cardW) lands it exactly on the
+  // viewport — no over-scale, so its CV content == the real page 1:1.
   const growTarget = () => {
     const card = cardRef.current;
     if (!card) return null;
@@ -91,7 +94,7 @@ export function DownloadButton() {
     const W = window.innerWidth;
     const H = window.innerHeight;
     return {
-      scale: Math.max(W / r.width, H / r.height) * 1.05,
+      scale: W / r.width,
       x: W / 2 - (r.left + r.width / 2),
       y: H / 2 - (r.top + r.height / 2),
     };
@@ -246,10 +249,18 @@ export function DownloadButton() {
         onClick={handleClick}
         className="group block w-full"
       >
+        {/* Card is the SAME proportion as the viewport and holds the same CV
+            content scaled down — so a uniform grow to scale 1 matches the real
+            page exactly (no distortion, no over-scale). */}
         <motion.div
           ref={cardRef}
-          className="relative mx-auto aspect-[1.6] w-[clamp(300px,80vw,520px)]"
-          style={{ scale: cardScale, x: cardX, y: cardY }}
+          className="relative mx-auto w-[clamp(280px,72vw,520px)]"
+          style={{
+            scale: cardScale,
+            x: cardX,
+            y: cardY,
+            aspectRatio: `${designW} / ${designH}`,
+          }}
         >
           {/* pointer-events-none so the tilting visual never becomes the hover
               hit-target (that caused edge jitter); hover is the stable <a> box. */}
