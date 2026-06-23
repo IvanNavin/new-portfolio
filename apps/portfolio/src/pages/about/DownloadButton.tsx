@@ -42,6 +42,7 @@ export function DownloadButton() {
   const cardScale = useMotionValue(1);
   const cardX = useMotionValue(0);
   const cardY = useMotionValue(0);
+  const cardOpacity = useMotionValue(1); // dissolves into the real page at handoff
   const radius = useMotionValue(28);
   const textOpacity = useMotionValue(1);
   const flyProgress = useMotionValue(0); // 0 = on card, 1 = flown through camera
@@ -123,29 +124,36 @@ export function DownloadButton() {
     zoomingRef.current = true;
     elevate(true);
     await straighten();
-    // Text flies through the camera fast; card grows slower behind it,
+    // Text flies through the camera fast (stays visible while it rushes past,
+    // then fades as it crosses the lens); card grows slower behind it,
     // un-blurring as it approaches the real page.
     animate(flyProgress, 1, FLY);
-    animate(textOpacity, 0, { duration: 0.3, ease: "easeIn" });
+    animate(textOpacity, [1, 1, 0], {
+      duration: FLY.duration,
+      times: [0, 0.55, 1],
+      ease: "easeIn",
+    });
     animate(cardX, target.x, GROW);
     animate(cardY, target.y, GROW);
     animate(radius, 0, GROW);
     animate(cvBlur, 0, GROW);
     await animate(cardScale, target.scale, GROW).finished;
-    // Hand off to the scrollable CV page (identical frame), then reset the card
-    // behind the now-covering overlay.
+    // Hand off: bring the (now full-screen) card ABOVE the real CV overlay and
+    // dissolve it into it — masks any residual seam.
+    if (cardRef.current) cardRef.current.style.zIndex = "90";
     navigate("/about/cv");
-    requestAnimationFrame(() => {
-      cardScale.set(1);
-      cardX.set(0);
-      cardY.set(0);
-      radius.set(28);
-      textOpacity.set(1);
-      flyProgress.set(0);
-      cvBlur.set(REST_BLUR);
-      elevate(false);
-      zoomingRef.current = false;
-    });
+    await animate(cardOpacity, 0, { duration: 0.25, ease: "easeOut" }).finished;
+    // Reset the card behind the overlay.
+    cardScale.set(1);
+    cardX.set(0);
+    cardY.set(0);
+    radius.set(28);
+    textOpacity.set(1);
+    flyProgress.set(0);
+    cvBlur.set(REST_BLUR);
+    cardOpacity.set(1);
+    elevate(false);
+    zoomingRef.current = false;
   };
 
   const runClose = async () => {
@@ -171,6 +179,7 @@ export function DownloadButton() {
     cardScale.set(target.scale);
     cardX.set(target.x);
     cardY.set(target.y);
+    cardOpacity.set(1);
     radius.set(0);
     textOpacity.set(0);
     flyProgress.set(1);
@@ -259,6 +268,7 @@ export function DownloadButton() {
             scale: cardScale,
             x: cardX,
             y: cardY,
+            opacity: cardOpacity,
             aspectRatio: `${designW} / ${designH}`,
           }}
         >

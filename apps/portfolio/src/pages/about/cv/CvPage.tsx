@@ -38,7 +38,14 @@ export function CvPage({
 
   return (
     <main className="cv-page">
-      {!preview && (
+      {preview ? (
+        // Reserve the same top space the BackButton occupies on the real page,
+        // so the card thumbnail's content aligns with it (no top-offset jump at
+        // the zoom handoff).
+        <div aria-hidden="true" className="flex justify-end pt-2">
+          <div className="size-[100px]" />
+        </div>
+      ) : (
         <BackButton text={t("main.about")} to="/about" onBack={onBack} />
       )}
 
