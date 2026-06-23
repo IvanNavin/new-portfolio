@@ -1,5 +1,6 @@
 import { Suspense, useLayoutEffect, useMemo, useRef } from "react";
 import type { RefObject } from "react";
+import type { MotionValue } from "framer-motion";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Text3D, Center, Environment, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
@@ -50,10 +51,12 @@ function Lettering({
   text,
   mode,
   pointer,
+  progress,
 }: {
   text: string;
   mode: "line" | "stack";
   pointer: RefObject<Pointer>;
+  progress?: MotionValue<number>;
 }) {
   const { viewport } = useThree();
   const tilt = useRef<THREE.Group>(null); // interactive cursor delta (0 at rest)
@@ -91,9 +94,19 @@ function Lettering({
   useFrame(() => {
     const t = tilt.current;
     if (!t) return;
-    const p = pointer.current;
-    const ty = interactive ? p.x * 0.22 : 0;
-    const tx = interactive ? -p.y * 0.16 : 0;
+    // Fly-through: accelerate the lettering straight at the camera (z=6) so we
+    // pass through it. The constant VIEW angle keeps the extruded side faces in
+    // view as a letter rushes past.
+    if (progress) {
+      const p = progress.get();
+      const e = p * p; // ease-in: slow start, rushes past at the end
+      t.rotation.set(0, 0, 0);
+      t.position.z = e * 7.4;
+      return;
+    }
+    const pt = pointer.current;
+    const ty = interactive ? pt.x * 0.22 : 0;
+    const tx = interactive ? -pt.y * 0.16 : 0;
     t.rotation.y = THREE.MathUtils.lerp(t.rotation.y, ty, 0.08);
     t.rotation.x = THREE.MathUtils.lerp(t.rotation.x, tx, 0.08);
   });
@@ -132,10 +145,12 @@ export function ReadCvText3D({
   text,
   mode,
   pointer,
+  progress,
 }: {
   text: string;
   mode: "line" | "stack";
   pointer: RefObject<Pointer>;
+  progress?: MotionValue<number>;
 }) {
   return (
     <Canvas
@@ -171,7 +186,12 @@ export function ReadCvText3D({
         />
       </Environment>
       <Suspense fallback={null}>
-        <Lettering text={text} mode={mode} pointer={pointer} />
+        <Lettering
+          text={text}
+          mode={mode}
+          pointer={pointer}
+          progress={progress}
+        />
       </Suspense>
     </Canvas>
   );

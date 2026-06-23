@@ -5,10 +5,6 @@ import { ReadCvText3D, type Pointer } from "@/components/ReadCvText3D";
 import { CvPage } from "@/pages/about/cv/CvPage";
 import { useCvZoom } from "@/pages/about/cvZoom";
 
-// CV preview design width — must match CvOverlay's so the card→page zoom seam
-// is exact (clamped to the viewport for mobile, like the overlay).
-const DESIGN_W = 860;
-
 /**
  * "Read full CV" 3D button. A dark card sits behind, the volumetric gold text
  * floats in front, and the whole thing tilts toward the cursor so the viewing
@@ -45,17 +41,18 @@ export function DownloadButton() {
     setOrigin({ x: r.left, y: r.top, w: r.width, h: r.height });
   };
 
-  // Mini CV thumbnail: rendered at the design width (clamped to viewport, like
-  // the overlay) then scaled to the card. Tracked so it stays sized across
-  // viewport changes.
+  // Mini CV thumbnail: a viewport-framed snapshot of the full CV page, scaled
+  // into the card. Using the *viewport* width as the design width makes the
+  // thumbnail identical to CvOverlay's first frame (full page scaled to the
+  // card), so the click→zoom seam is exact. Tracked across viewport changes.
   const [cardW, setCardW] = useState(0);
-  const [designW, setDesignW] = useState(DESIGN_W);
+  const [designW, setDesignW] = useState(() => window.innerWidth);
   useLayoutEffect(() => {
     const el = cardRef.current;
     if (!el) return;
     const update = () => {
       setCardW(el.getBoundingClientRect().width);
-      setDesignW(Math.min(DESIGN_W, window.innerWidth));
+      setDesignW(window.innerWidth);
     };
     update();
     const ro = new ResizeObserver(update);
