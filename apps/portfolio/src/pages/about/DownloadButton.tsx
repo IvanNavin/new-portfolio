@@ -295,10 +295,9 @@ export function DownloadButton() {
                 a dark veil. Clipped here (its own layer) so the spilling text
                 isn't cut off. Its border-radius animates to 0 as it grows. */}
             <motion.div
-              className="absolute inset-0 overflow-hidden border bg-[#0a0a0f] shadow-[0_30px_70px_rgba(0,0,0,0.55)]"
+              className="absolute inset-0 overflow-hidden bg-[#0a0a0f] shadow-[0_30px_70px_rgba(0,0,0,0.55)]"
               style={{
                 borderRadius: radius,
-                borderColor,
                 transform: "translateZ(0)",
               }}
             >
@@ -326,6 +325,13 @@ export function DownloadButton() {
                   background:
                     "radial-gradient(420px circle at var(--mx,50%) var(--my,50%), rgba(253,224,71,0.12), transparent 60%)",
                 }}
+              />
+              {/* Border as a DECORATIVE overlay (not on the content box) so it
+                  never insets the CV thumbnail — that 1px inset, ×scale, was the
+                  2px seam jump. Fades out as the card grows (page has none). */}
+              <motion.div
+                className="pointer-events-none absolute inset-0 border"
+                style={{ borderColor, borderRadius: radius }}
               />
             </motion.div>
 
