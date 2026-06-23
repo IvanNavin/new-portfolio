@@ -21,7 +21,10 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": [
         "warn",
-        { allowConstantExport: true, allowExportNames: ["useRouter"] },
+        {
+          allowConstantExport: true,
+          allowExportNames: ["useRouter", "useCvZoom"],
+        },
       ],
       "@typescript-eslint/no-unused-vars": [
         "error",

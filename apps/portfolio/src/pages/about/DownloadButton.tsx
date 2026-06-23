@@ -1,8 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "@/router/router";
+import { Link, useRouter } from "@/router/router";
 import { ReadCvText3D, type Pointer } from "@/components/ReadCvText3D";
 import { CvPage } from "@/pages/about/cv/CvPage";
+import { useCvZoom } from "@/pages/about/cvZoom";
 
 // The CV preview is rendered at this design width, then scaled down to the
 // card. Close to the CV's 880px max-width so the mini reads as the full page.
@@ -25,10 +26,24 @@ const PREVIEW_W = 860;
  */
 export function DownloadButton() {
   const { t } = useTranslation();
+  const { path } = useRouter();
+  const { setOrigin } = useCvZoom();
   const innerRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   // Cursor fed into the 3D scene without re-rendering (read each frame).
   const pointer = useRef<Pointer>({ x: 0, y: 0 });
+
+  // While the CV is open the card sits behind the overlay; drop its lettering so
+  // it doesn't double up with the flying text mid-zoom.
+  const zooming = path === "/about/cv";
+
+  // Hand the card's screen rect to the overlay so it can grow the page out of it.
+  const handleClick = () => {
+    const card = cardRef.current;
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    setOrigin({ x: r.left, y: r.top, w: r.width, h: r.height });
+  };
 
   // Scale of the mini CV thumbnail = card width / its design width. Tracked so
   // the thumbnail stays sharp/sized across viewport changes.
@@ -92,6 +107,7 @@ export function DownloadButton() {
         aria-label={t("about.readCv")}
         onMouseMove={handleMove}
         onMouseLeave={handleLeave}
+        onClick={handleClick}
         className="group block w-full"
       >
         {/* pointer-events-none so the tilting visual never becomes the hover
@@ -143,11 +159,9 @@ export function DownloadButton() {
               the short card). No CSS translateZ — depth comes from the Text3D
               geometry + the resting view angle. */}
             <div
-              className={
-                wide
-                  ? "pointer-events-none absolute -inset-[18%]"
-                  : "pointer-events-none absolute -inset-x-[6%] -inset-y-[34%]"
-              }
+              className={`pointer-events-none absolute transition-opacity duration-200 ${
+                zooming ? "opacity-0" : "opacity-100"
+              } ${wide ? "-inset-[18%]" : "-inset-x-[6%] -inset-y-[34%]"}`}
             >
               <ReadCvText3D
                 text={t("about.readCv").toUpperCase()}
