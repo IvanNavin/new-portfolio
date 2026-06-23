@@ -15,7 +15,12 @@ import {
   yearsOfExperience,
 } from "../constants";
 
-export function CvPage() {
+/**
+ * @param preview  Render as an inert thumbnail (the "Read full CV" card
+ *   background): drop the interactive chrome — BackButton + toolbar/QR — and
+ *   keep only the readable document so it scales down cleanly.
+ */
+export function CvPage({ preview = false }: { preview?: boolean }) {
   const { t } = useTranslation();
   const career = buildCareerTimeline(t);
 
@@ -25,7 +30,7 @@ export function CvPage() {
 
   return (
     <main className="cv-page">
-      <BackButton text={t("main.about")} to="/about" />
+      {!preview && <BackButton text={t("main.about")} to="/about" />}
 
       <header className="cv-header">
         <h1 className={clsxm("font-russo", "cv-header__name")}>Ivan Holovko</h1>
@@ -34,7 +39,9 @@ export function CvPage() {
         </p>
         <div className="cv-header__contacts">
           {CV_CONTACTS.map((c) =>
-            c.href ? (
+            // In preview the whole card is already an <a>; render contacts as
+            // spans to avoid invalid nested anchors.
+            c.href && !preview ? (
               <a
                 key={c.label}
                 href={c.href}
@@ -124,15 +131,17 @@ export function CvPage() {
         </div>
       </section>
 
-      <CVToolbar
-        labels={{
-          print: t("cv.print"),
-          share: t("cv.share"),
-          copied: t("cv.copied"),
-          scanHint: t("cv.scanHint"),
-          downloadPdf: t("cv.downloadPdf"),
-        }}
-      />
+      {!preview && (
+        <CVToolbar
+          labels={{
+            print: t("cv.print"),
+            share: t("cv.share"),
+            copied: t("cv.copied"),
+            scanHint: t("cv.scanHint"),
+            downloadPdf: t("cv.downloadPdf"),
+          }}
+        />
+      )}
     </main>
   );
 }

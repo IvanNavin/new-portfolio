@@ -1,7 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@/router/router";
 import { ReadCvText3D, type Pointer } from "@/components/ReadCvText3D";
+import { CvPage } from "@/pages/about/cv/CvPage";
+
+// The CV preview is rendered at this design width, then scaled down to the
+// card. Close to the CV's 880px max-width so the mini reads as the full page.
+const PREVIEW_W = 860;
 
 /**
  * "Read full CV" 3D button. A dark card sits behind, the volumetric gold text
@@ -24,6 +29,19 @@ export function DownloadButton() {
   const cardRef = useRef<HTMLDivElement>(null);
   // Cursor fed into the 3D scene without re-rendering (read each frame).
   const pointer = useRef<Pointer>({ x: 0, y: 0 });
+
+  // Scale of the mini CV thumbnail = card width / its design width. Tracked so
+  // the thumbnail stays sharp/sized across viewport changes.
+  const [cardW, setCardW] = useState(0);
+  useLayoutEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const update = () => setCardW(el.getBoundingClientRect().width);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   // Phones get the rotated word-stack; tablet+ spills a single line.
   const [wide, setWide] = useState(
@@ -88,14 +106,29 @@ export function DownloadButton() {
             ref={innerRef}
             className="pointer-events-none relative h-full w-full rounded-[28px] transition-transform duration-200 ease-out [transform-style:preserve-3d]"
           >
-            {/* Card face (behind) */}
+            {/* Card face (behind): the real CV page, scaled into the card as a
+                live thumbnail, under a dark veil so the gold text stays legible.
+                Clipped here (own layer) — the card itself can't clip or it would
+                cut off the spilling text. */}
             <div
-              className="absolute inset-0 rounded-[28px] border border-white/10 bg-[#0d0d12] shadow-[0_30px_70px_rgba(0,0,0,0.55)] transition-colors duration-300 group-hover:border-yellow-300/30"
+              className="absolute inset-0 overflow-hidden rounded-[28px] border border-white/10 bg-[#0d0d12] shadow-[0_30px_70px_rgba(0,0,0,0.55)] transition-colors duration-300 group-hover:border-yellow-300/30"
               style={{ transform: "translateZ(0)" }}
             >
+              <div
+                aria-hidden="true"
+                className="absolute top-0 left-0 origin-top-left"
+                style={{
+                  width: PREVIEW_W,
+                  transform: `scale(${cardW ? cardW / PREVIEW_W : 0.5})`,
+                }}
+              >
+                <CvPage preview />
+              </div>
+              {/* Dark veil for text legibility. */}
+              <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f]/82 via-[#0a0a0f]/70 to-[#0a0a0f]/88" />
               {/* Cursor-following sheen (subtle, not a gradient fill) */}
               <div
-                className="absolute inset-0 rounded-[28px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 style={{
                   background:
                     "radial-gradient(420px circle at var(--mx,50%) var(--my,50%), rgba(253,224,71,0.12), transparent 60%)",
