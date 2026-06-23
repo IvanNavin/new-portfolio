@@ -101,7 +101,7 @@ function Lettering({
     if (fly > 0.0001) {
       const e = fly * fly; // ease-in: slow start, rushes past at the end
       t.rotation.set(0, 0, 0);
-      t.position.z = e * 7.4;
+      t.position.z = e * 9; // flies well past the camera (z=6) → big lead
       return;
     }
     t.position.z = 0;
@@ -158,6 +158,10 @@ export function ReadCvText3D({
       camera={{ position: [0, 0, 6], fov: 32 }}
       gl={{ alpha: true, antialias: true }}
       dpr={[1, 2]}
+      // Measure by layout size, NOT getBoundingClientRect — otherwise the card's
+      // zoom CSS-scale would size the drawing buffer to the scaled dimensions and
+      // never recover (text vanishes after the zoom).
+      resize={{ offsetSize: true }}
       // pointer-events:none so the canvas (which sits inside the tilting card)
       // never becomes the hover hit-target — that's what caused the edge jitter.
       style={{ pointerEvents: "none" }}

@@ -1,13 +1,16 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion, useMotionValue, animate } from "framer-motion";
+import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Link, useRouter } from "@/router/router";
 import { ReadCvText3D, type Pointer } from "@/components/ReadCvText3D";
 import { CvPage } from "@/pages/about/cv/CvPage";
 import { useCvZoom } from "@/pages/about/cvZoom";
 
-const GROW = { duration: 0.8, ease: [0.4, 0, 0.2, 1] as const }; // card (slower)
-const FLY = { duration: 0.45, ease: "easeIn" as const }; // text (faster)
+const GROW = { duration: 1.0, ease: [0.4, 0, 0.2, 1] as const }; // card (slower)
+const FLY = { duration: 0.4, ease: "easeIn" as const }; // text (much faster)
+// Frosted-glass blur on the CV thumbnail at rest; clears as the card zooms in
+// so it resolves into the sharp real page (no jump at the handoff).
+const REST_BLUR = 6;
 
 /**
  * "Read full CV" 3D button → seamless zoom INTO the CV page.
@@ -42,6 +45,8 @@ export function DownloadButton() {
   const radius = useMotionValue(28);
   const textOpacity = useMotionValue(1);
   const flyProgress = useMotionValue(0); // 0 = on card, 1 = flown through camera
+  const cvBlur = useMotionValue(REST_BLUR); // frosted at rest, 0 when full
+  const cvFilter = useTransform(cvBlur, (b) => `blur(${b}px)`);
 
   // Mini CV thumbnail: a viewport-framed snapshot of the full CV page, scaled
   // into the card. Using the *viewport* width as the design width makes the
@@ -115,12 +120,14 @@ export function DownloadButton() {
     zoomingRef.current = true;
     elevate(true);
     await straighten();
-    // Text flies through the camera fast; card grows slower behind it.
+    // Text flies through the camera fast; card grows slower behind it,
+    // un-blurring as it approaches the real page.
     animate(flyProgress, 1, FLY);
-    animate(textOpacity, 0, { duration: 0.36, ease: "easeIn" });
+    animate(textOpacity, 0, { duration: 0.3, ease: "easeIn" });
     animate(cardX, target.x, GROW);
     animate(cardY, target.y, GROW);
     animate(radius, 0, GROW);
+    animate(cvBlur, 0, GROW);
     await animate(cardScale, target.scale, GROW).finished;
     // Hand off to the scrollable CV page (identical frame), then reset the card
     // behind the now-covering overlay.
@@ -132,12 +139,22 @@ export function DownloadButton() {
       radius.set(28);
       textOpacity.set(1);
       flyProgress.set(0);
+      cvBlur.set(REST_BLUR);
       elevate(false);
       zoomingRef.current = false;
     });
   };
 
   const runClose = async () => {
+    // After a reload/direct-open the About page behind the overlay is scrolled
+    // to the top and the card is off-screen — centre it first (hidden under the
+    // overlay) so the page shrinks back to a visible card.
+    const card = cardRef.current;
+    const sc = card?.closest(".overflow-y-auto") as HTMLElement | null;
+    if (card && sc) {
+      const r = card.getBoundingClientRect();
+      sc.scrollTop += r.top + r.height / 2 - window.innerHeight / 2;
+    }
     const target = growTarget();
     if (!target) {
       navigate("/about");
@@ -154,13 +171,23 @@ export function DownloadButton() {
     radius.set(0);
     textOpacity.set(0);
     flyProgress.set(1);
+    cvBlur.set(0);
     navigate("/about");
     animate(flyProgress, 0, { duration: 0.45, ease: "easeOut" });
     animate(textOpacity, 1, { duration: 0.45, ease: "easeOut" });
     animate(cardX, 0, GROW);
     animate(cardY, 0, GROW);
     animate(radius, 28, GROW);
+    animate(cvBlur, REST_BLUR, GROW);
     await animate(cardScale, 1, GROW).finished;
+    // Guarantee the exact rest state regardless of any interruption.
+    cardScale.set(1);
+    cardX.set(0);
+    cardY.set(0);
+    radius.set(28);
+    textOpacity.set(1);
+    flyProgress.set(0);
+    cvBlur.set(REST_BLUR);
     elevate(false);
     zoomingRef.current = false;
     endClose();
@@ -237,16 +264,17 @@ export function DownloadButton() {
               className="absolute inset-0 overflow-hidden border border-white/10 bg-[#0d0d12] shadow-[0_30px_70px_rgba(0,0,0,0.55)] transition-colors duration-300 group-hover:border-yellow-300/30"
               style={{ borderRadius: radius, transform: "translateZ(0)" }}
             >
-              <div
+              <motion.div
                 aria-hidden="true"
                 className="absolute top-0 left-0 origin-top-left"
                 style={{
                   width: designW,
                   transform: `scale(${cardW ? cardW / designW : 0.5})`,
+                  filter: cvFilter,
                 }}
               >
                 <CvPage preview />
-              </div>
+              </motion.div>
               {/* Dark veil for text legibility. */}
               <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f]/82 via-[#0a0a0f]/70 to-[#0a0a0f]/88" />
               {/* Cursor-following sheen. */}
