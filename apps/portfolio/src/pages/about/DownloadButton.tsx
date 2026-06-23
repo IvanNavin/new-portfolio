@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "@/router/router";
-import { ReadCvText3D } from "@/components/ReadCvText3D";
+import { ReadCvText3D, type Pointer } from "@/components/ReadCvText3D";
 
 /**
  * "Read full CV" 3D button. A dark card sits behind, the volumetric gold text
@@ -21,6 +21,8 @@ import { ReadCvText3D } from "@/components/ReadCvText3D";
 export function DownloadButton() {
   const { t } = useTranslation();
   const innerRef = useRef<HTMLDivElement>(null);
+  // Cursor fed into the 3D scene without re-rendering (read each frame).
+  const pointer = useRef<Pointer>({ x: 0, y: 0 });
 
   // Phones get the rotated word-stack; tablet+ spills a single line.
   const [wide, setWide] = useState(
@@ -44,11 +46,15 @@ export function DownloadButton() {
     el.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
     el.style.setProperty("--mx", `${px * 100}%`);
     el.style.setProperty("--my", `${py * 100}%`);
+    pointer.current.x = px * 2 - 1;
+    pointer.current.y = 1 - py * 2;
   };
 
   const handleLeave = () => {
     const el = innerRef.current;
     if (el) el.style.transform = "rotateX(0deg) rotateY(0deg)";
+    pointer.current.x = 0;
+    pointer.current.y = 0;
   };
 
   return (
@@ -60,9 +66,13 @@ export function DownloadButton() {
         onMouseLeave={handleLeave}
         className="group block aspect-[1.6] w-[clamp(300px,80vw,520px)]"
       >
+        {/* pointer-events-none so the tilting visual never becomes the hover
+            hit-target: hover is decided solely by the stable <a> box, otherwise
+            the tilt moves the card's projection under/away from the cursor at
+            the edges and it jitters in a hover/leave feedback loop. */}
         <div
           ref={innerRef}
-          className="relative h-full w-full rounded-[28px] transition-transform duration-200 ease-out [transform-style:preserve-3d]"
+          className="pointer-events-none relative h-full w-full rounded-[28px] transition-transform duration-200 ease-out [transform-style:preserve-3d]"
         >
           {/* Card face (behind) */}
           <div
@@ -79,21 +89,23 @@ export function DownloadButton() {
             />
           </div>
 
-          {/* Real extruded 3D text. On desktop the canvas is larger than the
-              card so the lettering spills over its edges; on narrow screens it
-              stays card-sized (inset-0) so the diagonal word-stack can't clip
-              or skew on the rotated cube face. No CSS translateZ — depth comes
-              from the Text3D geometry + the card's tilt. */}
+          {/* Real extruded 3D text in an oversized canvas so the lettering
+              spills past the card edges. Desktop spills symmetrically; phones
+              spill mostly top/bottom (narrow side insets keep the canvas inside
+              the viewport, generous vertical insets let the 45° stack overflow
+              the short card). No CSS translateZ — depth comes from the Text3D
+              geometry + the resting view angle. */}
           <div
             className={
               wide
                 ? "pointer-events-none absolute -inset-[18%]"
-                : "pointer-events-none absolute inset-0"
+                : "pointer-events-none absolute -inset-x-[6%] -inset-y-[34%]"
             }
           >
             <ReadCvText3D
               text={t("about.readCv").toUpperCase()}
               mode={wide ? "line" : "stack"}
+              pointer={pointer}
             />
           </div>
         </div>

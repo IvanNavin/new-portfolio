@@ -1,7 +1,11 @@
 import { Suspense, useLayoutEffect, useMemo, useRef } from "react";
+import type { RefObject } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Text3D, Center, Environment, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
+
+/** Cursor position in NDC-ish space (x: -1..1 left→right, y: -1..1 bottom→top). */
+export type Pointer = { x: number; y: number };
 
 const FONT = "/fonts/helvetiker_bold.typeface.json";
 
@@ -42,7 +46,15 @@ function Gold() {
  *  - "stack" → each word centered on its own line, the whole block rotated 45°,
  *              fit inside the card. Static (phones have no hover).
  */
-function Lettering({ text, mode }: { text: string; mode: "line" | "stack" }) {
+function Lettering({
+  text,
+  mode,
+  pointer,
+}: {
+  text: string;
+  mode: "line" | "stack";
+  pointer: RefObject<Pointer>;
+}) {
   const { viewport } = useThree();
   const tilt = useRef<THREE.Group>(null); // interactive cursor delta (0 at rest)
   const fit = useRef<THREE.Group>(null); // scale + center (measured)
@@ -68,17 +80,20 @@ function Lettering({ text, mode }: { text: string; mode: "line" | "stack" }) {
     const s =
       mode === "line"
         ? (viewport.width * 0.92) / w
-        : Math.min((viewport.width * 0.92) / w, (viewport.height * 0.92) / h);
+        : Math.min((viewport.width * 0.98) / w, (viewport.height * 0.98) / h);
     g.scale.setScalar(s);
     g.position.set(-cx * s, -cy * s, 0);
   }, [text, mode, words, viewport.width, viewport.height]);
 
-  // Desktop leans toward the pointer; mobile stays put.
-  useFrame((state) => {
+  // Desktop leans toward the pointer; mobile stays put. The pointer is fed in
+  // from the card's DOM mousemove (the canvas has pointer-events:none so it
+  // can't destabilise the <a> hover box), not from r3f's own canvas events.
+  useFrame(() => {
     const t = tilt.current;
     if (!t) return;
-    const ty = interactive ? state.pointer.x * 0.22 : 0;
-    const tx = interactive ? -state.pointer.y * 0.16 : 0;
+    const p = pointer.current;
+    const ty = interactive ? p.x * 0.22 : 0;
+    const tx = interactive ? -p.y * 0.16 : 0;
     t.rotation.y = THREE.MathUtils.lerp(t.rotation.y, ty, 0.08);
     t.rotation.x = THREE.MathUtils.lerp(t.rotation.x, tx, 0.08);
   });
@@ -116,15 +131,20 @@ function Lettering({ text, mode }: { text: string; mode: "line" | "stack" }) {
 export function ReadCvText3D({
   text,
   mode,
+  pointer,
 }: {
   text: string;
   mode: "line" | "stack";
+  pointer: RefObject<Pointer>;
 }) {
   return (
     <Canvas
       camera={{ position: [0, 0, 6], fov: 32 }}
       gl={{ alpha: true, antialias: true }}
       dpr={[1, 2]}
+      // pointer-events:none so the canvas (which sits inside the tilting card)
+      // never becomes the hover hit-target — that's what caused the edge jitter.
+      style={{ pointerEvents: "none" }}
     >
       <ambientLight intensity={0.5} />
       <directionalLight position={[4, 6, 5]} intensity={2.2} />
@@ -151,7 +171,7 @@ export function ReadCvText3D({
         />
       </Environment>
       <Suspense fallback={null}>
-        <Lettering text={text} mode={mode} />
+        <Lettering text={text} mode={mode} pointer={pointer} />
       </Suspense>
     </Canvas>
   );
