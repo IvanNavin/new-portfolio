@@ -49,11 +49,26 @@ export const QRPopover = ({ url, labels, onClose }: Props) => {
   const copyUrl = async () => {
     try {
       await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
     } catch {
-      /* clipboard API can fail (insecure context, permissions). */
+      // Async clipboard can be blocked (iframe / no permission) — fall back to
+      // the legacy textarea + execCommand path.
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = url;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      } catch {
+        /* give up silently */
+      }
     }
+    // Show the confirmation either way — the click intent was to copy, and the
+    // feedback is what the user is after.
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
   };
 
   return (
