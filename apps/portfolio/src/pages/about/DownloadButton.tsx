@@ -47,6 +47,11 @@ export function DownloadButton() {
   const flyProgress = useMotionValue(0); // 0 = on card, 1 = flown through camera
   const cvBlur = useMotionValue(REST_BLUR); // frosted at rest, 0 when full
   const cvFilter = useTransform(cvBlur, (b) => `blur(${b}px)`);
+  // Card-only decorations (border + dark veil) that DON'T exist on the real
+  // page — faded out as it grows so the end state == the page exactly.
+  const borderA = useMotionValue(0.1);
+  const borderColor = useTransform(borderA, (a) => `rgba(255,255,255,${a})`);
+  const veilOpacity = useMotionValue(1);
 
   // Mini CV thumbnail: a viewport-framed snapshot of the full CV page, scaled
   // into the card. Using the *viewport* width as the design width makes the
@@ -138,6 +143,8 @@ export function DownloadButton() {
     animate(cardY, target.y, GROW);
     animate(radius, 0, GROW);
     animate(cvBlur, 0, GROW);
+    animate(borderA, 0, GROW);
+    animate(veilOpacity, 0, GROW);
     await animate(cardScale, target.scale, GROW).finished;
     // The full-screen card is now pixel-identical to the real CV page, so swap
     // instantly (invisible) — no opacity crossfade needed. Reset the card behind
@@ -151,6 +158,8 @@ export function DownloadButton() {
       textOpacity.set(1);
       flyProgress.set(0);
       cvBlur.set(REST_BLUR);
+      borderA.set(0.1);
+      veilOpacity.set(1);
       elevate(false);
       zoomingRef.current = false;
     });
@@ -183,6 +192,8 @@ export function DownloadButton() {
     textOpacity.set(0);
     flyProgress.set(1);
     cvBlur.set(0);
+    borderA.set(0);
+    veilOpacity.set(0);
     navigate("/about");
     animate(flyProgress, 0, { duration: 0.45, ease: "easeOut" });
     animate(textOpacity, 1, { duration: 0.45, ease: "easeOut" });
@@ -190,6 +201,8 @@ export function DownloadButton() {
     animate(cardY, 0, GROW);
     animate(radius, 28, GROW);
     animate(cvBlur, REST_BLUR, GROW);
+    animate(borderA, 0.1, GROW);
+    animate(veilOpacity, 1, GROW);
     await animate(cardScale, 1, GROW).finished;
     // Guarantee the exact rest state regardless of any interruption.
     cardScale.set(1);
@@ -199,6 +212,8 @@ export function DownloadButton() {
     textOpacity.set(1);
     flyProgress.set(0);
     cvBlur.set(REST_BLUR);
+    borderA.set(0.1);
+    veilOpacity.set(1);
     elevate(false);
     zoomingRef.current = false;
     endClose();
@@ -280,8 +295,12 @@ export function DownloadButton() {
                 a dark veil. Clipped here (its own layer) so the spilling text
                 isn't cut off. Its border-radius animates to 0 as it grows. */}
             <motion.div
-              className="absolute inset-0 overflow-hidden border border-white/10 bg-[#0d0d12] shadow-[0_30px_70px_rgba(0,0,0,0.55)] transition-colors duration-300 group-hover:border-yellow-300/30"
-              style={{ borderRadius: radius, transform: "translateZ(0)" }}
+              className="absolute inset-0 overflow-hidden border bg-[#0a0a0f] shadow-[0_30px_70px_rgba(0,0,0,0.55)]"
+              style={{
+                borderRadius: radius,
+                borderColor,
+                transform: "translateZ(0)",
+              }}
             >
               <motion.div
                 aria-hidden="true"
@@ -294,8 +313,12 @@ export function DownloadButton() {
               >
                 <CvPage preview />
               </motion.div>
-              {/* Dark veil for text legibility. */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f]/82 via-[#0a0a0f]/70 to-[#0a0a0f]/88" />
+              {/* Dark veil for text legibility — fades out as the card grows
+                  (the real page has none). */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f]/82 via-[#0a0a0f]/70 to-[#0a0a0f]/88"
+                style={{ opacity: veilOpacity }}
+              />
               {/* Cursor-following sheen. */}
               <div
                 className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"

@@ -39,15 +39,10 @@ export function CvPage({
   return (
     <main className="cv-page">
       {preview ? (
-        // Non-interactive look-alike of the BackButton in the exact same slot,
-        // so the card thumbnail is pixel-identical to the real page → the zoom
-        // hands off with no back-button pop / position jump.
-        <div className="sticky top-0 z-50 flex justify-end pt-2">
-          <div className="flex size-[100px] items-center justify-center rounded-full border-2 border-white/90">
-            <span className="font-russo text-base text-white">
-              {t("main.about")}
-            </span>
-          </div>
+        // Just reserve the BackButton's vertical space so the content lines up
+        // with the real page (don't draw a button — it wouldn't match).
+        <div aria-hidden="true" className="flex justify-end pt-2">
+          <div className="size-[100px]" />
         </div>
       ) : (
         <BackButton text={t("main.about")} to="/about" onBack={onBack} />
