@@ -1,4 +1,4 @@
-import { AnyType } from 'portfolio/app/types';
+import { AnyType } from '../../types';
 
 export const log = (...args: AnyType[]) => {
   // eslint-disable-next-line no-console

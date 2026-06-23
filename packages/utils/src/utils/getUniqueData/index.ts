@@ -1,5 +1,5 @@
 'use client';
-import { AnyType } from 'portfolio/app/types';
+import { AnyType } from '../../types';
 
 export const getUniqueData = (data: AnyType): AnyType => {
   const stringifyData = data
