@@ -7,19 +7,21 @@ import { WorksPage } from "@/pages/WorksPage";
 import { TalksPage } from "@/pages/TalksPage";
 import { ContactPage } from "@/pages/ContactPage";
 import { CvOverlay } from "@/components/CvOverlay";
-import { CvZoomProvider } from "@/pages/about/cvZoom";
+import { CvZoomLayer } from "@/components/CvZoomLayer";
+import { CvZoomProvider, useCvZoom } from "@/pages/about/cvZoom";
 
-export function App() {
+function AppInner() {
   const { path } = useRouter();
+  const { zoom } = useCvZoom();
 
-  // The CV lives at /about/cv. It renders as a full-screen overlay above the
-  // cube while the cube stays parked on the About face behind it. When opened
-  // from the "Read full CV" card, CvOverlay grows the page out of the card.
+  // The CV lives at /about/cv: a full-screen overlay above the cube while the
+  // cube stays parked on the About face. The card→page zoom plays in CvZoomLayer
+  // (rendered on top during the transition).
   const isCv = path === "/about/cv";
   const cubeActive = isCv ? "/about" : path;
 
   return (
-    <CvZoomProvider>
+    <>
       <CubeWrapper active={cubeActive}>
         <HomePage path="/" />
         <AboutPage path="/about" />
@@ -29,8 +31,17 @@ export function App() {
       </CubeWrapper>
 
       {isCv && <CvOverlay />}
+      {zoom && <CvZoomLayer />}
 
       <LanguageSwitcher />
+    </>
+  );
+}
+
+export function App() {
+  return (
+    <CvZoomProvider>
+      <AppInner />
     </CvZoomProvider>
   );
 }
