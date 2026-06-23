@@ -58,7 +58,7 @@ export function DownloadButton() {
   };
 
   return (
-    <div className="mt-12 flex justify-center [perspective:1000px]">
+    <div className="mt-28 flex justify-center [perspective:1000px] md:mt-12">
       <Link
         to="/about/cv"
         aria-label={t("about.readCv")}
