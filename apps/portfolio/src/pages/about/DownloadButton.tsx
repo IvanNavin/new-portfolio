@@ -21,6 +21,7 @@ import { ReadCvText3D, type Pointer } from "@/components/ReadCvText3D";
 export function DownloadButton() {
   const { t } = useTranslation();
   const innerRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   // Cursor fed into the 3D scene without re-rendering (read each frame).
   const pointer = useRef<Pointer>({ x: 0, y: 0 });
 
@@ -35,19 +36,25 @@ export function DownloadButton() {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
+  // Tilt is measured from the card's CENTRE (not the hover box), so it feels the
+  // same over the card while the full-width <a> lets the surrounding space drive
+  // it too. Offsets are in card-widths/heights: ±0.5 = card edge.
   const handleMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const el = innerRef.current;
-    if (!el) return;
-    const r = e.currentTarget.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width; // 0..1
-    const py = (e.clientY - r.top) / r.height; // 0..1
-    const ry = (px - 0.5) * 30; // rotateY
-    const rx = -(py - 0.5) * 30; // rotateX
+    const card = cardRef.current;
+    if (!el || !card) return;
+    const r = card.getBoundingClientRect();
+    const clamp = (v: number, a: number, b: number) =>
+      Math.min(b, Math.max(a, v));
+    const dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+    const dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+    const ry = clamp(dx, -0.8, 0.8) * 30; // rotateY (±15° at card edge)
+    const rx = -clamp(dy, -0.8, 0.8) * 30; // rotateX
     el.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-    el.style.setProperty("--mx", `${px * 100}%`);
-    el.style.setProperty("--my", `${py * 100}%`);
-    pointer.current.x = px * 2 - 1;
-    pointer.current.y = 1 - py * 2;
+    el.style.setProperty("--mx", `${(clamp(dx, -0.5, 0.5) + 0.5) * 100}%`);
+    el.style.setProperty("--my", `${(clamp(dy, -0.5, 0.5) + 0.5) * 100}%`);
+    pointer.current.x = clamp(dx * 2, -1, 1);
+    pointer.current.y = clamp(-dy * 2, -1, 1);
   };
 
   const handleLeave = () => {
@@ -58,55 +65,63 @@ export function DownloadButton() {
   };
 
   return (
-    <div className="mt-28 flex justify-center [perspective:1000px] md:mt-12">
+    <div className="mt-28 [perspective:1000px] md:mt-12">
+      {/* Full-width hover/click area so the tilt reacts to the cursor in the
+          space around the card, not only directly over it. The visual card
+          stays a fixed size, centred inside. */}
       <Link
         to="/about/cv"
         aria-label={t("about.readCv")}
         onMouseMove={handleMove}
         onMouseLeave={handleLeave}
-        className="group block aspect-[1.6] w-[clamp(300px,80vw,520px)]"
+        className="group block w-full"
       >
         {/* pointer-events-none so the tilting visual never becomes the hover
             hit-target: hover is decided solely by the stable <a> box, otherwise
             the tilt moves the card's projection under/away from the cursor at
             the edges and it jitters in a hover/leave feedback loop. */}
         <div
-          ref={innerRef}
-          className="pointer-events-none relative h-full w-full rounded-[28px] transition-transform duration-200 ease-out [transform-style:preserve-3d]"
+          ref={cardRef}
+          className="mx-auto aspect-[1.6] w-[clamp(300px,80vw,520px)]"
         >
-          {/* Card face (behind) */}
           <div
-            className="absolute inset-0 rounded-[28px] border border-white/10 bg-[#0d0d12] shadow-[0_30px_70px_rgba(0,0,0,0.55)] transition-colors duration-300 group-hover:border-yellow-300/30"
-            style={{ transform: "translateZ(0)" }}
+            ref={innerRef}
+            className="pointer-events-none relative h-full w-full rounded-[28px] transition-transform duration-200 ease-out [transform-style:preserve-3d]"
           >
-            {/* Cursor-following sheen (subtle, not a gradient fill) */}
+            {/* Card face (behind) */}
             <div
-              className="absolute inset-0 rounded-[28px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-              style={{
-                background:
-                  "radial-gradient(420px circle at var(--mx,50%) var(--my,50%), rgba(253,224,71,0.12), transparent 60%)",
-              }}
-            />
-          </div>
+              className="absolute inset-0 rounded-[28px] border border-white/10 bg-[#0d0d12] shadow-[0_30px_70px_rgba(0,0,0,0.55)] transition-colors duration-300 group-hover:border-yellow-300/30"
+              style={{ transform: "translateZ(0)" }}
+            >
+              {/* Cursor-following sheen (subtle, not a gradient fill) */}
+              <div
+                className="absolute inset-0 rounded-[28px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                style={{
+                  background:
+                    "radial-gradient(420px circle at var(--mx,50%) var(--my,50%), rgba(253,224,71,0.12), transparent 60%)",
+                }}
+              />
+            </div>
 
-          {/* Real extruded 3D text in an oversized canvas so the lettering
+            {/* Real extruded 3D text in an oversized canvas so the lettering
               spills past the card edges. Desktop spills symmetrically; phones
               spill mostly top/bottom (narrow side insets keep the canvas inside
               the viewport, generous vertical insets let the 45° stack overflow
               the short card). No CSS translateZ — depth comes from the Text3D
               geometry + the resting view angle. */}
-          <div
-            className={
-              wide
-                ? "pointer-events-none absolute -inset-[18%]"
-                : "pointer-events-none absolute -inset-x-[6%] -inset-y-[34%]"
-            }
-          >
-            <ReadCvText3D
-              text={t("about.readCv").toUpperCase()}
-              mode={wide ? "line" : "stack"}
-              pointer={pointer}
-            />
+            <div
+              className={
+                wide
+                  ? "pointer-events-none absolute -inset-[18%]"
+                  : "pointer-events-none absolute -inset-x-[6%] -inset-y-[34%]"
+              }
+            >
+              <ReadCvText3D
+                text={t("about.readCv").toUpperCase()}
+                mode={wide ? "line" : "stack"}
+                pointer={pointer}
+              />
+            </div>
           </div>
         </div>
       </Link>
