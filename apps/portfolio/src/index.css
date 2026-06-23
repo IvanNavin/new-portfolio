@@ -142,8 +142,11 @@ body {
 /* Star-blink decoration shared by the animated-border buttons. */
 .star-blink {
   position: absolute;
-  top: 30px;
-  left: 20px;
+  /* Left edge, vertically centred on the button (matches the original CTA).
+     `transform` is driven by the blink animation, so centre via top+margin. */
+  top: 50%;
+  margin-top: -7px;
+  left: 18px;
   width: 14px;
   height: 14px;
   background-color: #b6cbd4;
