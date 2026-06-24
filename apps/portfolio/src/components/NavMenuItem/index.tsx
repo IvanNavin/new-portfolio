@@ -14,6 +14,9 @@ type Props = {
   index: number;
   className?: string;
   textClassName?: string;
+  /** Whether items flip like a cube on touch devices. Off → static front
+      text (used where `first === second`, so the flip would only flicker). */
+  flipOnTouch?: boolean;
 };
 
 export const NavMenuItem = ({
@@ -21,6 +24,7 @@ export const NavMenuItem = ({
   index,
   className,
   textClassName,
+  flipOnTouch = true,
 }: Props) => {
   const [hovered, setHovered] = useState(false);
   // Client-only SPA: window always exists, so detect touch at first render.
@@ -49,7 +53,7 @@ export const NavMenuItem = ({
       className={clsxm(
         "group relative flex self-start border-transparent bg-transparent p-0 text-left",
         "focus-within:border-transparent focus-within:outline-transparent select-none",
-        isTouch && "touch",
+        flipOnTouch && isTouch && "touch",
         className,
       )}
     >

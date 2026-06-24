@@ -47,6 +47,7 @@ export function TalksPage(_props: PageProps) {
               key={item.href}
               item={item}
               index={index}
+              flipOnTouch={false}
               textClassName={clsxm("text-[3vw]", index !== 0 && "text-red-600")}
             />
           ))}
