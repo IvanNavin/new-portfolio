@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { BackButton } from "@/components/BackButton";
 import { VideoFrame } from "@/components/VideoFrame";
+import Noise from "@/components/reactbits/Noise";
 import { findTalk } from "./talks";
 
 /**
@@ -16,9 +17,18 @@ export function TalkOverlay({ slug }: { slug: string }) {
 
   return (
     <div className="fixed inset-0 z-[80] overflow-y-auto bg-[#0a0a0f] text-white">
+      {/* Film-grain background (reactbits), pinned to the viewport behind the
+          content while the page scrolls. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      >
+        <Noise patternAlpha={18} />
+      </div>
+
       <BackButton text={t("main.talks")} to="/talks" />
 
-      <main className="mx-auto max-w-[900px] px-6 py-24">
+      <main className="relative z-10 mx-auto max-w-[900px] px-6 py-24">
         <h1 className="font-russo mb-8 text-[clamp(24px,4vw,40px)]">
           {talk.title}
         </h1>
