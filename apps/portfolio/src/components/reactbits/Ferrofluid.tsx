@@ -308,8 +308,10 @@ export default function Ferrofluid({
     meshRef.current = mesh;
 
     const resize = () => {
-      const rect = container.getBoundingClientRect();
-      renderer.setSize(rect.width, rect.height);
+      // clientWidth/Height = layout size (transform-immune). getBoundingClientRect
+      // is skewed while the cube face is mid-rotation, which sized the canvas to
+      // a sliver when navigating in from another face.
+      renderer.setSize(container.clientWidth, container.clientHeight);
       uniforms.iResolution.value = [
         gl.drawingBufferWidth,
         gl.drawingBufferHeight,
