@@ -84,14 +84,6 @@ body {
   animation: fadeInWithScale 1s forwards;
 }
 
-/* Cal.com inline embed: its JS auto-resizes the injected iframe to content
-   height, which collapses to ~150px on the short event-picker view. Force the
-   iframe (and Cal's wrapper) to fill our reserved height so it never collapses. */
-.cal-embed > *,
-.cal-embed iframe {
-  height: 100% !important;
-}
-
 /* WebGL fluid background canvas fills its cube face. */
 #fluid {
   position: absolute;

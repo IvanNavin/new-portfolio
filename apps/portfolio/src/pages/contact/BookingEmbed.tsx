@@ -110,10 +110,13 @@ export const BookingEmbed = ({
         {caption}
       </p>
       {/* No outer frame — Cal renders its own card inside the iframe. */}
+      {/* Cal's inline embed is a fixed-height widget (cal-inline inherits this
+          height, the iframe fills it, content scrolls INSIDE). Give it enough
+          height to fit the event-picker so nothing scrolls inside the iframe —
+          only the page scrolls. */}
       <div
         ref={ref}
-        className="cal-embed"
-        style={{ width: "100%", height: 700 }}
+        style={{ width: "100%", height: 920 }}
         aria-label="Cal.com booking widget"
       />
       {isProfileMode && (
