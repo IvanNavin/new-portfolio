@@ -329,7 +329,9 @@ export default function Ferrofluid({
       mouseTargetRef.current = [x, y];
       if (mouseDampening <= 0) uniforms.iMouse.value = [x, y];
     };
-    if (mouseInteraction) canvas.addEventListener("pointermove", onPointerMove);
+    // Listen on window (not the canvas) so the cursor magnet works even though
+    // the canvas sits behind pointer-events:none content.
+    if (mouseInteraction) window.addEventListener("pointermove", onPointerMove);
 
     const loop = (t: number) => {
       rafRef.current = requestAnimationFrame(loop);
@@ -357,7 +359,7 @@ export default function Ferrofluid({
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (mouseInteraction)
-        canvas.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("pointermove", onPointerMove);
       ro.disconnect();
       if (canvas.parentElement === container) container.removeChild(canvas);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

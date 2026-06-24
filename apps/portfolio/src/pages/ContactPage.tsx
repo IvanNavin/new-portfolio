@@ -31,10 +31,7 @@ export function ContactPage(_props: PageProps) {
         className="pointer-events-none sticky top-0 left-0 -mb-[100dvh] h-[100dvh] w-full overflow-hidden"
       >
         {path === "/contact" && (
-          <Ferrofluid
-            colors={["#fde047", "#e7a92c", "#fff3d6"]}
-            mouseInteraction={false}
-          />
+          <Ferrofluid colors={["#fde047", "#e7a92c", "#fff3d6"]} />
         )}
       </div>
 
