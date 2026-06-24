@@ -3,7 +3,7 @@ import { useRouter } from "@/router/router";
 import { BackButton } from "@/components/BackButton";
 import { NavMenuItem, type NavMenuItemData } from "@/components/NavMenuItem";
 import { clsxm } from "@/lib/utils";
-import LightRays from "@/components/reactbits/LightRays";
+import Galaxy from "@/components/reactbits/Galaxy";
 import { buildTalks } from "./talks/talks";
 import type { PageProps } from "./types";
 
@@ -24,23 +24,14 @@ export function TalksPage(_props: PageProps) {
 
   return (
     <div className="relative h-full w-full overflow-x-clip overflow-y-auto bg-black text-white">
-      {/* Light Rays background (reactbits), pinned to the viewport while content
+      {/* Galaxy background (reactbits), pinned to the viewport while content
           scrolls. Only mounted while Talks is the live route so its WebGL loop
           doesn't run behind the other faces. */}
       <div
         aria-hidden="true"
         className="pointer-events-none sticky top-0 left-0 -mb-[100dvh] h-[100dvh] w-full overflow-hidden"
       >
-        {path === "/talks" && (
-          <LightRays
-            raysOrigin="top-center"
-            raysColor="#ffd45e"
-            lightSpread={0.85}
-            rayLength={1.4}
-            followMouse
-            mouseInfluence={0.12}
-          />
-        )}
+        {path === "/talks" && <Galaxy mouseRepulsion mouseInteraction />}
       </div>
 
       {path === "/talks" && <BackButton text={t("ivan")} />}
