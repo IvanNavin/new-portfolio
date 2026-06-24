@@ -1,5 +1,5 @@
 import { Renderer, Program, Mesh, Color, Triangle } from "ogl";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 
 // Ported from React Bits (reactbits.dev/backgrounds/galaxy). ogl + a fragment
 // shader rendering layered, twinkling, mouse-reactive starfields.
@@ -190,6 +190,9 @@ interface GalaxyProps {
   autoCenterRepulsion?: number;
   transparent?: boolean;
   className?: string;
+  /** 0 = calm starfield, 1 = full hyperspace dive. Live-read each frame (a
+      ref, so animating it never tears down the WebGL program). */
+  warpRef?: RefObject<number>;
 }
 
 export default function Galaxy({
@@ -210,6 +213,7 @@ export default function Galaxy({
   autoCenterRepulsion = 0,
   transparent = true,
   className = "",
+  warpRef,
 }: GalaxyProps) {
   const ctnDom = useRef<HTMLDivElement>(null);
   const targetMousePos = useRef({ x: 0.5, y: 0.5 });
@@ -298,6 +302,13 @@ export default function Galaxy({
         program.uniforms.uStarSpeed.value = (t * 0.001 * starSpeed) / 10.0;
       }
 
+      // Warp dive: a radial explosion from centre (uAutoCenterRepulsion) plus a
+      // speed surge reads as flying forward into the stars.
+      const warp = warpRef?.current ?? 0;
+      program.uniforms.uAutoCenterRepulsion.value =
+        autoCenterRepulsion + warp * 5;
+      program.uniforms.uSpeed.value = speed * (1 + warp * 3);
+
       const lerpFactor = 0.05;
       smoothMousePos.current.x +=
         (targetMousePos.current.x - smoothMousePos.current.x) * lerpFactor;
@@ -356,6 +367,7 @@ export default function Galaxy({
     repulsionStrength,
     autoCenterRepulsion,
     transparent,
+    warpRef,
   ]);
 
   return (

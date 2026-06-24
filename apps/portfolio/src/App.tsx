@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion";
 import { CubeWrapper } from "@/cube/CubeWrapper";
 import { useRouter } from "@/router/router";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -39,7 +40,9 @@ export function App() {
       </CubeWrapper>
 
       {isCv && <CvOverlay />}
-      {isTalk && <TalkOverlay slug={talkSlug} />}
+      <AnimatePresence>
+        {isTalk && <TalkOverlay key={talkSlug} slug={talkSlug} />}
+      </AnimatePresence>
 
       <LanguageSwitcher />
     </CvZoomProvider>

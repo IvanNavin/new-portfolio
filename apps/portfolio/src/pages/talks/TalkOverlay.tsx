@@ -1,13 +1,20 @@
+import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { BackButton } from "@/components/BackButton";
 import { VideoFrame } from "@/components/VideoFrame";
 import Noise from "@/components/reactbits/Noise";
 import { findTalk } from "./talks";
 
+// Easing for the dive — a sharp ease-out (expo-ish) so the page rushes in from
+// depth and settles.
+const DIVE_EASE = [0.22, 1, 0.36, 1] as const;
+
 /**
  * Detail page for a single talk (/talks/<slug>), rendered as a full-screen
  * overlay above the cube while it stays parked on the Talks face — mirrors
- * how the CV overlays the About face. A YouTube embed plus related links.
+ * how the CV overlays the About face. Enters with a "warp dive": the backdrop
+ * fades in (letting the hyperspacing Galaxy show through) while the content
+ * emerges from the centre. AnimatePresence (in App) reverses it on exit.
  */
 export function TalkOverlay({ slug }: { slug: string }) {
   const { t } = useTranslation();
@@ -16,7 +23,13 @@ export function TalkOverlay({ slug }: { slug: string }) {
   if (!talk) return null;
 
   return (
-    <div className="fixed inset-0 z-[80] overflow-y-auto bg-[#0a0a0f] text-white">
+    <motion.div
+      className="fixed inset-0 z-[80] overflow-y-auto bg-[#0a0a0f] text-white"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
+    >
       {/* Film-grain background (reactbits), pinned to the viewport behind the
           content while the page scrolls. */}
       <div
@@ -28,7 +41,14 @@ export function TalkOverlay({ slug }: { slug: string }) {
 
       <BackButton text={t("main.talks")} to="/talks" />
 
-      <main className="relative z-10 mx-auto max-w-[900px] px-6 py-24">
+      <motion.main
+        className="relative z-10 mx-auto max-w-[900px] px-6 py-24"
+        style={{ transformOrigin: "center center" }}
+        initial={{ scale: 0.5, filter: "blur(16px)" }}
+        animate={{ scale: 1, filter: "blur(0px)" }}
+        exit={{ scale: 0.5, opacity: 0, filter: "blur(16px)" }}
+        transition={{ duration: 0.6, ease: DIVE_EASE }}
+      >
         <h1 className="font-russo mb-8 text-[clamp(24px,4vw,40px)]">
           {talk.title}
         </h1>
@@ -55,7 +75,7 @@ export function TalkOverlay({ slug }: { slug: string }) {
             </li>
           ))}
         </ul>
-      </main>
-    </div>
+      </motion.main>
+    </motion.div>
   );
 }
