@@ -8,6 +8,8 @@ import { TalksPage } from "@/pages/TalksPage";
 import { ContactPage } from "@/pages/ContactPage";
 import { CvOverlay } from "@/components/CvOverlay";
 import { CvZoomProvider } from "@/pages/about/cvZoom";
+import { TalkOverlay } from "@/pages/talks/TalkOverlay";
+import { isTalkSlug } from "@/pages/talks/talks";
 
 export function App() {
   const { path } = useRouter();
@@ -16,7 +18,15 @@ export function App() {
   // cube while the cube stays parked on the About face behind it. When opened
   // from the "Read full CV" card, CvOverlay grows the page out of the card.
   const isCv = path === "/about/cv";
-  const cubeActive = isCv ? "/about" : path;
+
+  // Talk detail pages live at /talks/<slug> and overlay the Talks face the
+  // same way the CV overlays About.
+  const talkSlug = path.startsWith("/talks/")
+    ? path.slice("/talks/".length)
+    : "";
+  const isTalk = isTalkSlug(talkSlug);
+
+  const cubeActive = isCv ? "/about" : isTalk ? "/talks" : path;
 
   return (
     <CvZoomProvider>
@@ -29,6 +39,7 @@ export function App() {
       </CubeWrapper>
 
       {isCv && <CvOverlay />}
+      {isTalk && <TalkOverlay slug={talkSlug} />}
 
       <LanguageSwitcher />
     </CvZoomProvider>

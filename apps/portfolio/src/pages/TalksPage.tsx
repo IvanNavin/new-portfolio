@@ -1,20 +1,66 @@
-import { CubeNav } from "@/components/CubeNav";
+import { useTranslation } from "react-i18next";
+import { useRouter } from "@/router/router";
+import { BackButton } from "@/components/BackButton";
+import { NavMenuItem, type NavMenuItemData } from "@/components/NavMenuItem";
+import { clsxm } from "@/lib/utils";
+import LightRays from "@/components/reactbits/LightRays";
+import { buildTalks } from "./talks/talks";
 import type { PageProps } from "./types";
 
+/**
+ * Talks page (cube "bottom" face). A vertical menu of the four talks over the
+ * Light Rays background (reactbits). Each item flips to navigate to its detail
+ * overlay at /talks/<slug>.
+ */
 export function TalksPage(_props: PageProps) {
+  const { t } = useTranslation();
+  const { path } = useRouter();
+
+  const items: NavMenuItemData[] = buildTalks(t).map((talk) => ({
+    first: talk.navTitle,
+    second: talk.navTitle,
+    href: `/talks/${talk.slug}`,
+  }));
+
   return (
-    <main className="relative grid h-full w-full place-items-center bg-[radial-gradient(circle_at_25%_25%,#0c4a6e,transparent_60%),radial-gradient(circle_at_80%_80%,#0284c7,transparent_55%)] bg-[#04121c]">
-      <div className="text-center">
-        <p className="mb-4 text-sm font-medium tracking-[0.3em] text-sky-300/80 uppercase">
-          Bottom face · /talks
-        </p>
-        <h1 className="text-7xl font-bold tracking-tight text-white">Talks</h1>
-        <p className="mt-4 max-w-md text-balance text-white/60">
-          Arrives from below (vertical roll). Placeholder for Talks and its 4
-          sub-routes, ported later.
-        </p>
+    <div className="relative h-full w-full overflow-x-clip overflow-y-auto bg-black text-white">
+      {/* Light Rays background (reactbits), pinned to the viewport while content
+          scrolls. Only mounted while Talks is the live route so its WebGL loop
+          doesn't run behind the other faces. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none sticky top-0 left-0 -mb-[100dvh] h-[100dvh] w-full overflow-hidden"
+      >
+        {path === "/talks" && (
+          <LightRays
+            raysOrigin="top-center"
+            raysColor="#ffd45e"
+            lightSpread={0.85}
+            rayLength={1.4}
+            followMouse
+            mouseInfluence={0.12}
+          />
+        )}
       </div>
-      <CubeNav />
-    </main>
+
+      {path === "/talks" && <BackButton text={t("ivan")} />}
+
+      <main className="relative z-10 flex min-h-full w-full flex-col">
+        <h1 className="font-russo px-[clamp(24px,8vw,114px)] pt-12 text-[clamp(28px,5vw,44px)]">
+          {t("talks.title")}
+        </h1>
+
+        <nav className="flex flex-1 flex-col items-start justify-center gap-1 pl-[clamp(24px,8vw,114px)]">
+          {items.map((item, index) => (
+            <NavMenuItem
+              key={item.href}
+              item={item}
+              index={index}
+              textClassName={clsxm("text-[3vw]", index !== 0 && "text-red-600")}
+            />
+          ))}
+        </nav>
+      </main>
+    </div>
   );
 }
