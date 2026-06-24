@@ -5,9 +5,11 @@ import { VideoFrame } from "@/components/VideoFrame";
 import Noise from "@/components/reactbits/Noise";
 import { findTalk } from "./talks";
 
-// Easing for the dive — a sharp ease-out (expo-ish) so the page rushes in from
-// depth and settles.
-const DIVE_EASE = [0.22, 1, 0.36, 1] as const;
+// Easing for the dive — easeInOutCubic, so the motion is spread evenly across
+// the whole duration (a front-loaded ease-out finishes visually in ~300ms and
+// reads as instant no matter how long the timer is).
+const DIVE_EASE = [0.65, 0, 0.35, 1] as const;
+const DIVE_DURATION = 1.4;
 
 /**
  * Detail page for a single talk (/talks/<slug>), rendered as a full-screen
@@ -28,7 +30,7 @@ export function TalkOverlay({ slug }: { slug: string }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
+      transition={{ duration: DIVE_DURATION, ease: DIVE_EASE }}
     >
       {/* Film-grain background (reactbits), pinned to the viewport behind the
           content while the page scrolls. */}
@@ -47,7 +49,7 @@ export function TalkOverlay({ slug }: { slug: string }) {
         initial={{ scale: 0.5, filter: "blur(16px)" }}
         animate={{ scale: 1, filter: "blur(0px)" }}
         exit={{ scale: 0.5, opacity: 0, filter: "blur(16px)" }}
-        transition={{ duration: 1, ease: DIVE_EASE }}
+        transition={{ duration: DIVE_DURATION, ease: DIVE_EASE }}
       >
         <h1 className="font-russo mb-8 text-[clamp(24px,4vw,40px)]">
           {talk.title}

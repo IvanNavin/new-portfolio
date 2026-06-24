@@ -29,8 +29,8 @@ export function TalksPage(_props: PageProps) {
   const warpRef = useRef(0);
   useEffect(() => {
     const controls = animate(warpRef.current, diving ? 1 : 0, {
-      duration: 1,
-      ease: diving ? "easeIn" : "easeOut",
+      duration: 1.4,
+      ease: [0.65, 0, 0.35, 1],
       onUpdate: (v) => {
         warpRef.current = v;
       },
@@ -64,7 +64,7 @@ export function TalksPage(_props: PageProps) {
       <motion.main
         className="relative z-10 flex min-h-full w-full flex-col"
         animate={{ scale: diving ? 1.6 : 1, opacity: diving ? 0 : 1 }}
-        transition={{ duration: 1, ease: diving ? "easeIn" : "easeOut" }}
+        transition={{ duration: 1.4, ease: [0.65, 0, 0.35, 1] }}
         style={{ transformOrigin: "center center" }}
       >
         <h1 className="font-russo px-[clamp(24px,8vw,114px)] pt-12 text-[clamp(28px,5vw,44px)]">
