@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { BackButton } from "@/components/BackButton";
 import { VideoFrame } from "@/components/VideoFrame";
-import Noise from "@/components/reactbits/Noise";
+import Galaxy from "@/components/reactbits/Galaxy";
 import { findTalk } from "./talks";
 
 // Easing for the dive — easeInOutCubic, so the motion is spread evenly across
@@ -32,13 +32,13 @@ export function TalkOverlay({ slug }: { slug: string }) {
       exit={{ opacity: 0 }}
       transition={{ duration: DIVE_DURATION, ease: DIVE_EASE }}
     >
-      {/* Film-grain background (reactbits), pinned to the viewport behind the
-          content while the page scrolls. */}
+      {/* Calm Galaxy starfield (reactbits) — the destination you arrive at
+          after the warp dive. Pinned to the viewport behind the content. */}
       <div
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
       >
-        <Noise patternAlpha={40} />
+        <Galaxy mouseRepulsion mouseInteraction />
       </div>
 
       <BackButton text={t("main.talks")} to="/talks" />
