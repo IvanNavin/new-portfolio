@@ -16,7 +16,7 @@ export function TalkOverlay({ slug }: { slug: string }) {
 
   return (
     <div className="fixed inset-0 z-[80] overflow-y-auto bg-[#0a0a0f] text-white">
-      <BackButton text={t("talks.title")} to="/talks" />
+      <BackButton text={t("main.talks")} to="/talks" />
 
       <main className="mx-auto max-w-[900px] px-6 py-24">
         <h1 className="font-russo mb-8 text-[clamp(24px,4vw,40px)]">
