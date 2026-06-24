@@ -3,7 +3,7 @@ import { useRouter } from "@/router/router";
 import { BackButton } from "@/components/BackButton";
 import type { PageProps } from "./types";
 
-import { RotateStar } from "./contact/RotateStar";
+import Ferrofluid from "@/components/reactbits/Ferrofluid";
 import { ContactLinks } from "./contact/ContactLinks";
 import { BookingEmbed } from "./contact/BookingEmbed";
 import {
@@ -23,13 +23,19 @@ export function ContactPage(_props: PageProps) {
 
   return (
     <div className="relative h-full w-full overflow-x-clip overflow-y-auto bg-black text-white">
-      {/* Cosmic light-dots background, pinned to the viewport while content
-          scrolls. */}
+      {/* Ferrofluid background (reactbits), pinned to the viewport while content
+          scrolls. Only mounted while Contact is the live route so its WebGL
+          loop doesn't run behind the other faces. */}
       <div
         aria-hidden="true"
         className="pointer-events-none sticky top-0 left-0 -mb-[100dvh] h-[100dvh] w-full overflow-hidden"
       >
-        <RotateStar />
+        {path === "/contact" && (
+          <Ferrofluid
+            colors={["#fde047", "#e7a92c", "#fff3d6"]}
+            mouseInteraction={false}
+          />
+        )}
       </div>
 
       {/* Fixed to the viewport corner → only while Contact is the live route
