@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "@/router/router";
 import { BackButton } from "@/components/BackButton";
+import LetterGlitch from "@/components/reactbits/LetterGlitch";
 import { WORKS } from "./works/works";
 import { WorkItem } from "./works/WorkItem";
 import { WorksFilter, type Filters } from "./works/WorksFilter";
@@ -38,11 +40,22 @@ export function WorksPage(_props: PageProps) {
     [filters],
   );
 
+  const onWorks = path.startsWith("/works");
+
   return (
     <div className="relative h-full w-full overflow-y-auto bg-[#0a0a0f] text-white">
+      {/* Letter Glitch background (reactbits), pinned to the viewport while the
+          grid scrolls. Mounted across the list and its detail subroutes. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none sticky top-0 left-0 -mb-[100dvh] h-[100dvh] w-full overflow-hidden opacity-60"
+      >
+        {onWorks && <LetterGlitch />}
+      </div>
+
       {path === "/works" && <BackButton text={t("ivan")} />}
 
-      <main className="mx-auto max-w-[1200px] px-8 py-16">
+      <main className="relative z-10 mx-auto max-w-[1200px] px-8 py-16">
         <h1 className="font-russo mb-4 text-[clamp(28px,5vw,44px)]">
           {t("myWorks.myWorks")}
         </h1>
@@ -69,11 +82,16 @@ export function WorksPage(_props: PageProps) {
             />
           </aside>
 
-          <nav className="relative mx-auto flex max-w-[1200px] flex-1 flex-wrap justify-around transition-all duration-300 ease-out">
-            {filteredWorks.map((item) => (
-              <WorkItem item={item} key={item.id} />
-            ))}
-          </nav>
+          <motion.nav
+            layout
+            className="relative mx-auto flex max-w-[1200px] flex-1 flex-wrap justify-around"
+          >
+            <AnimatePresence mode="popLayout">
+              {filteredWorks.map((item, index) => (
+                <WorkItem item={item} index={index} key={item.id} />
+              ))}
+            </AnimatePresence>
+          </motion.nav>
         </div>
       </main>
     </div>

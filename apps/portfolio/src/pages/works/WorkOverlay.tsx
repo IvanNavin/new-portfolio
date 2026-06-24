@@ -1,10 +1,28 @@
+import { useState } from "react";
 import type { TFunction } from "i18next";
+import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { BackButton } from "@/components/BackButton";
 import { Button } from "@/components/Button";
 import { SafeIframe } from "@/components/SafeIframe";
 import { RenderTextArea } from "@/components/RenderTextArea";
 import { findWork, type Work } from "./works";
+import { consumeDiveRect } from "./diveStore";
+
+const DIVE_EASE = [0.65, 0, 0.35, 1] as const;
+
+/** Transform that places the full-screen overlay exactly over the clicked card
+    (so it can grow out of it). Falls back to a plain fade when there's no rect. */
+function diveFromRect() {
+  const rect = consumeDiveRect();
+  if (!rect || typeof window === "undefined") return null;
+  return {
+    opacity: 0.3,
+    scale: rect.width / window.innerWidth,
+    x: rect.left + rect.width / 2 - window.innerWidth / 2,
+    y: rect.top + rect.height / 2 - window.innerHeight / 2,
+  };
+}
 
 const POKEDEX_STACK = [
   "React",
@@ -137,11 +155,20 @@ const Embed = ({ work }: { work: Work }) => {
 export function WorkOverlay({ id }: { id: string }) {
   const { t } = useTranslation();
   const work = findWork(id);
+  // Capture the dive-from rect once (on mount), reused for the exit too.
+  const [dive] = useState(diveFromRect);
 
   if (!work) return null;
 
   return (
-    <div className="fixed inset-0 z-[80] overflow-y-auto bg-[#0a0a0f] text-white">
+    <motion.div
+      className="fixed inset-0 z-[80] overflow-y-auto bg-[#0a0a0f] text-white"
+      style={{ transformOrigin: "center center" }}
+      initial={dive ?? { opacity: 0 }}
+      animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+      exit={dive ?? { opacity: 0 }}
+      transition={{ duration: 0.6, ease: DIVE_EASE }}
+    >
       <BackButton text={t("myWorks.myWorks")} to="/works" />
 
       <main className="mx-auto max-w-[900px] px-6 py-24">
@@ -160,6 +187,6 @@ export function WorkOverlay({ id }: { id: string }) {
           <Button text="See code" href={work.codeUrl} />
         </footer>
       </main>
-    </div>
+    </motion.div>
   );
 }

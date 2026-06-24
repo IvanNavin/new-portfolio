@@ -55,7 +55,9 @@ export function App() {
       <AnimatePresence>
         {isTalk && <TalkOverlay key={talkSlug} slug={talkSlug} />}
       </AnimatePresence>
-      {isWork && <WorkOverlay key={workId} id={workId} />}
+      <AnimatePresence>
+        {isWork && <WorkOverlay key={workId} id={workId} />}
+      </AnimatePresence>
 
       <LanguageSwitcher />
     </CvZoomProvider>
