@@ -23,7 +23,7 @@ export function TalkOverlay({ slug }: { slug: string }) {
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
       >
-        <Noise patternAlpha={18} />
+        <Noise patternAlpha={40} />
       </div>
 
       <BackButton text={t("main.talks")} to="/talks" />
