@@ -28,7 +28,7 @@ export function TalkOverlay({ slug }: { slug: string }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.45, ease: "easeOut" }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
     >
       {/* Film-grain background (reactbits), pinned to the viewport behind the
           content while the page scrolls. */}
@@ -47,7 +47,7 @@ export function TalkOverlay({ slug }: { slug: string }) {
         initial={{ scale: 0.5, filter: "blur(16px)" }}
         animate={{ scale: 1, filter: "blur(0px)" }}
         exit={{ scale: 0.5, opacity: 0, filter: "blur(16px)" }}
-        transition={{ duration: 0.6, ease: DIVE_EASE }}
+        transition={{ duration: 1, ease: DIVE_EASE }}
       >
         <h1 className="font-russo mb-8 text-[clamp(24px,4vw,40px)]">
           {talk.title}
