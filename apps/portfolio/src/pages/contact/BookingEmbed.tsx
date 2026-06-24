@@ -112,6 +112,7 @@ export const BookingEmbed = ({
       {/* No outer frame — Cal renders its own card inside the iframe. */}
       <div
         ref={ref}
+        className="cal-embed"
         style={{ width: "100%", height: 700 }}
         aria-label="Cal.com booking widget"
       />
