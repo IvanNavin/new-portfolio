@@ -11,6 +11,8 @@ import { CvOverlay } from "@/components/CvOverlay";
 import { CvZoomProvider } from "@/pages/about/cvZoom";
 import { TalkOverlay } from "@/pages/talks/TalkOverlay";
 import { isTalkSlug } from "@/pages/talks/talks";
+import { WorkOverlay } from "@/pages/works/WorkOverlay";
+import { isWorkId } from "@/pages/works/works";
 
 export function App() {
   const { path } = useRouter();
@@ -27,7 +29,17 @@ export function App() {
     : "";
   const isTalk = isTalkSlug(talkSlug);
 
-  const cubeActive = isCv ? "/about" : isTalk ? "/talks" : path;
+  // Work detail pages live at /works/<id> and overlay the Works face.
+  const workId = path.startsWith("/works/") ? path.slice("/works/".length) : "";
+  const isWork = isWorkId(workId);
+
+  const cubeActive = isCv
+    ? "/about"
+    : isTalk
+      ? "/talks"
+      : isWork
+        ? "/works"
+        : path;
 
   return (
     <CvZoomProvider>
@@ -43,6 +55,7 @@ export function App() {
       <AnimatePresence>
         {isTalk && <TalkOverlay key={talkSlug} slug={talkSlug} />}
       </AnimatePresence>
+      {isWork && <WorkOverlay key={workId} id={workId} />}
 
       <LanguageSwitcher />
     </CvZoomProvider>

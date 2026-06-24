@@ -84,6 +84,18 @@ body {
   animation: fadeInWithScale 1s forwards;
 }
 
+/* Rotating circular text for the works "See live / See code" buttons. */
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-rotate {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: rotate 12s linear infinite;
+}
+
 /* WebGL fluid background canvas fills its cube face. */
 #fluid {
   position: absolute;
