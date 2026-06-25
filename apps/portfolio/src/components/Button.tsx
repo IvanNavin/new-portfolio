@@ -43,7 +43,7 @@ export const Button = ({ text, href, className }: Props) => (
       <text
         dy="70"
         textLength="1220"
-        className="animate-rotate fill-white text-[63px] tracking-[17px] uppercase"
+        className="font-russo animate-rotate fill-white text-[63px] tracking-[17px] uppercase"
       >
         <textPath href={`#textcircle-${text.replace(/\s+/g, "-")}`}>
           {text}
