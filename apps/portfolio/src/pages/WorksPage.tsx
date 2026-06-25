@@ -19,6 +19,7 @@ export function WorksPage(_props: PageProps) {
   const { path } = useRouter();
 
   const [filters, setFilters] = useState<Filters>({ workType: [], stack: [] });
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const allStacks = useMemo(() => {
     const set = new Set<string>();
@@ -40,7 +41,10 @@ export function WorksPage(_props: PageProps) {
     [filters],
   );
 
+  // The face stays mounted with the cube, so the grid is gated on the route —
+  // it (re)mounts when you actually arrive on /works, replaying the stagger.
   const onWorks = path.startsWith("/works");
+  const activeCount = filters.workType.length + filters.stack.length;
 
   return (
     <div className="relative h-full w-full overflow-y-auto bg-[#0a0a0f] text-white">
@@ -62,6 +66,40 @@ export function WorksPage(_props: PageProps) {
         <p className="max-w-[760px] text-sm text-white/70">
           {t("myWorks.description")}
         </p>
+
+        {/* Mobile filter toggle (the sidebar is desktop-only). */}
+        <button
+          type="button"
+          onClick={() => setMobileFiltersOpen((o) => !o)}
+          className="font-russo mt-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.03] px-4 py-2 text-xs tracking-widest text-white/85 uppercase transition-colors hover:border-yellow-400/70 hover:text-yellow-300 md:hidden"
+        >
+          Filters
+          {activeCount > 0 && (
+            <span className="rounded-full bg-yellow-400 px-1.5 text-[11px] text-black">
+              {activeCount}
+            </span>
+          )}
+        </button>
+
+        <AnimatePresence initial={false}>
+          {mobileFiltersOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="overflow-hidden md:hidden"
+            >
+              <div className="pt-4">
+                <WorksFilter
+                  filters={filters}
+                  allStacks={allStacks}
+                  onChange={setFilters}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <FilterChips
           filters={filters}
@@ -87,9 +125,10 @@ export function WorksPage(_props: PageProps) {
             className="relative mx-auto flex max-w-[1200px] flex-1 flex-wrap justify-around"
           >
             <AnimatePresence mode="popLayout">
-              {filteredWorks.map((item, index) => (
-                <WorkItem item={item} index={index} key={item.id} />
-              ))}
+              {onWorks &&
+                filteredWorks.map((item, index) => (
+                  <WorkItem item={item} index={index} key={item.id} />
+                ))}
             </AnimatePresence>
           </motion.nav>
         </div>
