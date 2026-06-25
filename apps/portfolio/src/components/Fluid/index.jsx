@@ -1244,8 +1244,17 @@ export const Fluid = () => {
     }
 
     function resizeCanvas() {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
+      // Size the drawing buffer to the canvas's actual display box (not
+      // window.innerWidth) times the device pixel ratio. Keying off the real
+      // box + DPR means the buffer always matches what's shown — so it never
+      // gets stretched (wrong proportions) or upscaled (blurry), and a DPR
+      // change (e.g. dragging the window to another monitor) is caught too,
+      // which a plain innerWidth check misses.
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const width = Math.round((canvas.clientWidth || window.innerWidth) * dpr);
+      const height = Math.round(
+        (canvas.clientHeight || window.innerHeight) * dpr,
+      );
 
       if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width;
@@ -1698,8 +1707,10 @@ export const Fluid = () => {
       pointer.id = id;
       pointer.down = true;
       pointer.moved = false;
-      pointer.texcoordX = posX / canvas.width;
-      pointer.texcoordY = 1.0 - posY / canvas.height;
+      // Pointer coords are CSS px, so normalise by the CSS size (clientWidth),
+      // not the DPR-scaled drawing buffer (canvas.width).
+      pointer.texcoordX = posX / canvas.clientWidth;
+      pointer.texcoordY = 1.0 - posY / canvas.clientHeight;
       pointer.prevTexcoordX = pointer.texcoordX;
       pointer.prevTexcoordY = pointer.texcoordY;
       pointer.deltaX = 0;
@@ -1710,8 +1721,8 @@ export const Fluid = () => {
     function updatePointerMoveData(pointer, posX, posY) {
       pointer.prevTexcoordX = pointer.texcoordX;
       pointer.prevTexcoordY = pointer.texcoordY;
-      pointer.texcoordX = posX / canvas.width;
-      pointer.texcoordY = 1.0 - posY / canvas.height;
+      pointer.texcoordX = posX / canvas.clientWidth;
+      pointer.texcoordY = 1.0 - posY / canvas.clientHeight;
       pointer.deltaX = correctDeltaX(pointer.texcoordX - pointer.prevTexcoordX);
       pointer.deltaY = correctDeltaY(pointer.texcoordY - pointer.prevTexcoordY);
       pointer.moved =
