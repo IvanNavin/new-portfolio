@@ -2,19 +2,21 @@ import { type CSSProperties, type MouseEvent } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useRouter } from "@/router/router";
 import type { Work } from "./works";
-import { setDiveRect } from "./diveStore";
 import styles from "./work-item.module.css";
 
 const TILT = 8; // max degrees
 
 /**
- * A single work card: a faux browser window. Clicking opens the project's
- * detail overlay (/works/<id>), diving out of this card. Hovering tilts the
- * card toward the cursor and lifts the front image to reveal the tech tags.
+ * A single work card: a faux browser window. Clicking morphs this exact window
+ * into the detail overlay (shared `layoutId`), so the original card grows —
+ * no scaled copy. Hovering tilts it toward the cursor and lifts the front image
+ * to reveal the tech tags.
  */
 export const WorkItem = ({ item, index }: { item: Work; index: number }) => {
-  const { navigate } = useRouter();
+  const { navigate, path } = useRouter();
   const { id, name, status, frontPicture, backPicture, stack } = item;
+
+  const isOpen = path === `/works/${id}`;
 
   // Pointer-driven 3D tilt (springed for smoothness).
   const rotateX = useSpring(useMotionValue(0), { stiffness: 250, damping: 20 });
@@ -22,19 +24,16 @@ export const WorkItem = ({ item, index }: { item: Work; index: number }) => {
 
   const onMove = (e: MouseEvent<HTMLDivElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width - 0.5;
-    const py = (e.clientY - r.top) / r.height - 0.5;
-    rotateX.set(-py * TILT);
-    rotateY.set(px * TILT);
+    rotateX.set(-((e.clientY - r.top) / r.height - 0.5) * TILT);
+    rotateY.set(((e.clientX - r.left) / r.width - 0.5) * TILT);
   };
   const reset = () => {
     rotateX.set(0);
     rotateY.set(0);
   };
 
-  const open = (e: MouseEvent<HTMLButtonElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    setDiveRect({ top: r.top, left: r.left, width: r.width, height: r.height });
+  const open = () => {
+    reset(); // flatten before the morph so framer measures the card square-on
     navigate(`/works/${id}`);
   };
 
@@ -52,7 +51,15 @@ export const WorkItem = ({ item, index }: { item: Work; index: number }) => {
         onMouseLeave={reset}
         style={{ rotateX, rotateY, transformPerspective: 900 }}
       >
-        <button type="button" className={styles.screen} onClick={open}>
+        {/* The shared element: this window morphs into the detail overlay. While
+            its detail is open it's hidden here (the overlay holds the live one). */}
+        <motion.button
+          type="button"
+          layoutId={`work-window-${id}`}
+          className={styles.screen}
+          onClick={open}
+          style={{ visibility: isOpen ? "hidden" : "visible" }}
+        >
           {status && <span className={styles.status}>{status}</span>}
           <div className={styles.bar}>
             <h5 className={styles.h5}>{name}</h5>
@@ -87,7 +94,7 @@ export const WorkItem = ({ item, index }: { item: Work; index: number }) => {
               </picture>
             </div>
           </div>
-        </button>
+        </motion.button>
       </motion.div>
     </motion.div>
   );

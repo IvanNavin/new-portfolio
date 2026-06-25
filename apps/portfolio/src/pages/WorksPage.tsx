@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "@/router/router";
 import { BackButton } from "@/components/BackButton";
-import LetterGlitch from "@/components/reactbits/LetterGlitch";
+import DotField from "@/components/reactbits/DotField";
 import { WORKS } from "./works/works";
 import { WorkItem } from "./works/WorkItem";
 import { WorksFilter, type Filters } from "./works/WorksFilter";
@@ -44,13 +44,13 @@ export function WorksPage(_props: PageProps) {
 
   return (
     <div className="relative h-full w-full overflow-y-auto bg-[#0a0a0f] text-white">
-      {/* Letter Glitch background (reactbits), pinned to the viewport while the
-          grid scrolls. Mounted across the list and its detail subroutes. */}
+      {/* Dot Field background (reactbits), pinned to the viewport while the grid
+          scrolls. Mounted across the list and its detail subroutes. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none sticky top-0 left-0 -mb-[100dvh] h-[100dvh] w-full overflow-hidden opacity-60"
+        className="pointer-events-none sticky top-0 left-0 -mb-[100dvh] h-[100dvh] w-full overflow-hidden"
       >
-        {onWorks && <LetterGlitch />}
+        {onWorks && <DotField />}
       </div>
 
       {path === "/works" && <BackButton text={t("ivan")} />}

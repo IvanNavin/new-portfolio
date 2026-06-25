@@ -1,4 +1,3 @@
-import { useState } from "react";
 import type { TFunction } from "i18next";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -7,22 +6,7 @@ import { Button } from "@/components/Button";
 import { SafeIframe } from "@/components/SafeIframe";
 import { RenderTextArea } from "@/components/RenderTextArea";
 import { findWork, type Work } from "./works";
-import { consumeDiveRect } from "./diveStore";
-
-const DIVE_EASE = [0.65, 0, 0.35, 1] as const;
-
-/** Transform that places the full-screen overlay exactly over the clicked card
-    (so it can grow out of it). Falls back to a plain fade when there's no rect. */
-function diveFromRect() {
-  const rect = consumeDiveRect();
-  if (!rect || typeof window === "undefined") return null;
-  return {
-    opacity: 0.3,
-    scale: rect.width / window.innerWidth,
-    x: rect.left + rect.width / 2 - window.innerWidth / 2,
-    y: rect.top + rect.height / 2 - window.innerHeight / 2,
-  };
-}
+import styles from "./work-item.module.css";
 
 const POKEDEX_STACK = [
   "React",
@@ -124,7 +108,8 @@ const Embed = ({ work }: { work: Work }) => {
         autoPlay
         loop
         muted
-        className="w-full rounded-lg"
+        poster={work.frontPicture}
+        className="block w-full"
         src={work.embed.src}
       />
     );
@@ -134,7 +119,7 @@ const Embed = ({ work }: { work: Work }) => {
       <img
         src={work.embed.src}
         alt={work.name}
-        className="max-h-[500px] w-full rounded-lg object-contain"
+        className="block max-h-[560px] w-full object-cover"
       />
     );
   }
@@ -155,37 +140,49 @@ const Embed = ({ work }: { work: Work }) => {
 export function WorkOverlay({ id }: { id: string }) {
   const { t } = useTranslation();
   const work = findWork(id);
-  // Capture the dive-from rect once (on mount), reused for the exit too.
-  const [dive] = useState(diveFromRect);
 
   if (!work) return null;
 
   return (
     <motion.div
       className="fixed inset-0 z-[80] overflow-y-auto bg-[#0a0a0f] text-white"
-      style={{ transformOrigin: "center center" }}
-      initial={dive ?? { opacity: 0 }}
-      animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-      exit={dive ?? { opacity: 0 }}
-      transition={{ duration: 0.6, ease: DIVE_EASE }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.35 }}
     >
       <BackButton text={t("myWorks.myWorks")} to="/works" />
 
       <main className="mx-auto max-w-[900px] px-6 py-24">
-        <h1 className="font-russo mb-8 text-[clamp(24px,4vw,40px)]">
-          {work.name}
-        </h1>
+        {/* Shared element: this window is the grid card grown up. The faux
+            browser bar + the front image (the embed's poster) match the card,
+            so the morph is seamless. */}
+        <motion.div
+          layoutId={`work-window-${id}`}
+          className="overflow-hidden rounded-lg bg-black shadow-[8px_8px_0_rgba(255,255,255,0.12)]"
+        >
+          <div className={styles.bar}>
+            <h5 className={styles.h5}>{work.name}</h5>
+            <i />
+          </div>
+          <Embed work={work} />
+        </motion.div>
 
-        <Embed work={work} />
+        {/* Write-up fades in once the window has grown. */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.4 }}
+        >
+          <div className="mt-8 leading-relaxed text-white/85">
+            <WorkBody t={t} work={work} />
+          </div>
 
-        <div className="mt-8 leading-relaxed text-white/85">
-          <WorkBody t={t} work={work} />
-        </div>
-
-        <footer className="mt-10 flex flex-wrap gap-8">
-          {work.liveUrl && <Button text="See live" href={work.liveUrl} />}
-          <Button text="See code" href={work.codeUrl} />
-        </footer>
+          <footer className="mt-10 flex flex-wrap gap-8">
+            {work.liveUrl && <Button text="See live" href={work.liveUrl} />}
+            <Button text="See code" href={work.codeUrl} />
+          </footer>
+        </motion.div>
       </main>
     </motion.div>
   );
