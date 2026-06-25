@@ -66,15 +66,19 @@ export function AboutPage(_props: PageProps) {
         aria-hidden="true"
         className="sticky top-0 left-0 -mb-[100dvh] h-[100dvh] w-full"
       >
-        <ShapeGrid
-          shape="hexagon"
-          squareSize={50}
-          hoverTrailAmount={3}
-          direction="diagonal"
-          speed={0.8}
-          borderColor="#5a5a66"
-          hoverFillColor="#fde047"
-        />
+        {/* Mounted only while About is live so its rAF loop doesn't run behind
+            hidden faces (matches the other faces' backgrounds). */}
+        {path.startsWith("/about") && (
+          <ShapeGrid
+            shape="hexagon"
+            squareSize={50}
+            hoverTrailAmount={3}
+            direction="diagonal"
+            speed={0.8}
+            borderColor="#5a5a66"
+            hoverFillColor="#fde047"
+          />
+        )}
       </div>
 
       <main className="relative z-10 mx-auto min-h-full max-w-[1000px] p-8 pb-[100px]">

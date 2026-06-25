@@ -1664,7 +1664,7 @@ export const Fluid = () => {
       const touches = e.targetTouches;
       for (let i = 0; i < touches.length; i++) {
         const pointer = pointers[i + 1];
-        if (!pointer.down) continue;
+        if (!pointer || !pointer.down) continue;
         const posX = touches[i].pageX;
         const posY = touches[i].pageY;
         updatePointerMoveData(pointer, posX, posY);
@@ -1700,7 +1700,7 @@ export const Fluid = () => {
 
     window.addEventListener("keydown", onKeydown);
 
-    setInterval(() => {
+    const autoSplatInterval = setInterval(() => {
       splatStack.push(parseInt(Math.random() * 20) + 5);
     }, 10000);
 
@@ -1868,6 +1868,7 @@ export const Fluid = () => {
       // we don't loseContext() here because StrictMode's dev double-mount reuses
       // the same canvas, and killing its context would crash the second mount.
       cancelAnimationFrame(animationFrameId);
+      clearInterval(autoSplatInterval);
     };
   }, []);
 

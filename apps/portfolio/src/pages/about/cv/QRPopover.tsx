@@ -1,5 +1,5 @@
 import QRCode from "qrcode";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { clsxm } from "@/lib/utils";
 import ElectricBorder from "@/components/reactbits/ElectricBorder";
 
@@ -21,6 +21,15 @@ export const QRPopover = ({ url, labels, onClose }: Props) => {
   const [qrSvg, setQrSvg] = useState<string>("");
   const [copied, setCopied] = useState(false);
   const [enlarged, setEnlarged] = useState(false);
+  const copiedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clear the "copied" reset timer on unmount so it can't fire after teardown.
+  useEffect(
+    () => () => {
+      if (copiedTimer.current) clearTimeout(copiedTimer.current);
+    },
+    [],
+  );
 
   useEffect(() => {
     QRCode.toString(url, {
@@ -68,7 +77,8 @@ export const QRPopover = ({ url, labels, onClose }: Props) => {
     // Show the confirmation either way — the click intent was to copy, and the
     // feedback is what the user is after.
     setCopied(true);
-    setTimeout(() => setCopied(false), 1800);
+    if (copiedTimer.current) clearTimeout(copiedTimer.current);
+    copiedTimer.current = setTimeout(() => setCopied(false), 1800);
   };
 
   return (
