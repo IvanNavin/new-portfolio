@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "@/router/router";
@@ -67,10 +68,10 @@ export function WorksPage(_props: PageProps) {
           {t("myWorks.description")}
         </p>
 
-        {/* Mobile filter toggle (the sidebar is desktop-only). */}
+        {/* Mobile filter trigger (the sidebar is desktop-only). */}
         <button
           type="button"
-          onClick={() => setMobileFiltersOpen((o) => !o)}
+          onClick={() => setMobileFiltersOpen(true)}
           className="font-russo mt-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.03] px-4 py-2 text-xs tracking-widest text-white/85 uppercase transition-colors hover:border-yellow-400/70 hover:text-yellow-300 md:hidden"
         >
           Filters
@@ -80,26 +81,6 @@ export function WorksPage(_props: PageProps) {
             </span>
           )}
         </button>
-
-        <AnimatePresence initial={false}>
-          {mobileFiltersOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="overflow-hidden md:hidden"
-            >
-              <div className="pt-4">
-                <WorksFilter
-                  filters={filters}
-                  allStacks={allStacks}
-                  onChange={setFilters}
-                />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         <FilterChips
           filters={filters}
@@ -133,6 +114,61 @@ export function WorksPage(_props: PageProps) {
           </motion.nav>
         </div>
       </main>
+
+      {/* Mobile filter modal — portaled to <body> so its fixed positioning
+          escapes the cube face's 3D transform. */}
+      {createPortal(
+        <AnimatePresence>
+          {mobileFiltersOpen && (
+            <motion.div
+              className="fixed inset-0 z-[100] md:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div
+                className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+                onClick={() => setMobileFiltersOpen(false)}
+              />
+              <motion.div
+                className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl border-t border-white/10 bg-[#0a0a0f] p-6 [scrollbar-width:none]"
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", damping: 32, stiffness: 320 }}
+              >
+                <div className="mb-5 flex items-center justify-between">
+                  <h3 className="font-russo text-lg">Filters</h3>
+                  <button
+                    type="button"
+                    onClick={() => setMobileFiltersOpen(false)}
+                    aria-label="Close filters"
+                    className="text-2xl leading-none text-white/60 transition-colors hover:text-white"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <WorksFilter
+                  filters={filters}
+                  allStacks={allStacks}
+                  onChange={setFilters}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setMobileFiltersOpen(false)}
+                  className="font-russo mt-6 w-full rounded-full bg-yellow-400 py-3 text-sm tracking-widest text-black uppercase transition-colors hover:bg-yellow-300"
+                >
+                  Show {filteredWorks.length} works
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
     </div>
   );
 }

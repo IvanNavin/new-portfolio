@@ -41,10 +41,14 @@ export const WorkItem = ({ item, index }: { item: Work; index: number }) => {
     <motion.div
       layout
       className={styles.item}
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 48 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.35, delay: Math.min(index * 0.04, 0.4) }}
+      exit={{ opacity: 0, scale: 0.85 }}
+      transition={{
+        duration: 0.5,
+        delay: 0.25 + Math.min(index * 0.08, 0.9),
+        ease: [0.22, 1, 0.36, 1],
+      }}
     >
       <motion.div
         onMouseMove={onMove}
