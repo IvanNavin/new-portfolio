@@ -1212,6 +1212,21 @@ export const Fluid = () => {
 
     let lastUpdateTime = Date.now();
     let colorUpdateTimer = 0.0;
+    let resizeReinitTimer = 0;
+
+    // Resizing copies the current dye into the new (often different-aspect)
+    // buffers, so the live, moving dye gets stretched. Once the resize settles,
+    // recreate the buffers blank and re-seed — a clean restart at the new aspect
+    // instead of a stretched carry-over. Debounced so a drag doesn't thrash it.
+    function scheduleResizeReinit() {
+      clearTimeout(resizeReinitTimer);
+      resizeReinitTimer = setTimeout(() => {
+        dye = null;
+        velocity = null;
+        initFramebuffers();
+        splatStack.push(parseInt((Math.random() * 20).toString()) + 5);
+      }, 250);
+    }
 
     update();
 
@@ -1220,7 +1235,10 @@ export const Fluid = () => {
 
       const dt = calcDeltaTime();
 
-      if (resizeCanvas()) initFramebuffers();
+      if (resizeCanvas()) {
+        initFramebuffers();
+        scheduleResizeReinit();
+      }
 
       updateColors(dt);
       applyInputs();
@@ -1862,6 +1880,7 @@ export const Fluid = () => {
       canvas.removeEventListener("touchmove", onTouchMove, false);
       window.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("keydown", onKeydown);
+      clearTimeout(resizeReinitTimer);
     };
   }, []);
 
