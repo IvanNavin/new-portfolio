@@ -174,13 +174,15 @@ export function WorkOverlay({ id }: { id: string }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.4 }}
         >
-          <div className="mt-8 leading-relaxed text-white/85">
+          <div className="font-russo mt-8 leading-relaxed text-white/85">
             <WorkBody t={t} work={work} />
           </div>
 
           <footer className="mt-10 flex flex-wrap gap-8">
-            {work.liveUrl && <Button text="See live" href={work.liveUrl} />}
-            <Button text="See code" href={work.codeUrl} />
+            {work.liveUrl && (
+              <Button text="See the result here" href={work.liveUrl} />
+            )}
+            <Button text="See the code here" href={work.codeUrl} />
           </footer>
         </motion.div>
       </main>
