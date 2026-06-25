@@ -6,20 +6,10 @@ import { clsxm, isTouchDevice } from "@/lib/utils";
 import myPhoto from "@/assets/iam-wb-1.png";
 import type { PageProps } from "./types";
 
-// Ivan started at Evoplay in October 2018. Count full years since then so we
-// don't jump a year on Jan 1 — full N years lands in October.
-const CAREER_START = new Date(2018, 9, 1);
-
 export function HomePage(_props: PageProps) {
   const { t } = useTranslation();
   // Client-only SPA: window always exists, so detect at first render.
   const [isTouch] = useState(() => isTouchDevice());
-
-  const now = new Date();
-  const monthsSinceStart =
-    (now.getFullYear() - CAREER_START.getFullYear()) * 12 +
-    (now.getMonth() - CAREER_START.getMonth());
-  const yearsOfExperience = Math.max(0, Math.floor(monthsSinceStart / 12));
 
   return (
     <main className="relative h-full w-full overflow-hidden bg-black">
@@ -41,15 +31,6 @@ export function HomePage(_props: PageProps) {
           className="h-full w-full object-contain object-bottom"
         />
       </section>
-
-      <p
-        className={clsxm(
-          "animate-fade-in-scale text-shadow pointer-events-none absolute right-6 bottom-20 z-50 max-w-[50vw] text-right",
-          "text-[clamp(11px,1.6vw,18px)] tracking-wider text-white/90",
-        )}
-      >
-        {t("main.tagline", { years: yearsOfExperience })}
-      </p>
 
       <div className="text-shadow pointer-events-none absolute bottom-6 z-50 block w-full animate-bounce text-center text-[3.6vmin] text-white">
         {isTouch ? t("main.tap") : t("main.slide")}
