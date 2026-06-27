@@ -1,25 +1,14 @@
-# Build caches that bloat upload size — Vercel rebuilds these on its side.
+# Build caches and noise that bloat upload size — Vercel rebuilds these.
+# NOTE: this file is read from the repo ROOT for EVERY project's build, so it
+# must NOT ignore any app's source. Ignoring apps/<x> here strips that project's
+# own files at build time, so `turbo run build` finds 0 packages and the build
+# fails with a missing output directory. Keep this to universal artifacts only.
 node_modules
 .next
 .turbo
 .swc
 .DS_Store
 coverage
-
-# Other apps in the monorepo — devpulse doesn't depend on them at build time
-# and shipping their sources just slows the upload. Workspace packages
-# (@repo/*) live in packages/ and are resolved by yarn workspaces.
-apps/2048
-apps/destructurizator
-apps/gantt-chart
-apps/language
-apps/miner
-apps/pokedex
-apps/portfolio
-apps/rpg-game
-apps/snake
-apps/solitaire
-apps/visit-stat
 
 # Local env files
 .env
