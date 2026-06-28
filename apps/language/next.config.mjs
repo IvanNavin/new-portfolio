@@ -1,3 +1,8 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 const nullGoogleClientId = 'nullGoogleClientId';
 const nullGoogleClientSecret = 'nullGoogleClientSecret';
 const nullRapidApiKey = 'nullRapidApiKey';
@@ -13,13 +18,16 @@ const nextConfig = {
   transpilePackages: ['@repo/utils'],
   reactStrictMode: false,
   swcMinify: true,
-  // Ship the Prisma client (@repo/prisma) and its query-engine binary with the
-  // serverless function instead of bundling it — mirrors devpulse, the one
-  // Prisma app here that deploys cleanly. With `output: 'standalone'` the
-  // engine was traced to a path the Vercel function couldn't find, so Prisma
-  // failed at runtime with "could not locate the Query Engine".
   experimental: {
+    // Keep Prisma out of the bundle and force its query-engine binary into the
+    // serverless function's file trace. @repo/prisma is generated to a custom
+    // workspace location, so neither Next nor Vercel ships the engine on their
+    // own → "could not locate the Query Engine" at runtime.
     serverComponentsExternalPackages: ['@prisma/client', '@repo/prisma'],
+    outputFileTracingRoot: path.join(__dirname, '../../'),
+    outputFileTracingIncludes: {
+      '**/*': ['../../packages/prisma/generated/prisma-client/*.node'],
+    },
   },
   images: {
     domains: ['lh3.googleusercontent.com'],
