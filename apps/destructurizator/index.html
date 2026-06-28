@@ -1,22 +1,27 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
           name="viewport">
     <meta content="ie=edge" http-equiv="X-UA-Compatible">
-    <title>Destructurizator</title>
+    <title>Thanos Snap</title>
     <link href="./main.css" rel="stylesheet">
 </head>
 <body>
 
-<div id="effect-wrapper">
-    <img alt="your image here" id="effect-img" src="./koronavirus.png">
-</div>
-<button class="button" data-effect data-target="#effect-wrapper" type="button">
-    <img alt="thanos hand" class="thanos-hand" src="./thanos-hand.png">
-    Click
-</button>
+<main class="stage">
+    <h1 class="title">Thanos Snap</h1>
+
+    <div id="effect-wrapper">
+        <img alt="A target waiting to be dusted" id="effect-img" src="./koronavirus.png">
+    </div>
+
+    <button class="button" data-effect data-target="#effect-wrapper" type="button">
+        <img alt="" aria-hidden="true" class="thanos-hand" src="./thanos-hand.png">
+        <span>Snap</span>
+    </button>
+</main>
 
 <script src="./chance.min.js"></script>
 <script src="./script.js"></script>

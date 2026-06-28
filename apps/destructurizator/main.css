@@ -1,52 +1,96 @@
-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-top: 100px;
+:root {
+  --size: min(332px, 78vw);
+  --gold: #e8b94b;
+  --purple: #6c4ad6;
 }
 
-button {
-  width: 150px;
-  height: 48px;
-  margin-top: 50px;
-  cursor: pointer;
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+body {
+  display: flex;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #e9e6f5;
+  /* Deep space: a faint purple nebula fading to black. */
+  background:
+    radial-gradient(circle at 50% 38%, rgba(108, 74, 214, 0.28), transparent 55%),
+    radial-gradient(circle at 50% 120%, rgba(232, 185, 75, 0.12), transparent 45%),
+    #07060d;
+  overflow: hidden;
+}
+
+/* A sprinkle of stars, painted purely with gradients (no extra assets). */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 75% 20%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 40% 70%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 85% 65%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 12% 80%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 62% 45%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 30% 12%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 90% 90%, rgba(255, 255, 255, 0.55), transparent);
+  animation: twinkle 6s ease-in-out infinite;
+}
+
+.stage {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 24px;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.4rem, 5vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: linear-gradient(90deg, var(--gold), #fff 50%, var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 #effect-wrapper {
-  display: inline-block;
   position: relative;
-  box-sizing: border-box;
-  width: 332px;
-  height: 332px;
-  z-index: 1;
+  width: var(--size);
+  height: var(--size);
+  /* gentle idle drift so the target feels alive before the snap */
+  animation: float 5s ease-in-out infinite;
 }
 
 #effect-wrapper > * {
   box-sizing: border-box;
-}
-
-div#effect-wrapper * {
   transform: translate3d(0, 0, 0);
-}
-
-#effect-wrapper #effect-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 332px;
-  height: 332px;
 }
 
 #effect-wrapper img {
   width: 100%;
   height: 100%;
+  filter: drop-shadow(0 0 24px rgba(108, 74, 214, 0.45));
 }
 
+/* Dust layers cloned from the source image; sized to fill the wrapper. */
 .dust {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
   z-index: 1;
   filter: blur(0.05em);
 }
@@ -61,25 +105,60 @@ div#effect-wrapper * {
 
 .fadeinimage {
   transform-origin: center;
-  animation: fadeinimage 1.4s ease-in forwards;
+  animation: fadeinimage 1s ease-out forwards;
 }
 
 .button {
-  display: flex;
-  justify-content: center;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 22px;
-  font-weight: 600;
+  gap: 10px;
+  padding: 12px 26px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #1a1206;
+  cursor: pointer;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f4d27a, var(--gold));
+  box-shadow:
+    0 6px 20px rgba(232, 185, 75, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 28px rgba(108, 74, 214, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.button:disabled {
+  cursor: default;
+  filter: grayscale(0.5) brightness(0.85);
+  box-shadow: none;
 }
 
 .thanos-hand {
-  width: 36px;
+  width: 30px;
+  height: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  #effect-wrapper {
+    animation: none;
+  }
 }
 
 @keyframes fadeout {
   0% {
-    opacity: 1
+    opacity: 1;
   }
   100% {
     opacity: 0;
@@ -102,8 +181,30 @@ div#effect-wrapper * {
 @keyframes fadeinimage {
   from {
     opacity: 0;
+    transform: scale(0.96);
   }
   to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(-6px);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
     opacity: 1;
   }
 }

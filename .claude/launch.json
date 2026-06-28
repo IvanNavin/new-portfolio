@@ -6,6 +6,18 @@
       "runtimeExecutable": "yarn",
       "runtimeArgs": ["workspace", "portfolio", "dev"],
       "port": 5173
+    },
+    {
+      "name": "destructurizator",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4178",
+        "--directory",
+        "apps/destructurizator"
+      ],
+      "port": 4178
     }
   ]
 }

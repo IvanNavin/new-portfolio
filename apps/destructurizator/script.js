@@ -1,25 +1,33 @@
 const controls = {
   duration: 2,
   blur: 3,
-  windX: 200,
-  windY: -100,
-  scatter: 25,
-  detail: 20,
-  resetDelay: 1000, // the time in milliseconds before the image returns
+  windX: 200, // base horizontal drift of the dust (px)
+  windY: -100, // base vertical drift of the dust (px, negative = up)
+  fan: 150, // how much the layers spread sideways into a cone
+  jitter: 45, // random per-layer wobble so no two layers move alike
+  scatter: 25, // max rotation of a layer (deg)
+  detail: 20, // number of dust layers
+  resetDelay: 1000, // ms to wait, after the snap finishes, before restoring
 };
+
+const RES = 332; // internal pixel resolution of each dust canvas
 
 const btn = document.querySelector("[data-effect]");
 
 btn.addEventListener("click", (e) => {
-  const target = document.querySelector(e.target.dataset.target);
+  // currentTarget is always the button, even when the click lands on the
+  // gauntlet icon inside it (e.target would be that <img>, with no dataset).
+  const target = document.querySelector(e.currentTarget.dataset.target);
 
   if (target.style.display === "none") {
     target.style.display = "";
   }
 
-  Array.from(target.children).map((el) => {
-    el.classList.remove("quickFade");
+  // Clear any leftover transition classes from a previous run.
+  Array.from(target.children).forEach((el) => {
+    el.classList.remove("quickFade", "fadeinimage");
   });
+
   btn.disabled = true;
   snap(target);
 });
@@ -28,9 +36,8 @@ const snap = (target) => {
   const canvasCount = controls.detail;
   const img = target.querySelector("img");
   const canvas = document.createElement("canvas");
-  canvas.width = 332;
-  canvas.height = 332;
-  canvas.setAttribute("id", "effect-canvas");
+  canvas.width = RES;
+  canvas.height = RES;
   const ctx = canvas.getContext("2d");
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -51,6 +58,9 @@ const snap = (target) => {
     a[i + 3] = pixelArr[i + 3];
   }
 
+  const center = (canvasCount - 1) / 2;
+  const d = controls.duration * 1000;
+
   //create canvas for each imageData and append to target element
   for (let i = 0; i < canvasCount; i++) {
     const c = newCanvasFromImageData(
@@ -59,48 +69,47 @@ const snap = (target) => {
       canvas.height,
     );
     c.classList.add("dust");
-    // c.style.zIndex = canvasCount - i;
 
-    const d = controls.duration * 1000;
+    // Spread the layers into a cone: outer layers (by horizontal band) lean
+    // further out, and every layer gets a little random jitter so the cloud
+    // disperses organically instead of as 20 identical sheets.
+    const lean = center === 0 ? 0 : (i - center) / center; // -1 .. 1
+    const sx = controls.windX + lean * controls.fan + jitter();
+    const sy = controls.windY - Math.abs(lean) * 30 + jitter();
+    const angle = chance.integer({
+      min: -controls.scatter,
+      max: controls.scatter,
+    });
 
-    //apply animation
-    setTimeout(
-      () => {
-        animateTransform(
-          c,
-          controls.windX,
-          controls.windY,
-          chance.integer({
-            min: -controls.scatter,
-            max: controls.scatter,
-          }),
-          d,
-        );
-        c.classList.add("blur");
-        setTimeout(() => {
-          c.remove();
-        }, d + 50);
-      },
-      65 * i + 4 * controls.duration,
-    );
+    //apply animation, staggered so the dust peels away gradually
+    setTimeout(() => {
+      animateTransform(c, sx, sy, angle, d);
+      c.classList.add("blur");
+      setTimeout(() => {
+        c.remove();
+      }, d + 50);
+    }, 65 * i);
 
     //append dust to target
     target.appendChild(c);
   }
 
-  Array.from(target.querySelectorAll(":not(.dust)")).map((el) => {
+  Array.from(target.querySelectorAll(":not(.dust)")).forEach((el) => {
     el.classList.add("quickFade");
   });
 
-  // Запускаємо reset після того, як анімація завершиться
+  // Reset once the last layer has drifted off and the pause has elapsed.
   setTimeout(
     () => {
       btn.disabled = false;
       reset(target);
     },
-    controls.duration * 1000 + controls.resetDelay,
+    controls.duration * 1000 + 65 * canvasCount + controls.resetDelay,
   );
 };
+
+const jitter = () =>
+  chance.integer({ min: -controls.jitter, max: controls.jitter });
 
 const weightedRandomDistrib = (peak, count) => {
   const prob = [],
@@ -144,7 +153,7 @@ const newCanvasFromImageData = (imageDataArray, w, h) => {
   return canvas;
 };
 
-// Функція для скидання ефекту і повернення зображення
+// Remove the leftover dust and fade the original image back in.
 const reset = (target) => {
   const img = target.querySelector("img");
 
@@ -155,5 +164,6 @@ const reset = (target) => {
   });
 
   img.classList.remove("quickFade");
+  img.classList.add("fadeinimage");
   target.style.display = "";
 };
