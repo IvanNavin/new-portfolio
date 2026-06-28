@@ -18,6 +18,12 @@
         "apps/destructurizator"
       ],
       "port": 4178
+    },
+    {
+      "name": "language",
+      "runtimeExecutable": "apps/language/node_modules/.bin/next",
+      "runtimeArgs": ["dev", "apps/language", "-p", "3030"],
+      "port": 3030
     }
   ]
 }

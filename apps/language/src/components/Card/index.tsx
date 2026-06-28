@@ -1,6 +1,6 @@
-'use client';
 import { clsxm } from '@repo/utils';
 import { CheckSquareOutlined, DeleteOutlined } from '@src/components';
+import { useState } from 'react';
 
 import s from './Card.module.scss';
 
@@ -19,9 +19,25 @@ export const Card = ({
   onDone,
   onDelete,
 }: Props) => {
+  const [flipped, setFlipped] = useState(false);
+  const toggle = () => setFlipped((prev) => !prev);
+
   return (
     <div className={s.root}>
-      <div className={clsxm(s.card, isDone && s.done)}>
+      <div
+        className={clsxm(s.card, flipped && s.flipped, isDone && s.done)}
+        role='button'
+        tabIndex={0}
+        aria-pressed={flipped}
+        aria-label={`Flip the card for "${word}"`}
+        onClick={toggle}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggle();
+          }
+        }}
+      >
         <div className={s.front}>{word}</div>
         <div className={s.back}>{translation}</div>
       </div>

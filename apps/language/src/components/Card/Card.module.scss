@@ -13,28 +13,23 @@
   height: 50px;
   position: relative;
   perspective: 1000px;
+  cursor: pointer;
+  outline: none;
 
+  // Learned word: strike it through on the face so it reads as "known"
+  // without having to flip the card.
   &.done {
     .front {
-      transform: rotateY(180deg);
-    }
-
-    .back {
-      transform: rotateY(360deg);
-      position: relative;
-
-      &::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        right: 16px;
-        left: 16px;
-        height: 2px;
-        background-color: black;
-        transform: translateY(-50%);
-      }
+      color: #9aa0a6;
+      text-decoration: line-through;
     }
   }
+}
+
+.card:focus-visible {
+  outline: 2px solid #1bb95e;
+  outline-offset: 4px;
+  border-radius: 10px;
 }
 
 .front, .back {
@@ -46,9 +41,10 @@
   height: 100%;
   left: 0;
   top: 0;
-  transition: 1s;
+  transition: transform 0.6s;
   backface-visibility: hidden;
   border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
 .front {
@@ -61,17 +57,26 @@
   transform: rotateY(180deg);
 }
 
-.card:hover .front {transform: rotateY(180deg);}
-.card:hover .back {transform: rotateY(360deg);}
+// Flip on click/tap (works on touch, unlike the old :hover) — and matches the
+// "click on the word, the card flips" behaviour described on the portfolio.
+.flipped {
+  .front {
+    transform: rotateY(180deg);
+  }
+
+  .back {
+    transform: rotateY(360deg);
+  }
+}
 
 .icons {
   font-size: 26px;
   cursor: pointer;
-  
+
   &:hover {
     color: #1BB95E;
   }
-  
+
   &.deleted {
     &:hover {
       color: red;

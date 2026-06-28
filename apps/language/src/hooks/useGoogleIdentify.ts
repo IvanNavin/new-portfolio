@@ -50,6 +50,14 @@ const useGoogleIdentify = (props?: UseGoogleIdentifyProps) => {
       console.warn('Iframe detected: skipping Google Identify logic.');
       return;
     }
+
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+
+    if (!clientId) {
+      // Without a client id, Google Identity Services only logs errors —
+      // skip loading it entirely.
+      return;
+    }
     // add Google Identify script
     const script = document.createElement('script');
     script.src = url;
@@ -72,8 +80,7 @@ const useGoogleIdentify = (props?: UseGoogleIdentifyProps) => {
 
       if (!isLoading && !isLoggedIn && google) {
         google.accounts.id.initialize({
-          client_id: process.env
-            .NEXT_PUBLIC_GOOGLE_CLIENT_ID as unknown as string,
+          client_id: clientId,
           callback: async (response: { credential: string }) => {
             setIsLoading(true);
             log('Google response:', response);

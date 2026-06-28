@@ -13,7 +13,7 @@ import {
 } from '@src/components';
 import { AuthHeader } from '@src/containers/AuthHeader';
 import { isInIframe } from '@src/utils/isInIframe';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 import s from './home.module.scss';
 
@@ -21,9 +21,15 @@ import secondBackground from '../../assets/back2.jpg';
 import firstBackground from '../../assets/background.jpg';
 
 export const HomePage = () => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <Suspense fallback={<>Loading...</>}>
-      {!isInIframe() && <AuthHeader />}
+      {mounted && !isInIframe() && <AuthHeader />}
 
       <BackgroundBlock backgroundImg={firstBackground} fullHeight>
         <Header white>Time to learn words online</Header>
