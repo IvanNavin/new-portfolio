@@ -1,8 +1,3 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -11,18 +6,13 @@ const nextConfig = {
   transpilePackages: ['@repo/utils'],
   reactStrictMode: false,
   swcMinify: true,
-  output: 'standalone',
+  // Ship the Prisma client (@repo/prisma) and its query-engine binary with the
+  // serverless function instead of bundling it — mirrors devpulse, the one
+  // Prisma app here that deploys cleanly. With `output: 'standalone'` the
+  // engine was traced to a path the Vercel function couldn't find, so Prisma
+  // failed at runtime with "could not locate the Query Engine".
   experimental: {
-    // The Prisma client is generated to a custom workspace location
-    // (@repo/prisma → packages/prisma/generated), which Next's standalone
-    // file tracing doesn't follow — so the query-engine .node binary never
-    // ships with the function and Prisma fails at runtime with
-    // "could not locate the Query Engine". Widen the tracing root to the
-    // monorepo and force-include the engine binaries.
-    outputFileTracingRoot: path.join(__dirname, '../../'),
-    outputFileTracingIncludes: {
-      '**/*': ['../../packages/prisma/generated/prisma-client/*.node'],
-    },
+    serverComponentsExternalPackages: ['@prisma/client', '@repo/prisma'],
   },
   images: {
     remotePatterns: [
