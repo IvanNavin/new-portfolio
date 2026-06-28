@@ -233,6 +233,7 @@ export const WORKS: Work[] = [
       ESkill.Prisma,
       ESkill.TypeScript,
       ESkill.Tailwind,
+      ESkill.Sass,
       ESkill.GoogleOneTap,
     ],
     frontPicture: ENGLISH,
