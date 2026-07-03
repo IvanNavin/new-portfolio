@@ -44,7 +44,6 @@ export default class Game {
     this.winCascade = null; // { particles: [...] }
     this.inputLocked = false; // true while dealing / auto-completing / cascading
     this.loopRunning = false;
-    this.hoverCol = -1; // tableau column whose top card is hovered
     this.wasteAnim = {
       active: false,
       start: 0,
@@ -106,10 +105,22 @@ export default class Game {
     const topY = margin + this.verticalOffset;
     const tableauY = topY + ch + margin;
     // Face-down cards pack tight; face-up cards fan out so their rank/suit
-    // corner stays readable (standard Klondike spacing).
-    const overlapDown = ch * 0.13;
-    const overlapUp = ch * 0.32;
-    const hoverLift = ch * 0.12;
+    // corner stays readable. The face-up gap shrinks as needed so the tallest
+    // column still fits on screen (never overflowing off the bottom).
+    const overlapDown = ch * 0.14;
+    const idealUp = ch * 0.3;
+    const available = H - tableauY - margin;
+    let overlapUp = idealUp;
+    for (let c = 0; c < cols; c++) {
+      let up = 0;
+      let down = 0;
+      for (const card of this.tableau[c]) card.faceUp ? (up += 1) : (down += 1);
+      if (up > 1) {
+        const room = available - ch - down * overlapDown;
+        overlapUp = Math.min(overlapUp, room / (up - 1));
+      }
+    }
+    overlapUp = Math.max(overlapUp, ch * 0.11);
     const stockX = startX + 6 * (cw + gap);
     const wasteX = stockX - gap - cw;
     return {
@@ -125,7 +136,6 @@ export default class Game {
       tableauY,
       overlapDown,
       overlapUp,
-      hoverLift,
       stockX,
       wasteX,
       cols,
@@ -305,16 +315,10 @@ export default class Game {
 
     // --- tableau ---
     for (let col = 0; col < L.cols; col++) {
-      const pile = this.tableau[col];
-      pile.forEach((card, row) => {
+      this.tableau[col].forEach((card, row) => {
         if (isFlying(card)) return;
         const { x, y } = this.tableauPos(col, row, L);
-        // Lift the hovered column's top card as a grab affordance.
-        const lift =
-          !this.drag && col === this.hoverCol && row === pile.length - 1
-            ? L.hoverLift
-            : 0;
-        this.drawCard(ctx, card, x, y - lift, cw, ch);
+        this.drawCard(ctx, card, x, y, cw, ch);
       });
     }
 
@@ -378,6 +382,21 @@ export default class Game {
     const total = this.waste.length;
     const overlapX = cw * 0.3;
     const xSlots = [wasteX - 2 * overlapX, wasteX - overlapX, wasteX];
+
+    // While the top waste card is being dragged, leave the cards under it
+    // exactly where they were (they don't slide toward the gap).
+    if (this.drag?.from?.pile === "waste") {
+      const under = this.waste.slice(-2);
+      const offset = 2 - under.length;
+      for (let i = 0; i < this.waste.length - under.length; i++) {
+        if (!this.flying.has(this.waste[i]))
+          this.waste[i].draw(ctx, xSlots[0], topY, cw, ch);
+      }
+      under.forEach((c, i) => {
+        if (!this.flying.has(c)) c.draw(ctx, xSlots[i + offset], topY, cw, ch);
+      });
+      return;
+    }
 
     if (total === 0) return;
 
@@ -564,8 +583,8 @@ export default class Game {
         ch: hit.ch,
         overlapY: hit.overlap ?? hit.ch * this.overlapFactor,
       };
-      // Re-fan the remaining waste cards smoothly instead of snapping.
-      this.startWasteAnimation(oldVis, this.waste.slice(-3));
+      // Note: no re-fan on pickup — the cards under the lifted one stay put
+      // (handled in drawWaste), so nothing slides around.
       this.render();
       return;
     }
@@ -593,19 +612,13 @@ export default class Game {
   onMouseMove(e) {
     const p = this.getMousePos(e);
     if (!this.drag) {
-      // Hover affordance: highlight the grabbable top card under the cursor.
+      // Pointer cursor over anything grabbable, as a hover affordance.
       const hit = this.hitTest(p.x, p.y);
-      const col =
-        hit?.pile === "tableau" &&
-        hit.row === this.tableau[hit.index].length - 1 &&
-        this.tableau[hit.index].at(-1)?.faceUp
-          ? hit.index
-          : -1;
-      if (col !== this.hoverCol) {
-        this.hoverCol = col;
-        this.canvas.style.cursor = col >= 0 ? "pointer" : "default";
-        this.render();
-      }
+      const grabbable =
+        (hit?.pile === "stock" && (this.stock.length || this.waste.length)) ||
+        (hit?.pile === "waste" && this.waste.length) ||
+        (hit?.pile === "tableau" && this.tableau[hit.index][hit.row]?.faceUp);
+      this.canvas.style.cursor = grabbable ? "pointer" : "default";
       return;
     }
     if (Math.hypot(p.x - this.drag.x, p.y - this.drag.y) > 3) {
