@@ -8,6 +8,14 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Pokédex',
+  description:
+    'Browse 800+ Pokémon — search by name, filter by type, experience and attack, and explore each one’s stats and abilities.',
+  openGraph: {
+    title: 'Pokédex',
+    description:
+      'Browse 800+ Pokémon — search by name, filter by type, experience and attack, and explore each one’s stats and abilities.',
+    type: 'website',
+  },
 };
 
 type RootProps = Readonly<{
