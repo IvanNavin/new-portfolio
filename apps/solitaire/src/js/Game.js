@@ -44,6 +44,7 @@ export default class Game {
     this.winCascade = null; // { particles: [...] }
     this.inputLocked = false; // true while dealing / auto-completing / cascading
     this.loopRunning = false;
+    this.hoverCol = -1; // tableau column whose top card is hovered
     this.wasteAnim = {
       active: false,
       start: 0,
@@ -104,7 +105,11 @@ export default class Game {
     const startX = (W - groupW) / 2;
     const topY = margin + this.verticalOffset;
     const tableauY = topY + ch + margin;
-    const overlapY = ch * this.overlapFactor;
+    // Face-down cards pack tight; face-up cards fan out so their rank/suit
+    // corner stays readable (standard Klondike spacing).
+    const overlapDown = ch * 0.13;
+    const overlapUp = ch * 0.32;
+    const hoverLift = ch * 0.12;
     const stockX = startX + 6 * (cw + gap);
     const wasteX = stockX - gap - cw;
     return {
@@ -118,7 +123,9 @@ export default class Game {
       startX,
       topY,
       tableauY,
-      overlapY,
+      overlapDown,
+      overlapUp,
+      hoverLift,
       stockX,
       wasteX,
       cols,
@@ -129,10 +136,21 @@ export default class Game {
     return { x: L.startX + i * (L.cw + L.gap), y: L.topY };
   }
 
+  // Cumulative Y of a card in a column — depends on how many face-down vs
+  // face-up cards sit beneath it.
+  tableauCardY(col, row, L) {
+    const pile = this.tableau[col];
+    let y = L.tableauY;
+    for (let i = 0; i < row; i++) {
+      y += pile[i] && pile[i].faceUp ? L.overlapUp : L.overlapDown;
+    }
+    return y;
+  }
+
   tableauPos(col, row, L) {
     return {
       x: L.startX + col * (L.cw + L.gap),
-      y: L.tableauY + row * L.overlapY,
+      y: this.tableauCardY(col, row, L),
     };
   }
 
@@ -258,7 +276,7 @@ export default class Game {
 
     const ctx = this.ctx;
     const L = this.getLayout();
-    const { W, H, scale, cw, ch, startX, topY, overlapY, stockX, wasteX } = L;
+    const { W, H, scale, cw, ch, topY, stockX } = L;
     ctx.clearRect(0, 0, W, H);
 
     const isFlying = (c) => this.flying.has(c);
@@ -287,10 +305,16 @@ export default class Game {
 
     // --- tableau ---
     for (let col = 0; col < L.cols; col++) {
-      this.tableau[col].forEach((card, row) => {
+      const pile = this.tableau[col];
+      pile.forEach((card, row) => {
         if (isFlying(card)) return;
         const { x, y } = this.tableauPos(col, row, L);
-        this.drawCard(ctx, card, x, y, cw, ch);
+        // Lift the hovered column's top card as a grab affordance.
+        const lift =
+          !this.drag && col === this.hoverCol && row === pile.length - 1
+            ? L.hoverLift
+            : 0;
+        this.drawCard(ctx, card, x, y - lift, cw, ch);
       });
     }
 
@@ -355,11 +379,6 @@ export default class Game {
     const overlapX = cw * 0.3;
     const xSlots = [wasteX - 2 * overlapX, wasteX - overlapX, wasteX];
 
-    if (this.drag?.from?.pile === "waste") {
-      const visible = this.waste.slice(-2);
-      visible.forEach((c, i) => c.draw(ctx, xSlots[1 + i], topY, cw, ch));
-      return;
-    }
     if (total === 0) return;
 
     const hidden = Math.max(0, total - maxVis);
@@ -442,8 +461,7 @@ export default class Game {
 
   hitTest(x, y) {
     const L = this.getLayout();
-    const { cw, ch, startX, topY, tableauY, overlapY, stockX, wasteX, cols } =
-      L;
+    const { cw, ch, startX, topY, tableauY, stockX, wasteX, cols } = L;
 
     for (let col = 0; col < cols; col++) {
       if (!this.tableau[col].length) {
@@ -457,7 +475,7 @@ export default class Game {
             fy: tableauY,
             cw,
             ch,
-            overlap: overlapY,
+            overlap: L.overlapUp,
           };
         }
       }
@@ -476,10 +494,13 @@ export default class Game {
     }
     for (let col = 0; col < cols; col++) {
       const tx = startX + col * (cw + L.gap);
-      for (let row = this.tableau[col].length - 1; row >= 0; row--) {
-        const ty = tableauY + row * overlapY;
+      const pile = this.tableau[col];
+      for (let row = pile.length - 1; row >= 0; row--) {
+        const ty = this.tableauCardY(col, row, L);
         const bottom =
-          row === this.tableau[col].length - 1 ? ty + ch : ty + overlapY;
+          row === pile.length - 1
+            ? ty + ch
+            : this.tableauCardY(col, row + 1, L);
         if (x >= tx && x <= tx + cw && y >= ty && y <= bottom) {
           return {
             pile: "tableau",
@@ -489,7 +510,7 @@ export default class Game {
             fy: ty,
             cw,
             ch,
-            overlap: overlapY,
+            overlap: L.overlapUp,
           };
         }
       }
@@ -509,6 +530,9 @@ export default class Game {
         const card = this.stock.pop();
         card.flip();
         this.waste.push(card);
+        // The drawn card flies from the stock over to the waste.
+        const L = this.getLayout();
+        this.animateFlight([card], L.stockX, L.topY, L.wasteX, L.topY, 0);
       } else {
         while (this.waste.length) {
           const c = this.waste.pop();
@@ -538,8 +562,10 @@ export default class Game {
         offsetY: y - hit.fy,
         cw: hit.cw,
         ch: hit.ch,
-        overlapY: hit.ch * this.overlapFactor,
+        overlapY: hit.overlap ?? hit.ch * this.overlapFactor,
       };
+      // Re-fan the remaining waste cards smoothly instead of snapping.
+      this.startWasteAnimation(oldVis, this.waste.slice(-3));
       this.render();
       return;
     }
@@ -565,8 +591,23 @@ export default class Game {
   }
 
   onMouseMove(e) {
-    if (!this.drag) return;
     const p = this.getMousePos(e);
+    if (!this.drag) {
+      // Hover affordance: highlight the grabbable top card under the cursor.
+      const hit = this.hitTest(p.x, p.y);
+      const col =
+        hit?.pile === "tableau" &&
+        hit.row === this.tableau[hit.index].length - 1 &&
+        this.tableau[hit.index].at(-1)?.faceUp
+          ? hit.index
+          : -1;
+      if (col !== this.hoverCol) {
+        this.hoverCol = col;
+        this.canvas.style.cursor = col >= 0 ? "pointer" : "default";
+        this.render();
+      }
+      return;
+    }
     if (Math.hypot(p.x - this.drag.x, p.y - this.drag.y) > 3) {
       this.drag.moved = true;
     }
