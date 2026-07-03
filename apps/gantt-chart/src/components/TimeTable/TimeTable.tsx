@@ -1,6 +1,5 @@
 import { FrappeGantt } from 'frappe-gantt-react'
 import { Task } from 'frappe-gantt-react/typings/Task'
-import { Moment } from 'moment/moment'
 import { useEffect } from 'react'
 
 import { useTypedSelector } from '../../store/store'
@@ -44,12 +43,12 @@ export const TimeTable = () => {
   const { data, viewMode } = useTypedSelector((state) => state.gridReducer)
   const { updateDate, updateProgress } = useActions()
 
-  const onDateChange = (task: Task, start: Moment, end: Moment) => {
-    updateDate({ name: task.name, start, end })
+  const onDateChange = (task: Task, start: unknown, end: unknown) => {
+    updateDate({ id: task.id, start, end })
   }
 
   const onProgressChange = (task: Task, progress: number) => {
-    updateProgress({ name: task.name, progress })
+    updateProgress({ id: task.id, progress })
   }
 
   useEffect(() => {
@@ -70,7 +69,7 @@ export const TimeTable = () => {
     <div className={s.wrapper}>
       {data && (
         <FrappeGantt
-          tasks={data as Task[]}
+          tasks={data as unknown as Task[]}
           viewMode={viewMode}
           onDateChange={onDateChange}
           onProgressChange={onProgressChange}

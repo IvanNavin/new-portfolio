@@ -1,21 +1,22 @@
 import { format } from 'date-fns'
-import { Moment } from 'moment/moment'
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { mockData } from '../../__mock__/mockData'
 import { ViewMode } from '../../types/types'
-import { Task } from '../../utils/Task'
+import { makeTask, Task, TaskInput } from '../../utils/Task'
 
 interface IGridSlice {
-  data: Partial<Task>[]
+  data: Task[]
   viewMode: ViewMode
 }
 
 const initialState: IGridSlice = {
-  data: mockData.map((x) => new Task(x)),
+  data: mockData.map((task) => makeTask(task)),
   viewMode: ViewMode.Month,
 }
+
+const toDate = (value: unknown): string => format(new Date(value as string), 'yyyy-MM-dd')
 
 const gridSlice = createSlice({
   name: 'grid',
@@ -26,48 +27,38 @@ const gridSlice = createSlice({
     },
     updateDate(
       state: IGridSlice,
-      {
-        payload: { name, start, end },
-      }: PayloadAction<{ name: string; start: Moment; end: Moment }>,
+      { payload: { id, start, end } }: PayloadAction<{ id: string; start: unknown; end: unknown }>,
     ) {
-      state.data = state.data.map((task) => {
-        if (task.name === name) {
-          task.start = format(new Date(start as unknown as string), 'yyyy-MM-dd')
-          task.end = format(new Date(end as unknown as string), 'yyyy-MM-dd')
-
-          return task
-        }
-
-        return task
-      })
+      const task = state.data.find((task) => task.id === id)
+      if (task) {
+        task.start = toDate(start)
+        task.end = toDate(end)
+      }
     },
     updateProgress(
       state: IGridSlice,
-      { payload: { name, progress } }: PayloadAction<{ name: string; progress: number }>,
+      { payload: { id, progress } }: PayloadAction<{ id: string; progress: number }>,
     ) {
-      state.data = state.data.map((task) => {
-        if (task.name === name) {
-          task.progress = progress
-
-          return task
-        }
-
-        return task
-      })
+      const task = state.data.find((task) => task.id === id)
+      if (task) {
+        task.progress = progress
+      }
     },
-    addTask(state: IGridSlice, { payload }: PayloadAction<Partial<Task>>) {
-      state.data.push(new Task(payload))
+    addTask(state: IGridSlice, { payload }: PayloadAction<TaskInput>) {
+      state.data.push(makeTask(payload))
     },
     editTask(
       state: IGridSlice,
-      { payload: { taskName, task } }: PayloadAction<{ taskName: string; task: Partial<Task> }>,
+      { payload: { id, task } }: PayloadAction<{ id: string; task: TaskInput }>,
     ) {
-      const newData = state.data.filter((task) => task.name !== taskName)
-      newData.push(new Task(task))
-      state.data = newData
+      // Replace in place so the edited row keeps its position in the list.
+      const index = state.data.findIndex((task) => task.id === id)
+      if (index !== -1) {
+        state.data[index] = makeTask({ ...task, id })
+      }
     },
     deleteTask(state: IGridSlice, { payload }: PayloadAction<string>) {
-      state.data = state.data.filter((task) => task.name !== payload)
+      state.data = state.data.filter((task) => task.id !== payload)
     },
     resetGrid: () => initialState,
   },

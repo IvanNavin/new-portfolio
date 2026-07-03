@@ -11,8 +11,12 @@ import { useActions } from '../../utils/useActions'
 import { IAddEditTask } from './types'
 
 const schema = yup.object().shape({
-  name: yup.string().trim().required('required string min 2').min(2),
-  date: yup.array().of(yup.date().required('required date')).defined().nullable(),
+  name: yup
+    .string()
+    .trim()
+    .required('Name is required')
+    .min(2, 'Name must be at least 2 characters'),
+  date: yup.array().of(yup.date().required('Pick a date')).defined().nullable(),
 })
 
 export const useAddEditTask = (task: Partial<Task> | null, onClose: () => void) => {
@@ -33,32 +37,23 @@ export const useAddEditTask = (task: Partial<Task> | null, onClose: () => void) 
     progress,
     dependencies,
   }) => {
-    if (task?.name) {
-      editTask({
-        taskName: task.name,
-        task: {
-          id: name,
-          name,
-          start: format(start as Date, 'yyyy-MM-dd'),
-          end: format(end as Date, 'yyyy-MM-dd'),
-          progress,
-          dependencies,
-        },
-      })
+    const fields = {
+      name,
+      start: format(start as Date, 'yyyy-MM-dd'),
+      end: format(end as Date, 'yyyy-MM-dd'),
+      dependencies,
+    }
+
+    if (task?.id) {
+      // Keep the existing id so drag/progress edits keep referencing this task.
+      editTask({ id: task.id, task: { ...fields, progress } })
     } else {
-      addTask({
-        id: name,
-        name,
-        start: format(start as Date, 'yyyy-MM-dd'),
-        end: format(end as Date, 'yyyy-MM-dd'),
-        progress: 0,
-        dependencies,
-      })
+      addTask({ id: crypto.randomUUID(), progress: 0, ...fields })
     }
     onClose()
   }
 
-  const onDelete = () => task?.name && deleteTask(task.name)
+  const onDelete = () => task?.id && deleteTask(task.id)
 
   useEffect(() => {
     if (task) {

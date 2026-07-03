@@ -1,47 +1,48 @@
-export class Task {
-  private _dependencies: string[] | string = []
-
-  id = ''
-  name = ''
-  start = ''
-  end = ''
-
-  constructor(options: Partial<Task> = {}) {
-    Object.assign(this, options)
-  }
-
-  /**
-   * Progress in percentage
-   */
-  private _progress = 0.52
-
-  get progress() {
-    return this._progress || 0.52
-  }
-
-  set progress(value) {
-    this._progress = value || 0.52
-  }
-
-  /**
-   * A css custom class for the task chart bar
-   */
+// Plain, serializable task shape. Redux state must stay serializable and be
+// safe for Immer to draft — class instances (with private fields / accessors)
+// are neither, so tasks are plain objects created via `makeTask`.
+export interface Task {
+  id: string
+  name: string
+  start: string
+  end: string
+  progress: number
+  dependencies: string[]
   custom_class?: string
-
-  setDependencies(value: string | string[]) {
-    this._dependencies = Array.isArray(value) ? value : value.split(',').map((d) => d.trim())
-  }
-
-  set dependencies(value: string[] | string) {
-    this._dependencies = Array.isArray(value)
-      ? value
-      : value
-          .split(',')
-          .map((t) => t.trim())
-          .filter(Boolean)
-  }
-
-  get dependencies(): string[] | string {
-    return this._dependencies
-  }
 }
+
+const DEFAULT_PROGRESS = 0.52
+
+const toDependencies = (value?: string | string[]): string[] => {
+  if (Array.isArray(value)) return value
+  if (typeof value === 'string') {
+    return value
+      .split(',')
+      .map((dependency) => dependency.trim())
+      .filter(Boolean)
+  }
+
+  return []
+}
+
+export type TaskInput = Partial<Omit<Task, 'dependencies'>> & {
+  dependencies?: string | string[]
+}
+
+export const makeTask = ({
+  id = '',
+  name = '',
+  start = '',
+  end = '',
+  progress,
+  dependencies,
+  custom_class,
+}: TaskInput = {}): Task => ({
+  id,
+  name,
+  start,
+  end,
+  progress: progress || DEFAULT_PROGRESS,
+  dependencies: toDependencies(dependencies),
+  ...(custom_class ? { custom_class } : {}),
+})

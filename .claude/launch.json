@@ -30,6 +30,15 @@
       "runtimeExecutable": "apps/pokedex/node_modules/.bin/next",
       "runtimeArgs": ["dev", "apps/pokedex", "-p", "3040"],
       "port": 3040
+    },
+    {
+      "name": "gantt-chart",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd apps/gantt-chart && PORT=3050 BROWSER=none npm start"
+      ],
+      "port": 3050
     }
   ]
 }
