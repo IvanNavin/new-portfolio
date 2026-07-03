@@ -44,6 +44,8 @@ export default class Game {
     this.winCascade = null; // { particles: [...] }
     this.inputLocked = false; // true while dealing / auto-completing / cascading
     this.loopRunning = false;
+    this.hoverCol = -1; // hovered tableau column
+    this.hoverRow = -1; // hovered card row within that column
     this.wasteAnim = {
       active: false,
       start: 0,
@@ -104,23 +106,14 @@ export default class Game {
     const startX = (W - groupW) / 2;
     const topY = margin + this.verticalOffset;
     const tableauY = topY + ch + margin;
-    // Face-down cards pack tight; face-up cards fan out so their rank/suit
-    // corner stays readable. The face-up gap shrinks as needed so the tallest
-    // column still fits on screen (never overflowing off the bottom).
+    // Fixed spacing: face-down cards pack tight, face-up cards fan out. The
+    // face-up gap is sized ONCE for the worst realistic column (6 face-down +
+    // 13 face-up), so it never changes as cards come and go — nothing jumps —
+    // while the tallest column still fits on screen.
     const overlapDown = ch * 0.14;
-    const idealUp = ch * 0.3;
     const available = H - tableauY - margin;
-    let overlapUp = idealUp;
-    for (let c = 0; c < cols; c++) {
-      let up = 0;
-      let down = 0;
-      for (const card of this.tableau[c]) card.faceUp ? (up += 1) : (down += 1);
-      if (up > 1) {
-        const room = available - ch - down * overlapDown;
-        overlapUp = Math.min(overlapUp, room / (up - 1));
-      }
-    }
-    overlapUp = Math.max(overlapUp, ch * 0.11);
+    const room = available - ch - 6 * overlapDown;
+    const overlapUp = Math.max(ch * 0.12, Math.min(ch * 0.3, room / 12));
     const stockX = startX + 6 * (cw + gap);
     const wasteX = stockX - gap - cw;
     return {
@@ -153,6 +146,11 @@ export default class Game {
     let y = L.tableauY;
     for (let i = 0; i < row; i++) {
       y += pile[i] && pile[i].faceUp ? L.overlapUp : L.overlapDown;
+      // Hover: widen the gap right after the hovered card so it reads clearly
+      // (the cards below it slide down, keeping their spacing).
+      if (!this.drag && col === this.hoverCol && i === this.hoverRow) {
+        y += L.overlapUp;
+      }
     }
     return y;
   }
@@ -612,13 +610,28 @@ export default class Game {
   onMouseMove(e) {
     const p = this.getMousePos(e);
     if (!this.drag) {
-      // Pointer cursor over anything grabbable, as a hover affordance.
       const hit = this.hitTest(p.x, p.y);
       const grabbable =
         (hit?.pile === "stock" && (this.stock.length || this.waste.length)) ||
         (hit?.pile === "waste" && this.waste.length) ||
         (hit?.pile === "tableau" && this.tableau[hit.index][hit.row]?.faceUp);
       this.canvas.style.cursor = grabbable ? "pointer" : "default";
+
+      // Reveal a covered face-up card on hover (skip the always-visible top).
+      let hCol = -1;
+      let hRow = -1;
+      if (hit?.pile === "tableau") {
+        const pile = this.tableau[hit.index];
+        if (pile[hit.row]?.faceUp && hit.row < pile.length - 1) {
+          hCol = hit.index;
+          hRow = hit.row;
+        }
+      }
+      if (hCol !== this.hoverCol || hRow !== this.hoverRow) {
+        this.hoverCol = hCol;
+        this.hoverRow = hRow;
+        this.render();
+      }
       return;
     }
     if (Math.hypot(p.x - this.drag.x, p.y - this.drag.y) > 6) {
