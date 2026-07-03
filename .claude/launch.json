@@ -39,6 +39,18 @@
         "cd apps/gantt-chart && PORT=3050 BROWSER=none npm start"
       ],
       "port": 3050
+    },
+    {
+      "name": "solitaire",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4180",
+        "--directory",
+        "apps/solitaire"
+      ],
+      "port": 4180
     }
   ]
 }

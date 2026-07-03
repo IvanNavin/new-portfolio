@@ -3,28 +3,47 @@ import Card from "./Card.js";
 import {
   isValidFoundationDrop,
   isValidTableauDrop,
+  rankOf,
   strokeRoundedRect,
 } from "./helpers.js";
+
+const now = () => performance.now();
+const clamp01 = (t) => (t < 0 ? 0 : t > 1 ? 1 : t);
+// easeOutCubic — cards decelerate as they land.
+const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+
+const MOVE_MS = 170;
+const SNAP_MS = 200;
+const FLIP_MS = 240;
+const DEAL_MS = 260;
+const DEAL_STAGGER = 45;
 
 export default class Game {
   constructor(ctx, canvas) {
     this.ctx = ctx;
     this.canvas = canvas;
 
-    this.tableau = Array.from({ length: 7 }, () => []); // 7 tableau columns
-    this.foundations = Array.from({ length: 4 }, () => []); // 4 foundation piles
-    this.stock = []; // stock pile (face-down)
-    this.waste = []; // waste pile (face-up)
+    this.tableau = Array.from({ length: 7 }, () => []);
+    this.foundations = Array.from({ length: 4 }, () => []);
+    this.stock = [];
+    this.waste = [];
 
     this.verticalOffset = 40;
     this.overlapFactor = 0.1;
-    this.moveCount = 0; // move counter
-    this.startTime = null; // game start time
-    this.history = []; // stack of previous states for undo
+    this.moveCount = 0;
+    this.startTime = null;
+    this.history = [];
     this.accumulatedPause = 0;
     this.pauseStart = null;
     this.paused = false;
     this.drag = null;
+
+    // --- animation state ---
+    this.flying = new Map(); // Card -> { fromX, fromY, toX, toY, start, duration, delay, onComplete }
+    this.flips = new Map(); // Card -> { start, duration }
+    this.winCascade = null; // { particles: [...] }
+    this.inputLocked = false; // true while dealing / auto-completing / cascading
+    this.loopRunning = false;
     this.wasteAnim = {
       active: false,
       start: 0,
@@ -35,7 +54,6 @@ export default class Game {
   }
 
   init() {
-    // Reset everything to the initial state
     this.tableau = Array.from({ length: 7 }, () => []);
     this.foundations = Array.from({ length: 4 }, () => []);
     this.stock = [];
@@ -47,26 +65,167 @@ export default class Game {
     this.accumulatedPause = 0;
     this.pauseStart = null;
     this.paused = false;
+    this.flying.clear();
+    this.flips.clear();
+    this.winCascade = null;
 
-    // 1) Create and shuffle the deck
     this.deck = new Deck();
     this.deck.shuffle();
 
-    // 2) Deal cards into tableau
+    // Deal face-down; the reveal happens after the deal animation lands.
     for (let col = 0; col < 7; col++) {
       for (let i = 0; i <= col; i++) {
-        const card = this.deck.draw();
-        this.tableau[col].push(card);
+        this.tableau[col].push(this.deck.draw());
       }
-      // Flip only the top card in each column
-      this.tableau[col][col].flip();
     }
-
-    // 3) All remaining cards go to the stock pile
     this.stock = this.deck.cards.slice();
 
-    // 4) Save the initial state to history for undo
+    this.startDealAnimation();
     this.recordHistory();
+  }
+
+  // ---------- geometry ----------
+
+  getLayout() {
+    const W = this.canvas.width;
+    const H = this.canvas.height;
+    const idealW = 1000;
+    const idealH = 780;
+    const scale = Math.min(W / idealW, H / idealH);
+    const idealMargin = 20;
+    const idealGap = 20;
+    const cols = 7;
+    const margin = idealMargin * scale;
+    const gap = idealGap * scale;
+    const cw0 = (idealW - 2 * idealMargin - (cols - 1) * idealGap) / cols;
+    const cw = cw0 * scale;
+    const ch = cw0 * 1.5 * scale;
+    const groupW = (cw + gap) * 7 - gap;
+    const startX = (W - groupW) / 2;
+    const topY = margin + this.verticalOffset;
+    const tableauY = topY + ch + margin;
+    const overlapY = ch * this.overlapFactor;
+    const stockX = startX + 6 * (cw + gap);
+    const wasteX = stockX - gap - cw;
+    return {
+      W,
+      H,
+      scale,
+      margin,
+      gap,
+      cw,
+      ch,
+      startX,
+      topY,
+      tableauY,
+      overlapY,
+      stockX,
+      wasteX,
+      cols,
+    };
+  }
+
+  foundationPos(i, L) {
+    return { x: L.startX + i * (L.cw + L.gap), y: L.topY };
+  }
+
+  tableauPos(col, row, L) {
+    return {
+      x: L.startX + col * (L.cw + L.gap),
+      y: L.tableauY + row * L.overlapY,
+    };
+  }
+
+  // ---------- animation core ----------
+
+  isAnimating() {
+    return (
+      this.flying.size > 0 ||
+      this.flips.size > 0 ||
+      this.wasteAnim.active ||
+      !!this.winCascade
+    );
+  }
+
+  // Drive the canvas only while something is moving (no idle 60fps repaint).
+  requestRender() {
+    if (this.loopRunning) return;
+    this.loopRunning = true;
+    const loop = () => {
+      this.render();
+      if (this.isAnimating()) {
+        requestAnimationFrame(loop);
+      } else {
+        this.loopRunning = false;
+        this.render(); // settle the final static frame
+      }
+    };
+    requestAnimationFrame(loop);
+  }
+
+  // Animate a group of cards gliding from (fromX,fromY) to (toX,toY), keeping
+  // their vertical spacing. onComplete fires once, when the last card lands.
+  animateFlight(cards, fromX, fromY, toX, toY, overlapY, opts = {}) {
+    const t0 = now();
+    const duration = opts.duration ?? MOVE_MS;
+    cards.forEach((card, i) => {
+      this.flying.set(card, {
+        fromX,
+        fromY: fromY + i * overlapY,
+        toX,
+        toY: toY + i * overlapY,
+        start: t0,
+        duration,
+        delay: (opts.delay ?? 0) + i * (opts.stagger ?? 0),
+        onComplete: i === cards.length - 1 ? opts.onComplete : null,
+      });
+    });
+    this.requestRender();
+  }
+
+  reveal(card) {
+    if (!card || card.faceUp) return;
+    card.faceUp = true;
+    this.flips.set(card, { start: now(), duration: FLIP_MS });
+    this.requestRender();
+  }
+
+  startDealAnimation() {
+    const L = this.getLayout();
+    this.inputLocked = true;
+    let order = 0;
+    let last = null;
+    for (let col = 0; col < 7; col++) {
+      for (let row = 0; row < this.tableau[col].length; row++) {
+        const card = this.tableau[col][row];
+        const to = this.tableauPos(col, row, L);
+        this.flying.set(card, {
+          fromX: L.stockX,
+          fromY: L.topY,
+          toX: to.x,
+          toY: to.y,
+          start: now(),
+          duration: DEAL_MS,
+          delay: order * DEAL_STAGGER,
+          onComplete: null,
+        });
+        last = card;
+        order += 1;
+      }
+    }
+    if (last) {
+      this.flying.get(last).onComplete = () => {
+        // Reveal the bottom (top-of-column) cards once everything has landed.
+        for (let col = 0; col < 7; col++) {
+          const top = this.tableau[col].at(-1);
+          setTimeout(() => this.reveal(top), col * 60);
+        }
+        this.inputLocked = false;
+      };
+    } else {
+      this.inputLocked = false;
+    }
+    this.requestRender();
   }
 
   pause() {
@@ -84,268 +243,244 @@ export default class Game {
     }
   }
 
-  /**
-   * Returns true if all foundation piles contain 13 cards
-   */
   checkWin() {
     return this.foundations.every((pile) => pile.length === 13);
   }
 
+  // ---------- render ----------
+
   render() {
     if (this.paused) return;
-    const ctx = this.ctx;
-    const W = this.canvas.width;
-    const H = this.canvas.height;
+    if (this.winCascade) {
+      this.renderWinCascade();
+      return;
+    }
 
+    const ctx = this.ctx;
+    const L = this.getLayout();
+    const { W, H, scale, cw, ch, startX, topY, overlapY, stockX, wasteX } = L;
     ctx.clearRect(0, 0, W, H);
 
-    // --- layout params ---
-    const idealW = 1000,
-      idealH = 780;
-    const scale = Math.min(W / idealW, H / idealH);
+    const isFlying = (c) => this.flying.has(c);
 
-    const idealMargin = 20,
-      idealGap = 20,
-      cols = 7;
-    const margin = idealMargin * scale;
-    const gap = idealGap * scale;
-
-    const cw0 = (idealW - 2 * idealMargin - (cols - 1) * idealGap) / cols;
-    const ch0 = cw0 * 1.5;
-    const cw = cw0 * scale;
-    const ch = ch0 * scale;
-
-    const groupW = (cw + gap) * 7 - gap;
-    const startX = (W - groupW) / 2;
-
-    const topY = margin + this.verticalOffset;
-    const tableauY = topY + ch + margin;
-    const overlapY = ch * this.overlapFactor;
-
-    const stockCol = 6;
-    const stockX = startX + stockCol * (cw + gap);
-    const wasteX = stockX - gap - cw;
-
-    // --- 1) foundations ---
+    // --- foundations ---
     for (let i = 0; i < 4; i++) {
-      const x = startX + i * (cw + gap);
-      const y = topY;
-      if (this.foundations[i].length) {
-        this.foundations[i].at(-1).draw(ctx, x, y, cw, ch);
-      } else {
-        ctx.save();
-        ctx.strokeStyle = "#fff";
-        ctx.lineWidth = 2;
-        ctx.setLineDash([]);
-        strokeRoundedRect(ctx, x, y, cw, ch, 10);
-        ctx.restore();
-
-        ctx.save();
-        ctx.strokeStyle = "rgba(255,255,255,0.5)";
-        ctx.lineWidth = 1;
-        ctx.setLineDash([5 * scale, 5 * scale]);
-        strokeRoundedRect(
-          ctx,
-          x + 8 * scale,
-          y + 8 * scale,
-          cw - 16 * scale,
-          ch - 16 * scale,
-          8 * scale,
-        );
-        ctx.restore();
-
-        ctx.save();
-        ctx.fillStyle = "rgba(255,255,255,0.5)";
-        ctx.font = `${ch * 0.6}px sans-serif`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("A", x + cw / 2, y + ch / 2);
-        ctx.restore();
+      const { x, y } = this.foundationPos(i, L);
+      const top = this.foundations[i].at(-1);
+      if (top && !isFlying(top)) {
+        top.draw(ctx, x, y, cw, ch);
+      } else if (!top) {
+        this.drawEmptySlot(ctx, x, y, cw, ch, scale, "A");
       }
     }
 
-    // --- 2) stock ---
-    if (this.stock.length) {
-      this.stock.at(-1).draw(ctx, stockX, topY, cw, ch);
-    } else {
-      ctx.save();
-      ctx.strokeStyle = "#fff";
-      ctx.lineWidth = 2;
-      ctx.setLineDash([]);
-      strokeRoundedRect(ctx, stockX, topY, cw, ch, 10);
-      ctx.restore();
-
-      // 2) Dashed inner frame
-      const inset = 8 * scale;
-      const innerX = stockX + inset;
-      const innerY = topY + inset;
-      const innerW = cw - inset * 2;
-      const innerH = ch - inset * 2;
-
-      ctx.save();
-      ctx.strokeStyle = "rgba(255,255,255,0.5)";
-      ctx.lineWidth = 1;
-      ctx.setLineDash([5 * scale, 5 * scale]);
-      strokeRoundedRect(ctx, innerX, innerY, innerW, innerH, 8 * scale);
-      ctx.restore();
-
-      const svgPath = `M224,48V96a8,8,0,0,1-8,8H168a8,8,0,0,1,0-16h28.69L182.06,73.37a79.56,79.56,0,0,0-56.13-23.43h-.45A79.52,79.52,0,0,0,69.59,72.71,8,8,0,0,1,58.41,61.27a96,96,0,0,1,135,.79L208,76.69V48a8,8,0,0,1,16,0ZM186.41,183.29a80,80,0,0,1-112.47-.66L59.31,168H88a8,8,0,0,0,0-16H40a8,8,0,0,0-8,8v48a8,8,0,0,0,16,0V179.31l14.63,14.63A95.43,95.43,0,0,0,130,222.06h.53a95.36,95.36,0,0,0,67.07-27.33,8,8,0,0,0-11.18-11.44Z`;
-      const p = new Path2D(svgPath);
-      const scaleX = innerW / 256;
-      const scaleY = innerH / 256;
-      const iconScale = Math.min(scaleX, scaleY);
-      const iconW = 256 * iconScale;
-      const iconH = 256 * iconScale;
-      const dx = innerX + (innerW - iconW) / 2;
-      const dy = innerY + (innerH - iconH) / 2;
-
-      ctx.save();
-      ctx.fillStyle = "rgba(255,255,255,0.5)";
-      ctx.translate(dx, dy);
-      ctx.scale(iconScale, iconScale);
-      ctx.fill(p);
-      ctx.restore();
+    // --- stock ---
+    const stockTop = this.stock.at(-1);
+    if (stockTop && !isFlying(stockTop)) {
+      stockTop.draw(ctx, stockX, topY, cw, ch);
+    } else if (!this.stock.length) {
+      this.drawEmptySlot(ctx, stockX, topY, cw, ch, scale, "recycle");
     }
 
-    // --- 3) waste ---
-    const maxVis = 3;
-    const total = this.waste.length;
+    // --- waste ---
+    this.drawWaste(ctx, L);
 
-    if (this.drag?.from?.pile === "waste") {
-      const overlapX = cw * 0.3;
-      const xSlots = [wasteX - 2 * overlapX, wasteX - overlapX, wasteX];
-      const visible = this.waste.slice(-2);
-      visible.forEach((c, i) => c.draw(ctx, xSlots[1 + i], topY, cw, ch));
-    } else if (total > 0) {
-      const overlapX = cw * 0.3;
-      const xSlots = [wasteX - 2 * overlapX, wasteX - overlapX, wasteX];
-      const hidden = Math.max(0, total - maxVis);
-      for (let i = 0; i < hidden; i++) {
-        this.waste[i].draw(ctx, xSlots[0], topY, cw, ch);
-      }
-      const visible = this.waste.slice(-maxVis);
-      let t = 1;
-      if (this.wasteAnim.active) {
-        const e = Date.now() - this.wasteAnim.start;
-        t = Math.min(1, e / this.wasteAnim.duration);
-        if (t === 1) this.wasteAnim.active = false;
-      }
-      visible.forEach((c, i) => {
-        const from = this.wasteAnim.fromSlot.get(c);
-        const to = this.wasteAnim.toSlot.get(c);
-        let x;
-        if (this.wasteAnim.active && from != null && to != null) {
-          const xSlots = [wasteX - 2 * overlapX, wasteX - overlapX, wasteX];
-          x = xSlots[from] + (xSlots[to] - xSlots[from]) * t;
-        } else {
-          const start = maxVis - visible.length;
-          x = xSlots[start + i];
-        }
-        c.draw(ctx, x, topY, cw, ch);
-      });
-    }
-
-    // --- 4) tableau ---
-    for (let col = 0; col < cols; col++) {
-      const xStart = startX + col * (cw + gap);
+    // --- tableau ---
+    for (let col = 0; col < L.cols; col++) {
       this.tableau[col].forEach((card, row) => {
-        const y = tableauY + row * overlapY;
-        card.draw(ctx, xStart, y, cw, ch);
+        if (isFlying(card)) return;
+        const { x, y } = this.tableauPos(col, row, L);
+        this.drawCard(ctx, card, x, y, cw, ch);
       });
     }
 
-    // --- 5) drag layer ---
+    // --- flying layer (on top) ---
+    this.drawFlying(ctx, cw, ch);
+
+    // --- drag layer ---
     if (this.drag) {
-      const { cards, x, y, offsetX, offsetY, overlapY } = this.drag;
+      const { cards, x, y, offsetX, offsetY, overlapY: oy } = this.drag;
       cards.forEach((c, i) =>
-        c.draw(ctx, x - offsetX, y - offsetY + i * overlapY, cw, ch),
+        this.drawCard(ctx, c, x - offsetX, y - offsetY + i * oy, cw, ch),
       );
     }
 
-    // --- 6) HUD ---
     this.drawHUD();
   }
 
-  // Converts clientX/Y → canvas coordinates
-  getMousePos(e) {
-    const rect = this.canvas.getBoundingClientRect();
-    return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    };
+  // Draws a card, applying a horizontal flip if it's mid-reveal.
+  drawCard(ctx, card, x, y, cw, ch) {
+    const flip = this.flips.get(card);
+    if (!flip) {
+      card.draw(ctx, x, y, cw, ch);
+      return;
+    }
+    const t = clamp01((now() - flip.start) / flip.duration);
+    if (t >= 1) {
+      this.flips.delete(card);
+      card.draw(ctx, x, y, cw, ch);
+      return;
+    }
+    // First half shrinks the back to zero width, second half grows the face.
+    const front = t >= 0.5;
+    const p = front ? (t - 0.5) * 2 : 1 - t * 2;
+    const img = front ? card.image : Card.backImage;
+    const dw = Math.max(cw * p, 0.5);
+    if (img) ctx.drawImage(img, x + (cw - dw) / 2, y, dw, ch);
   }
 
-  // Determines which "bite" (pile) click
+  drawFlying(ctx, cw, ch) {
+    if (!this.flying.size) return;
+    const t = now();
+    const done = [];
+    for (const [card, a] of this.flying) {
+      const local = clamp01((t - a.start - (a.delay || 0)) / a.duration);
+      const e = easeOut(local);
+      const x = a.fromX + (a.toX - a.fromX) * e;
+      const y = a.fromY + (a.toY - a.fromY) * e;
+      card.draw(ctx, x, y, cw, ch);
+      if (local >= 1) done.push(card);
+    }
+    for (const card of done) {
+      const a = this.flying.get(card);
+      this.flying.delete(card);
+      a.onComplete?.();
+    }
+  }
+
+  drawWaste(ctx, L) {
+    const { cw, ch, topY, wasteX } = L;
+    const maxVis = 3;
+    const total = this.waste.length;
+    const overlapX = cw * 0.3;
+    const xSlots = [wasteX - 2 * overlapX, wasteX - overlapX, wasteX];
+
+    if (this.drag?.from?.pile === "waste") {
+      const visible = this.waste.slice(-2);
+      visible.forEach((c, i) => c.draw(ctx, xSlots[1 + i], topY, cw, ch));
+      return;
+    }
+    if (total === 0) return;
+
+    const hidden = Math.max(0, total - maxVis);
+    for (let i = 0; i < hidden; i++) {
+      if (!this.flying.has(this.waste[i]))
+        this.waste[i].draw(ctx, xSlots[0], topY, cw, ch);
+    }
+    const visible = this.waste.slice(-maxVis);
+    let t = 1;
+    if (this.wasteAnim.active) {
+      const e = now() - this.wasteAnim.start;
+      t = Math.min(1, e / this.wasteAnim.duration);
+      if (t === 1) this.wasteAnim.active = false;
+    }
+    visible.forEach((c, i) => {
+      if (this.flying.has(c)) return;
+      const from = this.wasteAnim.fromSlot.get(c);
+      const to = this.wasteAnim.toSlot.get(c);
+      let x;
+      if (this.wasteAnim.active && from != null && to != null) {
+        x = xSlots[from] + (xSlots[to] - xSlots[from]) * t;
+      } else {
+        x = xSlots[maxVis - visible.length + i];
+      }
+      c.draw(ctx, x, topY, cw, ch);
+    });
+  }
+
+  drawEmptySlot(ctx, x, y, cw, ch, scale, glyph) {
+    ctx.save();
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
+    strokeRoundedRect(ctx, x, y, cw, ch, 10);
+    ctx.restore();
+
+    const inset = 8 * scale;
+    ctx.save();
+    ctx.strokeStyle = "rgba(255,255,255,0.5)";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([5 * scale, 5 * scale]);
+    strokeRoundedRect(
+      ctx,
+      x + inset,
+      y + inset,
+      cw - inset * 2,
+      ch - inset * 2,
+      8 * scale,
+    );
+    ctx.restore();
+
+    if (glyph === "recycle") {
+      const svg = `M224,48V96a8,8,0,0,1-8,8H168a8,8,0,0,1,0-16h28.69L182.06,73.37a79.56,79.56,0,0,0-56.13-23.43h-.45A79.52,79.52,0,0,0,69.59,72.71,8,8,0,0,1,58.41,61.27a96,96,0,0,1,135,.79L208,76.69V48a8,8,0,0,1,16,0ZM186.41,183.29a80,80,0,0,1-112.47-.66L59.31,168H88a8,8,0,0,0,0-16H40a8,8,0,0,0-8,8v48a8,8,0,0,0,16,0V179.31l14.63,14.63A95.43,95.43,0,0,0,130,222.06h.53a95.36,95.36,0,0,0,67.07-27.33,8,8,0,0,0-11.18-11.44Z`;
+      const p = new Path2D(svg);
+      const s = Math.min((cw - inset * 2) / 256, (ch - inset * 2) / 256);
+      ctx.save();
+      ctx.fillStyle = "rgba(255,255,255,0.5)";
+      ctx.translate(x + (cw - 256 * s) / 2, y + (ch - 256 * s) / 2);
+      ctx.scale(s, s);
+      ctx.fill(p);
+      ctx.restore();
+    } else if (glyph) {
+      ctx.save();
+      ctx.fillStyle = "rgba(255,255,255,0.5)";
+      ctx.font = `${ch * 0.6}px sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(glyph, x + cw / 2, y + ch / 2);
+      ctx.restore();
+    }
+  }
+
+  // ---------- input ----------
+
+  getMousePos(e) {
+    const rect = this.canvas.getBoundingClientRect();
+    const src = e.touches?.[0] ?? e.changedTouches?.[0] ?? e;
+    return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+  }
+
   hitTest(x, y) {
-    const W = this.canvas.width,
-      H = this.canvas.height;
-    const idealW = 1000,
-      idealH = 780,
-      scale = Math.min(W / idealW, H / idealH);
-    const idealMargin = 20,
-      idealGap = 20,
-      cols = 7;
-    const margin = idealMargin * scale,
-      gap = idealGap * scale;
-    const cw0 = (idealW - 2 * idealMargin - (cols - 1) * idealGap) / cols;
-    const ch0 = cw0 * 1.5;
-    const cw = cw0 * scale,
-      ch = ch0 * scale;
+    const L = this.getLayout();
+    const { cw, ch, startX, topY, tableauY, overlapY, stockX, wasteX, cols } =
+      L;
 
-    const groupW = (cw + gap) * 7 - gap;
-    const startX = (W - groupW) / 2;
-    const topY = margin + this.verticalOffset;
-    const rowY = topY + ch + margin;
-    const overlap = ch * this.overlapFactor;
-
-    const stockCol = 6;
-    const stockX = startX + stockCol * (cw + gap);
-    const wasteX = stockX - gap - cw;
-
-    // empty tableau spots
     for (let col = 0; col < cols; col++) {
       if (!this.tableau[col].length) {
-        const tx = startX + col * (cw + gap);
-        if (x >= tx && x <= tx + cw && y >= rowY && y <= rowY + ch) {
+        const tx = startX + col * (cw + L.gap);
+        if (x >= tx && x <= tx + cw && y >= tableauY && y <= tableauY + ch) {
           return {
             pile: "tableau",
             index: col,
             row: 0,
             fx: tx,
-            fy: rowY,
+            fy: tableauY,
             cw,
             ch,
-            overlap,
+            overlap: overlapY,
           };
         }
       }
     }
-
-    // foundations
     for (let i = 0; i < 4; i++) {
-      const fx = startX + i * (cw + gap),
-        fy = topY;
+      const { x: fx, y: fy } = this.foundationPos(i, L);
       if (x >= fx && x <= fx + cw && y >= fy && y <= fy + ch) {
         return { pile: "foundation", index: i, fx, fy, cw, ch };
       }
     }
-
-    // stock
     if (x >= stockX && x <= stockX + cw && y >= topY && y <= topY + ch) {
       return { pile: "stock", fx: stockX, fy: topY, cw, ch };
     }
-
-    // waste
     if (x >= wasteX && x <= wasteX + cw && y >= topY && y <= topY + ch) {
       return { pile: "waste", fx: wasteX, fy: topY, cw, ch };
     }
-
-    // tableau cards
     for (let col = 0; col < cols; col++) {
-      const tx = startX + col * (cw + gap);
+      const tx = startX + col * (cw + L.gap);
       for (let row = this.tableau[col].length - 1; row >= 0; row--) {
-        const ty = rowY + row * overlap;
-        if (x >= tx && x <= tx + cw && y >= ty && y <= ty + ch) {
+        const ty = tableauY + row * overlapY;
+        const bottom =
+          row === this.tableau[col].length - 1 ? ty + ch : ty + overlapY;
+        if (x >= tx && x <= tx + cw && y >= ty && y <= bottom) {
           return {
             pile: "tableau",
             index: col,
@@ -354,26 +489,22 @@ export default class Game {
             fy: ty,
             cw,
             ch,
-            overlap,
+            overlap: overlapY,
           };
         }
       }
     }
-
     return null;
   }
 
   onMouseDown(e) {
+    if (this.inputLocked) return;
     const { x, y } = this.getMousePos(e);
     const hit = this.hitTest(x, y);
     if (!hit) return;
 
-    // 1) Stock
     if (hit.pile === "stock") {
-      // 1) oldVis up to 3 cards
       const oldVis = this.waste.slice(-3);
-
-      // 2) Classical translation logic
       if (this.stock.length) {
         const card = this.stock.pop();
         card.flip();
@@ -385,42 +516,37 @@ export default class Game {
           this.stock.push(c);
         }
       }
-
-      // 3) newVis up to 3 cards
-      const newVis = this.waste.slice(-3);
-
-      // 4) Running animation
-      this.startWasteAnimation(oldVis, newVis);
-
-      // 5) History
+      this.startWasteAnimation(oldVis, this.waste.slice(-3));
       this.recordHistory();
       return;
     }
 
-    // 2) Waste → drag’n’drop
-    if (hit.pile === "waste" && this.waste.length) {
-      // The old three Visible was remembered
+    if (
+      hit.pile === "waste" &&
+      this.waste.length &&
+      !this.flying.has(this.waste.at(-1))
+    ) {
       const oldVis = this.waste.slice(-3);
-      // Get one card
       const cards = [this.waste.pop()];
       this.drag = {
         cards,
         from: hit,
-        oldVis, // Remember for animation after Drop
+        oldVis,
         x,
         y,
         offsetX: x - hit.fx,
         offsetY: y - hit.fy,
         cw: hit.cw,
         ch: hit.ch,
-        overlapY: hit.overlap ?? hit.ch * this.overlapFactor,
+        overlapY: hit.ch * this.overlapFactor,
       };
       this.render();
       return;
     }
 
-    // 3) Tableau → drag’n’drop
-    if (hit.pile === "tableau") {
+    if (hit.pile === "tableau" && this.tableau[hit.index].length) {
+      const card = this.tableau[hit.index][hit.row];
+      if (!card.faceUp || this.flying.has(card)) return;
       const cards = this.tableau[hit.index].slice(hit.row);
       this.tableau[hit.index] = this.tableau[hit.index].slice(0, hit.row);
       this.drag = {
@@ -436,15 +562,16 @@ export default class Game {
       };
       this.render();
     }
-
-    // Other cases - we're not dragging anything
   }
 
   onMouseMove(e) {
     if (!this.drag) return;
-    const { x, y } = this.getMousePos(e);
-    this.drag.x = x;
-    this.drag.y = y;
+    const p = this.getMousePos(e);
+    if (Math.hypot(p.x - this.drag.x, p.y - this.drag.y) > 3) {
+      this.drag.moved = true;
+    }
+    this.drag.x = p.x;
+    this.drag.y = p.y;
     this.render();
   }
 
@@ -452,166 +579,316 @@ export default class Game {
     if (!this.drag) return;
     const { x, y } = this.getMousePos(e);
     const hit = this.hitTest(x, y);
-
-    const { cards, from, oldVis } = this.drag;
+    const { cards, from, oldVis, offsetX, offsetY, overlapY, moved } =
+      this.drag;
     const moving = cards[0];
-    let moved = false;
+    const dropX = x - offsetX;
+    const dropY = y - offsetY;
+    const L = this.getLayout();
+    let target = null; // {x,y}
 
-    // 1) Drop → Foundation
-    if (hit?.pile === "foundation") {
-      const fPile = this.foundations[hit.index];
-      if (isValidFoundationDrop(moving, fPile)) {
-        fPile.push(moving);
-        moved = true;
-      }
-    }
-    // 2) Drop → Tableau
-    else if (hit?.pile === "tableau") {
-      const tPile = this.tableau[hit.index];
-      if (isValidTableauDrop(moving, tPile)) {
-        tPile.push(...cards);
-        moved = true;
-      }
+    if (
+      hit?.pile === "foundation" &&
+      cards.length === 1 &&
+      isValidFoundationDrop(moving, this.foundations[hit.index])
+    ) {
+      this.foundations[hit.index].push(moving);
+      target = this.foundationPos(hit.index, L);
+    } else if (
+      hit?.pile === "tableau" &&
+      isValidTableauDrop(moving, this.tableau[hit.index])
+    ) {
+      const pile = this.tableau[hit.index];
+      const startRow = pile.length;
+      pile.push(...cards);
+      target = this.tableauPos(hit.index, startRow, L);
     }
 
-    // 3) If it was the correct move
-    if (moved) {
-      // а) flip if necessary
-      if (from.pile === "tableau") {
-        const src = this.tableau[from.index];
-        if (src.length && !src.at(-1).faceUp) src.at(-1).flip();
-      }
-      // б) If we dragged with Waste - we run animation
-      if (from.pile === "waste") {
-        const newVis = this.waste.slice(-3);
-        this.startWasteAnimation(oldVis, newVis);
-      }
+    this.drag = null;
+
+    if (target) {
+      this.animateFlight(cards, dropX, dropY, target.x, target.y, overlapY, {
+        onComplete: () => {
+          if (from.pile === "tableau") {
+            const src = this.tableau[from.index];
+            if (src.length) this.reveal(src.at(-1));
+          }
+          this.afterMove();
+        },
+      });
+      if (from.pile === "waste")
+        this.startWasteAnimation(oldVis, this.waste.slice(-3));
       this.moveCount++;
       this.recordHistory();
-    }
-    // 4) Otherwise - to return the card to your place
-    else {
-      if (from.pile === "waste") {
-        this.waste.push(...cards);
-      } else if (from.pile === "tableau") {
-        this.tableau[from.index].push(...cards);
-      }
-    }
-
-    // 5) Now we reset Drag and render the final state
-    this.drag = null;
-    this.render();
-
-    // 6) Victory check
-    if (this.checkWin()) {
-      setTimeout(() => {
-        document.getElementById("winOverlay").classList.remove("hidden");
-      }, 200);
+    } else if (moved) {
+      // Snap back to origin.
+      const back =
+        from.pile === "waste"
+          ? { x: L.wasteX, y: L.topY }
+          : this.tableauPos(from.index, this.tableau[from.index].length, L);
+      this.animateFlight(cards, dropX, dropY, back.x, back.y, overlapY, {
+        duration: SNAP_MS,
+        onComplete: () => {
+          if (from.pile === "waste") this.waste.push(...cards);
+          else this.tableau[from.index].push(...cards);
+          this.render();
+        },
+      });
+    } else {
+      // A plain click that never moved — restore instantly, no animation.
+      if (from.pile === "waste") this.waste.push(...cards);
+      else this.tableau[from.index].push(...cards);
+      this.render();
     }
   }
 
+  // Double-click / double-tap → send the card to a foundation if it fits.
+  onDoubleClick(e) {
+    if (this.inputLocked || this.drag) return;
+    const { x, y } = this.getMousePos(e);
+    const hit = this.hitTest(x, y);
+    if (!hit) return;
+
+    let card = null;
+    let from = null;
+    if (hit.pile === "waste" && this.waste.length) {
+      card = this.waste.at(-1);
+      from = { pile: "waste" };
+    } else if (hit.pile === "tableau" && this.tableau[hit.index].length) {
+      const col = this.tableau[hit.index];
+      if (hit.row === col.length - 1 && col.at(-1).faceUp) {
+        card = col.at(-1);
+        from = { pile: "tableau", index: hit.index };
+      }
+    }
+    if (!card || this.flying.has(card)) return;
+
+    for (let i = 0; i < 4; i++) {
+      if (isValidFoundationDrop(card, this.foundations[i])) {
+        this.moveToFoundation(card, from, i);
+        return;
+      }
+    }
+  }
+
+  moveToFoundation(card, from, fIndex) {
+    const L = this.getLayout();
+    let fromX;
+    let fromY;
+    if (from.pile === "waste") {
+      this.waste.pop();
+      const oldVis = this.waste.slice(-3).concat(card);
+      fromX = L.wasteX;
+      fromY = L.topY;
+      this.startWasteAnimation(oldVis, this.waste.slice(-3));
+    } else {
+      const col = this.tableau[from.index];
+      col.pop();
+      const pos = this.tableauPos(from.index, col.length, L);
+      fromX = pos.x;
+      fromY = pos.y;
+    }
+    this.foundations[fIndex].push(card);
+    const to = this.foundationPos(fIndex, L);
+    this.moveCount++;
+    this.animateFlight([card], fromX, fromY, to.x, to.y, 0, {
+      onComplete: () => {
+        if (from.pile === "tableau") {
+          const src = this.tableau[from.index];
+          if (src.length) this.reveal(src.at(-1));
+        }
+        this.afterMove();
+      },
+    });
+    this.recordHistory();
+  }
+
+  // Runs after any committed move: win check + optional auto-finish.
+  afterMove() {
+    if (this.checkWin()) {
+      this.startWinCascade();
+      return;
+    }
+    if (!this.inputLocked && this.canAutoComplete()) {
+      this.autoCompleteStep();
+    }
+  }
+
+  canAutoComplete() {
+    return (
+      this.stock.length === 0 &&
+      this.waste.length <= 1 &&
+      this.tableau.every((col) => col.every((c) => c.faceUp))
+    );
+  }
+
+  // One auto-move to a foundation, then chains to the next via the flight end.
+  autoCompleteStep() {
+    this.inputLocked = true;
+    const candidates = [];
+    if (this.waste.length)
+      candidates.push({ card: this.waste.at(-1), from: { pile: "waste" } });
+    this.tableau.forEach((col, index) => {
+      if (col.length)
+        candidates.push({ card: col.at(-1), from: { pile: "tableau", index } });
+    });
+
+    // Prefer the lowest rank so aces/twos go first.
+    candidates.sort((a, b) => rankOf(a.card.value) - rankOf(b.card.value));
+    for (const { card, from } of candidates) {
+      for (let i = 0; i < 4; i++) {
+        if (isValidFoundationDrop(card, this.foundations[i])) {
+          const cb = () => {
+            if (this.checkWin()) this.startWinCascade();
+            else this.autoCompleteStep();
+          };
+          this.moveToFoundationChained(card, from, i, cb);
+          return;
+        }
+      }
+    }
+    this.inputLocked = false;
+  }
+
+  moveToFoundationChained(card, from, fIndex, onDone) {
+    const L = this.getLayout();
+    let fromX;
+    let fromY;
+    if (from.pile === "waste") {
+      this.waste.pop();
+      fromX = L.wasteX;
+      fromY = L.topY;
+    } else {
+      const col = this.tableau[from.index];
+      col.pop();
+      const pos = this.tableauPos(from.index, col.length, L);
+      fromX = pos.x;
+      fromY = pos.y;
+    }
+    this.foundations[fIndex].push(card);
+    this.moveCount++;
+    const to = this.foundationPos(fIndex, L);
+    this.animateFlight([card], fromX, fromY, to.x, to.y, 0, {
+      duration: 120,
+      onComplete: onDone,
+    });
+  }
+
+  // ---------- win cascade ----------
+
+  startWinCascade() {
+    const L = this.getLayout();
+    const particles = [];
+    this.foundations.forEach((pile, i) => {
+      const { x, y } = this.foundationPos(i, L);
+      pile.forEach((card) => {
+        particles.push({
+          card,
+          x,
+          y,
+          vx: (Math.random() * 2 - 1) * 6 * (L.scale + 0.4),
+          vy: -Math.random() * 4,
+          cw: L.cw,
+          ch: L.ch,
+        });
+      });
+    });
+    this.inputLocked = true;
+    this.winCascade = { particles, ground: L.H - L.ch };
+    // Fill once so the trails build on a clean board.
+    this.ctx.fillStyle = "rgba(0,0,0,0.25)";
+    this.ctx.fillRect(0, 0, L.W, L.H);
+    this.requestRender();
+    setTimeout(() => {
+      document.getElementById("winOverlay")?.classList.remove("hidden");
+    }, 3200);
+  }
+
+  renderWinCascade() {
+    const ctx = this.ctx;
+    const { W, H } = this.getLayout();
+    // Translucent wash → cards leave fading trails (classic Solitaire win).
+    ctx.fillStyle = "rgba(0,0,0,0.08)";
+    ctx.fillRect(0, 0, W, H);
+
+    let alive = 0;
+    for (const p of this.winCascade.particles) {
+      p.vy += 0.35;
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.y + p.ch >= H) {
+        p.y = H - p.ch;
+        p.vy = -p.vy * 0.78;
+        if (Math.abs(p.vy) < 1) p.vy = 0;
+      }
+      if (p.x + p.cw > 0 && p.x < W) {
+        alive += 1;
+        p.card.draw(ctx, p.x, p.y, p.cw, p.ch);
+      }
+    }
+    if (alive === 0) this.winCascade = null;
+  }
+
+  // ---------- history / hud ----------
+
   recordHistory() {
-    // Instead of slice() we keep the “clean” card data
-    const snapshot = {
-      // Each card as plain object
-      tableau: this.tableau.map((col) =>
-        col.map((c) => ({ suit: c.suit, value: c.value, faceUp: c.faceUp })),
-      ),
-      foundations: this.foundations.map((col) =>
-        col.map((c) => ({ suit: c.suit, value: c.value, faceUp: c.faceUp })),
-      ),
-      stock: this.stock.map((c) => ({
-        suit: c.suit,
-        value: c.value,
-        faceUp: c.faceUp,
-      })),
-      waste: this.waste.map((c) => ({
-        suit: c.suit,
-        value: c.value,
-        faceUp: c.faceUp,
-      })),
+    const snap = (pile) =>
+      pile.map((c) => ({ suit: c.suit, value: c.value, faceUp: c.faceUp }));
+    this.history.push({
+      tableau: this.tableau.map(snap),
+      foundations: this.foundations.map(snap),
+      stock: snap(this.stock),
+      waste: snap(this.waste),
       moveCount: this.moveCount,
-    };
-    this.history.push(snapshot);
+    });
     if (this.history.length > 100) this.history.shift();
   }
 
   drawHUD() {
     const ctx = this.ctx;
-    const margin = 20;
-
     ctx.save();
     ctx.fillStyle = "#fff";
     ctx.font = "18px sans-serif";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
-
-    // Calculate y so that HUD was above the bottom (retreat margin)
-    const yPos = margin;
-
     const elapsed = Date.now() - this.startTime - this.accumulatedPause;
-    const secs = Math.floor(elapsed / 1000);
+    const secs = Math.max(0, Math.floor(elapsed / 1000));
     const m = Math.floor(secs / 60)
       .toString()
       .padStart(2, "0");
     const s = (secs % 60).toString().padStart(2, "0");
-    ctx.fillText(`Moves: ${this.moveCount}     Time: ${m}:${s}`, 20, yPos);
-
+    ctx.fillText(`Moves: ${this.moveCount}     Time: ${m}:${s}`, 20, 20);
     ctx.restore();
   }
 
   undo() {
-    // If there is no previous state - we do nothing
-    if (this.history.length < 2) return;
-
-    // 1) Throw out the current condition
+    if (this.inputLocked || this.history.length < 2) return;
     this.history.pop();
-
-    // 2) Take now the last (ie the one we want to roll)
     const prev = this.history[this.history.length - 1];
-
-    // 3) Play all arrays of maps with Snapshot
-    this.tableau = prev.tableau.map((colData) =>
-      colData.map((d) => new Card(d.suit, d.value, d.faceUp)),
-    );
-    this.foundations = prev.foundations.map((colData) =>
-      colData.map((d) => new Card(d.suit, d.value, d.faceUp)),
-    );
-    this.stock = prev.stock.map((d) => new Card(d.suit, d.value, d.faceUp));
-    this.waste = prev.waste.map((d) => new Card(d.suit, d.value, d.faceUp));
-
-    // 4) Restoring the move counter
+    const build = (pile) =>
+      pile.map((d) => new Card(d.suit, d.value, d.faceUp));
+    this.tableau = prev.tableau.map(build);
+    this.foundations = prev.foundations.map(build);
+    this.stock = build(prev.stock);
+    this.waste = build(prev.waste);
     this.moveCount = prev.moveCount;
-
-    // 5) Re-render the field
+    this.flying.clear();
+    this.flips.clear();
     this.render();
   }
 
-  /**
-   * Starts Waste Running Animation.
-   * @param {Card []} oldVis - an array
-   * @param {Card []} newVis - an array
-   */
   startWasteAnimation(oldVis, newVis) {
-    const now = Date.now();
     this.wasteAnim.active = true;
-    this.wasteAnim.start = now;
+    this.wasteAnim.start = now();
     this.wasteAnim.fromSlot.clear();
     this.wasteAnim.toSlot.clear();
-
     const maxVisible = 3;
-    const oldStart = maxVisible - oldVis.length;
-    oldVis.forEach((c, i) => this.wasteAnim.fromSlot.set(c, oldStart + i));
-    const newStart = maxVisible - newVis.length;
-    newVis.forEach((c, i) => this.wasteAnim.toSlot.set(c, newStart + i));
-
-    // Local animation cycle
-    const step = () => {
-      this.render();
-      if (this.wasteAnim.active) {
-        requestAnimationFrame(step);
-      }
-    };
-    requestAnimationFrame(step);
+    oldVis.forEach((c, i) =>
+      this.wasteAnim.fromSlot.set(c, maxVisible - oldVis.length + i),
+    );
+    newVis.forEach((c, i) =>
+      this.wasteAnim.toSlot.set(c, maxVisible - newVis.length + i),
+    );
+    this.requestRender();
   }
 }

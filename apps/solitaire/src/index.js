@@ -17,14 +17,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     (_, i) => `src/assets/cards/back0${i + 1}.png`,
   );
 
-  // Занурюємо 8 back-картинок
   const current = localStorage.getItem("cardBack") || backs[7];
   backs.forEach((path) => {
     const img = document.createElement("img");
     img.src = path;
     if (path === current) img.classList.add("selected");
     img.addEventListener("click", () => {
-      // оновлюємо вибір
       document
         .querySelectorAll(".theme-options img")
         .forEach((i) => i.classList.remove("selected"));
@@ -39,60 +37,88 @@ document.addEventListener("DOMContentLoaded", async () => {
   await Card.preloadFaces();
 
   const canvas = document.getElementById("canvas");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
   const ctx = canvas.getContext("2d");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+
+  const sizeCanvas = () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  };
+  sizeCanvas();
 
   const game = new Game(ctx, canvas);
   game.init();
   game.render();
 
-  // Слухачі для drag’n’drop
+  // Mouse
   canvas.addEventListener("mousedown", (e) => game.onMouseDown(e));
   canvas.addEventListener("mousemove", (e) => game.onMouseMove(e));
-  canvas.addEventListener("mouseup", (e) => game.onMouseUp(e));
+  window.addEventListener("mouseup", (e) => game.onMouseUp(e));
+  canvas.addEventListener("dblclick", (e) => game.onDoubleClick(e));
+
+  // Touch (map to the mouse handlers + double-tap → auto-to-foundation)
+  let lastTap = 0;
+  let lastX = 0;
+  let lastY = 0;
+  canvas.addEventListener(
+    "touchstart",
+    (e) => {
+      e.preventDefault();
+      const t = e.touches[0];
+      const t0 = Date.now();
+      const isDouble =
+        t0 - lastTap < 300 &&
+        Math.hypot(t.clientX - lastX, t.clientY - lastY) < 30;
+      lastTap = t0;
+      lastX = t.clientX;
+      lastY = t.clientY;
+      if (isDouble) {
+        lastTap = 0;
+        game.onDoubleClick(e);
+        return;
+      }
+      game.onMouseDown(e);
+    },
+    { passive: false },
+  );
+  canvas.addEventListener(
+    "touchmove",
+    (e) => {
+      e.preventDefault();
+      game.onMouseMove(e);
+    },
+    { passive: false },
+  );
+  canvas.addEventListener("touchend", (e) => game.onMouseUp(e));
+
   undoBtn.addEventListener("click", () => game.undo());
 
-  // Новa гра
-  newGameBtn.addEventListener("click", () => {
+  const newGame = () => {
     menuOverlay.classList.add("hidden");
+    winOverlay.classList.add("hidden");
     game.init();
     game.render();
-  });
+  };
+  newGameBtn.addEventListener("click", newGame);
+  playAgain.addEventListener("click", newGame);
 
-  // Меню відкриття/закриття
   menuBtn.addEventListener("click", () => {
     game.pause();
     menuOverlay.classList.remove("hidden");
   });
-
   closeMenuBtn.addEventListener("click", () => {
     menuOverlay.classList.add("hidden");
     game.resume();
-    // одразу один рендер, щоби оновити HUD
     game.render();
   });
 
-  playAgain.addEventListener("click", () => {
-    winOverlay.classList.add("hidden");
-    game.init();
-    game.render();
-  });
-
-  // Опціонально: ресайз
   window.addEventListener("resize", () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    sizeCanvas();
     game.render();
   });
 
-  function animate() {
-    game.render();
-    requestAnimationFrame(animate);
-  }
-
-  requestAnimationFrame(animate);
+  // Keep the HUD clock ticking without repainting 60fps when idle. Active
+  // animations drive their own render loop; this only covers the idle state.
+  setInterval(() => {
+    if (!game.paused && !game.isAnimating()) game.render();
+  }, 1000);
 });
