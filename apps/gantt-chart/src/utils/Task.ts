@@ -42,7 +42,8 @@ export const makeTask = ({
   name,
   start,
   end,
-  progress: progress || DEFAULT_PROGRESS,
+  // Nullish (not falsy) so an explicit 0 stays 0 — a new task is 0%, not 52%.
+  progress: progress ?? DEFAULT_PROGRESS,
   dependencies: toDependencies(dependencies),
   ...(custom_class ? { custom_class } : {}),
 })
