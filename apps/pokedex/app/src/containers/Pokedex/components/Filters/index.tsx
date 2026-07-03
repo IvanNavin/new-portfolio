@@ -21,7 +21,7 @@ export const Filters = () => {
         data={pokemonTypes}
         value={types}
         onChange={handleTypeChange}
-        placeholder='Tipo'
+        placeholder='Type'
         searchable
         clearable
       />

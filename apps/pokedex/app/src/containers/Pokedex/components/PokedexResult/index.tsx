@@ -9,28 +9,33 @@ import {
 } from '@mantine/hooks';
 import { getUniqueData } from '@repo/utils';
 import { PokemonsFilterType } from '@root/prisma/db';
-import { AnyType } from '@src/types';
+import { PokemonType } from '@src/types/api-types';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import s from './styles.module.scss';
 
 export const PokedexResult = () => {
-  const [pokemons, setPokemons] = useState<AnyType[]>([]);
+  const [pokemons, setPokemons] = useState<PokemonType[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const abortRef = useRef<AbortController | null>(null);
   const { types, experience, attack } = usePokedexContext();
   const [debouncedExperience] = useDebouncedValue(experience, 500);
   const [debouncedAttack] = useDebouncedValue(attack, 500);
   const searchParams = useSearchParams();
+  // The search query is already debounced at the SearchBar (URL) level,
+  // so we consume it directly here — no second debounce.
   const search = searchParams.get('search') || '';
-  const [debouncedSearch] = useDebouncedValue(search, 500);
   const { ref, entry } = useIntersection<HTMLDivElement>({
     threshold: 1,
   });
   const prevPage = usePrevious(page);
 
-  const fetchPokemons = async (page: number) => {
+  const fetchPokemons = async (page: number, replace = false) => {
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
     setLoading(true);
 
     const filters: Partial<PokemonsFilterType> = {
@@ -46,31 +51,47 @@ export const PokedexResult = () => {
       filters.types = types;
     }
 
-    if (debouncedSearch) {
-      filters.name = debouncedSearch;
+    if (search) {
+      filters.name = search;
     }
 
-    const response = await fetch('/api/pokemons', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(filters),
-    });
+    try {
+      const response = await fetch('/api/pokemons', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(filters),
+        signal: controller.signal,
+      });
 
-    const data = await response.json();
+      if (!response.ok) return;
 
-    if (data) {
-      setPokemons((prevPokemons) => getUniqueData([...prevPokemons, ...data]));
+      const data = await response.json();
+
+      if (Array.isArray(data)) {
+        setPokemons((prevPokemons) =>
+          getUniqueData(replace ? data : [...prevPokemons, ...data]),
+        );
+      }
+    } catch (error) {
+      if ((error as Error).name !== 'AbortError') {
+        throw error;
+      }
+    } finally {
+      if (abortRef.current === controller) {
+        setLoading(false);
+      }
     }
-    setLoading(false);
   };
 
   useEffect(() => {
     setPage(1);
-    setPokemons([]);
-    void fetchPokemons(1);
-  }, [types, debouncedExperience, debouncedAttack, debouncedSearch]);
+    void fetchPokemons(1, true);
+  }, [types, debouncedExperience, debouncedAttack, search]);
+
+  // Cancel any in-flight request when the list unmounts.
+  useEffect(() => () => abortRef.current?.abort(), []);
 
   useEffect(() => {
     if (entry?.isIntersecting) {
@@ -96,6 +117,9 @@ export const PokedexResult = () => {
           />
         ))}
       </div>
+      {!loading && pokemons.length === 0 && (
+        <p className={s.empty}>No pokemons match your filters.</p>
+      )}
     </>
   );
 };

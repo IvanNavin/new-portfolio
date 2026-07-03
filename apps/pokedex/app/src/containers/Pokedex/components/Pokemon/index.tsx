@@ -5,7 +5,7 @@ import { toCapitalize } from '@repo/utils';
 import { PokemonType } from '@src/types/api-types';
 import cn from 'classnames';
 import Image from 'next/image';
-import { forwardRef } from 'react';
+import { forwardRef, KeyboardEvent } from 'react';
 
 import s from './styles.module.scss';
 
@@ -46,8 +46,23 @@ export const Pokemon = forwardRef<HTMLDivElement, Props>(
       });
     };
 
+    const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick();
+      }
+    };
+
     return (
-      <div ref={ref} className={s.root} onClick={onClick} role='dialog'>
+      <div
+        ref={ref}
+        className={s.root}
+        onClick={onClick}
+        onKeyDown={onKeyDown}
+        role='button'
+        tabIndex={0}
+        aria-label={`Open ${toCapitalize(name)} details`}
+      >
         <div className={s.container}>
           <div className={s.infoWrap}>
             <h5 className={s.titleName}>{toCapitalize(name)}</h5>
@@ -80,3 +95,5 @@ export const Pokemon = forwardRef<HTMLDivElement, Props>(
     );
   },
 );
+
+Pokemon.displayName = 'Pokemon';

@@ -39,7 +39,7 @@ export async function getPokemons({
   };
 
   try {
-    return prisma.pokemon.findMany({
+    return await prisma.pokemon.findMany({
       where,
       skip: (page - 1) * limit,
       take: limit,

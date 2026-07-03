@@ -1,4 +1,6 @@
+import { getGeneration } from '@containers/Pokedex/constants';
 import { closeAllModals } from '@mantine/modals';
+import { toCapitalize } from '@repo/utils';
 import { PokemonType } from '@src/types/api-types';
 import cn from 'classnames';
 import Image from 'next/image';
@@ -53,20 +55,18 @@ export const PokemonModal = ({ data }: Props) => {
       </div>
       <div className={s.statPokeWrap}>
         <div className={s.row}>
-          <h5 className={s.header}>{name}</h5>
-          <span className={s.generation}>Generation 1</span>
+          <h5 className={s.header}>{toCapitalize(name)}</h5>
+          <span className={s.generation}>Generation {getGeneration(id)}</span>
           <span className={s.id}>{id}</span>
         </div>
         <div className={s.abilities}>
           <span>Abilities</span>
-          {abilities?.map((skill, index) => {
-            return (
-              <span key={skill}>
-                {index !== 0 && '-'}
-                {skill}
-              </span>
-            );
-          })}
+          {abilities?.map((skill, index) => (
+            <span key={skill}>
+              {index !== 0 && ', '}
+              {toCapitalize(skill)}
+            </span>
+          ))}
         </div>
         <div className={s.healthExp}>
           <div className={s.health}>
@@ -93,11 +93,11 @@ export const PokemonModal = ({ data }: Props) => {
         <div className={s.stat}>
           <div className={s.box}>
             <div className={s.circle}>{attack}</div>
-            Defense
+            Attack
           </div>
           <div className={s.box}>
             <div className={s.circle}>{defense}</div>
-            Attack
+            Defense
           </div>
           <div className={s.box}>
             <div className={s.circle}>{data.special_attack}</div>
