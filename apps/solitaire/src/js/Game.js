@@ -641,21 +641,26 @@ export default class Game {
     const L = this.getLayout();
     let target = null; // {x,y}
 
-    if (
-      hit?.pile === "foundation" &&
-      cards.length === 1 &&
-      isValidFoundationDrop(moving, this.foundations[hit.index])
-    ) {
-      this.foundations[hit.index].push(moving);
-      target = this.foundationPos(hit.index, L);
-    } else if (
-      hit?.pile === "tableau" &&
-      isValidTableauDrop(moving, this.tableau[hit.index])
-    ) {
-      const pile = this.tableau[hit.index];
-      const startRow = pile.length;
-      pile.push(...cards);
-      target = this.tableauPos(hit.index, startRow, L);
+    // Only a real drag counts as a move — a plain click (that happens to land
+    // back on a valid spot) must not trigger a spurious move, which would also
+    // leave the card mid-flight and swallow the following double-click.
+    if (moved) {
+      if (
+        hit?.pile === "foundation" &&
+        cards.length === 1 &&
+        isValidFoundationDrop(moving, this.foundations[hit.index])
+      ) {
+        this.foundations[hit.index].push(moving);
+        target = this.foundationPos(hit.index, L);
+      } else if (
+        hit?.pile === "tableau" &&
+        isValidTableauDrop(moving, this.tableau[hit.index])
+      ) {
+        const pile = this.tableau[hit.index];
+        const startRow = pile.length;
+        pile.push(...cards);
+        target = this.tableauPos(hit.index, startRow, L);
+      }
     }
 
     this.drag = null;
