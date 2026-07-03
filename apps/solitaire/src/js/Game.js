@@ -621,7 +621,7 @@ export default class Game {
       this.canvas.style.cursor = grabbable ? "pointer" : "default";
       return;
     }
-    if (Math.hypot(p.x - this.drag.x, p.y - this.drag.y) > 3) {
+    if (Math.hypot(p.x - this.drag.x, p.y - this.drag.y) > 6) {
       this.drag.moved = true;
     }
     this.drag.x = p.x;
@@ -680,18 +680,21 @@ export default class Game {
       this.moveCount++;
       this.recordHistory();
     } else if (moved) {
-      // Snap back to origin.
+      // Snap back to origin. Commit the cards back into their pile immediately
+      // (not on animation end) so the card is never in limbo — a double-click
+      // fired right after can still find and move it.
+      if (from.pile === "waste") this.waste.push(...cards);
+      else this.tableau[from.index].push(...cards);
+      const startRow =
+        from.pile === "waste"
+          ? 0
+          : this.tableau[from.index].length - cards.length;
       const back =
         from.pile === "waste"
           ? { x: L.wasteX, y: L.topY }
-          : this.tableauPos(from.index, this.tableau[from.index].length, L);
+          : this.tableauPos(from.index, startRow, L);
       this.animateFlight(cards, dropX, dropY, back.x, back.y, overlapY, {
         duration: SNAP_MS,
-        onComplete: () => {
-          if (from.pile === "waste") this.waste.push(...cards);
-          else this.tableau[from.index].push(...cards);
-          this.render();
-        },
       });
     } else {
       // A plain click that never moved — restore instantly, no animation.
@@ -720,7 +723,10 @@ export default class Game {
         from = { pile: "tableau", index: hit.index };
       }
     }
-    if (!card || this.flying.has(card)) return;
+    if (!card) return;
+    // If the card is still animating home from a jittery click, cancel that
+    // flight so the double-click can take over instead of being ignored.
+    this.flying.delete(card);
 
     for (let i = 0; i < 4; i++) {
       if (isValidFoundationDrop(card, this.foundations[i])) {
