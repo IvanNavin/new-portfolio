@@ -741,12 +741,55 @@ export default class Game {
     // flight so the double-click can take over instead of being ignored.
     this.flying.delete(card);
 
+    // 1) A foundation is always the first choice.
     for (let i = 0; i < 4; i++) {
       if (isValidFoundationDrop(card, this.foundations[i])) {
         this.moveToFoundation(card, from, i);
         return;
       }
     }
+    // 2) Otherwise drop it on the first suitable tableau column.
+    for (let col = 0; col < 7; col++) {
+      if (from.pile === "tableau" && col === from.index) continue;
+      if (isValidTableauDrop(card, this.tableau[col])) {
+        this.moveToTableau(card, from, col);
+        return;
+      }
+    }
+  }
+
+  moveToTableau(card, from, destCol) {
+    const L = this.getLayout();
+    let fromX;
+    let fromY;
+    if (from.pile === "waste") {
+      this.waste.pop();
+      const oldVis = this.waste.slice(-3).concat(card);
+      fromX = L.wasteX;
+      fromY = L.topY;
+      this.startWasteAnimation(oldVis, this.waste.slice(-3));
+    } else {
+      const col = this.tableau[from.index];
+      col.pop();
+      const pos = this.tableauPos(from.index, col.length, L);
+      fromX = pos.x;
+      fromY = pos.y;
+    }
+    const dest = this.tableau[destCol];
+    const startRow = dest.length;
+    dest.push(card);
+    const to = this.tableauPos(destCol, startRow, L);
+    this.moveCount++;
+    this.animateFlight([card], fromX, fromY, to.x, to.y, 0, {
+      onComplete: () => {
+        if (from.pile === "tableau") {
+          const src = this.tableau[from.index];
+          if (src.length) this.reveal(src.at(-1));
+        }
+        this.afterMove();
+      },
+    });
+    this.recordHistory();
   }
 
   moveToFoundation(card, from, fIndex) {
