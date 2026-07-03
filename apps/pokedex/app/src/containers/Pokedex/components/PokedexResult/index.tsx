@@ -2,12 +2,7 @@
 import { LoaderOverlay } from '@components/LoaderOverlay';
 import { Pokemon } from '@containers/Pokedex/components/Pokemon';
 import { usePokedexContext } from '@containers/Pokedex/hooks/usePokedexContext';
-import {
-  useDebouncedValue,
-  useIntersection,
-  usePrevious,
-} from '@mantine/hooks';
-import { getUniqueData } from '@repo/utils';
+import { useDebouncedValue, useIntersection } from '@mantine/hooks';
 import { PokemonsFilterType } from '@root/prisma/db';
 import { PokemonType } from '@src/types/api-types';
 import { useSearchParams } from 'next/navigation';
@@ -15,9 +10,21 @@ import { useEffect, useRef, useState } from 'react';
 
 import s from './styles.module.scss';
 
+const PAGE_LIMIT = 18;
+
+// Accumulated infinite-scroll pages can repeat a pokemon; keep the last
+// occurrence by id instead of re-stringifying the whole list every page.
+const dedupeById = (list: PokemonType[]): PokemonType[] => {
+  const byId = new Map<number, PokemonType>();
+  list.forEach((pokemon) => byId.set(pokemon.id, pokemon));
+  return Array.from(byId.values());
+};
+
 export const PokedexResult = () => {
   const [pokemons, setPokemons] = useState<PokemonType[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const abortRef = useRef<AbortController | null>(null);
   const { types, experience, attack } = usePokedexContext();
@@ -30,13 +37,13 @@ export const PokedexResult = () => {
   const { ref, entry } = useIntersection<HTMLDivElement>({
     threshold: 1,
   });
-  const prevPage = usePrevious(page);
 
   const fetchPokemons = async (page: number, replace = false) => {
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
     setLoading(true);
+    setError(false);
 
     const filters: Partial<PokemonsFilterType> = {
       minExperience: debouncedExperience[0],
@@ -44,7 +51,7 @@ export const PokedexResult = () => {
       minAttack: debouncedAttack[0],
       maxAttack: debouncedAttack[1],
       page,
-      limit: 18,
+      limit: PAGE_LIMIT,
     };
 
     if (types.length) {
@@ -65,18 +72,26 @@ export const PokedexResult = () => {
         signal: controller.signal,
       });
 
-      if (!response.ok) return;
+      if (!response.ok) {
+        setError(true);
+        return;
+      }
 
       const data = await response.json();
 
-      if (Array.isArray(data)) {
-        setPokemons((prevPokemons) =>
-          getUniqueData(replace ? data : [...prevPokemons, ...data]),
-        );
+      if (!Array.isArray(data)) {
+        setError(true);
+        return;
       }
-    } catch (error) {
-      if ((error as Error).name !== 'AbortError') {
-        throw error;
+
+      // A short page means the server has nothing more to give.
+      setHasMore(data.length === PAGE_LIMIT);
+      setPokemons((prevPokemons) =>
+        dedupeById(replace ? data : [...prevPokemons, ...data]),
+      );
+    } catch (err) {
+      if ((err as Error).name !== 'AbortError') {
+        setError(true);
       }
     } finally {
       if (abortRef.current === controller) {
@@ -87,6 +102,7 @@ export const PokedexResult = () => {
 
   useEffect(() => {
     setPage(1);
+    setHasMore(true);
     void fetchPokemons(1, true);
   }, [types, debouncedExperience, debouncedAttack, search]);
 
@@ -94,13 +110,13 @@ export const PokedexResult = () => {
   useEffect(() => () => abortRef.current?.abort(), []);
 
   useEffect(() => {
-    if (entry?.isIntersecting) {
+    if (entry?.isIntersecting && hasMore && !loading) {
       setPage((prevPage) => prevPage + 1);
     }
-  }, [entry]);
+  }, [entry, hasMore, loading]);
 
   useEffect(() => {
-    if (page > 1 && page !== prevPage && !loading) {
+    if (page > 1) {
       void fetchPokemons(page);
     }
   }, [page]);
@@ -117,7 +133,10 @@ export const PokedexResult = () => {
           />
         ))}
       </div>
-      {!loading && pokemons.length === 0 && (
+      {!loading && error && (
+        <p className={s.empty}>Something went wrong. Please try again.</p>
+      )}
+      {!loading && !error && pokemons.length === 0 && (
         <p className={s.empty}>No pokemons match your filters.</p>
       )}
     </>

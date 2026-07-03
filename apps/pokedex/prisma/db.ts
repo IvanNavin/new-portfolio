@@ -2,7 +2,15 @@ import { Prisma, PrismaClient } from '@repo/prisma';
 import { log } from '@repo/utils';
 import { PokemonType } from '@src/types/api-types';
 
-const prisma = new PrismaClient();
+// Reuse a single client across HMR reloads in dev; a fresh `new PrismaClient()`
+// per reload exhausts the database connection pool.
+const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
+
+const prisma = globalForPrisma.prisma ?? new PrismaClient();
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
+}
 
 export type PokemonsFilterType = {
   name?: string;
