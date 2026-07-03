@@ -28,7 +28,7 @@ export default function RootLayout({ children }: RootProps) {
       <head>
         <ColorSchemeScript />
       </head>
-      <body className={karla.className}>
+      <body className={karla.className} suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -27,6 +27,9 @@ export const PokedexResult = () => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const abortRef = useRef<AbortController | null>(null);
+  // Synchronous "is a request in flight" guard — `loading` state updates a tick
+  // too late and lets the observer fire duplicate page bumps (causing gaps).
+  const fetchingRef = useRef(false);
   const { types, experience, attack } = usePokedexContext();
   const [debouncedExperience] = useDebouncedValue(experience, 500);
   const [debouncedAttack] = useDebouncedValue(attack, 500);
@@ -34,14 +37,18 @@ export const PokedexResult = () => {
   // The search query is already debounced at the SearchBar (URL) level,
   // so we consume it directly here — no second debounce.
   const search = searchParams.get('search') || '';
+  // Watch a sentinel below the grid, with a generous rootMargin so the next
+  // page loads before the user hits the bottom (a threshold-based watch on the
+  // last card was blocked by the fixed footer covering it).
   const { ref, entry } = useIntersection<HTMLDivElement>({
-    threshold: 1,
+    rootMargin: '600px',
   });
 
   const fetchPokemons = async (page: number, replace = false) => {
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
+    fetchingRef.current = true;
     setLoading(true);
     setError(false);
 
@@ -95,6 +102,7 @@ export const PokedexResult = () => {
       }
     } finally {
       if (abortRef.current === controller) {
+        fetchingRef.current = false;
         setLoading(false);
       }
     }
@@ -109,11 +117,19 @@ export const PokedexResult = () => {
   // Cancel any in-flight request when the list unmounts.
   useEffect(() => () => abortRef.current?.abort(), []);
 
+  // Advance a page whenever the sentinel is near the viewport. The synchronous
+  // fetchingRef guard keeps bumps sequential (no skipped pages); pokemons.length
+  // avoids firing before the first page has loaded.
   useEffect(() => {
-    if (entry?.isIntersecting && hasMore && !loading) {
+    if (
+      entry?.isIntersecting &&
+      hasMore &&
+      !fetchingRef.current &&
+      pokemons.length
+    ) {
       setPage((prevPage) => prevPage + 1);
     }
-  }, [entry, hasMore, loading]);
+  }, [entry, hasMore, pokemons.length]);
 
   useEffect(() => {
     if (page > 1) {
@@ -126,13 +142,12 @@ export const PokedexResult = () => {
       {loading && <LoaderOverlay />}
       <div className={s.wrapper}>
         {pokemons.map((pokemon, index) => (
-          <Pokemon
-            key={pokemon.id}
-            data={pokemon}
-            ref={index === pokemons.length - 1 ? ref : null}
-          />
+          <Pokemon key={pokemon.id} data={pokemon} priority={index < 3} />
         ))}
       </div>
+      {hasMore && !error && pokemons.length > 0 && (
+        <div ref={ref} className={s.sentinel} aria-hidden='true' />
+      )}
       {!loading && error && (
         <p className={s.empty}>Something went wrong. Please try again.</p>
       )}
