@@ -8,6 +8,7 @@ import { WorksPage } from "@/pages/WorksPage";
 import { TalksPage } from "@/pages/TalksPage";
 import { ContactPage } from "@/pages/ContactPage";
 import { CvOverlay } from "@/components/CvOverlay";
+import { VisitTracker } from "@/components/VisitTracker";
 import { CvZoomProvider } from "@/pages/about/cvZoom";
 import { TalkOverlay } from "@/pages/talks/TalkOverlay";
 import { isTalkSlug } from "@/pages/talks/talks";
@@ -60,6 +61,7 @@ export function App() {
       </AnimatePresence>
 
       <LanguageSwitcher />
+      <VisitTracker />
     </CvZoomProvider>
   );
 }
