@@ -1,3 +1,5 @@
+@import '../../../breakpoints';
+
 .footer {
   display: flex;
   justify-content: space-between;
@@ -13,4 +15,11 @@
   margin: 0 auto;
   z-index: 1;
   padding: 0 20px;
+
+  // A fixed footer floats over the scrollable result grid on phones —
+  // drop it back into the normal flow there.
+  @include media('<tablet') {
+    position: static;
+    margin: 40px auto 24px;
+  }
 }

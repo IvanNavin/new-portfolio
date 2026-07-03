@@ -29,7 +29,7 @@ export default function RangeSelect({
     >
       <Popover.Target>
         <Button variant='light' onClick={() => setOpened((o) => !o)}>
-          {`${label} range: ${value[0]} - ${value[1]}`}
+          {`${label}: ${value[0]}–${value[1]}`}
         </Button>
       </Popover.Target>
       <Popover.Dropdown>

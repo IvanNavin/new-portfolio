@@ -6,11 +6,16 @@
   position: relative;
   margin-right: -159px;
 
+  // The artwork is authored in a fixed 793x680 coordinate space. On small
+  // screens we shrink it with a transform, but a transform doesn't shrink the
+  // reserved layout box — so collapse the leftover space with negative margins,
+  // otherwise the illustration overlaps the heading below it.
   @include media('<tablet-desktop') {
-    width: 100%;
-    height: 100%;
-    margin-right: 0;
-    transform: scale(0.3);
+    // Shrink to 0.4 and collapse the unscaled reserved box symmetrically so the
+    // artwork stays centred: vertical (680-272)/2 ≈ 204, horizontal (793-317)/2 ≈ 238.
+    transform: scale(0.4);
+    transform-origin: center center;
+    margin: -204px -238px;
   }
 }
 

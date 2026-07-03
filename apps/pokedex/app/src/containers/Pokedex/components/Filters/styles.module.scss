@@ -1,7 +1,14 @@
+@import '../../../../../breakpoints';
+
 .wrapper {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
   margin-top: 24px;
   padding-left: 30px;
+
+  @include media('<tablet') {
+    padding-left: 0;
+    justify-content: center;
+  }
 }

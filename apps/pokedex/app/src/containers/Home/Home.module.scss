@@ -8,6 +8,16 @@
   height: 100vh;
   background: linear-gradient(180deg, $third 0%, $primary 100%);
   overflow: hidden;
+
+  // On phones the fixed 100vh + overflow:hidden cramped everything on short
+  // screens. Let the page grow and scroll instead; clip only the horizontal
+  // overflow from the oversized artwork.
+  @include media('<tablet-desktop') {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    overflow-x: clip;
+  }
 }
 
 .contentWrap {
@@ -18,7 +28,8 @@
     flex-direction: column-reverse;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 200px);
+    gap: 24px;
+    padding: 16px 0 32px;
   }
 }
 

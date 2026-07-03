@@ -160,3 +160,24 @@
   align-items: center;
   gap: 4px;
 }
+
+// On a single-column phone layout the card spans the full width, so the
+// 35/65 split squeezes the stats into the artwork. Give the info column
+// more room and make the card taller so nothing overlaps.
+@include media('<tablet') {
+  .root {
+    padding-top: 70%;
+  }
+
+  .infoWrap {
+    width: 44%;
+  }
+
+  .pictureWrap {
+    width: 56%;
+  }
+
+  .titleName {
+    font-size: 16px;
+  }
+}

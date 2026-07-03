@@ -28,6 +28,10 @@
   }
 
   @include media('<tablet-desktop') {
+    // `flex-basis: 516px` is the column WIDTH for the desktop row layout; in the
+    // stacked mobile layout it would become a 516px HEIGHT and leave a big void
+    // above the text. Let the block size to its content instead.
+    flex: 0 0 auto;
     align-items: center;
     p {
       text-align: center;

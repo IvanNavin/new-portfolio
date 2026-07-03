@@ -10,4 +10,10 @@
   @include media('>tablet', '<desktop') {
     padding: 0 20px;
   }
+
+  // Phones had no override and kept the 75px desktop gutters, squeezing
+  // all content (cards, search, filters) into a ~225px column.
+  @include media('<tablet') {
+    padding: 0 16px;
+  }
 }
