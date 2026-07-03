@@ -24,6 +24,12 @@
       "runtimeExecutable": "apps/language/node_modules/.bin/next",
       "runtimeArgs": ["dev", "apps/language", "-p", "3030"],
       "port": 3030
+    },
+    {
+      "name": "pokedex",
+      "runtimeExecutable": "apps/pokedex/node_modules/.bin/next",
+      "runtimeArgs": ["dev", "apps/pokedex", "-p", "3040"],
+      "port": 3040
     }
   ]
 }
