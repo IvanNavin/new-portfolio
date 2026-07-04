@@ -15,7 +15,8 @@ window.addEventListener("load", async () => {
   const chatWrap = document.querySelector(".chat-wrap");
   const chatForm = document.getElementById("form");
   const messageBox = chatWrap.querySelector(".message");
-  const dpad = document.querySelector(".dpad");
+  const canvas = document.getElementById("world");
+  const skinPicker = document.querySelector(".skin-picker");
 
   let isFirstConnection = true;
   let currentUserId = "";
@@ -40,33 +41,31 @@ window.addEventListener("load", async () => {
     warning.style.opacity = "0";
   };
 
-  // Touch/mouse D-pad: hold a button to move, release to stop. We drive the same
-  // keysPressed set the keyboard uses, so no extra logic in the game loop.
-  const bindDpad = () => {
-    const input =
-      ClientGame.game && ClientGame.game.engine && ClientGame.game.engine.input;
-    if (!input || !dpad) return;
+  // Skin picker: keep exactly one option selected. The default is set in HTML.
+  let selectedSkin =
+    document.querySelector(".skin-option.is-selected")?.dataset.skin || "girl1";
+  skinPicker?.addEventListener("click", (event) => {
+    const option = event.target.closest(".skin-option");
+    if (!option) return;
+    skinPicker
+      .querySelectorAll(".skin-option")
+      .forEach((btn) => btn.classList.remove("is-selected"));
+    option.classList.add("is-selected");
+    selectedSkin = option.dataset.skin;
+  });
 
-    const press = (code) => input.keysPressed.add(code);
-    const release = (code) => input.keysPressed.delete(code);
-
-    dpad.querySelectorAll("[data-key]").forEach((btn) => {
-      const code = btn.dataset.key;
-      const down = (e) => {
-        e.preventDefault();
-        press(code);
-      };
-      const up = (e) => {
-        e.preventDefault();
-        release(code);
-      };
-      btn.addEventListener("pointerdown", down);
-      btn.addEventListener("pointerup", up);
-      btn.addEventListener("pointerleave", up);
-      btn.addEventListener("pointercancel", up);
+  // Tap / click a tile to walk there (mobile-friendly; also works with the
+  // mouse). The canvas is CSS-scaled, so map client coords back into its
+  // internal pixel space before handing them to the game.
+  const bindCanvasTap = () => {
+    canvas.addEventListener("pointerdown", (e) => {
+      const game = ClientGame.game;
+      if (!game || !game.player) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+      const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+      game.onCanvasTap(x, y);
     });
-
-    dpad.classList.add("is-active");
   };
 
   const submitName = (event) => {
@@ -89,6 +88,7 @@ window.addEventListener("load", async () => {
     ClientGame.init({
       tagID: "world",
       playerName: name,
+      skin: selectedSkin,
       world,
       sprites,
       gameObjects,
@@ -97,10 +97,10 @@ window.addEventListener("load", async () => {
       },
     });
 
-    socket.emit("start", name);
-    bindDpad();
+    socket.emit("start", { name, skin: selectedSkin });
+    bindCanvasTap();
 
-    chatWrap.style.display = "block";
+    chatWrap.style.display = "flex";
     nameForm.removeEventListener("submit", submitName);
     startGame.remove();
   };

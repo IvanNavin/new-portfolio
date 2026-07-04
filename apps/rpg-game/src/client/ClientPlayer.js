@@ -1,9 +1,13 @@
-import ClientGameObject from './ClientGameObject';
+import ClientGameObject from "./ClientGameObject";
 
 class ClientPlayer extends ClientGameObject {
   constructor(cfg) {
     super(cfg);
 
+    // Needed so ClientApi.onPlayerMove can tell this player apart from others.
+    // Without it the local player would re-apply its own (network-delayed)
+    // server echoes and rubber-band back to old cells while walking.
+    this.playerId = cfg.objCfg.playerId;
     this.playerName = cfg.objCfg.playerName;
   }
 

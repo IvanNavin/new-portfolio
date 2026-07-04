@@ -85,8 +85,8 @@ class ClientApi {
     this.game.removePlayerById(id);
   }
 
-  join(playerName) {
-    this.io.emit("join", playerName);
+  join(playerName, skin) {
+    this.io.emit("join", { name: playerName, skin });
   }
 
   move(dir) {

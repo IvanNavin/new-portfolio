@@ -28,12 +28,23 @@
         </div>
 
         <div class="start-game" style="display: none;">
-            <form id="nameForm">
-                <label class="row">
-                    Put Your Name
+            <form id="nameForm" class="start-card">
+                <h2 class="start-title">Choose your hero</h2>
+
+                <div class="skin-picker">
+                    <button type="button" class="skin-option is-selected" data-skin="girl1" aria-label="Girl 1"></button>
+                    <button type="button" class="skin-option" data-skin="girl2" aria-label="Girl 2"></button>
+                    <button type="button" class="skin-option" data-skin="girl3" aria-label="Girl 3"></button>
+                    <button type="button" class="skin-option" data-skin="boy1" aria-label="Boy 1"></button>
+                    <button type="button" class="skin-option" data-skin="boy2" aria-label="Boy 2"></button>
+                    <button type="button" class="skin-option" data-skin="boy3" aria-label="Boy 3"></button>
+                </div>
+
+                <label class="row start-label" for="name">
+                    Put your name
                 </label>
                 <div class="row">
-                    <input class="input" type="text" name="name" id="name" autofocus>
+                    <input class="input" type="text" name="name" id="name" autofocus maxlength="12" placeholder="Hero name">
                 </div>
                 <div class="row">
                     <button class="btn">
@@ -44,34 +55,21 @@
             </form>
         </div>
 
-        <div class="dpad" aria-hidden="true">
-            <button type="button" class="dpad-btn dpad-up" data-key="ArrowUp" aria-label="Move up">▲</button>
-            <button type="button" class="dpad-btn dpad-left" data-key="ArrowLeft" aria-label="Move left">◀</button>
-            <button type="button" class="dpad-btn dpad-right" data-key="ArrowRight" aria-label="Move right">▶</button>
-            <button type="button" class="dpad-btn dpad-down" data-key="ArrowDown" aria-label="Move down">▼</button>
-        </div>
-
-        <p class="controls-hint">Arrows / WASD to move</p>
+        <p class="controls-hint">Tap a tile or use arrows / WASD to move</p>
     </div>
     <div class="chat-wrap" data-online style="display: none">
+        <div class="chat-header">
+            <span class="chat-title">Chat</span>
+            <span class="chat-online" aria-label="Players online"></span>
+        </div>
         <div class="message"></div>
         <div class="send">
             <form id="form">
-                <input type="text" id="input" name="message">
-                <button>
-                    SEND
+                <input type="text" id="input" name="message" placeholder="Type a message…" autocomplete="off">
+                <button aria-label="Send message">
+                    <span>SEND</span>
                 </button>
             </form>
-        </div>
-        <div class="border">
-            <div class="top-left"></div>
-            <div class="top"></div>
-            <div class="top-right"></div>
-            <div class="right"></div>
-            <div class="bottom-right"></div>
-            <div class="bottom"></div>
-            <div class="bottom-left"></div>
-            <div class="left"></div>
         </div>
     </div>
 </div>

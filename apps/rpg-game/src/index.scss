@@ -30,12 +30,19 @@ body::-webkit-scrollbar {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 16px;
   min-height: 100vh;
+  width: 100%;
+  padding: 16px;
 }
 
+// The board keeps a square aspect ratio and shrinks to fit narrow viewports.
+// `--board`: the outer square size, capped at 616px on desktop and to the
+// viewport width (minus page padding) on mobile. No transform hacks.
 .canvas-wrap {
-  width: 616px;
-  height: 616px;
+  --board: min(616px, calc(100vw - 32px));
+  width: var(--board);
+  height: var(--board);
   position: relative;
   border-radius: 12px;
   background: #b6b6b6;
@@ -45,11 +52,6 @@ body::-webkit-scrollbar {
   align-items: center;
   font-family: 'Big Shoulders Stencil Display', cursive;
   font-size: 38px;
-
-  @media all and (max-width: 600px) {
-    transform: scale(0.5);
-    margin-top: -50%;
-  }
 }
 
 .canvas-wrap canvas {
@@ -59,6 +61,9 @@ body::-webkit-scrollbar {
   bottom: 8px;
   right: 8px;
   z-index: 1;
+  // The canvas keeps its 600x600 attributes; CSS just scales it to fit the frame.
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
 }
 
 .top {
@@ -149,25 +154,121 @@ body::-webkit-scrollbar {
   z-index: 100;
 }
 
+// Full-viewport overlay so the hero-select card always has the whole screen to
+// breathe — the game board is a small square on phones, and pinning the card to
+// it clipped the START button on tall screens.
 .start-game {
-  position: absolute;
-  z-index: 99;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  position: fixed;
+  z-index: 200;
+  inset: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 20px;
-  background-image: url(./assets/WorldMap.png);
+  background-color: #0b0d14;
+  background-image: linear-gradient(rgba(8, 9, 14, 0.55), rgba(8, 9, 14, 0.75)),
+    url(./assets/WorldMap.png);
   background-position: center;
+  background-size: cover;
   color: #f4f4f4;
+  padding: 16px;
+}
+
+// Frosted panel that holds the skin picker + name form. Caps to the viewport
+// and scrolls internally on very short screens instead of overflowing.
+.start-card {
+  width: min(340px, 100%);
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 20px 22px;
+  border-radius: 16px;
+  background: rgba(18, 20, 28, 0.72);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+.start-title {
+  font-family: 'Big Shoulders Stencil Display', cursive;
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.start-label {
+  font-size: 15px;
+  letter-spacing: 1px;
+  opacity: 0.85;
+  text-transform: uppercase;
+}
+
+// Skin picker: six character buttons cropped from the shared spritesheet.
+.skin-picker {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+  width: 100%;
+  justify-items: center;
+}
+
+.skin-option {
+  width: 64px;
+  height: 64px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.06);
+  // Show one 96px front-facing frame, scaled to fit the 64px button.
+  // The native sheet is 1152x768 (12x8 cells of 96px). Scale by 64/96
+  // so every frame + offset shrinks to the 64px grid: 768 x 512.
+  background-image: url(./assets/characters.png);
+  background-repeat: no-repeat;
+  background-size: 768px 512px; // 1152 * (64/96) x 768 * (64/96)
+  image-rendering: pixelated;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  &.is-selected {
+    border-color: #3aebca;
+    box-shadow: 0 0 0 2px rgba(58, 235, 202, 0.4);
+    background-color: rgba(58, 235, 202, 0.12);
+    transform: translateY(-2px);
+  }
+
+  // Front-facing frames, offsets scaled by 64/96 from the 96px grid.
+  &[data-skin='girl1'] {
+    background-position: -64px 0; // sheet (-96, 0)
+  }
+  &[data-skin='girl2'] {
+    background-position: -256px 0; // sheet (-384, 0)
+  }
+  &[data-skin='girl3'] {
+    background-position: -448px 0; // sheet (-672, 0)
+  }
+  &[data-skin='boy1'] {
+    background-position: -64px -256px; // sheet (-96, -384)
+  }
+  &[data-skin='boy2'] {
+    background-position: -256px -256px; // sheet (-384, -384)
+  }
+  &[data-skin='boy3'] {
+    background-position: -448px -256px; // sheet (-672, -384)
+  }
 }
 
 .row {
   text-align: center;
   margin-bottom: 12px;
+  width: 100%;
 }
 
 label.row {
@@ -176,13 +277,25 @@ label.row {
 }
 
 .input {
-  width: 201px;
+  width: 100%;
   height: 46px;
-  border: 4px solid #a5a5a5;
-  border-radius: 4px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
   padding: 0 12px;
-  font-size: 24px;
+  font-size: 20px;
   text-align: center;
+  background: rgba(255, 255, 255, 0.95);
+  color: #12141c;
+
+  &::placeholder {
+    color: #8a8f9c;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #3aebca;
+    box-shadow: 0 0 0 2px rgba(58, 235, 202, 0.35);
+  }
 }
 
 .btn {
@@ -226,209 +339,241 @@ label.row {
   border-radius: 10px;
 }
 
+// ── Chat ──────────────────────────────────────────────────────────────────
+// Column layout: header (with online badge) / scrollable messages / composer.
 .chat-wrap {
   position: relative;
-  background-color: #f4f4f4;
-  border-radius: 20px;
-  width: 616px;
+  display: flex;
+  flex-direction: column;
+  width: min(616px, calc(100vw - 32px));
   height: 300px;
+  max-height: 45vh;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #1b1e27;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  color: #e8eaf0;
+}
 
-  &::before {
-    content: attr(data-online);
-    opacity: 0.3;
-    position: absolute;
-    top: 14px;
-    right: 24px;
+.chat-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #232733;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex: 0 0 auto;
+}
+
+.chat-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+// Online badge. The green dot is the flex item, right-aligned in the header.
+// The live "N online" text is printed by .chat-wrap::before (only an element
+// owning the data-online attribute can print it via attr()) and sits just to
+// the left of the dot. Both are pinned to the header's right edge, so they
+// read as one badge regardless of the count's digit width.
+.chat-online {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3aebca;
+  box-shadow: 0 0 6px rgba(58, 235, 202, 0.8);
+}
+
+.chat-wrap[data-online]::before {
+  content: attr(data-online) ' online';
+  position: absolute;
+  top: 13px;
+  right: 32px; // leaves room for the 8px dot + 16px padding to the right
+  font-size: 13px;
+  line-height: 1;
+  color: #e8eaf0;
+  opacity: 0.85;
+  z-index: 1;
+  pointer-events: none;
+}
+
+// Messages scroll area.
+.message {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 12px 12px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 3px;
   }
 
-  &::after {
-    content: '';
-    position: absolute;
-    top: 17.5px;
-    right: 34px;
-    width: 12px;
-    height: 12px;
-    background: #3aebca;
-    border-radius: 50%;
+  // System / notification lines (connect, disconnect).
+  > p:not(.msg-box) {
+    align-self: center;
+    max-width: 90%;
+    margin: 6px 0;
+    font-size: 12px;
+    text-align: center;
+    color: rgba(232, 234, 240, 0.55);
+
+    strong {
+      font-weight: 600;
+      opacity: 0.75;
+    }
   }
 }
 
+// Composer.
 .send {
-  height: 28px;
-  position: absolute;
-  bottom: 8px;
-  left: 8px;
-  right: 8px;
+  flex: 0 0 auto;
+  padding: 10px;
+  background: #232733;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .send form {
   display: flex;
-  align-content: stretch;
+  gap: 8px;
+  align-items: stretch;
 }
 
 .send form input {
-  width: 100%;
-  height: 28px;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 38px;
   font-size: 14px;
-  padding: 0 8px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  background: #12141c;
+  color: #e8eaf0;
+
+  &::placeholder {
+    color: rgba(232, 234, 240, 0.4);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #3aebca;
+  }
 }
 
 .send form button {
-  background: #0633ff;
-  color: #fff;
-  border: 1px solid #838383;
-  border-radius: 0 4px 4px 0;
-  padding: 0 8px;
+  flex: 0 0 auto;
+  background: #3aebca;
+  color: #0c2a25;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  border: none;
+  border-radius: 20px;
+  padding: 0 18px;
   cursor: pointer;
+  transition: background 0.1s ease;
+
+  &:hover {
+    background: #55f0d4;
+  }
+  &:active {
+    background: #2fd0b2;
+  }
 }
 
-.message {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 8px;
-  bottom: 36px;
-  overflow: scroll;
-  padding: 6px 8px;
-}
-
+// ── Message bubbles ─────────────────────────────────────────────────────────
+// Template (from index.js):
+//   <p class="msg-box[ isCurrentUser]">
+//     <span class="name">NAME</span>
+//     <span class="msg" data-time="HH:MM">MSG</span>
+//   </p>
 .msg-box {
   display: flex;
-  margin: 12px 0 2px;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 78%;
+  margin: 6px 0;
 
   .name {
-    display: flex;
-    align-items: center;
-    margin-top: -4px;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 0 0 3px 4px;
+    color: #8fb7ff;
   }
 
   .msg {
-    padding: 2px 5px;
-    border: 1px solid dodgerblue;
-    border-radius: 4px;
     position: relative;
-    margin-left: 5px;
+    padding: 8px 12px 6px;
+    border-radius: 14px 14px 14px 4px;
+    background: #2c313f;
+    color: #e8eaf0;
+    font-size: 14px;
+    line-height: 1.35;
+    word-break: break-word;
 
-    &::before {
-      content: attr(data-time);
-      font-size: 10px;
-      position: absolute;
-      top: -12px;
-      right: 0;
-    }
-
+    // Timestamp under the bubble.
     &::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: -9px;
-      margin-top: -5px;
-      border: 4px solid transparent;
-      border-right: 4px solid dodgerblue;
+      content: attr(data-time);
+      display: block;
+      margin-top: 2px;
+      font-size: 10px;
+      text-align: right;
+      opacity: 0.5;
     }
   }
 
+  // Current user's own messages: right-aligned, accent colour.
   &.isCurrentUser {
-    justify-content: flex-end;
+    align-self: flex-end;
+    align-items: flex-end;
 
     .name {
-      order: 1;
-      margin-top: 0;
+      margin: 0 4px 3px 0;
+      color: #3aebca;
     }
 
     .msg {
-      margin-right: 5px;
-
-      &::before {
-        left: 0;
-      }
-
-      &::after {
-        right: -9px;
-        left: auto;
-        border: 4px solid transparent;
-        border-left: 4px solid dodgerblue;
-      }
+      border-radius: 14px 14px 4px 14px;
+      background: #2b5f57;
+      color: #eafff9;
     }
   }
 }
 
-// On-screen controls hint (keyboard players)
+// On-screen controls hint, pinned to the bottom edge of the board.
 .controls-hint {
   position: absolute;
-  bottom: 14px;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 90;
+  max-width: calc(100% - 32px);
   font-size: 13px;
   letter-spacing: 1px;
   color: #f4f4f4;
   background: rgba(0, 0, 0, 0.45);
-  padding: 4px 12px;
+  padding: 4px 14px;
   border-radius: 12px;
   pointer-events: none;
   user-select: none;
-  white-space: nowrap;
+  text-align: center;
 }
 
-// Touch D-pad — hidden until the game starts on a touch device
-.dpad {
-  display: none;
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  z-index: 95;
-  width: 150px;
-  height: 150px;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  gap: 4px;
-  touch-action: none;
-  user-select: none;
-}
-
-.dpad-btn {
-  border: none;
-  border-radius: 10px;
-  background: rgba(20, 20, 20, 0.55);
-  color: #f4f4f4;
-  font-size: 22px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  touch-action: none;
-
-  &:active {
-    background: rgba(58, 235, 202, 0.7);
-    color: #000;
-  }
-}
-
-.dpad-up {
-  grid-column: 2;
-  grid-row: 1;
-}
-.dpad-left {
-  grid-column: 1;
-  grid-row: 2;
-}
-.dpad-right {
-  grid-column: 3;
-  grid-row: 2;
-}
-.dpad-down {
-  grid-column: 2;
-  grid-row: 3;
-}
-
-// Show the D-pad and hide the keyboard hint on touch devices
-@media (hover: none) and (pointer: coarse) {
-  .dpad.is-active {
-    display: grid;
-  }
+@media all and (max-width: 400px) {
   .controls-hint {
-    display: none;
+    font-size: 11px;
+    bottom: 10px;
+    white-space: normal;
   }
 }

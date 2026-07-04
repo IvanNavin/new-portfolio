@@ -1,28 +1,34 @@
-import terrainIMG from '../assets/terrain.png';
-import charactersIMG from '../assets/characters.png';
+import overworldIMG from "../assets/Overworld.png";
+import charactersIMG from "../assets/characters.png";
+
+// Terrain now comes from ArMM1998's CC0 "Zelda-like" Overworld tileset
+// (16x16 pixel tiles), which matches the pixel-art character sprites.
+// Tile at grid (col,row) => frame [col*16, row*16, 16, 16].
+const T = (col, row) => ({
+  img: overworldIMG,
+  frames: [[col * 16, row * 16, 16, 16]],
+});
 
 export default {
   terrain: {
-    grass: {
-      img: terrainIMG,
-      frames: [[896, 256, 64, 64]],
-    },
-    water: {
-      img: terrainIMG,
-      frames: [[0, 576, 64, 64]],
-    },
-    wall: {
-      img: terrainIMG,
-      frames: [[448, 64, 64, 64]],
-    },
-    spawn: {
-      img: terrainIMG,
-      frames: [[384, 640, 64, 64]],
-    },
-    npcSpawn: {
-      img: terrainIMG,
-      frames: [[896, 576, 64, 64]],
-    },
+    grass: T(0, 0),
+    // Aliases kept so old references never break; all map to grass for now.
+    grassLush: T(0, 0),
+    grassDry: T(0, 0),
+    sand: T(0, 0),
+    path: T(0, 0),
+    npcSpawn: T(0, 0),
+    // Spawn markers render as plain grass (invisible) — the server only needs
+    // the 'spawn' object in the map to place players; no occult pentagram.
+    spawn: T(0, 0),
+
+    water: T(3, 3), // deep water fill (used for the ocean border + lakes)
+    tree: T(7, 16), // solid leafy canopy — clusters read as dense forest
+    bush: T(7, 16), // (alias canopy)
+    rock: T(1, 12), // boulder (whole tile — not a fragment)
+    flower: T(0, 8), // grassy flowers
+    mushroom: T(0, 8), // (alias flower — a light accent)
+    wall: T(3, 3), // (alias water — the border is an ocean)
   },
   characters: {
     girl1: {

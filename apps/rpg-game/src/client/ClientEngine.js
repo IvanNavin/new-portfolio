@@ -1,7 +1,7 @@
-import EventSourceMixin from '../common/EventSourceMixin';
-import ClientCamera from './ClientCamera';
-import ClientInput from './ClientInput';
-import clamp from '../common/util';
+import EventSourceMixin from "../common/EventSourceMixin";
+import ClientCamera from "./ClientCamera";
+import ClientInput from "./ClientInput";
+import clamp from "../common/util";
 
 class ClientEngine {
   constructor(canvas, game) {
@@ -10,7 +10,7 @@ class ClientEngine {
       canvases: {
         main: canvas,
       },
-      ctx: canvas.getContext('2d'),
+      ctx: canvas.getContext("2d"),
       imageLoaders: [],
       sprites: {},
       images: {},
@@ -20,6 +20,9 @@ class ClientEngine {
       startTime: 0,
       lastRenderTime: 0,
     });
+
+    // Crisp pixel-art scaling — no smoothing/seams when tiles are drawn upscaled.
+    this.ctx.imageSmoothingEnabled = false;
 
     this.loop = this.loop.bind(this);
   }
@@ -37,10 +40,10 @@ class ClientEngine {
     this.lastRenderTime = timestamp;
 
     const { ctx, canvas } = this;
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = "black";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    this.trigger('render', timestamp);
+    this.trigger("render", timestamp);
     this.initNextFrame();
   }
 
@@ -88,7 +91,7 @@ class ClientEngine {
     let canvas = this.canvases[name];
 
     if (!canvas) {
-      canvas = document.createElement('canvas');
+      canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;
       this.canvases[name] = canvas;
@@ -102,7 +105,8 @@ class ClientEngine {
 
     if (canvas) {
       this.canvas = canvas;
-      this.ctx = canvas.getContext('2d');
+      this.ctx = canvas.getContext("2d");
+      this.ctx.imageSmoothingEnabled = false;
     }
 
     return canvas;
@@ -132,13 +136,13 @@ class ClientEngine {
 
   renderSign(opt) {
     const options = {
-      color: 'Black',
-      bgColor: '#3aebca80',
-      font: '16px sans-serif',
+      color: "Black",
+      bgColor: "#3aebca80",
+      font: "16px sans-serif",
       verticalPadding: 5,
       horizontalPadding: 3,
-      textAlign: 'center',
-      textBaseline: 'center',
+      textAlign: "center",
+      textBaseline: "center",
       ...opt,
     };
 
@@ -151,19 +155,32 @@ class ClientEngine {
     const measure = ctx.measureText(options.text);
     const textHeight = measure.actualBoundingBoxAscent;
 
-    const barWidth = clamp(measure.width + 2 * options.horizontalPadding, options.minWidth, options.maxWidth);
+    const barWidth = clamp(
+      measure.width + 2 * options.horizontalPadding,
+      options.minWidth,
+      options.maxWidth,
+    );
     const barHeight = textHeight + 2 * options.verticalPadding;
 
     const barX = options.x - barWidth / 2 - camera.x;
     const barY = options.y - barHeight / 2 - camera.y;
 
-    const textWidth = clamp(measure.width, 0, barWidth - 2 * options.horizontalPadding);
+    const textWidth = clamp(
+      measure.width,
+      0,
+      barWidth - 2 * options.horizontalPadding,
+    );
 
     ctx.fillStyle = options.bgColor;
     ctx.fillRect(barX, barY, barWidth, barHeight);
 
     ctx.fillStyle = options.color;
-    ctx.fillText(options.text, barX + barWidth / 2, barY + barHeight - options.verticalPadding, textWidth);
+    ctx.fillText(
+      options.text,
+      barX + barWidth / 2,
+      barY + barHeight - options.verticalPadding,
+      textWidth,
+    );
   }
 }
 
