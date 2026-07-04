@@ -1,8 +1,21 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  lazy,
+  Suspense,
+} from "react";
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Link, useRouter } from "@/router/router";
-import { ReadCvText3D, type Pointer } from "@/components/ReadCvText3D";
+import type { Pointer } from "@/components/ReadCvText3D";
+
+const ReadCvText3D = lazy(() =>
+  import("@/components/ReadCvText3D").then((m) => ({
+    default: m.ReadCvText3D,
+  })),
+);
 import { CvPage } from "@/pages/about/cv/CvPage";
 import { useCvZoom } from "@/pages/about/cvZoom";
 
@@ -344,12 +357,14 @@ export function DownloadButton() {
               }`}
               style={{ opacity: textOpacity }}
             >
-              <ReadCvText3D
-                text={t("about.readCv").toUpperCase()}
-                mode={wide ? "line" : "stack"}
-                pointer={pointer}
-                progress={flyProgress}
-              />
+              <Suspense fallback={null}>
+                <ReadCvText3D
+                  text={t("about.readCv").toUpperCase()}
+                  mode={wide ? "line" : "stack"}
+                  pointer={pointer}
+                  progress={flyProgress}
+                />
+              </Suspense>
             </motion.div>
           </div>
         </motion.div>

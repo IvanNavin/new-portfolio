@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, lazy, Suspense } from "react";
 import {
   motion,
   useMotionValueEvent,
@@ -7,7 +7,7 @@ import {
 } from "framer-motion";
 import { clsxm } from "@/lib/utils";
 import { useScrollProgress } from "@/lib/useScrollProgress";
-import Orb from "@/components/reactbits/Orb";
+const Orb = lazy(() => import("@/components/reactbits/Orb"));
 
 export type CareerEntry = {
   company: string;
@@ -61,12 +61,14 @@ const OrbTraveler = () => (
       }}
     />
     <div className="absolute inset-0">
-      <Orb
-        hue={359}
-        forceHoverState
-        hoverIntensity={1}
-        backgroundColor="#000000"
-      />
+      <Suspense fallback={null}>
+        <Orb
+          hue={359}
+          forceHoverState
+          hoverIntensity={1}
+          backgroundColor="#000000"
+        />
+      </Suspense>
     </div>
   </div>
 );

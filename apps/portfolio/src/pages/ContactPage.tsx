@@ -1,9 +1,10 @@
+import { lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "@/router/router";
 import { BackButton } from "@/components/BackButton";
 import type { PageProps } from "./types";
 
-import Ferrofluid from "@/components/reactbits/Ferrofluid";
+const Ferrofluid = lazy(() => import("@/components/reactbits/Ferrofluid"));
 import { ContactLinks } from "./contact/ContactLinks";
 import { BookingEmbed } from "./contact/BookingEmbed";
 import {
@@ -31,7 +32,9 @@ export function ContactPage(_props: PageProps) {
         className="pointer-events-none sticky top-0 left-0 -mb-[100dvh] h-[100dvh] w-full overflow-hidden"
       >
         {path === "/contact" && (
-          <Ferrofluid colors={["#fde047", "#e7a92c", "#fff3d6"]} />
+          <Suspense fallback={null}>
+            <Ferrofluid colors={["#fde047", "#e7a92c", "#fff3d6"]} />
+          </Suspense>
         )}
       </div>
 

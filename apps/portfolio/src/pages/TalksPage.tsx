@@ -1,10 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { motion, animate } from "framer-motion";
 import { useRouter } from "@/router/router";
 import { BackButton } from "@/components/BackButton";
 import { NavMenuItem, type NavMenuItemData } from "@/components/NavMenuItem";
-import Galaxy from "@/components/reactbits/Galaxy";
+const Galaxy = lazy(() => import("@/components/reactbits/Galaxy"));
 import { buildTalks } from "./talks/talks";
 import type { PageProps } from "./types";
 
@@ -53,7 +53,9 @@ export function TalksPage(_props: PageProps) {
         className="pointer-events-none sticky top-0 left-0 -mb-[100dvh] h-[100dvh] w-full overflow-hidden"
       >
         {onTalks && (
-          <Galaxy mouseRepulsion mouseInteraction warpRef={warpRef} />
+          <Suspense fallback={null}>
+            <Galaxy mouseRepulsion mouseInteraction warpRef={warpRef} />
+          </Suspense>
         )}
       </div>
 

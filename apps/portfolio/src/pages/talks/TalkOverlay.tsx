@@ -1,9 +1,11 @@
+import { lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { BackButton } from "@/components/BackButton";
 import { VideoFrame } from "@/components/VideoFrame";
-import Galaxy from "@/components/reactbits/Galaxy";
 import { findTalk } from "./talks";
+
+const Galaxy = lazy(() => import("@/components/reactbits/Galaxy"));
 
 // Easing for the dive — easeInOutCubic, so the motion is spread evenly across
 // the whole duration (a front-loaded ease-out finishes visually in ~300ms and
@@ -38,7 +40,9 @@ export function TalkOverlay({ slug }: { slug: string }) {
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
       >
-        <Galaxy mouseRepulsion mouseInteraction />
+        <Suspense fallback={null}>
+          <Galaxy mouseRepulsion mouseInteraction />
+        </Suspense>
       </div>
 
       <BackButton text={t("main.talks")} to="/talks" />
