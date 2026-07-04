@@ -69,6 +69,15 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "4183", "--directory", "apps/miner"],
       "port": 4183
+    },
+    {
+      "name": "rpg-game",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd apps/rpg-game && PORT=4184 node scripts/server.js"
+      ],
+      "port": 4184
     }
   ]
 }

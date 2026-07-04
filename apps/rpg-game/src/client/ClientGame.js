@@ -1,10 +1,17 @@
-import ClientEngine from './ClientEngine';
-import ClientWorld from './ClientWorld';
+import ClientEngine from "./ClientEngine";
+import ClientWorld from "./ClientWorld";
 
-import sprites from '../configs/sprites';
-import levelCfg from '../configs/world.json';
-import gameObjects from '../configs/gameObjects.json';
-import ClientApi from './ClientApi';
+import sprites from "../configs/sprites";
+import levelCfg from "../configs/world.json";
+import gameObjects from "../configs/gameObjects.json";
+import ClientApi from "./ClientApi";
+
+const MOVE_DIRS = {
+  up: [0, -1],
+  right: [1, 0],
+  down: [0, 1],
+  left: [-1, 0],
+};
 
 class ClientGame {
   constructor(cfg) {
@@ -45,14 +52,10 @@ class ClientGame {
   initEngine() {
     this.engine.loadSprites(this.cfg.sprites || sprites).then(() => {
       this.map.init();
-      this.engine.on('render', (_, time) => {
+      this.engine.on("render", (_, time) => {
         if (this.player) {
           this.engine.camera.focusGameObject(this.player);
-
-          if (this.engine.input.keysPressed.has('ArrowUp')) this.movePlayerToDir('up');
-          else if (this.engine.input.keysPressed.has('ArrowRight')) this.movePlayerToDir('right');
-          else if (this.engine.input.keysPressed.has('ArrowDown')) this.movePlayerToDir('down');
-          else if (this.engine.input.keysPressed.has('ArrowLeft')) this.movePlayerToDir('left');
+          this.updatePlayerMovement(this.readMoveDir());
         }
         this.map.render(time);
       });
@@ -62,28 +65,45 @@ class ClientGame {
     });
   }
 
-  movePlayerToDir(dir) {
-    const dirs = {
-      up: [0, -1],
-      right: [1, 0],
-      down: [0, 1],
-      left: [-1, 0],
-    };
+  // Which direction the movement keys are asking for this frame (null = none).
+  readMoveDir() {
+    const keys = this.engine.input.keysPressed;
+    if (keys.has("ArrowUp") || keys.has("KeyW")) return "up";
+    if (keys.has("ArrowRight") || keys.has("KeyD")) return "right";
+    if (keys.has("ArrowDown") || keys.has("KeyS")) return "down";
+    if (keys.has("ArrowLeft") || keys.has("KeyA")) return "left";
+    return null;
+  }
 
+  // Drive the player's animation state straight from the held direction so the
+  // walk cycle runs continuously. We never bounce back to the front-facing
+  // 'main' state between steps (that caused a one-frame "face flash"); idle is
+  // only shown once the player has actually stopped.
+  updatePlayerMovement(dir) {
     const { player } = this;
+    if (!player) return;
 
-    if (player && player.motionProgress === 1) {
-      const canMovie = player.moveByCellCoord(
-        dirs[dir][0],
-        dirs[dir][1],
-        (cell) => cell && cell.findObjectsByType('grass').length,
+    // Face the requested direction immediately. setState() restarts the walk
+    // cycle, so only call it when the direction truly changes.
+    if (dir && player.state !== dir) {
+      player.setState(dir);
+    }
+
+    // A new cell step can only begin once the previous slide has finished.
+    if (player.motionProgress !== 1) return;
+
+    if (dir) {
+      const [dcol, drow] = MOVE_DIRS[dir];
+      const moved = player.moveByCellCoord(
+        dcol,
+        drow,
+        (cell) => cell && cell.findObjectsByType("grass").length,
       );
 
-      if (canMovie) {
-        player.setState(dir);
-        player.once('motion-stopped', () => player.setState('main'));
-        this.api.move(dir);
-      }
+      if (moved) this.api.move(dir);
+    } else if (player.state !== "main") {
+      // Standing still with no key held → idle animation.
+      player.setState("main");
     }
   }
 
@@ -102,7 +122,7 @@ class ClientGame {
       const cell = this.map.cellAt(col, row);
       const playerObj = cell.createGameObject(
         {
-          class: 'player',
+          class: "player",
           type: skin,
           playerId: id,
           playerName: name,
@@ -117,8 +137,6 @@ class ClientGame {
 
     return this.players[id];
   }
-
-
 
   getPlayerById(id) {
     return this.players[id];

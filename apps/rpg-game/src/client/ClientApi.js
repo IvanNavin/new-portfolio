@@ -1,4 +1,4 @@
-import { io } from 'socket.io-client';
+import { io } from "socket.io-client";
 
 class ClientApi {
   constructor(cfg) {
@@ -20,21 +20,21 @@ class ClientApi {
       });
     }
 
-    this.io.on('welcome', this.onWelcome);
-    this.io.on('join', this.onJoin.bind(this));
-    this.io.on('newPlayer', this.onNewPlayer.bind(this));
-    this.io.on('playerMove', this.onPlayerMove.bind(this));
-    this.io.on('playerDisconnect', this.onPlayerDisconnect.bind(this));
+    this.io.on("welcome", this.onWelcome);
+    this.io.on("join", this.onJoin.bind(this));
+    this.io.on("newPlayer", this.onNewPlayer.bind(this));
+    this.io.on("playerMove", this.onPlayerMove.bind(this));
+    this.io.on("playerDisconnect", this.onPlayerDisconnect.bind(this));
   }
 
   onWelcome(serverStatus) {
-    window.console.log('Server is online ', serverStatus);
+    window.console.log("Server is online ", serverStatus);
   }
 
   onJoin(player) {
     this.game.createCurrentPlayer(player.player);
     this.game.setPlayers(player.playersList);
-    window.console.log('JOINED A GAME', player);
+    window.console.log("JOINED A GAME", player);
   }
 
   onNewPlayer(player) {
@@ -43,32 +43,41 @@ class ClientApi {
 
   getDir(col, row, oldCol, oldRow) {
     if (row < oldRow) {
-      return 'up';
+      return "up";
     }
     if (col > oldCol) {
-      return 'right';
+      return "right";
     }
     if (row > oldRow) {
-      return 'down';
+      return "down";
     }
     if (col < oldCol) {
-      return 'left';
+      return "left";
     }
-    return 'main';
+    return "main";
   }
 
   onPlayerMove({ col, row, id, oldRow, oldCol }) {
     const { game } = this;
     // Ignore moves for the local player to prevent jitter (client prediction)
     if (game.player && game.player.playerId === id) {
-        return;
+      return;
     }
     const player = game.getPlayerById(id);
 
     if (player) {
+      const dir = this.getDir(col, row, oldCol, oldRow);
+
       player.moveToCellCoord(col, row);
-      player.setState(this.getDir(col, row, oldCol, oldRow));
-      player.once('motion-stopped', () => player.setState('main'));
+      // Only restart the walk cycle when the facing actually changes, and never
+      // snap back to the front-facing 'main' between consecutive steps.
+      if (player.state !== dir) player.setState(dir);
+
+      // Debounced idle: each step (~200ms slide) refreshes the timer, so a
+      // continuously walking player never flashes the idle pose. Once the steps
+      // stop coming, the timer fires and returns them to 'main'.
+      clearTimeout(player.idleTimer);
+      player.idleTimer = setTimeout(() => player.setState("main"), 260);
     }
   }
 
@@ -77,11 +86,11 @@ class ClientApi {
   }
 
   join(playerName) {
-    this.io.emit('join', playerName);
+    this.io.emit("join", playerName);
   }
 
   move(dir) {
-    this.io.emit('move', dir);
+    this.io.emit("move", dir);
   }
 }
 
