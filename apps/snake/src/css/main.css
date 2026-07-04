@@ -10,17 +10,40 @@ html, body {
 
 body {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background: radial-gradient(#333, #111);
+  overflow: hidden;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 * {
   box-sizing: border-box;
   font-family: 'Press Start 2P', serif;
+}
+
+button {
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+button:hover {
+  background: #333;
+  color: white;
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+button:focus-visible,
+#main:focus-visible {
+  outline: 2px solid #77ff33;
+  outline-offset: 2px;
 }
 
 #restart {
@@ -34,16 +57,17 @@ body {
   font-weight: bold;
 }
 
+#restart:hover {
+  background: none;
+}
+
 #restart:hover svg {
   animation: rotate 2s linear infinite;
 }
 
 .start-screen {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: #111;
   color: white;
   display: flex;
@@ -51,38 +75,75 @@ body {
   align-items: center;
   justify-content: center;
   gap: 1rem;
+  padding: 1rem;
+  text-align: center;
   z-index: 10;
+  animation: fade-in 0.3s ease;
 }
 
 .start-screen h1 {
-  font-size: 4rem;
+  font-size: clamp(2.5rem, 12vw, 4rem);
   text-align: center;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(119, 255, 51, 0.5);
+}
+
+.start-screen h2 {
+  font-size: clamp(0.9rem, 4vw, 1.3rem);
 }
 
 .start-screen button {
   padding: 0.5rem 1rem;
   font-size: 1.2rem;
   cursor: pointer;
+  width: min(220px, 70vw);
+}
+
+.hint {
+  margin-top: 1rem;
+  max-width: 26ch;
+  font-size: 0.6rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.game-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 header {
   display: flex;
-  gap: 56px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(16px, 5vw, 56px);
   color: white;
-  font-size: 1rem;
+  font-size: clamp(0.7rem, 2.5vw, 1rem);
   margin-bottom: 8px;
+}
+
+header p {
+  margin: 0.4rem 0;
 }
 
 .game-container {
   position: relative;
+  /* --board-scale is computed in JS (fitBoard) and kept in sync on resize so the
+     board fits small screens while #food's px offsets stay aligned. */
+  transform: scale(var(--board-scale, 1));
+  transform-origin: top center;
 }
 
 #main {
   display: grid;
-  grid-template-columns: repeat(20, 1fr);
-  grid-template-rows: repeat(20, 1fr);
+  grid-template-columns: repeat(20, 20px);
+  grid-template-rows: repeat(20, 20px);
   background: rgba(0, 0, 0, 0.15);
-  width: min-content;
+  width: 400px;
+  height: 400px;
+  border: 1px solid rgba(119, 255, 51, 0.15);
+  touch-action: none;
 }
 
 .cell {
@@ -94,12 +155,13 @@ header {
 
 .cell.snake {
   background: white;
+  border-radius: 2px;
 }
 
 .cell.snake-head {
   box-shadow: white 0 0 20px;
+  background: #f0fff0;
 }
-
 
 .cell.dot::before {
   content: "";
@@ -119,62 +181,65 @@ header {
   position: absolute;
   width: 20px;
   height: 20px;
+  border-radius: 2px;
   animation: bounce 1s infinite;
+  pointer-events: none;
 }
 
-button {
-  cursor: pointer;
-}
-
-button:hover {
-  background: #333;
+.pause-btn {
+  margin-top: 1rem;
+  padding: 0.4rem 0.9rem;
+  background: rgba(255, 255, 255, 0.08);
   color: white;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+}
+
+.game-over,
+.pause-menu {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  z-index: 20;
+  animation: fade-in 0.25s ease;
 }
 
 .game-over {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   background: rgba(0, 0, 0, 0.85);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  z-index: 20;
   color: red;
 }
 
-.display-none {
-  display: none !important;
+.game-over h2 {
+  animation: pulse 1.2s ease-in-out infinite;
+  text-shadow: 0 0 16px rgba(255, 0, 0, 0.6);
 }
 
-.hide {
-  opacity: 0
+.final-score {
+  color: white;
+  font-size: 0.9rem;
 }
 
 .pause-menu {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   background: rgba(0, 0, 0, 0.85);
   color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  z-index: 20;
 }
 
 .pause-menu button {
   padding: 0.5rem 1.2rem;
   font-size: 1.1rem;
   cursor: pointer;
+  width: min(240px, 70vw);
+}
+
+.display-none {
+  display: none !important;
 }
 
 @keyframes bounce {
@@ -184,5 +249,25 @@ button:hover {
 
 @keyframes rotate {
   0% { transform: rotate(0deg) }
-  100% { transform: rotate(360deg); }
+  100% { transform: rotate(360deg) }
+}
+
+@keyframes fade-in {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1 }
+  50% { transform: scale(1.08); opacity: 0.7 }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
