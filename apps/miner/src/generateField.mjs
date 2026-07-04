@@ -13,13 +13,18 @@ export class GenerateField {
     return arr;
   }
 
-  createMatrix = () => {
+  createMatrix = (safe = null) => {
     const matrix = this.createField();
     let mine = this.opts.mine;
 
     while (mine > 0) {
-      const x = this.opts.random(this.opts.cols-1);
-      const y = this.opts.random(this.opts.rows-1);
+      const x = this.opts.random(this.opts.cols);
+      const y = this.opts.random(this.opts.rows);
+
+      // Never place a mine on the first-clicked cell (first-click safety).
+      if (safe && safe.x === x && safe.y === y) {
+        continue;
+      }
 
       if (matrix[y][x] !== this.opts.bomb) {
         matrix[y][x] = this.opts.bomb;
@@ -55,7 +60,7 @@ export class GenerateField {
     let html = '';
 
     for (let i = 0; i < countCells; i++) {
-      html += `<div class="cell" index="${i}" onselectstart="return false;"></div>`
+      html += `<div class="cell" index="${i}" role="button" tabindex="0" aria-label="Hidden cell" onselectstart="return false;"></div>`
     }
 
      this.opts.cells.insertAdjacentHTML('afterbegin', html);

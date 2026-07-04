@@ -12,9 +12,9 @@
 <div class="miner">
     <div class="game-field">
         <header class="top-bar">
-            <div class="counter bomb">010</div>
-            <div class="img"></div>
-            <div class="counter timer">000</div>
+            <div class="counter bomb" role="status" aria-label="Mines remaining">010</div>
+            <div class="img" role="button" tabindex="0" aria-label="New game"></div>
+            <div class="counter timer" role="timer" aria-label="Elapsed time">000</div>
         </header>
         <main class="field" data-state='menu'>
             <div class="menu">
@@ -27,7 +27,7 @@
             </div>
             <div
                     class="cells"
-                    style="grid-template-columns: repeat(10, 32px);"
+                    style="grid-template-columns: repeat(10, var(--cell-size));"
                     onselectstart="return false;"
             ></div>
             <div class="gameOver">

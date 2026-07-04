@@ -95,6 +95,13 @@ export class Miner {
 
           if (this.opts.matrix[y][x] !== 0) {
             element.innerText = this.opts.matrix[y][x];
+            element.dataset.value = this.opts.matrix[y][x];
+            element.setAttribute(
+              "aria-label",
+              `${this.opts.matrix[y][x]} adjacent mines`
+            );
+          } else {
+            element.setAttribute("aria-label", "Empty cell");
           }
 
           element.classList.add("open");
@@ -113,11 +120,13 @@ export class Miner {
     this.showAllMine();
     this.opts.field.dataset.state = "youWin";
     this.stopwatch.stop();
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-    });
+    if (typeof confetti === "function") {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+    }
   };
 
   checkCell = (target, y, x) => {
@@ -129,6 +138,11 @@ export class Miner {
       this.openFreeCells();
     } else {
       target.innerText = this.opts.matrix[y][x];
+      target.dataset.value = this.opts.matrix[y][x];
+      target.setAttribute(
+        "aria-label",
+        `${this.opts.matrix[y][x]} adjacent mines`
+      );
       target.classList.add("open");
       this.opts.cover[y][x] = 1;
     }
@@ -148,19 +162,28 @@ export class Miner {
   };
 
   onCell = ({ target }) => {
-    if (!this.stopwatch.running) {
-      this.stopwatch.start();
-    }
-
     const index = target.getAttribute("index");
     const y = Math.floor(index / this.opts.cols);
     const x = index % this.opts.cols;
+
+    // Don't reveal a flagged cell.
+    if (target.classList.contains("flag")) {
+      return;
+    }
 
     if (this.opts.cover[y][x] === 1) {
       return;
     }
 
-    target.removeEventListener("click", this.onCell);
+    // First-click safety: build the mine layout only once the player
+    // reveals their first cell, guaranteeing that cell is never a mine.
+    if (!this.opts.matrix.length) {
+      this.opts.matrix = this.generateField.createMatrix({ x, y });
+    }
+
+    if (!this.stopwatch.running) {
+      this.stopwatch.start();
+    }
 
     this.checkCell(target, y, x);
   };
@@ -174,6 +197,7 @@ export class Miner {
 
           if (!element.classList.contains("flag")) {
             element.classList.add(this.opts.bomb);
+            element.setAttribute("aria-label", "Mine");
           }
         }
       });
@@ -183,9 +207,11 @@ export class Miner {
   markAsMine = (target) => {
     if (target.classList.contains("flag")) {
       target.classList.remove("flag");
+      target.setAttribute("aria-label", "Hidden cell");
       this.opts.flags++;
     } else {
       target.classList.add("flag");
+      target.setAttribute("aria-label", "Flagged cell");
       this.opts.flags--;
     }
 
@@ -195,55 +221,98 @@ export class Miner {
   onRightClick = (e) => {
     e.preventDefault();
     const { target } = e;
-    const index = e.target.getAttribute("index");
+    const index = target.getAttribute("index");
     const y = Math.floor(index / this.opts.cols);
     const x = index % this.opts.cols;
 
+    // Can't flag an already-revealed cell.
     if (this.opts.cover[y][x] === 1) {
-      target.removeEventListener("click", this.onRightClick);
       return;
     }
 
-    this.markAsMine(target, y, x);
+    this.markAsMine(target);
   };
 
+  // Long-press flags, short tap reveals.
   touchStart = (e) => {
-    e.preventDefault();
-    if (!this.opts.touchTimer) {
-      this.opts.touchTimer = setTimeout(() => this.onCell(e), 500);
-    }
+    const target = e.currentTarget;
+    this.opts.longPressed = false;
+
+    const touch = e.touches ? e.touches[0] : e;
+    this.opts.touchStartX = touch ? touch.clientX : 0;
+    this.opts.touchStartY = touch ? touch.clientY : 0;
+
+    const index = target.getAttribute("index");
+    const y = Math.floor(index / this.opts.cols);
+    const x = index % this.opts.cols;
+
+    clearTimeout(this.opts.touchTimer);
+    this.opts.touchTimer = setTimeout(() => {
+      this.opts.longPressed = true;
+      // Can't flag an already-revealed cell.
+      if (this.opts.cover[y] && this.opts.cover[y][x] === 1) {
+        return;
+      }
+      this.markAsMine(target);
+    }, 400);
   };
 
-  doubleTap = (e) => {
-    const now = new Date().getTime();
-    const timeSince = now - this.opts.myLatestTap;
+  touchMove = (e) => {
+    // Cancel the long-press if the finger moves too far (scroll/drag).
+    const touch = e.touches ? e.touches[0] : e;
+    if (!touch) return;
 
-    if (timeSince < 600 && timeSince > 0) {
-      this.onRightClick(e);
+    const dx = Math.abs(touch.clientX - this.opts.touchStartX);
+    const dy = Math.abs(touch.clientY - this.opts.touchStartY);
+
+    if (dx > 10 || dy > 10) {
+      clearTimeout(this.opts.touchTimer);
+      this.opts.touchTimer = 0;
+      this.opts.longPressed = true; // suppress the reveal on touchend
     }
-
-    this.opts.myLatestTap = new Date().getTime();
   };
 
   touchEnd = (e) => {
-    e.preventDefault();
-    if (this.opts.touchTimer) {
-      clearTimeout(this.opts.touchTimer);
-      this.opts.touchTimer = 0;
+    clearTimeout(this.opts.touchTimer);
+    this.opts.touchTimer = 0;
+
+    if (this.opts.longPressed) {
+      // The long-press (flag) already fired, or the gesture was a scroll.
+      return;
     }
 
-    this.doubleTap(e);
+    e.preventDefault();
+    this.onCell({ target: e.currentTarget });
+  };
+
+  onKeyDown = (e) => {
+    const target = e.currentTarget;
+
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      this.onCell({ target });
+    } else if (e.key === "f" || e.key === "F") {
+      e.preventDefault();
+      const index = target.getAttribute("index");
+      const y = Math.floor(index / this.opts.cols);
+      const x = index % this.opts.cols;
+      if (this.opts.cover[y][x] !== 1) {
+        this.markAsMine(target);
+      }
+    }
   };
 
   listenCells = () => {
     this.opts.cells.querySelectorAll(".cell").forEach((cell) => {
       if (this.opts.isMob()) {
-        cell.addEventListener("touchstart", this.touchStart);
+        cell.addEventListener("touchstart", this.touchStart, { passive: true });
+        cell.addEventListener("touchmove", this.touchMove, { passive: true });
         cell.addEventListener("touchend", this.touchEnd);
       } else {
         cell.addEventListener("click", this.onCell);
         cell.addEventListener("contextmenu", this.onRightClick);
       }
+      cell.addEventListener("keydown", this.onKeyDown);
     });
   };
 
@@ -255,7 +324,8 @@ export class Miner {
   };
 
   onStart = () => {
-    this.opts.matrix = this.generateField.createMatrix();
+    // Matrix is generated lazily on the first reveal (first-click safety).
+    this.opts.matrix = [];
     this.opts.cover = this.generateField.createField();
 
     this.opts.winResult = this.opts.rows * this.opts.cols - this.opts.mine;
@@ -271,6 +341,12 @@ export class Miner {
     const resetBtn = document.querySelector(".img");
 
     resetBtn.addEventListener("click", this.onReset);
+    resetBtn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        this.onReset();
+      }
+    });
     start?.addEventListener("click", this.onStart);
   };
 }

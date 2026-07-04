@@ -46,7 +46,7 @@ export class Menu {
       }
     }
 
-     this.opts.cells.style['grid-template-columns'] = `repeat(${ this.opts.cols}, 32px)`;
+     this.opts.cells.style['grid-template-columns'] = `repeat(${ this.opts.cols}, var(--cell-size))`;
   }
 
   listenSelect = () => {
@@ -55,7 +55,7 @@ export class Menu {
 
   resetMenu = () => {
     this.setSimple();
-     this.opts.cells.style['grid-template-columns'] = `repeat(10, 32px)`;
+     this.opts.cells.style['grid-template-columns'] = `repeat(10, var(--cell-size))`;
      this.opts.select.value = 'simple';
      this.opts.field.dataset.state = 'menu';
   }

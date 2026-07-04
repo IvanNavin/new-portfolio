@@ -8,7 +8,9 @@ export class GlobalVariablesClass {
     this.mine = 10;
     this.flags = this.mine;
     this.touchTimer = 0;
-    this.myLatestTap = null;
+    this.longPressed = false;
+    this.touchStartX = 0;
+    this.touchStartY = 0;
     this.winResult = (this.rows * this.cols) - this.mine;
     this.cells = document.querySelector('.cells');
     this.field = document.querySelector('.field');
@@ -18,7 +20,15 @@ export class GlobalVariablesClass {
 
   random = (n) => Math.floor(Math.random() * n);
 
-  pad = (n) => Number(n).toString().padStart(3, '0');
+  pad = (n, len = 3) => {
+    const num = Number(n);
+    const sign = num < 0 ? '-' : '';
+    return sign + Math.abs(num).toString().padStart(len, '0');
+  };
 
-  isMob = () => /Mobi|Android/i.test(navigator.userAgent);
+  isMob = () =>
+    /Mobi|Android/i.test(navigator.userAgent) ||
+    (typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(pointer: coarse)').matches);
 }
