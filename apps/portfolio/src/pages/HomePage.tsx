@@ -4,7 +4,7 @@ import { useRouter } from "@/router/router";
 import { HomeNav } from "@/components/HomeNav";
 import Fluid from "@/components/Fluid";
 import { clsxm, isTouchDevice } from "@/lib/utils";
-import myPhoto from "@/assets/iam-wb-1.png";
+import myPhoto from "@/assets/iam-wb-1.webp";
 import type { PageProps } from "./types";
 
 export function HomePage(_props: PageProps) {
@@ -50,6 +50,7 @@ export function HomePage(_props: PageProps) {
           alt="Ivan Holovko"
           src={myPhoto}
           draggable={false}
+          fetchPriority="high"
           className="h-full w-full object-contain object-bottom"
         />
       </section>

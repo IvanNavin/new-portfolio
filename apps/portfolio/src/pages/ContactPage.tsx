@@ -50,13 +50,18 @@ export function ContactPage(_props: PageProps) {
 
         <ContactLinks t={t} />
 
-        <BookingEmbed
-          calLink={CAL_BOOKING_LINK}
-          origin={CAL_ORIGIN}
-          scriptSrc={CAL_EMBED_SCRIPT_SRC}
-          caption={t("contacts.bookCall")}
-          resetLabel={t("contacts.changeDuration")}
-        />
+        {/* Only mount the Cal.eu embed once we're actually on Contact — the cube
+            keeps every face mounted, so an ungated embed would load its script,
+            iframe and cookies on the home page (hurting perf + best-practices). */}
+        {path === "/contact" && (
+          <BookingEmbed
+            calLink={CAL_BOOKING_LINK}
+            origin={CAL_ORIGIN}
+            scriptSrc={CAL_EMBED_SCRIPT_SRC}
+            caption={t("contacts.bookCall")}
+            resetLabel={t("contacts.changeDuration")}
+          />
+        )}
       </main>
     </div>
   );
