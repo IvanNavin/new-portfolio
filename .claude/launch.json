@@ -51,6 +51,24 @@
         "apps/solitaire"
       ],
       "port": 4180
+    },
+    {
+      "name": "snake",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "4181", "--directory", "apps/snake"],
+      "port": 4181
+    },
+    {
+      "name": "2048",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "4182", "--directory", "apps/2048"],
+      "port": 4182
+    },
+    {
+      "name": "miner",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "4183", "--directory", "apps/miner"],
+      "port": 4183
     }
   ]
 }
