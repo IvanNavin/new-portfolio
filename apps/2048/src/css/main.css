@@ -1,6 +1,4 @@
 :root {
-    --board-width: 258px;
-    --board-height: 258px;
     --board-gap: 5px;
     --cell-width: 48px;
     --cell-height: 48px;
@@ -11,12 +9,26 @@
     --text-lightness: 90%;
     --bg-lightness: 90%;
     --cols: 5;
+    --rows: 5;
+
+    /* Derived from the cell/gap vars so the board tracks any size change. */
+    --board-width: calc(
+        var(--cols) * var(--cell-width) + (var(--cols) - 1) * var(--board-gap)
+    );
+    --board-height: calc(
+        var(--rows) * var(--cell-height) + (var(--rows) - 1) * var(--board-gap)
+    );
 }
 
 html, body {
     height: 100%;
     width: 100%;
     transform: translate3d(0, 0, 0);
+}
+
+body {
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #776e65;
 }
 
 * {
@@ -57,6 +69,28 @@ html, body {
     margin-bottom: 4px;
 }
 
+.restart-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: inherit;
+    line-height: 0;
+    transition: background-color 0.15s ease;
+}
+
+.restart-icon:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+}
+
+.restart-icon:active {
+    background-color: rgba(0, 0, 0, 0.12);
+}
+
 .wrapper[data-screen="menu"] .main-menu {
     display: flex;
 }
@@ -88,14 +122,22 @@ h1 {
 
 .board {
     display: grid;
+    grid-template-columns: repeat(var(--cols), var(--cell-width));
+    grid-template-rows: repeat(var(--rows), var(--cell-height));
+    gap: var(--board-gap);
+    /* content-box so the grid tracks stay exactly cell-sized and the
+       absolutely-positioned tiles line up with the empty cells. */
+    box-sizing: content-box;
     width: var(--board-width);
     height: var(--board-height);
-    grid-template-columns: repeat(var(--cols), 1fr);
-    gap: var(--board-gap);
     border: 2px solid var(--board-border);
     border-radius: 8px;
     background-color: var(--board-background);
     position: relative;
+    /* Keep swipes from scrolling / pull-to-refreshing the page. */
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .cell {
@@ -123,9 +165,16 @@ h1 {
     background-color: hsl(25, 60%, var(--bg-lightness));
     color: hsl(20, 25%, var(--text-lightness));
 
-    /*color: var(--cell-text-color);*/
-    transition: all 0.2s linear;
-    animation: show 200ms;
+    transition:
+        top 0.15s ease-in-out,
+        left 0.15s ease-in-out,
+        background-color 0.15s ease-in-out;
+    animation: show 200ms ease;
+}
+
+.box.merged {
+    animation: pop 150ms ease;
+    z-index: 1;
 }
 
 h2[data-win] {
@@ -205,5 +254,45 @@ h2[data-win] {
     100% {
         opacity: 1;
         transform: scale(1);
+    }
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.18);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Shrink the board so it fits comfortably on small / narrow screens. */
+@media (max-width: 360px), (max-height: 560px) {
+    :root {
+        --cell-width: 40px;
+        --cell-height: 40px;
+        --cell-font-size: 16px;
+    }
+
+    h1 {
+        font-size: 56px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .box {
+        transition: none;
+        animation: none;
+    }
+
+    .box.merged {
+        animation: none;
+    }
+
+    .btn:active {
+        top: 0;
     }
 }

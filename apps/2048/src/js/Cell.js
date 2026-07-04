@@ -44,6 +44,7 @@ export class Cell {
     this.linkedTile.setValue(
       this.linkedTile.value + this.linkedTileForMerge.value,
     );
+    this.linkedTile.playMergeAnimation();
     this.linkedTileForMerge.removeFromDOM();
     this.unlinkTileForMerge();
   }

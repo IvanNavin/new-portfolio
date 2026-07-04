@@ -1,12 +1,11 @@
-import { Game } from "./game.js";
+import { Game } from "./Game.js";
 
 const opts = {
   cols: 5,
   rows: 5,
   "board-border": "#000",
   "board-background": "#bbada0",
-  "board-padding": "4px",
-  "board-gap": "2px",
+  "board-gap": "5px",
   "cell-width": "48px",
   "cell-height": "48px",
   "empty-cell-background": "#cdc1b4",
@@ -14,19 +13,15 @@ const opts = {
   "cell-text-color": "#776e65",
 };
 
-// Calculate the remaining values after defining the object
-opts["board-width"] =
-  opts.cols * parseFloat(opts["cell-width"]) +
-  opts.cols * parseFloat(opts["board-gap"]) +
-  2 * parseFloat(opts["board-padding"]);
-opts["board-height"] =
-  opts.rows * parseFloat(opts["cell-height"]) +
-  opts.rows * parseFloat(opts["board-gap"]) +
-  2 * parseFloat(opts["board-padding"]);
+// Board dimensions are derived from the cell/gap variables in CSS (see
+// --board-width / --board-height), so they resize automatically on small
+// screens without JS having to recompute anything.
 
 document.addEventListener("DOMContentLoaded", function () {
   const startGameButton = document.querySelector("[data-start-game]");
-  const restartGameButton = document.querySelector("[data-restart-game]");
+  // There are multiple restart triggers (the in-game icon and the game-over
+  // modal button), so select all of them, not just the first.
+  const restartGameButtons = document.querySelectorAll("[data-restart-game]");
   const gameOverModal = document.querySelector("[data-game-over]");
   const toMenuButton = document.querySelector("[data-to-menu]");
   const wrapper = document.querySelector("[data-screen]");
@@ -36,9 +31,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const game = new Game(opts);
 
-  // Loop through all the properties of the opts object and set them as :root properties
+  // Loop through the scalar options and expose them as :root CSS variables
+  // (skip DOM/object values like boardElement).
   for (const [key, value] of Object.entries(opts)) {
-    root.style.setProperty(`--${key}`, value);
+    if (typeof value === "string" || typeof value === "number") {
+      root.style.setProperty(`--${key}`, value);
+    }
   }
 
   startGameButton.addEventListener("click", function () {
@@ -46,9 +44,11 @@ document.addEventListener("DOMContentLoaded", function () {
     game.startGame();
   });
 
-  restartGameButton.addEventListener("click", function () {
-    gameOverModal.classList.add("hide");
-    game.startGame();
+  restartGameButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      gameOverModal.classList.add("hide");
+      game.startGame();
+    });
   });
 
   toMenuButton.addEventListener("click", function () {

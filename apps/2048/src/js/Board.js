@@ -35,7 +35,7 @@ export class Board {
 
     for (let i = 0; i < cellsCount; i++) {
       this.board.push(
-        new Cell(this.boardElement, i % this.cols, Math.floor(i / this.rows)),
+        new Cell(this.boardElement, i % this.cols, Math.floor(i / this.cols)),
       );
     }
 

@@ -19,7 +19,7 @@ export class Box {
       `${bgLightness < 50 ? 90 : 10}%`,
     );
 
-    if (value > 2048 && this.winElement.classList.contains("hide")) {
+    if (value >= 2048 && this.winElement.classList.contains("hide")) {
       this.winElement.classList.remove("hide");
     }
   }
@@ -29,6 +29,19 @@ export class Box {
     this.y = y;
     this.tileElement.style.setProperty("--x", x);
     this.tileElement.style.setProperty("--y", y);
+  }
+
+  playMergeAnimation() {
+    this.tileElement.classList.remove("merged");
+    // Force a reflow so re-adding the class restarts the animation
+    // even on rapid consecutive merges.
+    void this.tileElement.offsetWidth;
+    this.tileElement.classList.add("merged");
+    this.tileElement.addEventListener(
+      "animationend",
+      () => this.tileElement.classList.remove("merged"),
+      { once: true },
+    );
   }
 
   removeFromDOM() {

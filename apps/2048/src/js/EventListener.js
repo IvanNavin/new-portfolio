@@ -5,6 +5,13 @@ export class EventListener {
     Object.assign(this, opts);
     this.touchStartX = null;
     this.touchStartY = null;
+    // Guard against overlapping moves while tiles are still animating.
+    this.isMoving = false;
+
+    // Bind once so the same references can be added/removed as listeners.
+    this.onKeyDown = this.onKeyDown.bind(this);
+    this.onTouchStart = this.onTouchStart.bind(this);
+    this.onTouchEnd = this.onTouchEnd.bind(this);
   }
 
   canMoveUp() {
@@ -84,20 +91,20 @@ export class EventListener {
     });
   }
 
-  async moveUp() {
-    await this.slideTiles(this.board.cellsGroupedByColumn);
+  moveUp() {
+    return this.slideTiles(this.board.cellsGroupedByColumn);
   }
 
-  async moveDown() {
-    await this.slideTiles(this.board.cellsGroupedByReversedColumn);
+  moveDown() {
+    return this.slideTiles(this.board.cellsGroupedByReversedColumn);
   }
 
-  async moveLeft() {
-    await this.slideTiles(this.board.cellsGroupedByRow);
+  moveLeft() {
+    return this.slideTiles(this.board.cellsGroupedByRow);
   }
 
-  async moveRight() {
-    await this.slideTiles(this.board.cellsGroupedByReversedRow);
+  moveRight() {
+    return this.slideTiles(this.board.cellsGroupedByReversedRow);
   }
 
   gameIsOver() {
@@ -109,40 +116,30 @@ export class EventListener {
     );
   }
 
-  async onKeyDown(event) {
-    switch (event.key) {
-      case "ArrowUp":
-        if (!this.canMoveUp()) {
-          this.listen();
-          return;
-        }
-        await this.moveUp();
-        break;
-      case "ArrowDown":
-        if (!this.canMoveDown()) {
-          this.listen();
-          return;
-        }
-        await this.moveDown();
-        break;
-      case "ArrowLeft":
-        if (!this.canMoveLeft()) {
-          this.listen();
-          return;
-        }
-        await this.moveLeft();
-        break;
-      case "ArrowRight":
-        if (!this.canMoveRight()) {
-          this.listen();
-          return;
-        }
-        await this.moveRight();
-        break;
-      default:
-        this.listen();
-        return;
+  // Shared move pipeline for both keyboard and touch input.
+  async handleMove(direction) {
+    if (this.isMoving) {
+      return;
     }
+
+    const moves = {
+      up: { canMove: () => this.canMoveUp(), move: () => this.moveUp() },
+      down: { canMove: () => this.canMoveDown(), move: () => this.moveDown() },
+      left: { canMove: () => this.canMoveLeft(), move: () => this.moveLeft() },
+      right: {
+        canMove: () => this.canMoveRight(),
+        move: () => this.moveRight(),
+      },
+    };
+
+    const action = moves[direction];
+
+    if (!action || !action.canMove()) {
+      return;
+    }
+
+    this.isMoving = true;
+    await action.move();
 
     const newTile = new Box(this.boardElement);
     this.board.getRandomEmptyCell().linkTile(newTile);
@@ -150,111 +147,85 @@ export class EventListener {
     if (this.gameIsOver()) {
       await newTile.waitForAnimationEnd();
       const gameOverModal = document.querySelector("[data-game-over]");
-
       gameOverModal.classList.remove("hide");
-
+      this.stop();
       return;
     }
 
-    this.listen();
+    this.isMoving = false;
+  }
+
+  onKeyDown(event) {
+    const keyToDirection = {
+      ArrowUp: "up",
+      ArrowDown: "down",
+      ArrowLeft: "left",
+      ArrowRight: "right",
+    };
+
+    const direction = keyToDirection[event.key];
+
+    if (!direction) {
+      return;
+    }
+
+    // Prevent the page from scrolling while playing with the arrow keys.
+    event.preventDefault();
+    this.handleMove(direction);
   }
 
   onTouchStart(event) {
     this.touchStartX = event.touches[0].clientX;
     this.touchStartY = event.touches[0].clientY;
-
-    return this;
   }
 
-  async onTouchEnd(event) {
-    // Determining the direction of movement while moving on the touch screen
+  onTouchEnd(event) {
+    if (this.touchStartX === null || this.touchStartY === null) {
+      return;
+    }
+
     const touchEndX = event.changedTouches[0].clientX;
     const touchEndY = event.changedTouches[0].clientY;
-    let direction = null;
-
-    if (this.touchStartX === touchEndX && this.touchStartY === touchEndY)
-      return;
 
     const deltaX = touchEndX - this.touchStartX;
     const deltaY = touchEndY - this.touchStartY;
 
-    // Determination of the displacement direction
+    this.touchStartX = null;
+    this.touchStartY = null;
+
+    // Ignore taps / tiny drags so they don't register as a swipe.
+    const SWIPE_THRESHOLD = 10;
+    if (
+      Math.abs(deltaX) < SWIPE_THRESHOLD &&
+      Math.abs(deltaY) < SWIPE_THRESHOLD
+    ) {
+      return;
+    }
+
+    let direction;
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
       direction = deltaX > 0 ? "right" : "left";
     } else {
       direction = deltaY > 0 ? "down" : "up";
     }
 
-    switch (direction) {
-      case "up":
-        if (!this.canMoveUp()) {
-          this.listen();
-          return;
-        }
-        await this.moveUp();
-        break;
-      case "down":
-        if (!this.canMoveDown()) {
-          this.listen();
-          return;
-        }
-        await this.moveDown();
-        break;
-      case "left":
-        if (!this.canMoveLeft()) {
-          this.listen();
-          return;
-        }
-        await this.moveLeft();
-        break;
-      case "right":
-        if (!this.canMoveRight()) {
-          this.listen();
-          return;
-        }
-        await this.moveRight();
-        break;
-      default:
-        this.listen();
-        return;
-    }
-
-    const newTile = new Box(this.boardElement);
-    this.board.getRandomEmptyCell().linkTile(newTile);
-
-    if (this.gameIsOver()) {
-      await newTile.waitForAnimationEnd();
-      const gameOverModal = document.querySelector("[data-game-over]");
-
-      gameOverModal.classList.remove("hide");
-
-      return;
-    }
-
-    this.listen();
+    this.handleMove(direction);
   }
 
+  // Attach persistent input listeners. Safe to call repeatedly because
+  // stop() removes the exact same bound references first.
   listen() {
-    document.addEventListener(
-      "keydown",
-      (e) => {
-        this.onKeyDown(e);
-      },
-      { once: true },
-    );
-    this.boardElement.addEventListener(
-      "touchstart",
-      (e) => {
-        this.onTouchStart(e);
-      },
-      { once: true },
-    );
-    this.boardElement.addEventListener(
-      "touchend",
-      (e) => {
-        this.onTouchEnd(e);
-      },
-      { once: true },
-    );
+    this.stop();
+    document.addEventListener("keydown", this.onKeyDown);
+    this.boardElement.addEventListener("touchstart", this.onTouchStart, {
+      passive: true,
+    });
+    this.boardElement.addEventListener("touchend", this.onTouchEnd);
+  }
+
+  stop() {
+    document.removeEventListener("keydown", this.onKeyDown);
+    this.boardElement.removeEventListener("touchstart", this.onTouchStart);
+    this.boardElement.removeEventListener("touchend", this.onTouchEnd);
   }
 }
