@@ -4,7 +4,6 @@ import { motion, animate } from "framer-motion";
 import { useRouter } from "@/router/router";
 import { BackButton } from "@/components/BackButton";
 import { NavMenuItem, type NavMenuItemData } from "@/components/NavMenuItem";
-import { clsxm } from "@/lib/utils";
 import Galaxy from "@/components/reactbits/Galaxy";
 import { buildTalks } from "./talks/talks";
 import type { PageProps } from "./types";
@@ -78,7 +77,7 @@ export function TalksPage(_props: PageProps) {
               item={item}
               index={index}
               flipOnTouch={false}
-              textClassName={clsxm("text-[3vw]", index !== 0 && "text-red-600")}
+              textClassName="text-[3vw]"
             />
           ))}
         </nav>

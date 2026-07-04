@@ -160,6 +160,18 @@
     "title": "Type vs. Interface"
   },
   "works": {
+    "devpulse": {
+      "text": {
+        "line0": "DevPulse ist ein persönlicher News-Reader für den Frontend-Stack: Releases, Browser-Updates und Notizen zu den Bibliotheken, die ich tatsächlich nutze — gesammelt in einem übersichtlichen Feed.",
+        "line1": "",
+        "line2": "Ein täglicher Cron-Job holt frische Beiträge aus kuratierten Quellen, extrahiert den lesbaren Artikel mit Mozilla Readability und erzeugt eine kurze KI-Zusammenfassung über das Vercel AI SDK und Google Gemini — so ist der Feed auf einen Blick erfassbar.",
+        "line3": "",
+        "line4": "Man kann nach Kategorien filtern (Frameworks, Sprache, Plattform, Browser, Tooling), quellenübergreifend suchen und sich mit Google (One Tap / NextAuth) anmelden, um Beiträge auszublenden oder zu speichern. Die Daten liegen in Postgres via Prisma.",
+        "line5": "",
+        "line6": "Gebaut mit Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS und Zod; läuft zudem als PWA mit hellem/dunklem Theme und Tastenkürzeln."
+      },
+      "title": "DevPulse"
+    },
     "english": {
       "text": {
         "line0": "Englisch lernen ist ein Projekt, das während des React-Marathons von Zara Zakharova gestartet wurde.",

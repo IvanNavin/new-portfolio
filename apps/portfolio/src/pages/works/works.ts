@@ -18,6 +18,7 @@ import POKEDEX_DESKTOP from "@/assets/img/pokedex-desktop.png";
 import ENGLISH from "@/assets/img/English.png";
 import THANOS from "@/assets/img/thanos.jpg";
 import THANOS_BACK from "@/assets/img/thanos-back.jpeg";
+import DEVPULSE_FRONT from "@/assets/img/devpulseFront.png";
 
 // `enum` is disallowed under erasableSyntaxOnly, so these are const maps that
 // double as a value (EWorkType.Game) and a type (EWorkType).
@@ -57,9 +58,12 @@ export const ESkill = {
   Canvas: "Canvas",
   Node: "Node",
   Hapi: "Hapi",
-  Websockets: "Websockets",
+  SocketIO: "Socket.io",
   Chat: "Chat",
   Yup: "Yup",
+  AISDK: "Vercel AI SDK",
+  Gemini: "Google Gemini",
+  Zod: "Zod",
 } as const;
 export type ESkill = (typeof ESkill)[keyof typeof ESkill];
 
@@ -111,11 +115,33 @@ export const WORKS: Work[] = [
     codeUrl: "https://github.com/IvanNavin/new-portfolio",
   },
   {
+    id: "devpulse",
+    name: "DevPulse",
+    status: "2026",
+    workType: [EWorkType.Productivity],
+    stack: [
+      ESkill.NextJS,
+      ESkill.React,
+      ESkill.TypeScript,
+      ESkill.Tailwind,
+      ESkill.Prisma,
+      ESkill.NextAuth,
+      ESkill.AISDK,
+      ESkill.Gemini,
+      ESkill.Zod,
+    ],
+    frontPicture: DEVPULSE_FRONT,
+    embed: { type: "iframe", src: "https://devpulse-two-swart.vercel.app/" },
+    liveUrl: "https://devpulse-two-swart.vercel.app/",
+    codeUrl:
+      "https://github.com/IvanNavin/new-portfolio/tree/main/apps/devpulse",
+  },
+  {
     id: "solitaire",
     name: "Solitaire",
     status: "2025",
     workType: [EWorkType.Game, EWorkType.VisualEffect],
-    stack: [ESkill.HTML, ESkill.CSS, ESkill.JavaScript],
+    stack: [ESkill.HTML, ESkill.CSS, ESkill.JavaScript, ESkill.Canvas],
     frontPicture: SOLITAIRE_FRONT,
     embed: { type: "iframe", src: "https://solitare-native.netlify.app/" },
     liveUrl: "https://solitare-native.netlify.app/",
@@ -169,7 +195,7 @@ export const WORKS: Work[] = [
       ESkill.Canvas,
       ESkill.Node,
       ESkill.Hapi,
-      ESkill.Websockets,
+      ESkill.SocketIO,
       ESkill.Chat,
     ],
     frontPicture: RPG,

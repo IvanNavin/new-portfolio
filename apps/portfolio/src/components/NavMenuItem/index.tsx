@@ -32,6 +32,7 @@ export const NavMenuItem = ({
 
   const baseTextClass = clsxm(
     "text-shadow font-russo text-[8vw] text-white shadow-black",
+    "transition-colors duration-300 group-hover:text-yellow-400 group-focus-visible:text-yellow-400",
     textClassName,
   );
 
@@ -51,8 +52,8 @@ export const NavMenuItem = ({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={clsxm(
-        "group relative flex self-start border-transparent bg-transparent p-0 text-left",
-        "focus-within:border-transparent focus-within:outline-transparent select-none",
+        "group relative flex self-start rounded-sm border-transparent bg-transparent p-0 text-left",
+        "select-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-yellow-400",
         flipOnTouch && isTouch && "touch",
         className,
       )}
@@ -60,7 +61,7 @@ export const NavMenuItem = ({
       <span
         className={clsxm(
           styles.cubeScene,
-          "opacity-0 transition-[margin] duration-500 ease-in-out group-hover:ml-10",
+          "opacity-0 transition-[margin] duration-500 ease-in-out group-hover:ml-10 group-focus-visible:ml-10",
         )}
         style={cubeStyle}
       >

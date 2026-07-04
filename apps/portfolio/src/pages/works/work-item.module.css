@@ -17,7 +17,7 @@
 .screen {
   width: 100%;
   cursor: pointer;
-  outline: transparent;
+  outline: none;
   position: relative;
   display: block;
   z-index: 1;
@@ -28,6 +28,11 @@
   padding: 0;
   color: inherit;
   font: inherit;
+}
+
+.screen:focus-visible {
+  outline: 2px solid #fde047;
+  outline-offset: 4px;
 }
 
 .bar {

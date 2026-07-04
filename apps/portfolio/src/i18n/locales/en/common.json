@@ -148,7 +148,7 @@
     "accessibility": "Development accessible interfaces️",
     "regexp": "Don't be afraid of regular expressions",
     "testingWithJest": "Testing with Jest and Testing Library",
-    "title": "Talks & writing"
+    "title": "Talks"
   },
   "regexp": {
     "crib": "Regular Expression Cheat Sheet",
@@ -163,6 +163,18 @@
     "title": "Type vs. Interface"
   },
   "works": {
+    "devpulse": {
+      "text": {
+        "line0": "DevPulse is a personal frontend-stack news reader: releases, browser updates, and notes from the libraries I actually use, gathered in one clean feed.",
+        "line1": "",
+        "line2": "A daily cron job fetches fresh stories from curated sources, extracts the readable article with Mozilla Readability, and generates a short AI summary via the Vercel AI SDK and Google Gemini — so the feed is skimmable at a glance.",
+        "line3": "",
+        "line4": "You can filter by category (frameworks, language, platform, browsers, tooling), search across sources, and sign in with Google (One Tap / NextAuth) to hide or save items. Data is stored in Postgres via Prisma.",
+        "line5": "",
+        "line6": "Built with Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS and Zod, it also ships as a PWA with light/dark themes and keyboard shortcuts."
+      },
+      "title": "DevPulse"
+    },
     "english": {
       "text": {
         "line0": "Learning English is a project that started during the React marathon by Zara Zakharova.",

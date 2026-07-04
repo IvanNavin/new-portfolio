@@ -100,7 +100,7 @@ export function BackButton({
               }
             : undefined
         }
-        className={`relative block size-[100px] overflow-hidden rounded-full ${
+        className={`relative block size-[100px] rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400 ${
           hovered ? "cursor-pointer" : ""
         }`}
       >

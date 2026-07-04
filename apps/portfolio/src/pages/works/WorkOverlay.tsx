@@ -73,6 +73,12 @@ const WorkBody = ({ t, work }: { t: TFunction; work: Work }) => {
           <RenderTextArea t={t} tKey="works.portfolio.text" />
         </section>
       );
+    case "devpulse":
+      return (
+        <section>
+          <RenderTextArea t={t} tKey="works.devpulse.text" />
+        </section>
+      );
     case "pokedex":
       return (
         <div className="flex flex-col gap-6">
