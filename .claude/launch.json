@@ -20,6 +20,15 @@
       "port": 4178
     },
     {
+      "name": "business-ideas",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd apps/business-ideas && PATH=\"$HOME/.nvm/versions/node/v22.20.0/bin:$PATH\" node_modules/.bin/next dev -p 3021"
+      ],
+      "port": 3021
+    },
+    {
       "name": "language",
       "runtimeExecutable": "apps/language/node_modules/.bin/next",
       "runtimeArgs": ["dev", "apps/language", "-p", "3030"],

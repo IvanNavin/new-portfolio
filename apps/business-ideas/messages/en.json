@@ -1,0 +1,196 @@
+{
+  "meta": {
+    "title": "Plan B — business idea calculator",
+    "description": "Pick a business idea, plug in your numbers and instantly see the economics: investment, profit, break-even point and payback period.",
+    "businessTitle": "{name} — business idea calculator | Plan B"
+  },
+  "header": {
+    "brand": "Plan B",
+    "tagline": "business idea calculator",
+    "compare": "Compare"
+  },
+  "home": {
+    "badge": "10 models · 7 metrics · 0 sign-ups",
+    "heroPre": "Size up a business",
+    "heroHighlight": "before",
+    "heroPost": " you put money into it",
+    "heroLead": "Pick a business idea, plug in your own numbers — and instantly see the upfront investment, monthly profit, break-even point and payback period.",
+    "listHeading": "Business ideas",
+    "footerNote": "Plan B · All figures are approximate — plug in your own data for your location and niche.",
+    "footerMvp": "MVP · {year}"
+  },
+  "card": {
+    "startFrom": "Start from",
+    "open": "Open calculator →"
+  },
+  "filters": {
+    "title": "Filters",
+    "category": "Category",
+    "budgetFrom": "Budget from",
+    "budgetTo": "Budget to",
+    "riskTo": "Risk up to",
+    "difficultyTo": "Difficulty up to",
+    "sort": "Sort",
+    "sortDefault": "Default",
+    "sortBudget": "Cheapest first",
+    "sortBudgetDesc": "Most expensive first",
+    "sortRisk": "Safest first",
+    "sortProfit": "Most profitable first",
+    "results": "{count} of {total}",
+    "reset": "Reset",
+    "empty": "No businesses match these filters"
+  },
+  "meters": {
+    "difficulty": "Difficulty",
+    "risk": "Risk"
+  },
+  "categories": {
+    "food": "Food & drinks",
+    "services": "Services",
+    "retail": "Retail",
+    "digital": "Digital",
+    "production": "Production"
+  },
+  "business": {
+    "backToAll": "← All business ideas",
+    "recommendedStart": "Recommended start:",
+    "pros": "+ Pros",
+    "cons": "− Cons",
+    "calculator": "Calculator"
+  },
+  "calculator": {
+    "startupTitle": "Startup investment",
+    "monthlyTitle": "Monthly costs",
+    "revenueTitle": "Revenue",
+    "totalLabel": "Total",
+    "totalMonthlyLabel": "Total per month",
+    "revenueTotalLabel": "Revenue per month",
+    "disclaimer": "Default values are rough starting points, not exact market data. Plug in your own figures for your location and format."
+  },
+  "fieldHints": {
+    "startup": {
+      "equipment": "Core equipment needed to operate.",
+      "renovation": "Fit-out or preparing the premises or site for the format.",
+      "furniture": "Furniture, shelving, workstations, waiting area.",
+      "initialStock": "First batch of goods, raw materials or consumables.",
+      "licenses": "Registration, permits and licenses at launch.",
+      "marketing": "Signage, branding and opening promotion.",
+      "other": "Unforeseen and other one-off launch costs."
+    },
+    "monthly": {
+      "rent": "Rent for the premises or spot.",
+      "salaries": "Wages and payroll taxes.",
+      "utilities": "Electricity, water, heating, internet.",
+      "marketing": "Ongoing promotion and ads.",
+      "accounting": "Bookkeeper or accounting service.",
+      "software": "POS, CRM, website, service subscriptions.",
+      "other": "Other recurring costs."
+    }
+  },
+  "fields": {
+    "startup": {
+      "equipment": "Equipment",
+      "renovation": "Renovation",
+      "furniture": "Furniture",
+      "initialStock": "Initial stock",
+      "licenses": "Licenses & permits",
+      "marketing": "Launch marketing",
+      "other": "Other costs"
+    },
+    "monthly": {
+      "rent": "Rent",
+      "salaries": "Salaries",
+      "utilities": "Utilities",
+      "marketing": "Marketing",
+      "accounting": "Accounting",
+      "software": "Software",
+      "other": "Other costs"
+    }
+  },
+  "revenue": {
+    "clientsPerDay": "Clients per day",
+    "averageCheck": "Average check",
+    "workDays": "Working days per month",
+    "margin": "Margin",
+    "marginHint": "Share of the check left after the cost of goods. Formula: (check − cost) ÷ check × 100. Rent and salaries are not counted here.",
+    "marginMode": "What do you know?",
+    "modeMargin": "Margin %",
+    "modeCost": "Cost ₴",
+    "costLabel": "Cost per sale",
+    "costHint": "What one sale costs you (ingredients, goods, materials) — excluding rent and salaries. We'll compute the margin."
+  },
+  "results": {
+    "title": "Result",
+    "profitable": "Profitable",
+    "unprofitable": "Unprofitable",
+    "netProfitMonth": "Net profit per month",
+    "monthlyRevenue": "Monthly revenue",
+    "grossProfit": "Gross profit",
+    "monthlyCosts": "Monthly costs",
+    "startupTotal": "Startup investment",
+    "breakEven": "Break-even point",
+    "breakEvenHint": "≈ {clients} clients/day",
+    "payback": "Payback period",
+    "profitability": "Profitability",
+    "rateNote": "NBU rate · 1 {code} = {rate} ₴",
+    "reset": "↺ Reset to defaults"
+  },
+  "payback": {
+    "never": "never pays off",
+    "over": "over 10 years",
+    "months": "{months} mo."
+  },
+  "charts": {
+    "costStructure": "Monthly cost structure",
+    "costStructureEmpty": "Add costs to see the structure",
+    "incomeVsCosts": "Income vs costs",
+    "cumulativeProfit": "Cumulative profit and payback point",
+    "barRevenue": "Revenue",
+    "barGross": "Gross",
+    "barCosts": "Costs",
+    "barNet": "Net",
+    "paybackMark": "Payback ≈ {months} mo",
+    "accumulated": "Accumulated",
+    "monthLabel": "Month {month}",
+    "monthAxis": "{month} mo"
+  },
+  "currency": {
+    "label": "Currency"
+  },
+  "compare": {
+    "title": "Compare businesses",
+    "lead": "Pick a few ideas and compare their economics side by side. Calculations use each business's default values.",
+    "pick": "Pick businesses to compare",
+    "emptyHint": "Pick at least two businesses to see the comparison.",
+    "limitHint": "You can compare up to {max} at once.",
+    "chartTitle": "Net profit per month",
+    "metric": "Metric",
+    "cta": "Compare",
+    "clear": "Clear",
+    "addToCompare": "Compare",
+    "inCompare": "In comparison",
+    "approx": "All figures are approximate — a rough guide, not exact market data.",
+    "onlyDiff": "Differences only",
+    "remove": "Remove",
+    "add": "Add business",
+    "groupSummary": "Summary",
+    "groupMoney": "Income & costs",
+    "groupProfile": "Business profile",
+    "rowCategory": "Category",
+    "rowBudget": "Rec. budget",
+    "rowDifficulty": "Difficulty",
+    "rowRisk": "Risk",
+    "rowStartup": "Startup investment",
+    "rowRevenue": "Revenue / mo",
+    "rowCosts": "Costs / mo",
+    "rowNet": "Net profit / mo",
+    "rowBreakEven": "Break-even, clients/day",
+    "rowPayback": "Payback",
+    "rowProfit": "Profitability"
+  },
+  "notFound": {
+    "code": "Error 404",
+    "title": "No such business idea (yet)",
+    "back": "← Back to the list"
+  }
+}

@@ -7,6 +7,7 @@
   "packageManager": "yarn@1.22.19",
   "workspaces": [
     "apps/2048",
+    "apps/business-ideas",
     "apps/destructurizator",
     "apps/devpulse",
     "apps/language",
