@@ -157,6 +157,13 @@ const EN_TEXT: Record<string, BusinessText> = {
       clientsPerDay: "Orders per day",
       averageCheck: "Average order value (₴)",
     },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "Solo format: hired labour = 0, your income is the net profit. Add a helper/packing cost if needed.",
+        },
+      },
+    },
   },
   "youtube-channel": {
     name: "YouTube channel",
@@ -178,7 +185,7 @@ const EN_TEXT: Record<string, BusinessText> = {
     ],
     revenueLabels: {
       clientsPerDay: "Thousands of views per day",
-      averageCheck: "Revenue per 1000 views (₴)",
+      averageCheck: "Revenue per 1000 views: ads + sponsorships (₴)",
     },
   },
   saas: {
@@ -186,7 +193,7 @@ const EN_TEXT: Record<string, BusinessText> = {
     shortDescription:
       "A niche subscription web service. Long ramp-up, but the best scalability.",
     description:
-      "Software as a Service: a niche product on a monthly subscription. The main investment is building the MVP and marketing. The longest path to profit, but the income is recurring and almost without marginal costs.",
+      "Software as a Service: a niche product on a monthly subscription. The main investment is building the MVP and marketing. The figures show a steady state (a stable subscriber base, MRR) reached in 12–18 months — and ~40% of micro-SaaS never hit $1K MRR. The income is recurring and almost without marginal costs.",
     pros: [
       "Recurring revenue (subscriptions)",
       "Margins of 80–90%",
@@ -208,6 +215,11 @@ const EN_TEXT: Record<string, BusinessText> = {
         other: {
           label: "MVP development",
           hint: "Building the first working version — the main launch cost.",
+        },
+      },
+      monthly: {
+        salaries: {
+          hint: "Bootstrapped model: the founder codes it themselves, hired team is minimal — this is really a salary to yourself/a contractor.",
         },
       },
     },
@@ -232,6 +244,13 @@ const EN_TEXT: Record<string, BusinessText> = {
     ],
     revenueLabels: {
       clientsPerDay: "Orders per day",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "An owner-operated model: hired labour is minimal. Profit hinges on keeping the printer fleet busy, not on the number of machines.",
+        },
+      },
     },
   },
   "cleaning-company": {

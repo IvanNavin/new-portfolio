@@ -62,7 +62,7 @@ export const businesses: Business[] = [
       "Кава з собою з мобільної точки: причіп, кавомобіль або невеликий МАФ. Значно дешевший старт, ніж стаціонарна кав’ярня, і можливість змінити локацію, якщо місце «не пішло».",
     category: "food",
     difficulty: 2,
-    risk: 2,
+    risk: 3,
     recommendedBudget: { min: 300_000, max: 500_000 },
     pros: [
       "Низький поріг входу",
@@ -78,10 +78,10 @@ export const businesses: Business[] = [
     ],
     defaults: {
       startup: {
-        equipment: 280_000,
+        equipment: 210_000,
         renovation: 20_000,
-        furniture: 15_000,
-        initialStock: 25_000,
+        furniture: 10_000,
+        initialStock: 20_000,
         licenses: 15_000,
         marketing: 20_000,
         other: 15_000,
@@ -97,7 +97,7 @@ export const businesses: Business[] = [
       },
       revenue: {
         clientsPerDay: 80,
-        averageCheck: 90,
+        averageCheck: 70,
         workDaysPerMonth: 28,
         marginPercent: 70,
       },
@@ -294,9 +294,9 @@ export const businesses: Business[] = [
     description:
       "Магазин на Etsy: хендмейд, вінтаж або цифрові товари (принти, шаблони). Валютний дохід, глобальна авдиторія та мінімальні стартові вкладення — але висока залежність від алгоритмів платформи.",
     category: "digital",
-    difficulty: 2,
+    difficulty: 3,
     risk: 3,
-    recommendedBudget: { min: 100_000, max: 250_000 },
+    recommendedBudget: { min: 60_000, max: 150_000 },
     pros: [
       "Дохід у валюті, глобальний ринок",
       "Мінімальні стартові вкладення",
@@ -311,33 +311,40 @@ export const businesses: Business[] = [
     ],
     defaults: {
       startup: {
-        equipment: 60_000,
+        equipment: 25_000,
         renovation: 0,
-        furniture: 10_000,
-        initialStock: 50_000,
+        furniture: 5_000,
+        initialStock: 20_000,
         licenses: 5_000,
-        marketing: 30_000,
+        marketing: 25_000,
         other: 15_000,
       },
       monthly: {
         rent: 0,
-        salaries: 25_000,
+        salaries: 0,
         utilities: 2_000,
-        marketing: 15_000,
+        marketing: 12_000,
         accounting: 2_000,
         software: 3_000,
         other: 5_000,
       },
       revenue: {
-        clientsPerDay: 8,
+        clientsPerDay: 3,
         averageCheck: 950,
         workDaysPerMonth: 30,
-        marginPercent: 45,
+        marginPercent: 50,
       },
     },
     revenueLabels: {
       clientsPerDay: "Замовлень за день",
       averageCheck: "Середній чек замовлення (₴)",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "Соло-формат: наймана праця = 0, ваш дохід — це чистий прибуток. Помічник/пакування додайте за потреби.",
+        },
+      },
     },
   },
   {
@@ -349,9 +356,9 @@ export const businesses: Business[] = [
     description:
       "YouTube-канал як бізнес: вкладення в техніку та команду, дохід — з монетизації переглядів, рекламних інтеграцій і згодом власних продуктів. Найризикованіша частина — вгадати нішу й формат.",
     category: "digital",
-    difficulty: 3,
+    difficulty: 4,
     risk: 5,
-    recommendedBudget: { min: 150_000, max: 350_000 },
+    recommendedBudget: { min: 80_000, max: 250_000 },
     pros: [
       "Мінімальні постійні витрати",
       "Канал — актив, який накопичує авдиторію",
@@ -367,7 +374,7 @@ export const businesses: Business[] = [
     defaults: {
       startup: {
         equipment: 120_000,
-        renovation: 15_000,
+        renovation: 5_000,
         furniture: 20_000,
         initialStock: 0,
         licenses: 0,
@@ -376,7 +383,7 @@ export const businesses: Business[] = [
       },
       monthly: {
         rent: 0,
-        salaries: 30_000,
+        salaries: 20_000,
         utilities: 2_000,
         marketing: 8_000,
         accounting: 2_000,
@@ -385,14 +392,14 @@ export const businesses: Business[] = [
       },
       revenue: {
         clientsPerDay: 15,
-        averageCheck: 250,
+        averageCheck: 120,
         workDaysPerMonth: 30,
         marginPercent: 90,
       },
     },
     revenueLabels: {
       clientsPerDay: "Тисяч переглядів за день",
-      averageCheck: "Дохід на 1000 переглядів (₴)",
+      averageCheck: "Дохід на 1000 переглядів: реклама + інтеграції (₴)",
     },
   },
   {
@@ -402,7 +409,7 @@ export const businesses: Business[] = [
     shortDescription:
       "Нішевий онлайн-сервіс за підпискою. Довгий розгін, але найкраща масштабованість.",
     description:
-      "Software as a Service: нішевий продукт за місячною підпискою. Основні вкладення — розробка MVP і маркетинг. Найдовший шлях до прибутку, але дохід повторюваний і майже без граничних витрат.",
+      "Software as a Service: нішевий продукт за місячною підпискою. Основні вкладення — розробка MVP і маркетинг. Цифри показують усталений стан (стабільна база підписників, MRR), якого доходять за 12–18 міс — і ~40% micro-SaaS так і не досягають $1K MRR. Дохід повторюваний і майже без граничних витрат.",
     category: "digital",
     difficulty: 5,
     risk: 5,
@@ -431,7 +438,7 @@ export const businesses: Business[] = [
       },
       monthly: {
         rent: 0,
-        salaries: 120_000,
+        salaries: 40_000,
         utilities: 0,
         marketing: 30_000,
         accounting: 4_000,
@@ -439,8 +446,8 @@ export const businesses: Business[] = [
         other: 8_000,
       },
       revenue: {
-        clientsPerDay: 8,
-        averageCheck: 990,
+        clientsPerDay: 4,
+        averageCheck: 1_290,
         workDaysPerMonth: 30,
         marginPercent: 85,
       },
@@ -456,6 +463,11 @@ export const businesses: Business[] = [
           hint: "Створення першої робочої версії продукту — головна стаття старту.",
         },
       },
+      monthly: {
+        salaries: {
+          hint: "Bootstrapped-модель: засновник кодить сам, наймана команда мінімальна — це радше зарплата собі/підряднику.",
+        },
+      },
     },
   },
   {
@@ -468,7 +480,7 @@ export const businesses: Business[] = [
       "Майстерня 3D-друку з парком із 3–5 принтерів: друк прототипів, запчастин, декору та дрібних серій. Невеликий старт і гнучкість, але попит потрібно активно шукати самому.",
     category: "production",
     difficulty: 3,
-    risk: 3,
+    risk: 4,
     recommendedBudget: { min: 200_000, max: 400_000 },
     pros: [
       "Невеликі стартові вкладення",
@@ -484,17 +496,17 @@ export const businesses: Business[] = [
     ],
     defaults: {
       startup: {
-        equipment: 180_000,
+        equipment: 150_000,
         renovation: 10_000,
         furniture: 20_000,
-        initialStock: 35_000,
+        initialStock: 20_000,
         licenses: 5_000,
         marketing: 15_000,
         other: 10_000,
       },
       monthly: {
         rent: 10_000,
-        salaries: 30_000,
+        salaries: 15_000,
         utilities: 5_000,
         marketing: 6_000,
         accounting: 2_000,
@@ -503,13 +515,20 @@ export const businesses: Business[] = [
       },
       revenue: {
         clientsPerDay: 8,
-        averageCheck: 600,
+        averageCheck: 550,
         workDaysPerMonth: 26,
-        marginPercent: 70,
+        marginPercent: 55,
       },
     },
     revenueLabels: {
       clientsPerDay: "Замовлень за день",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "Модель «власник сам друкує»: наймана праця мінімальна. Прибуток тримається на завантаженні парку, а не на кількості машин.",
+        },
+      },
     },
   },
   {
