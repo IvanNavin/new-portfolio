@@ -10,7 +10,7 @@ export const businesses: Business[] = [
     description:
       "Класична стаціонарна кав’ярня з посадковими місцями. Основний дохід — кава з собою та десерти. Успіх сильно залежить від локації та стабільної якості продукту.",
     category: "food",
-    difficulty: 3,
+    difficulty: 4,
     risk: 3,
     recommendedBudget: { min: 700_000, max: 1_200_000 },
     pros: [
@@ -30,7 +30,7 @@ export const businesses: Business[] = [
         equipment: 350_000,
         renovation: 250_000,
         furniture: 120_000,
-        initialStock: 60_000,
+        initialStock: 65_000,
         licenses: 25_000,
         marketing: 40_000,
         other: 30_000,
@@ -45,10 +45,10 @@ export const businesses: Business[] = [
         other: 8_000,
       },
       revenue: {
-        clientsPerDay: 120,
-        averageCheck: 140,
+        clientsPerDay: 110,
+        averageCheck: 120,
         workDaysPerMonth: 30,
-        marginPercent: 65,
+        marginPercent: 63,
       },
     },
   },
@@ -108,9 +108,9 @@ export const businesses: Business[] = [
     slug: "car-wash",
     name: "Автомийка",
     shortDescription:
-      "Мийка на 2–4 пости: ручна або самообслуговування. Капіталомісткий, але стабільний бізнес.",
+      "Мийка самообслуговування на 2–4 пости. Капіталомісткий старт, зате мінімум персоналу і стабільний попит.",
     description:
-      "Автомийка ручного миття або самообслуговування. Великі вкладення в обладнання та підготовку ділянки, зате послуга з постійним попитом і зрозумілою юніт-економікою поста.",
+      "Автомийка самообслуговування: клієнт миє авто сам на обладнаному посту. Великі вкладення в обладнання та підготовку ділянки, зате майже без персоналу, працює цілодобово і має зрозумілу юніт-економіку поста.",
     category: "services",
     difficulty: 4,
     risk: 3,
@@ -129,26 +129,26 @@ export const businesses: Business[] = [
     ],
     defaults: {
       startup: {
-        equipment: 900_000,
+        equipment: 1_200_000,
         renovation: 600_000,
-        furniture: 60_000,
-        initialStock: 50_000,
-        licenses: 60_000,
-        marketing: 50_000,
-        other: 80_000,
+        furniture: 40_000,
+        initialStock: 40_000,
+        licenses: 50_000,
+        marketing: 25_000,
+        other: 60_000,
       },
       monthly: {
-        rent: 70_000,
-        salaries: 120_000,
-        utilities: 35_000,
-        marketing: 12_000,
-        accounting: 6_000,
-        software: 4_000,
-        other: 15_000,
+        rent: 30_000,
+        salaries: 20_000,
+        utilities: 30_000,
+        marketing: 8_000,
+        accounting: 4_000,
+        software: 3_000,
+        other: 10_000,
       },
       revenue: {
-        clientsPerDay: 45,
-        averageCheck: 350,
+        clientsPerDay: 90,
+        averageCheck: 110,
         workDaysPerMonth: 30,
         marginPercent: 75,
       },
@@ -164,10 +164,13 @@ export const businesses: Business[] = [
           hint: "Стартовий запас шампуню, піни, воску, мікрофібри, щіток.",
         },
         furniture: {
-          hint: "Облаштування зони очікування та невеликого офісу.",
+          hint: "Технічна кімната, пост оператора та автомат прийому оплати.",
         },
       },
       monthly: {
+        salaries: {
+          hint: "Самообслуговування працює майже без персоналу: оператор/прибирання на неповну ставку.",
+        },
         utilities: {
           hint: "Головна стаття: мийка споживає багато води та електрики.",
         },
@@ -204,8 +207,8 @@ export const businesses: Business[] = [
     defaults: {
       startup: {
         equipment: 550_000,
-        renovation: 400_000,
-        furniture: 200_000,
+        renovation: 300_000,
+        furniture: 150_000,
         initialStock: 80_000,
         licenses: 35_000,
         marketing: 60_000,
@@ -213,7 +216,7 @@ export const businesses: Business[] = [
       },
       monthly: {
         rent: 60_000,
-        salaries: 160_000,
+        salaries: 185_000,
         utilities: 25_000,
         marketing: 20_000,
         accounting: 6_000,
@@ -222,9 +225,9 @@ export const businesses: Business[] = [
       },
       revenue: {
         clientsPerDay: 70,
-        averageCheck: 420,
+        averageCheck: 340,
         workDaysPerMonth: 30,
-        marginPercent: 60,
+        marginPercent: 55,
       },
     },
   },
@@ -238,7 +241,7 @@ export const businesses: Business[] = [
       "Пасивний формат: автомати продають каву або снеки 24/7. Головне — домовитись про хороші локації та регулярно обслуговувати техніку. Легко нарощувати мережу поступово.",
     category: "retail",
     difficulty: 2,
-    risk: 2,
+    risk: 3,
     recommendedBudget: { min: 300_000, max: 600_000 },
     pros: [
       "Мінімум персоналу — достатньо оператора на кілька годин",
@@ -254,13 +257,13 @@ export const businesses: Business[] = [
     ],
     defaults: {
       startup: {
-        equipment: 320_000,
+        equipment: 300_000,
         renovation: 0,
         furniture: 0,
-        initialStock: 40_000,
-        licenses: 10_000,
+        initialStock: 25_000,
+        licenses: 3_000,
         marketing: 5_000,
-        other: 15_000,
+        other: 20_000,
       },
       monthly: {
         rent: 16_000,
@@ -273,9 +276,9 @@ export const businesses: Business[] = [
       },
       revenue: {
         clientsPerDay: 90,
-        averageCheck: 50,
+        averageCheck: 40,
         workDaysPerMonth: 30,
-        marginPercent: 55,
+        marginPercent: 60,
       },
     },
     revenueLabels: {
@@ -518,7 +521,7 @@ export const businesses: Business[] = [
     description:
       "Клінінг для квартир, офісів і після ремонтів. Стартувати можна з двома клінерами й базовим обладнанням; ключове — налагодити потік заявок і контроль якості.",
     category: "services",
-    difficulty: 2,
+    difficulty: 3,
     risk: 2,
     recommendedBudget: { min: 150_000, max: 300_000 },
     pros: [
@@ -535,25 +538,25 @@ export const businesses: Business[] = [
     ],
     defaults: {
       startup: {
-        equipment: 90_000,
+        equipment: 80_000,
         renovation: 0,
         furniture: 10_000,
-        initialStock: 30_000,
-        licenses: 8_000,
+        initialStock: 15_000,
+        licenses: 5_000,
         marketing: 35_000,
-        other: 12_000,
+        other: 10_000,
       },
       monthly: {
         rent: 12_000,
-        salaries: 110_000,
+        salaries: 65_000,
         utilities: 3_000,
         marketing: 18_000,
         accounting: 3_000,
-        software: 4_000,
-        other: 8_000,
+        software: 3_000,
+        other: 10_000,
       },
       revenue: {
-        clientsPerDay: 8,
+        clientsPerDay: 5,
         averageCheck: 1_200,
         workDaysPerMonth: 26,
         marginPercent: 85,
@@ -562,6 +565,16 @@ export const businesses: Business[] = [
     revenueLabels: {
       clientsPerDay: "Прибирань за день",
       averageCheck: "Середній чек прибирання (₴)",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "≈2 клінери + частковий координатор. За відрядної оплати частина суми «переїжджає» в собівартість (нижча маржа).",
+        },
+        other: {
+          hint: "Пальне й логістика бригад по місту — обов'язкова стаття для виїзного клінінгу.",
+        },
+      },
     },
   },
 ];

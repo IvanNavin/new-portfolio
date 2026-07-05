@@ -52,9 +52,9 @@ const EN_TEXT: Record<string, BusinessText> = {
   "car-wash": {
     name: "Car wash",
     shortDescription:
-      "A 2–4 bay wash: hand wash or self-service. Capital-intensive but stable business.",
+      "A 2–4 bay self-service wash. Capital-intensive to launch, but minimal staff and steady demand.",
     description:
-      "A hand or self-service car wash. Large investment into equipment and site prep, but a service with steady demand and clear per-bay unit economics.",
+      "A self-service car wash: the customer washes their own car at an equipped bay. Large investment into equipment and site prep, but almost no staff, runs around the clock and has clear per-bay unit economics.",
     pros: [
       "Steady demand regardless of trends",
       "Self-service washes need almost no staff",
@@ -78,10 +78,13 @@ const EN_TEXT: Record<string, BusinessText> = {
           hint: "Initial supply of shampoo, foam, wax, microfiber, brushes.",
         },
         furniture: {
-          hint: "Fitting out a waiting area and a small office.",
+          hint: "Technical room, operator station and a payment terminal.",
         },
       },
       monthly: {
+        salaries: {
+          hint: "Self-service runs with almost no staff: a part-time operator/cleaner.",
+        },
         utilities: {
           hint: "The main line item: a wash uses a lot of water and power.",
         },
@@ -252,6 +255,16 @@ const EN_TEXT: Record<string, BusinessText> = {
     revenueLabels: {
       clientsPerDay: "Cleanings per day",
       averageCheck: "Average cleaning check (₴)",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "≈2 cleaners + a part-time coordinator. With per-job pay part of this shifts into cost of goods (lower margin).",
+        },
+        other: {
+          hint: "Fuel and crew logistics across the city — a must-have line for on-site cleaning.",
+        },
+      },
     },
   },
 };
