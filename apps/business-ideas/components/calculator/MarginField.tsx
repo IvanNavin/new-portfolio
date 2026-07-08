@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
-import { SliderField } from "@/components/calculator/SliderField";
+import { StepperField } from "@/components/calculator/StepperField";
 
 interface MarginFieldProps {
   marginPercent: number;
@@ -25,13 +25,13 @@ export function MarginField({
   // Собівартість одиниці (грн), виведена з маржі при поточному чеку
   const costUah = Math.max(
     0,
-    Math.round(averageCheck * (1 - marginPercent / 100)),
+    Math.round(averageCheck * (1 - marginPercent / 100) * 100) / 100,
   );
 
   const setFromCost = (newCostUah: number) => {
     const margin =
       averageCheck > 0 ? ((averageCheck - newCostUah) / averageCheck) * 100 : 0;
-    onChange(Math.min(100, Math.max(0, Math.round(margin))));
+    onChange(Math.min(100, Math.max(0, Math.round(margin * 10) / 10)));
   };
 
   const tab = (active: boolean) =>
@@ -68,24 +68,24 @@ export function MarginField({
       </div>
 
       {mode === "margin" ? (
-        <SliderField
+        <StepperField
           key="margin"
           label={t("margin")}
           value={marginPercent}
           onChange={onChange}
+          step={1}
           min={0}
           max={100}
           suffix="%"
           hint={t("marginHint")}
         />
       ) : (
-        <SliderField
+        <StepperField
           key="cost"
           label={t("costLabel")}
           value={costUah}
           onChange={setFromCost}
           min={0}
-          max={Math.max(averageCheck, 1)}
           money
           hint={t("costHint")}
         />

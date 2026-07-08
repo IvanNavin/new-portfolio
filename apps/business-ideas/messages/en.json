@@ -67,6 +67,14 @@
     "revenueTotalLabel": "Revenue per month",
     "disclaimer": "Default values are rough starting points, not exact market data. Plug in your own figures for your location and format."
   },
+  "scenarios": {
+    "title": "Scenarios",
+    "variant": "Variant {n}",
+    "add": "+ Variant",
+    "remove": "Delete variant {n}",
+    "compareTitle": "Scenario comparison",
+    "activeMark": "active"
+  },
   "fieldHints": {
     "startup": {
       "equipment": "Core equipment needed to operate.",

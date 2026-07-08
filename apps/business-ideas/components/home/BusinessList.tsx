@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 
 import { useAdmin } from "@/components/admin/AdminProvider";
-import { SliderField } from "@/components/calculator/SliderField";
+import { StepperField } from "@/components/calculator/StepperField";
 import { BusinessCard } from "@/components/home/BusinessCard";
 import { Link } from "@/i18n/navigation";
 import { calculate } from "@/lib/calculations";
@@ -176,22 +176,20 @@ export function BusinessList({ businesses }: { businesses: Business[] }) {
           })}
         </div>
 
-        <div className="mb-4 grid gap-x-6 gap-y-2 sm:grid-cols-2">
-          <SliderField
+        <div className="mb-4 flex flex-wrap gap-x-6 gap-y-2">
+          <StepperField
             label={t("budgetFrom")}
             value={minBudget}
             onChange={(v) => setMinBudget(Math.min(v, maxBudget))}
-            min={budgetBounds.min}
-            max={budgetBounds.max}
             money
+            stacked
           />
-          <SliderField
+          <StepperField
             label={t("budgetTo")}
             value={maxBudget}
             onChange={(v) => setMaxBudget(Math.max(v, minBudget))}
-            min={budgetBounds.min}
-            max={budgetBounds.max}
             money
+            stacked
           />
         </div>
 

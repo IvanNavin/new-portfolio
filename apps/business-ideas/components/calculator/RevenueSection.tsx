@@ -4,8 +4,7 @@ import { useTranslations } from "next-intl";
 
 import { MarginField } from "@/components/calculator/MarginField";
 import { SectionCard } from "@/components/calculator/SectionCard";
-import { SliderField } from "@/components/calculator/SliderField";
-import { sliderMax } from "@/lib/fieldConfig";
+import { StepperField } from "@/components/calculator/StepperField";
 import { useCurrency } from "@/lib/hooks/useCurrency";
 import type { Business, RevenueInputs } from "@/lib/types";
 
@@ -22,7 +21,6 @@ export function RevenueSection({
   monthlyRevenue,
   onChange,
 }: RevenueSectionProps) {
-  const defaults = business.defaults.revenue;
   const labels = business.revenueLabels;
   const { money } = useCurrency();
   const t = useTranslations("revenue");
@@ -35,25 +33,23 @@ export function RevenueSection({
       totalLabel={tc("revenueTotalLabel")}
       totalValue={money(monthlyRevenue)}
     >
-      <SliderField
+      <StepperField
         label={labels?.clientsPerDay ?? t("clientsPerDay")}
         value={revenue.clientsPerDay}
         onChange={(value) => onChange("clientsPerDay", value)}
-        min={0}
-        max={sliderMax(defaults.clientsPerDay)}
+        step={1}
       />
-      <SliderField
+      <StepperField
         label={labels?.averageCheck ?? t("averageCheck")}
         value={revenue.averageCheck}
         onChange={(value) => onChange("averageCheck", value)}
-        min={0}
-        max={sliderMax(defaults.averageCheck)}
         money
       />
-      <SliderField
+      <StepperField
         label={t("workDays")}
         value={revenue.workDaysPerMonth}
         onChange={(value) => onChange("workDaysPerMonth", value)}
+        step={1}
         min={1}
         max={31}
       />

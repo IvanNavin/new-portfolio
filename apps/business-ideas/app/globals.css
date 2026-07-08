@@ -89,52 +89,6 @@ html[data-theme='dark'] ::selection {
   color: var(--color-ink);
 }
 
-/* ── Повзунки ─────────────────────────────────────────────── */
-input[type='range'] {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 100%;
-  height: 22px;
-  background: transparent;
-  cursor: pointer;
-}
-input[type='range']::-webkit-slider-runnable-track {
-  height: 5px;
-  background: var(--color-line);
-  border-radius: 999px;
-}
-input[type='range']::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  margin-top: -7px;
-  width: 19px;
-  height: 19px;
-  border-radius: 999px;
-  background: var(--color-accent);
-  border: 3px solid var(--color-card);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-  transition: transform 120ms ease;
-}
-input[type='range']::-webkit-slider-thumb:hover {
-  transform: scale(1.12);
-}
-input[type='range']::-moz-range-track {
-  height: 5px;
-  background: var(--color-line);
-  border-radius: 999px;
-}
-input[type='range']::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  border-radius: 999px;
-  background: var(--color-accent);
-  border: 3px solid var(--color-card);
-}
-input[type='range']:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 4px;
-}
-
 /* Прибрати стрілки у number-інпутів */
 input[type='number']::-webkit-outer-spin-button,
 input[type='number']::-webkit-inner-spin-button {

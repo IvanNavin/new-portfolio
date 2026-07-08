@@ -28,7 +28,9 @@ export function NumberField({
   const [draft, setDraft] = useState<string | null>(null);
   const { toDisplay, toBase, currency } = useCurrency();
 
-  const displayValue = Math.round(toDisplay(value));
+  // Дозволяємо до 2 знаків після коми (напр. дрібні суми в іншій валюті)
+  const round2 = (n: number) => Math.round(n * 100) / 100;
+  const displayValue = round2(toDisplay(value));
 
   return (
     <label className="flex items-center justify-between gap-3 border-b border-line py-2 last:border-b-0">
@@ -47,7 +49,8 @@ export function NumberField({
       <span className="flex items-center gap-1.5">
         <input
           type="number"
-          inputMode="numeric"
+          inputMode="decimal"
+          step="any"
           min={0}
           value={draft ?? displayValue}
           onFocus={() => setDraft(String(displayValue))}
@@ -56,7 +59,7 @@ export function NumberField({
             setDraft(event.target.value);
             const parsed = Number(event.target.value);
             if (Number.isFinite(parsed)) {
-              onChange(Math.max(0, Math.round(toBase(parsed))));
+              onChange(Math.max(0, round2(toBase(parsed))));
             }
           }}
           className="w-28 border border-line bg-card px-2 py-1 text-right font-mono text-sm tabular-nums transition-colors focus:border-accent focus:bg-inset focus:outline-none"

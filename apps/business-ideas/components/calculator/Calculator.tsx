@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import { NumberField } from "@/components/calculator/NumberField";
 import { ResultsPanel } from "@/components/calculator/ResultsPanel";
 import { RevenueSection } from "@/components/calculator/RevenueSection";
+import { ScenarioBar } from "@/components/calculator/ScenarioBar";
+import { ScenarioCompare } from "@/components/calculator/ScenarioCompare";
 import { SectionCard } from "@/components/calculator/SectionCard";
 import { CostStructureChart } from "@/components/charts/CostStructureChart";
 import { CumulativeProfitChart } from "@/components/charts/CumulativeProfitChart";
@@ -35,6 +37,12 @@ export function Calculator({ business }: { business: Business }) {
     inputs,
     result,
     cumulativeSeries,
+    scenarios,
+    activeId,
+    canAddScenario,
+    setActive,
+    addScenario,
+    removeScenario,
     setStartupField,
     setMonthlyField,
     setRevenueField,
@@ -51,6 +59,16 @@ export function Calculator({ business }: { business: Business }) {
       <p className="border-l-2 border-amber bg-amber/10 px-3 py-2 text-xs leading-relaxed text-ink-soft">
         {t("disclaimer")}
       </p>
+
+      {/* Сценарії: кілька варіантів розрахунку одного бізнесу */}
+      <ScenarioBar
+        scenarios={scenarios}
+        activeId={activeId}
+        canAdd={canAddScenario}
+        onSelect={setActive}
+        onAdd={addScenario}
+        onRemove={removeScenario}
+      />
 
       {/* Вхідні дані + липка панель результату */}
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
@@ -108,6 +126,13 @@ export function Calculator({ business }: { business: Business }) {
           <ResultsPanel result={result} onReset={reset} />
         </div>
       </div>
+
+      {/* Порівняння сценаріїв — з'являється, щойно їх стає два і більше */}
+      <ScenarioCompare
+        scenarios={scenarios}
+        activeId={activeId}
+        onSelect={setActive}
+      />
 
       {/* Графіки — окремий блок під сіткою, тож липка панель їх не перекриває */}
       <div className="flex flex-col gap-6">

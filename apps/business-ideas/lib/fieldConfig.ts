@@ -20,10 +20,3 @@ export const MONTHLY_FIELD_KEYS: (keyof MonthlyCosts)[] = [
   "software",
   "other",
 ];
-
-/** Верхня межа повзунка: ~3 значення за замовчуванням, округлена до «гарного» числа */
-export function sliderMax(defaultValue: number): number {
-  const raw = Math.max(defaultValue * 3, 10);
-  const magnitude = 10 ** Math.floor(Math.log10(raw));
-  return Math.ceil(raw / magnitude) * magnitude;
-}
