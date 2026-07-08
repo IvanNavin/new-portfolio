@@ -4,7 +4,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { AdminDeleteButton } from "@/components/admin/AdminDeleteButton";
 import { EditableBusinessInfo } from "@/components/admin/EditableBusinessInfo";
-import { Calculator } from "@/components/calculator/Calculator";
 import { CompareToggle } from "@/components/compare/CompareToggle";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Link } from "@/i18n/navigation";
@@ -84,15 +83,8 @@ export default async function BusinessPage({ params }: BusinessPageProps) {
           </div>
         </nav>
 
+        {/* Картка + калькулятор (у режимі редагування — WYSIWYG всередині) */}
         <EditableBusinessInfo business={business} locale={locale} />
-
-        <section className="mt-10">
-          <h2 className="mb-5 font-display text-xl font-bold uppercase tracking-wide">
-            {t("calculator")}
-            <span className="ml-2 inline-block h-3 w-3 rounded-sm bg-accent" />
-          </h2>
-          <Calculator business={business} />
-        </section>
       </main>
     </>
   );

@@ -21,7 +21,7 @@ interface ChartCardProps {
   children: React.ReactNode;
 }
 
-function ChartCard({ title, children }: ChartCardProps) {
+export function ChartCard({ title, children }: ChartCardProps) {
   return (
     <section className="rounded-2xl border border-line bg-card p-4 shadow-hard">
       <h3 className="mb-3 font-display text-sm font-semibold uppercase tracking-wide">
