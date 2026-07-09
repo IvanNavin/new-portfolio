@@ -286,6 +286,270 @@ const EN_TEXT: Record<string, BusinessText> = {
       },
     },
   },
+  barbershop: {
+    name: "Barbershop",
+    shortDescription:
+      "A 3-chair men's grooming salon in a residential district with a recurring client base.",
+    description:
+      "A 2–3 chair barbershop of ~40 m² in a residential district of Kyiv or a mid-size city. Barbers earn ~40% commission per service, so payroll scales with revenue. Clients return every 3–5 weeks, creating predictable recurring income.",
+    pros: [
+      "Recurring demand — clients return monthly",
+      "Payroll scales with revenue (commission-based barbers)",
+      "Fast payback of 9–14 months per market data",
+      "No licenses needed, simple sole-proprietor setup",
+    ],
+    cons: [
+      "High competition — barbershops in every district",
+      "Business depends on barbers: if they leave, clients follow",
+      "First 3–4 months near break-even while building the base",
+      "Revenue capped by chairs and working hours",
+    ],
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "Barbers earn ~40% commission per check — already reflected in the margin; this line covers only the administrator and cleaning.",
+        },
+      },
+    },
+  },
+  "nail-studio": {
+    name: "Nail studio",
+    shortDescription:
+      "A 3-station nail studio with technicians paid a percentage of each service.",
+    description:
+      "A compact manicure and pedicure studio with 3 workstations in a ~35–40 m² space. Technicians earn 40% of each ticket, so payroll scales automatically with revenue and does not strain cash flow in slow months. Demand is recurring: a client returns every 3–4 weeks, so a base of ~150 regulars fully books the schedule.",
+    pros: [
+      "Recurring demand — clients return every 3–4 weeks",
+      "Commission-based pay scales labor costs with revenue",
+      "Low entry barrier: no licenses, simplified sole-proprietor taxation",
+      "Breaks even quickly even at half capacity",
+    ],
+    cons: [
+      "Clients follow their technician — a departing tech can take the base",
+      "Competition from home-based techs charging 20–30% less",
+      "Income depends on utilization — near zero in the first 2–3 months",
+      "Rising cost of imported supplies squeezes margins",
+    ],
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "Administrator only (fixed). Technicians earn 40% of each ticket — their pay is already baked into the 48% margin.",
+        },
+      },
+    },
+  },
+  "photo-studio": {
+    name: "Hourly rental photo studio",
+    shortDescription:
+      "1–2 halls with lighting and backdrops that photographers book by the hour.",
+    description:
+      "A ~100 m² studio with one or two halls (cyclorama, paper backdrops, lighting kit, makeup area) rented by photographers and bloggers by the hour via online booking. Near-zero cost per hour (electricity and backdrop wear) gives ~90% margins. The main risk is occupancy: break-even from ~4 booked hours a day.",
+    pros: [
+      "~90% margin — near-zero cost per booked hour",
+      "No full-time staff needed — online booking and self-service",
+      "No expensive cameras required — clients bring their own",
+      "Prepaid bookings — zero receivables and predictable cash",
+    ],
+    cons: [
+      "Unpredictable occupancy — first months may see 2–3 h/day at a loss",
+      "Strong seasonality: autumn peak, January–February slump",
+      "Interiors get stale on Instagram — halls need refreshing every 6 months",
+      "Dependence on one premises: a rent hike kills the business",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Booked hours per day",
+      averageCheck: "Price per hour (₴)",
+    },
+  },
+  "home-bakery": {
+    name: "Home bakery",
+    shortDescription: "Custom cakes and desserts made from a home kitchen.",
+    description:
+      "Made-to-order cakes, bento cakes and desserts produced at home or in a mini-workshop. Start in your own kitchen with semi-pro equipment (convection oven, planetary mixer, dedicated fridge), selling via Instagram and word of mouth. Requires sole-proprietor registration and free food-facility registration with the state food safety service.",
+    pros: [
+      "Low entry cost with no premises rent",
+      "Fast payback of 8–10 months",
+      "High ~60% margin after ingredient costs",
+      "Flexible schedule with room to scale into a workshop",
+    ],
+    cons: [
+      "Building an Instagram client base takes 3–6 months",
+      "Strong seasonality (fasting periods, January are slow)",
+      "Owner does everything: baking, decorating, delivery, content",
+      "Power outages are critical for the oven and fridge",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Orders per day",
+      averageCheck: "Average order value (₴)",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "Solo format: the owner does the work, their income is the model's net profit.",
+        },
+      },
+    },
+  },
+  "street-food": {
+    name: "Street food stand (shawarma)",
+    shortDescription:
+      "A shawarma stand in a rented kiosk or serving window in a high-traffic spot.",
+    description:
+      "Classic street food: a rented kiosk or serving window in a high-traffic spot, a shawarma grill, and 2 cooks in shifts. Low entry cost, break-even from ~35 portions a day. Success hinges on a location near offices, transit hubs or campuses, and consistent quality.",
+    pros: [
+      "Low entry cost and fast payback (6–9 months)",
+      "Steady year-round demand for fast food",
+      "Simple operations — minimal staff and menu",
+      "Break-even from just ~35 portions a day",
+    ],
+    cons: [
+      "Location is everything — weak traffic kills the stand",
+      "High competition and kiosk demolition risk",
+      "28–38% food cost, sensitive to meat prices",
+      "Sanitary inspections and reputation risk from quality issues",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Portions per day",
+    },
+    fieldOverrides: {
+      startup: {
+        other: {
+          hint: "A generator (a must-have given power outages), rent deposit, reserve.",
+        },
+      },
+    },
+  },
+  "phone-repair": {
+    name: "Smartphone repair service",
+    shortDescription:
+      "A phone repair spot in a mall: screens, batteries, minor repairs and accessories.",
+    description:
+      "A small spot (mall kiosk or a 10–15 m² room) repairing smartphones: display, battery, glass and connector replacement, cleaning and reflashing, plus accessory sales. Profit comes from a 100%+ markup on parts and high-margin labour. Success hinges on a high-traffic location, a reliable parts supplier and fast while-you-wait repairs.",
+    pros: [
+      "Stable demand — repair beats buying a new phone",
+      "Low entry barrier: UAH 150–250K and no licenses needed",
+      "High margin: 100%+ markup on parts, labour has almost no cost",
+      "Fast payback — 6–10 months at average workload",
+    ],
+    cons: [
+      "The business depends on the technician — losing them halts the shop",
+      "High competition in cities and price pressure",
+      "Dependence on imported parts and exchange rates",
+      "First months bring only 2–4 repairs a day — a cash cushion is needed",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Repairs per day",
+    },
+    fieldOverrides: {
+      startup: {
+        initialStock: {
+          hint: "Initial stock of common spare parts (displays, batteries, glass, cables) for 20–30 popular models plus display-case accessories.",
+        },
+      },
+    },
+  },
+  "pet-grooming": {
+    name: "Pet grooming salon",
+    shortDescription: "A 1–2 station grooming salon for dogs and cats.",
+    description:
+      "A ~50 m² salon with two grooming stations offering full-service grooming (bath, haircut, brushing, nails) for dogs and cats. Groomers earn 40–50% of each ticket, keeping fixed costs low. Ukraine's pet-care market grows ~20% a year, and grooming is a recurring service.",
+    pros: [
+      "Recurring demand (grooming every 1–2 months)",
+      "Pet-care market growing ~20% per year",
+      "Groomers paid % of ticket — low fixed costs",
+      "Moderate startup and roughly a one-year payback",
+    ],
+    cons: [
+      "Business depends on groomers — they may leave with the client base",
+      "First 3–6 months bring 3–5 clients/day instead of 8",
+      "High competition in large cities",
+      "Seasonality: winter slump, spring–summer peak",
+    ],
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "A part-time administrator only. Groomers earn 40–50% of each ticket — their pay is baked into the 47% margin.",
+        },
+      },
+    },
+  },
+  "sewing-atelier": {
+    name: "Sewing atelier",
+    shortDescription: "Clothing repair and tailoring with 1–2 seamstresses.",
+    description:
+      "A small clothing repair and tailoring atelier in a residential area: hemming, zipper replacement, alterations and custom sewing. Low equipment investment (lockstitch, overlock, coverstitch machines), a steady flow of small orders and high margins since costs are just threads and accessories.",
+    pros: [
+      "Low entry barrier — from UAH 100–175K",
+      "High 80–90% margin on repair services",
+      "Stable demand: clothes get repaired even in a crisis",
+      "Fast payback — 6–8 months per market data",
+    ],
+    cons: [
+      "Revenue is capped by the seamstresses' hands",
+      "Shortage of skilled seamstresses, wages rising",
+      "Strong dependence on location and foot traffic",
+      "First months bring 5–8 orders/day until a client base builds",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Orders per day",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "One hired seamstress; the second is the owner, whose income is the model's net profit.",
+        },
+      },
+    },
+  },
+  "parcel-pickup": {
+    name: "Parcel pickup point",
+    shortDescription:
+      "A partner pickup point for Nova Poshta / Rozetka / Meest.",
+    description:
+      "A small parcel pickup and drop-off point (15–25 m²) in a residential area, operating under postal operators' partner programs. Revenue is a fixed commission per handled parcel (UAH 6–20 depending on the operator) plus packaging sales. Minimal staff, no inventory purchasing, processes and software provided by the operator.",
+    pros: [
+      "No inventory purchasing — margin above 90%",
+      "Steady flow: e-commerce is growing, Nova Poshta plans +11,000 points",
+      "Simple operations, processes and software provided by the operator",
+      "Low entry barrier — from UAH 150K vs 650K+ for a full franchise",
+    ],
+    cons: [
+      "Full dependence on the partner operator's rates and decisions",
+      "Economics critically depend on location and parcel flow",
+      "Competition from parcel lockers and nearby branches",
+      "Low per-parcel commission — profit is sensitive to every expense",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Parcels per day",
+      averageCheck: "Income per parcel (₴)",
+    },
+  },
+  "second-hand": {
+    name: "Second-hand clothing store",
+    shortDescription:
+      "A 30–60 m² European second-hand store buying stock by the kilogram with a 3–4x markup.",
+    description:
+      'A 30–60 m² store selling used clothing from Europe. Stock is bought wholesale by weight (grade 1 at UAH 150–230/kg, cream at 250–500/kg) and sold per item at a 3–4x markup. Second-hand holds ~11% of Ukraine\'s clothing market and keeps growing: demand is crisis-resistant. Success hinges on a high-traffic location, a reliable bale supplier and a weekly "new arrival" discount schedule.',
+    pros: [
+      "Low entry barrier and fast payback of 4–12 months",
+      "Crisis-resistant demand — the segment holds ~11% of the clothing market",
+      "High 50–70% margin from buying by weight",
+      "No licenses needed — a sole proprietorship and fiscal register suffice",
+    ],
+    cons: [
+      "Bale quality is a lottery — a weak lot can turn kilograms unprofitable",
+      "Strong seasonality — summer dips noticeably versus autumn and winter",
+      "Growing competition from chains and online resale platforms",
+      "Revenue depends critically on location — up to a 3x spread",
+    ],
+    fieldOverrides: {
+      startup: {
+        initialStock: {
+          hint: "The opening batch is ~400 kg (the ~10 kg/m² norm for 40 m²) of mixed grade-1 and cream stock at ~UAH 180/kg.",
+        },
+      },
+    },
+  },
 };
 
 export const businessesEn: Business[] = businesses.map((business) => ({
