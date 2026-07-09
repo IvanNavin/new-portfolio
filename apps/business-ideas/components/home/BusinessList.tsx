@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useAdmin } from "@/components/admin/AdminProvider";
 import { StepperField } from "@/components/calculator/StepperField";
@@ -19,6 +19,86 @@ const CATEGORY_ORDER: BusinessCategory[] = [
 ];
 
 type SortKey = "default" | "budget" | "budgetDesc" | "risk" | "profit";
+
+const SORT_KEYS: SortKey[] = [
+  "default",
+  "budget",
+  "budgetDesc",
+  "risk",
+  "profit",
+];
+
+const FILTERS_STORAGE_KEY = "bi:filters";
+
+/** Збережені значення фільтрів — лише ті, що відрізняються від дефолтних */
+interface StoredFilters {
+  cats?: BusinessCategory[];
+  minBudget?: number;
+  maxBudget?: number;
+  maxRisk?: number;
+  maxDiff?: number;
+  sort?: SortKey;
+}
+
+function parseIntOrUndef(raw: string | null): number | undefined {
+  if (raw === null) return undefined;
+  const n = Number(raw);
+  return Number.isFinite(n) && n >= 0 ? n : undefined;
+}
+
+function parseLevel(raw: unknown): number | undefined {
+  const n = Number(raw);
+  return Number.isInteger(n) && n >= 1 && n <= 5 ? n : undefined;
+}
+
+/** Читає фільтри з URL (пріоритет) або з localStorage */
+function readStoredFilters(): StoredFilters {
+  const params = new URLSearchParams(window.location.search);
+  const hasUrlFilters = ["cats", "bmin", "bmax", "risk", "diff", "sort"].some(
+    (key) => params.has(key),
+  );
+
+  let raw: StoredFilters = {};
+  if (hasUrlFilters) {
+    raw = {
+      cats: params.get("cats")?.split(",") as BusinessCategory[] | undefined,
+      minBudget: parseIntOrUndef(params.get("bmin")),
+      maxBudget: parseIntOrUndef(params.get("bmax")),
+      maxRisk: parseLevel(params.get("risk")),
+      maxDiff: parseLevel(params.get("diff")),
+      sort: (params.get("sort") ?? undefined) as SortKey | undefined,
+    };
+  } else {
+    try {
+      raw = JSON.parse(
+        window.localStorage.getItem(FILTERS_STORAGE_KEY) ?? "{}",
+      ) as StoredFilters;
+    } catch {
+      raw = {};
+    }
+  }
+
+  // Валідація: пропускаємо лише відомі значення
+  return {
+    cats: Array.isArray(raw.cats)
+      ? raw.cats.filter((c) => CATEGORY_ORDER.includes(c))
+      : undefined,
+    minBudget:
+      typeof raw.minBudget === "number" && raw.minBudget >= 0
+        ? raw.minBudget
+        : undefined,
+    maxBudget:
+      typeof raw.maxBudget === "number" && raw.maxBudget >= 0
+        ? raw.maxBudget
+        : undefined,
+    maxRisk: parseLevel(raw.maxRisk),
+    maxDiff: parseLevel(raw.maxDiff),
+    sort:
+      raw.sort && SORT_KEYS.includes(raw.sort) && raw.sort !== "default"
+        ? raw.sort
+        : undefined,
+  };
+}
 
 function LevelPicker({
   label,
@@ -71,6 +151,68 @@ export function BusinessList({ businesses }: { businesses: Business[] }) {
   const [maxRisk, setMaxRisk] = useState(5);
   const [maxDiff, setMaxDiff] = useState(5);
   const [sort, setSort] = useState<SortKey>("default");
+  // Стаємо true після відновлення збережених фільтрів — до того не пишемо
+  const [restored, setRestored] = useState(false);
+
+  // Відновлення фільтрів: з URL (можна шарити лінк), інакше — з localStorage
+  useEffect(() => {
+    const stored = readStoredFilters();
+    if (stored.cats?.length) setCats(stored.cats);
+    if (stored.minBudget !== undefined) setMinBudget(stored.minBudget);
+    if (stored.maxBudget !== undefined) setMaxBudget(stored.maxBudget);
+    if (stored.maxRisk !== undefined) setMaxRisk(stored.maxRisk);
+    if (stored.maxDiff !== undefined) setMaxDiff(stored.maxDiff);
+    if (stored.sort !== undefined) setSort(stored.sort);
+    setRestored(true);
+  }, []);
+
+  // Збереження: недефолтні значення — в URL і localStorage, дефолтні — прибираємо
+  useEffect(() => {
+    if (!restored) return;
+
+    const filters: StoredFilters = {};
+    if (cats.length > 0) filters.cats = cats;
+    if (minBudget !== budgetBounds.min) filters.minBudget = minBudget;
+    if (maxBudget !== budgetBounds.max) filters.maxBudget = maxBudget;
+    if (maxRisk !== 5) filters.maxRisk = maxRisk;
+    if (maxDiff !== 5) filters.maxDiff = maxDiff;
+    if (sort !== "default") filters.sort = sort;
+
+    try {
+      if (Object.keys(filters).length > 0) {
+        window.localStorage.setItem(
+          FILTERS_STORAGE_KEY,
+          JSON.stringify(filters),
+        );
+      } else {
+        window.localStorage.removeItem(FILTERS_STORAGE_KEY);
+      }
+    } catch {
+      // приватний режим — не критично, лишиться синхронізація через URL
+    }
+
+    const url = new URL(window.location.href);
+    const setParam = (key: string, value: string | number | undefined) => {
+      if (value === undefined) url.searchParams.delete(key);
+      else url.searchParams.set(key, String(value));
+    };
+    setParam("cats", filters.cats?.join(","));
+    setParam("bmin", filters.minBudget);
+    setParam("bmax", filters.maxBudget);
+    setParam("risk", filters.maxRisk);
+    setParam("diff", filters.maxDiff);
+    setParam("sort", filters.sort);
+    window.history.replaceState(null, "", url);
+  }, [
+    restored,
+    cats,
+    minBudget,
+    maxBudget,
+    maxRisk,
+    maxDiff,
+    sort,
+    budgetBounds,
+  ]);
 
   const toggleCat = (c: BusinessCategory) =>
     setCats((cur) =>
