@@ -170,15 +170,15 @@ const EN_TEXT: Record<string, BusinessText> = {
     shortDescription:
       "A content business: income from monetization, integrations and own products.",
     description:
-      "A YouTube channel as a business: investment into gear and a team, income from view monetization, sponsored integrations and later your own products. The riskiest part is guessing the niche and format.",
+      "The start is a phone in your hand and free editing tools: the cash investment is near zero — a microphone and a light are the only worthwhile purchases. The real investment is time: on average ~100 videos and 12–18 months to steady monetization (YouTube threshold: 1,000 subscribers + 4,000 watch hours). The model's figures show an established channel; sponsorships, not YouTube payouts, drive most of the income.",
     pros: [
-      "Minimal fixed costs",
+      "Starts with a phone — near-zero cash investment",
       "The channel is an asset that accumulates an audience",
       "Several income streams: ads, integrations, products",
       "Not tied to a location",
     ],
     cons: [
-      "Unpredictable income, especially the first year",
+      "No income for the first 12–18 months (≈100 videos) — you pay with time",
       "Full dependence on platform algorithms",
       "Fierce competition for attention",
       "Burnout: content is needed constantly",
@@ -186,6 +186,18 @@ const EN_TEXT: Record<string, BusinessText> = {
     revenueLabels: {
       clientsPerDay: "Thousands of views per day",
       averageCheck: "Revenue per 1000 views: ads + sponsorships (₴)",
+    },
+    fieldOverrides: {
+      startup: {
+        equipment: {
+          hint: "You can start with just a phone (₴0). The 15k covers a lav mic, a light and a tripod; a camera comes later out of revenue.",
+        },
+      },
+      monthly: {
+        salaries: {
+          hint: "Shooting and editing yourself = 0. A freelance editor runs ~UAH 500–1,500 per video — add it here if you delegate.",
+        },
+      },
     },
   },
   saas: {
