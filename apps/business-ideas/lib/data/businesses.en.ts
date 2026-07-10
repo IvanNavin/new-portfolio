@@ -383,6 +383,11 @@ const EN_TEXT: Record<string, BusinessText> = {
       averageCheck: "Average order value (₴)",
     },
     fieldOverrides: {
+      startup: {
+        renovation: {
+          hint: "Adapting the home kitchen for food-facility registration: sink, work surfaces, zoning.",
+        },
+      },
       monthly: {
         salaries: {
           hint: "Solo format: the owner does the work, their income is the model's net profit.",
@@ -683,6 +688,11 @@ const EN_TEXT: Record<string, BusinessText> = {
       averageCheck: "Price per tray (₴)",
     },
     fieldOverrides: {
+      startup: {
+        renovation: {
+          hint: "Wiring for grow lights, a sink and moisture-proof finishing of the growing room.",
+        },
+      },
       monthly: {
         salaries: {
           hint: "Owner-operated: sowing, care, packing and delivery — their income is the model's net profit.",
@@ -887,7 +897,7 @@ const EN_TEXT: Record<string, BusinessText> = {
     shortDescription:
       "A small English school: 2 classrooms, group and 1-on-1 lessons, offline+online.",
     description:
-      "A language school with ~100–120 active students in a ~75 m² space with two classrooms. Core revenue comes from group lessons (6–8 students, UAH 250–350 per student), supplemented by 1-on-1 lessons and online groups that free up classroom capacity. No licence required (non-formal education); reaching the target 30 visits/day takes 4–6 months of enrollment.",
+      "A language school with ~100–120 active students in a ~75 m² space with two classrooms. Note: a solo tutor starts with almost no capital — this model is about a full school with rent, fit-out and a teaching team. Core revenue comes from group lessons (6–8 students, UAH 250–350 per student), supplemented by 1-on-1 lessons and online groups. No licence required (non-formal education); reaching the target 30 visits/day takes 4–6 months of enrollment.",
     pros: [
       "Consistently high demand for English, boosted by EU integration",
       "Teacher pay as % of revenue keeps costs scaling with income",
@@ -905,6 +915,15 @@ const EN_TEXT: Record<string, BusinessText> = {
       averageCheck: "Price per lesson per student (₴)",
     },
     fieldOverrides: {
+      startup: {
+        initialStock: {
+          label: "Textbooks & materials",
+          hint: "Course books, handouts and tests for the first groups.",
+        },
+        other: {
+          hint: "Rent deposit + a cash cushion for the 4–6 months of enrollment.",
+        },
+      },
       monthly: {
         salaries: {
           hint: "Only the administrator is here. Teachers earn ~45% of student fees per lesson taught — already reflected in the 55% margin.",
@@ -1098,8 +1117,14 @@ const EN_TEXT: Record<string, BusinessText> = {
     },
     fieldOverrides: {
       monthly: {
+        rent: {
+          hint: "Coworking or fully remote (then 0) — an office is optional.",
+        },
         salaries: {
           hint: "A hired junior developer; the founders live off the profit. Design is outsourced per project (~25% of budget, reflected in the margin).",
+        },
+        software: {
+          hint: "Work tools: Figma, hosting, repositories, AI assistant subscriptions.",
         },
       },
     },

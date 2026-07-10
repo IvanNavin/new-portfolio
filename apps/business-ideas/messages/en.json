@@ -21,7 +21,9 @@
   },
   "card": {
     "startFrom": "Start from",
-    "open": "Open calculator →"
+    "open": "Open calculator →",
+    "netPerMonth": "Profit/mo ≈",
+    "payback": "Payback ≈"
   },
   "filters": {
     "title": "Filters",

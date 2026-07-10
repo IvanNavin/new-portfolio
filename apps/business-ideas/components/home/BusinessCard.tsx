@@ -1,12 +1,15 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { useMemo } from "react";
 
 import { AdminDeleteButton } from "@/components/admin/AdminDeleteButton";
 import { CompareToggle } from "@/components/compare/CompareToggle";
 import { LevelMeter } from "@/components/ui/LevelMeter";
-import { BudgetRange } from "@/components/ui/Money";
+import { BudgetRange, Money } from "@/components/ui/Money";
 import { Link } from "@/i18n/navigation";
+import { calculate } from "@/lib/calculations";
+import { classifyPayback, formatNumber } from "@/lib/format";
 import type { Business } from "@/lib/types";
 
 export function BusinessCard({
@@ -19,6 +22,16 @@ export function BusinessCard({
   const t = useTranslations("card");
   const tm = useTranslations("meters");
   const tcat = useTranslations("categories");
+  const tp = useTranslations("payback");
+  const locale = useLocale();
+
+  // Орієнтовна економіка з дефолтних (заземлених) значень калькулятора
+  const result = useMemo(() => calculate(business.defaults), [business]);
+  const payback = classifyPayback(result.paybackMonths);
+  const paybackText =
+    payback.kind === "months"
+      ? tp("months", { months: formatNumber(payback.months, locale) })
+      : tp(payback.kind);
 
   return (
     <article
@@ -60,6 +73,26 @@ export function BusinessCard({
                 min={business.recommendedBudget.min}
                 max={business.recommendedBudget.max}
               />
+            </span>
+          </p>
+          <p className="flex items-baseline justify-between gap-2">
+            <span className="text-xs uppercase tracking-wider text-ink-faint">
+              {t("netPerMonth")}
+            </span>
+            <span
+              className={`font-mono text-sm font-semibold tabular-nums ${
+                result.netProfit >= 0 ? "text-accent" : "text-loss"
+              }`}
+            >
+              <Money uah={result.netProfit} compact />
+            </span>
+          </p>
+          <p className="flex items-baseline justify-between gap-2">
+            <span className="text-xs uppercase tracking-wider text-ink-faint">
+              {t("payback")}
+            </span>
+            <span className="font-mono text-sm font-semibold tabular-nums">
+              {paybackText}
             </span>
           </p>
           <LevelMeter
