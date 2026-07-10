@@ -70,6 +70,14 @@ async function seed() {
     console.log(`✓ ${uk.slug}`);
   }
 
+  // Синхронізуємо видалення: бізнеси, яких більше немає в TS, прибираємо з БД
+  // (business_content видаляється каскадом)
+  const keep = businesses.map((b) => b.slug);
+  const removed = await sql`
+    DELETE FROM businesses WHERE slug != ALL(${keep}) RETURNING slug
+  `;
+  for (const row of removed) console.log(`✗ видалено ${row.slug}`);
+
   console.log(`Пересіяно ${businesses.length} бізнесів ✓`);
   process.exit(0);
 }
