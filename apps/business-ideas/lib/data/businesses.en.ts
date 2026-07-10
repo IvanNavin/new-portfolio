@@ -550,6 +550,560 @@ const EN_TEXT: Record<string, BusinessText> = {
       },
     },
   },
+  "sushi-delivery": {
+    name: "Dark kitchen: sushi delivery",
+    shortDescription:
+      "A delivery-only kitchen making sushi for aggregators and direct orders, with no dining room.",
+    description:
+      "A compact 40–50 m² kitchen with no dining room, selling sushi sets via Glovo/Bolt Food, Instagram and its own site. Sushi is one of Ukraine's top delivery categories, and the dark kitchen format cuts rent, fit-out and front-of-house staff costs. Break-even sits near 20 orders a day.",
+    pros: [
+      "Sushi is a top delivery category with steady demand",
+      "No dining room, waitstaff, or high-traffic location costs",
+      "Fast launch: 1–2 months from lease to first sales",
+      "Easy to scale via a second kitchen or a multi-brand menu",
+    ],
+    cons: [
+      "Sushi food cost of 40–52% is the highest in delivery",
+      "Glovo/Bolt Food commissions of 20–35% eat aggregator-order margins",
+      "Intense competition and price wars in every city",
+      "Perishable fish means strict HACCP compliance and spoilage risk",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Orders per day",
+    },
+    fieldOverrides: {
+      startup: {
+        initialStock: {
+          hint: "Fish (salmon, eel), rice, nori, sauces plus an initial batch of packaging. Most ingredients are imported and FX-sensitive.",
+        },
+      },
+      monthly: {
+        salaries: {
+          hint: "Two sushi chefs on rotating shifts plus a packer-helper. Couriers belong to the aggregators; the owner handles orders and purchasing.",
+        },
+      },
+    },
+  },
+  "mini-bakery": {
+    name: "Mini bakery",
+    shortDescription:
+      "A fresh-baked goods spot with its own oven: croissants, buns, bread.",
+    description:
+      "A 35–45 m² full-cycle mini bakery: convection oven, proofer, dough mixer. The range covers croissants, sweet buns, bread and takeaway coffee. Key requirements are a high-traffic location, 380V power with backup for outages, and disciplined early-morning shifts.",
+    pros: [
+      "Daily demand for fresh pastry regardless of season",
+      "High margin on baked goods and coffee (28–40% food cost)",
+      "12–18 month payback per market data",
+      "Fresh bread smell is free marketing for the location",
+    ],
+    cons: [
+      "Expensive equipment — new gear pushes the budget past UAH 1M",
+      "Critical dependence on electricity: a blackout stops the oven",
+      "Night/early shifts and a shortage of experienced bakers",
+      "Success depends almost entirely on the location's foot traffic",
+    ],
+  },
+  "food-truck": {
+    name: "Food truck (burgers)",
+    shortDescription:
+      "A mobile burger kitchen: a city spot on weekdays plus festivals and events on weekends.",
+    description:
+      "A used food truck or trailer with kitchen equipment (grill, fryer, fridge) sells craft burgers. The base is a high-traffic city spot licensed by the local council, boosted by food festivals and events. Location and season are the key variables: April–October generates most of the annual revenue.",
+    pros: [
+      "Mobility — you can chase foot traffic by relocating",
+      "Startup is 2–3x cheaper than a stationary cafe",
+      "Fast payback in a good season (6–9 months per sources)",
+      "Festivals and events deliver peak revenue without permanent rent",
+    ],
+    cons: [
+      "Strong seasonality — winter traffic drops 40–60%",
+      "Dependence on municipal permits and competition for prime spots",
+      "Weather, air-raid alerts and event cancellations hit revenue directly",
+      "Used equipment carries hidden breakdown and downtime risk",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Orders per day",
+    },
+    fieldOverrides: {
+      startup: {
+        equipment: {
+          hint: "The bulk is the used food truck or trailer itself (~UAH 390k) plus fitting it out with a grill, fryer and refrigeration.",
+        },
+      },
+      monthly: {
+        rent: {
+          hint: "City spot fees and festival entry fees — not premises rent.",
+        },
+      },
+    },
+  },
+  "frozen-food": {
+    name: "Frozen semi-finished foods production",
+    shortDescription:
+      "A mini-workshop making varenyky, dumplings and cutlets sold to shops, markets and online.",
+    description:
+      'A mini-workshop producing craft "hand-made style" frozen foods: varenyky, pelmeni and cutlets. Sales go to small grocery stores and butcher shops (wholesale UAH 75–110/kg), markets and online orders (UAH 130–180/kg). Requires an operational permit from the State Food Safety Service and a HACCP system; the craft segment keeps growing as consumers move away from mass-market products.',
+    pros: [
+      "Stable year-round demand for frozen convenience food",
+      "~50% margin after ingredients in the craft segment",
+      "Compact start: a UAH 51k machine instead of multi-million lines",
+      "Diversified sales: shops, markets, online, HoReCa",
+    ],
+    cons: [
+      "Requires a state food-safety operational permit and HACCP",
+      "Distribution is built door-to-door across shops and markets",
+      "Exposed to meat and flour price swings",
+      "Cold chain risk: power outages can spoil whole batches",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Kilograms sold per day",
+      averageCheck: "Price per kg (₴)",
+    },
+  },
+  microgreens: {
+    name: "Microgreens farm",
+    shortDescription:
+      "Rack-based microgreens growing for restaurants and shops.",
+    description:
+      "A mini-farm with 5 racks (~120 trays at once) in a 15–20 m² room. 7–14 day cycle, ~3 turns per month. Sales: restaurants and cafes (wholesale UAH 80–110/tray), eco-shops and the market. The key to profit is 10–15 regular HoReCa clients.",
+    pros: [
+      "Low entry barrier and fast 7–14 day production cycle",
+      "60–70% margin — a tray costs UAH 30–40 vs a 120 price",
+      "Can start at home/garage with no hired staff",
+      "Healthy eating trend — HoReCa demand is growing",
+    ],
+    cons: [
+      "Sales are the main risk: without regular clients produce spoils in 2–3 days",
+      "Niche demand in Ukraine, restaurant orders dip in summer",
+      "Electricity-dependent (grow lights) — outages are critical",
+      "Daily manual work with no days off: sowing, watering, delivery",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Trays per day",
+      averageCheck: "Price per tray (₴)",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "Owner-operated: sowing, care, packing and delivery — their income is the model's net profit.",
+        },
+      },
+    },
+  },
+  "candle-workshop": {
+    name: "Scented candle making",
+    shortDescription:
+      "A home studio making soy scented candles sold via Instagram, craft markets and shops.",
+    description:
+      "Making soy wax scented candles in a home studio. Material cost per 250 ml candle is about UAH 165, retail price UAH 400–550. Sales via Instagram/TikTok, craft markets and gift shops on consignment; demand peaks September through December.",
+    pros: [
+      "Low entry barrier and home-based work with no rent",
+      "55–65% margin after material costs",
+      "Fast payback — 3–4 months with steady sales",
+      "Easy to scale via wholesale, corporate gifts and B2B",
+    ],
+    cons: [
+      "High competition among handmade brands",
+      "Strong seasonality — summer sales drop by half",
+      "Sales fully depend on social media content and activity",
+      "Manual work caps volume without hiring helpers",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Sales per day",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "Solo format: the owner makes, packs and runs social media. Above ~300 candles/month budget a part-time packing assistant.",
+        },
+      },
+    },
+  },
+  "carpentry-workshop": {
+    name: "Carpentry workshop",
+    shortDescription:
+      "Custom wood and chipboard furniture made by 1–2 craftsmen.",
+    description:
+      "A ~100 m² workshop with a panel saw, edge-banding equipment and routing tools. Produces custom kitchens, sliding-door wardrobes and cabinet furniture: 6–7 projects per month with an average order of ~UAH 35,000. The owner works as a craftsman alongside one hired carpenter; materials take up about half of the product price.",
+    pros: [
+      "Steady demand for furniture fitting non-standard layouts",
+      "High margin (~45%) after material costs",
+      "Small team makes quality easy to control",
+      "Portfolio and word of mouth cut ad spend over time",
+    ],
+    cons: [
+      "Requires real carpentry skills and experience",
+      "Long production cycle — a kitchen takes 1–2 weeks",
+      "Chipboard and hardware prices depend on exchange rates",
+      "Few orders in the first months until reputation builds",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Orders per day",
+      averageCheck: "Average order value (₴)",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "One hired carpenter; the second craftsman is the owner, who lives off the profit.",
+        },
+      },
+    },
+  },
+  "print-merch": {
+    name: "Merch printing & small print shop",
+    shortDescription:
+      "DTF and sublimation printing on t-shirts, mugs, bags plus small-format printing.",
+    description:
+      "A merch printing workshop: a compact DTF printer for t-shirts and textiles, sublimation for mugs, heat presses and a colour laser printer for business cards and flyers. Revenue mixes retail orders via Instagram and the website with B2B corporate merch orders. Equipment starts underutilized, so the business can triple output without new capital investment.",
+    pros: [
+      "High 55–60% gross margin on textiles and mugs",
+      "Repeat B2B corporate merch orders",
+      "Equipment scales 3x output with no extra capex",
+      "Multiple technologies mean multiple revenue streams",
+    ],
+    cons: [
+      "Imported equipment and consumables depend on exchange rates",
+      "DTF print heads need daily maintenance and are costly to repair",
+      "Strong competition from large print shops on tenders",
+      "Order flow is unstable in the first 3–6 months",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Orders per day",
+    },
+  },
+  "fitness-studio": {
+    name: "Group fitness studio",
+    shortDescription:
+      "A 100–150 m² studio for functional training, yoga and stretching without gym machines.",
+    description:
+      "A 100–150 m² group class studio: functional training, yoga and stretching in groups of 7–12. No expensive gym machines — only light equipment (TRX, kettlebells, mats), so the launch costs 3–5x less than a classic fitness club. The key to success is class occupancy: reach 5–6 classes/day with 7–8 participants each.",
+    pros: [
+      "Launch is several times cheaper than a machine-based gym",
+      "Per-class trainer pay means costs scale with revenue",
+      "Recurring income from memberships and prepayments",
+      "Demand for group formats is growing and equipment barely wears out",
+    ],
+    cons: [
+      "Profit depends critically on class occupancy",
+      "Strong competition from studios and big chains",
+      "Summer seasonal dips and client churn if a star trainer leaves",
+      "Blackouts and war-related risks require a generator and cash reserve",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Visits per day",
+      averageCheck: "Income per visit (₴)",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "Only the admin and cleaning; trainers are paid per class (UAH 250–400), which is accounted for in the margin.",
+        },
+      },
+    },
+  },
+  "quest-room": {
+    name: "Escape room",
+    shortDescription:
+      "Two story-driven escape rooms with props and electronics for teams of 2–6 players.",
+    description:
+      'A 100–110 m² venue with two escape rooms of different genres, a reception and waiting area in a 300k+ city. Revenue comes from hourly team games (birthdays, corporate events, dates). The cost per game is tiny, so margins are high, but rooms need a refresh every 1.5–2 years as the audience "completes" the plot.',
+    pros: [
+      "High gross margin — cost per game is tiny",
+      "No licence needed, simple sole-trader setup",
+      "Steady event demand: birthdays and corporate bookings",
+      "Prepaid bookings — zero receivables",
+    ],
+    cons: [
+      'Rooms "burn out" — the plot needs rebuilding every 1.5–2 years',
+      "Weak weekday load, peaks only on weekends and holidays",
+      "Air-raid alerts and seasonality cancel sessions",
+      "Success hinges on puzzle quality — ads won't save a weak plot",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Games per day",
+      averageCheck: "Price per game (₴)",
+    },
+  },
+  "massage-studio": {
+    name: "Massage studio",
+    shortDescription:
+      "A 1–2 table studio offering classic, wellness and sports massage.",
+    description:
+      "A compact 10–30 m² massage studio with one or two tables offering classic, wellness and sports massage. Therapists work on a revenue-share basis, keeping fixed costs minimal. Medical massage requires a Ministry of Health licence, so the start is wellness-only without one.",
+    pros: [
+      "Low entry cost — from UAH 120k",
+      "Revenue-share pay means costs fall with revenue",
+      "Steady demand for wellness services and repeat courses",
+      "An owner-therapist keeps an extra 35–40% of their own sessions",
+    ],
+    cons: [
+      "Revenue depends directly on therapists' skill and reputation",
+      "Medical massage requires a MoH licence or a licensed medic",
+      "Low occupancy in the first 3–6 months may mean losses",
+      "Strong competition from home-based private therapists",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Sessions per day",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "Therapists earn 35–40% of each check — already deducted in the 55% margin. This line covers only a guaranteed minimum / admin work.",
+        },
+      },
+    },
+  },
+  "tire-service": {
+    name: "Tire service",
+    shortDescription:
+      "Two bays: seasonal tire changes, balancing, puncture repair and tire storage.",
+    description:
+      "A two-bay tire shop: seasonal tire changeovers, wheel balancing, puncture repair and seasonal tire storage. The business is sharply seasonal — the October–November and March–April peaks bring 60–70% of annual revenue, so the model uses year-averaged figures, while tire storage and repairs smooth out the off-season.",
+    pros: [
+      "Guaranteed twice-a-year demand for tire changes",
+      "Simple service with no licences or complex staffing",
+      "Tire storage creates repeat clients and passive income",
+      "Revenue-share pay for mechanics lowers off-season risk",
+    ],
+    cons: [
+      "Sharp seasonality with 4–6 slow months a year",
+      "High competition and price-sensitive customers",
+      "Revenue depends heavily on location and traffic",
+      "Needs a cash reserve for the off-season and rising utility costs",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Cars per day",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "Mechanics' fixed base pay; their revenue share (~25%) is already reflected in the 65% margin.",
+        },
+      },
+    },
+  },
+  "english-school": {
+    name: "English language school",
+    shortDescription:
+      "A small English school: 2 classrooms, group and 1-on-1 lessons, offline+online.",
+    description:
+      "A language school with ~100–120 active students in a ~75 m² space with two classrooms. Core revenue comes from group lessons (6–8 students, UAH 250–350 per student), supplemented by 1-on-1 lessons and online groups that free up classroom capacity. No licence required (non-formal education); reaching the target 30 visits/day takes 4–6 months of enrollment.",
+    pros: [
+      "Consistently high demand for English, boosted by EU integration",
+      "Teacher pay as % of revenue keeps costs scaling with income",
+      "Online groups add revenue without extra rent",
+      "Monthly/semester prepayment creates a positive cash cycle",
+    ],
+    cons: [
+      "Heavy competition from chains and online platforms",
+      "Strong seasonality: summer enrollment drops 30–40%",
+      "Business depends on star teachers who may leave with students",
+      "Slow ramp-up: 4–6 months to reach target occupancy",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Student visits per day",
+      averageCheck: "Price per lesson per student (₴)",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "Only the administrator is here. Teachers earn ~45% of student fees per lesson taught — already reflected in the 55% margin.",
+        },
+      },
+    },
+  },
+  "carpet-cleaning": {
+    name: "Mobile upholstery cleaning",
+    shortDescription:
+      "On-site sofa, mattress and carpet cleaning with an extractor.",
+    description:
+      "Mobile deep-cleaning service for upholstery, mattresses and carpets: the operator drives to the client with a professional extractor and chemicals. No premises needed — equipment is stored at home and all work happens on-site. Chemical cost per job is UAH 50–150 against a ~1,500 ticket, so post-consumables margin is ~90%.",
+    pros: [
+      "No premises rent — near-zero fixed costs at start",
+      "Very high margin: chemicals cost UAH 50–150 per UAH 1,500 job",
+      "Fast payback — 4–6 months per real Ukrainian cases",
+      "Low entry barrier: one ~UAH 33k extractor is enough to start",
+    ],
+    cons: [
+      "Strong seasonality — summer demand for upholstery cleaning drops",
+      "High competition in big cities with dozens of providers on marketplaces",
+      "Physically demanding: 2–3 daily jobs hauling equipment",
+      "Income depends directly on ads and reputation — no leads means idle gear",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Jobs per day",
+    },
+    fieldOverrides: {
+      monthly: {
+        other: {
+          hint: "Fuel, own-car maintenance and depreciation, parking — the logistics of client visits.",
+        },
+      },
+    },
+  },
+  "kids-playroom": {
+    name: "Kids' play room",
+    shortDescription:
+      "An 80–120 m² play zone in a mall: hourly kids' stays plus birthday parties.",
+    description:
+      "A kids' play room in a shopping mall featuring a play maze, trampoline, ball pit and toddler zone. Core revenue comes from hourly stays (UAH 100–150/hour), supplemented by birthday party packages from UAH 3,000–5,000. Service cost is minimal so margins are high; success hinges on picking a mall with steady family footfall.",
+    pros: [
+      "High margin — the cost per visit is minimal",
+      "Steady demand: mall parents need supervised childcare",
+      "Birthday parties bring prepaid high-ticket orders",
+      "Simple operations — two rotating staff are enough",
+    ],
+    cons: [
+      "Fully dependent on the specific mall's foot traffic",
+      "Strong seasonality: summer attendance drops 30–40%",
+      "Heightened safety requirements and liability for children",
+      "Equipment wears out and needs regular renewal",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Visits per day",
+    },
+  },
+  "detailing-studio": {
+    name: "Auto detailing studio",
+    shortDescription:
+      "Interior detailing, polishing and ceramic coating, 1–2 bays.",
+    description:
+      "A deep-care auto studio in a rented ~100 m² bay: interior detailing (UAH 5–6k), corrective polishing (8–11k) and ceramic coatings (9–16k). Masters work on commission, keeping fixed costs low. Long jobs cap throughput at ~2 cars/day, but the high ticket yields roughly a one-year payback.",
+    pros: [
+      "High average ticket of UAH 5–16k per job",
+      "45–70% margin after chemicals and masters' commission",
+      "Launch within UAH 630k in a rented bay",
+      "Steady demand: Ukraine's aging car fleet needs care",
+    ],
+    cons: [
+      "Quality depends on scarce and expensive masters",
+      "Ramp-up to 2 cars/day takes 3–6 months",
+      "Seasonality: ceramic and polishing dip in winter",
+      "Long jobs physically cap daily throughput",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Cars per day",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "Admin/booking only. Masters earn ~40% of their output — already reflected in the 45% margin.",
+        },
+      },
+    },
+  },
+  "tool-rental": {
+    name: "Construction tool rental",
+    shortDescription:
+      "A rental point for rotary hammers, generators, concrete mixers and scaffolding.",
+    description:
+      "A tool rental point with a fleet of 35–40 units in a residential district: rotary hammers and breakers (UAH 150–300/day), concrete mixers, generators (UAH 600) and scaffolding. The daily rate equals 5–10% of the tool's retail price; a deposit of ~30% of value covers non-returns. Each unit pays for itself in ~6 months, while ~30% of turnover goes to repairs and scheduled replacement.",
+    pros: [
+      "No licences required, easy start as a sole proprietor",
+      "Each tool unit pays for itself in about 6 months",
+      "A deposit of ~30% of tool value covers theft and damage",
+      "Generators provide steady demand even off-season",
+    ],
+    cons: [
+      "Strong seasonality: peak May–October, demand drops in winter",
+      "Rented tools wear out fast — up to 30% of turnover goes to repairs",
+      "Risk of non-returns and damage exceeding the deposit",
+      "Profit depends heavily on location and fleet utilization",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Active rentals per day",
+      averageCheck: "Rental price per day (₴)",
+    },
+    fieldOverrides: {
+      startup: {
+        equipment: {
+          hint: "A fleet of 35–40 units: rotary hammers/breakers, concrete mixers, generators, scaffolding, angle grinders, tile cutters.",
+        },
+      },
+    },
+  },
+  "pet-shop": {
+    name: "Pet supplies store",
+    shortDescription:
+      "A pet food and accessories store in a residential neighbourhood.",
+    description:
+      "A 30–50 m² shop selling pet food, treats and accessories for cats and dogs, no live animals. Ukraine's pet market grows 15–20% yearly, with food driving ~65% of revenue and steady repeat purchases. Neighbourhood-store format with the owner behind the counter; the main investment is inventory (~UAH 300k).",
+    pros: [
+      "Market grows 15–20% yearly even in crisis",
+      "Pet food means repeat purchases and loyal regulars",
+      "No live animals — minimal permits and vet requirements",
+      "Long shelf life, low write-offs",
+    ],
+    cons: [
+      "Thin food margins (20–30%) — profit depends on volume",
+      "Chain and e-commerce pressure: 6 closures per 10 openings",
+      "Location is everything — 15 customers/day instead of 27 kills profit",
+      "Large capital frozen in inventory",
+    ],
+    fieldOverrides: {
+      startup: {
+        initialStock: {
+          hint: "First inventory: pet food (~65% of range), treats, litter and accessories — with a reserve for a second order in 2–3 weeks.",
+        },
+      },
+    },
+  },
+  "flower-shop": {
+    name: "Flower shop",
+    shortDescription:
+      "Bouquets, arrangements and flower delivery from a 15–30 m² shop.",
+    description:
+      "A 15–30 m² retail spot with a floral cooler: bouquets, custom arrangements, delivery. Markups run 100–300%, but flowers are perishable: 10–20% of stock is written off, and over a third of annual revenue comes from a few peak dates (Feb 14, Mar 8, Sep 1). Profit hinges on a high-traffic location, Instagram sales and purchasing discipline.",
+    pros: [
+      "High markup on flowers (100–300%)",
+      "Growing market (+23% in 2024, to UAH 9.5B)",
+      "Low entry barrier vs other retail",
+      "Instagram and delivery drive sales without a prime location",
+    ],
+    cons: [
+      "Perishable stock — 10–20% of purchases written off",
+      "Sharp seasonality: a third of revenue from 2–3 dates, summer slump",
+      "Heavy competition including supermarkets and kiosks",
+      "Needs a skilled florist — purchasing mistakes eat the profit",
+    ],
+    fieldOverrides: {
+      startup: {
+        initialStock: {
+          hint: "First purchase of flowers, greenery and packaging. 10–20% of the batch will wilt before it sells — keep the initial assortment narrow.",
+        },
+      },
+    },
+  },
+  "web-studio": {
+    name: "Web studio",
+    shortDescription:
+      "Website and landing page development for small businesses by a 2–3 person team.",
+    description:
+      "A small web studio: two founders (developer and PM/sales) plus a hired junior developer, with design outsourced per project. Order mix: landing pages (UAH 15–45k), corporate websites, online stores and international clients via Upwork ($1,500–3,000). The key to profit is a steady pipeline: expect 1–2 projects per month for the first 3–6 months; reaching ~4 takes case studies and active sales.",
+    pros: [
+      "Minimal startup investment and fast payback",
+      "Access to international clients with 2–4x higher project values",
+      "No rent, warehouse, or inventory",
+      "Scales via subcontractors without growing fixed costs",
+    ],
+    cons: [
+      "Unstable pipeline — only 1–2 projects per month at the start",
+      "Heavy competition from freelancers and AI website builders",
+      "Founders' early income is below a developer's market salary",
+      "Sales and negotiations consume up to a third of the team's time",
+    ],
+    revenueLabels: {
+      clientsPerDay: "Projects per day",
+      averageCheck: "Average project value (₴)",
+    },
+    fieldOverrides: {
+      monthly: {
+        salaries: {
+          hint: "A hired junior developer; the founders live off the profit. Design is outsourced per project (~25% of budget, reflected in the margin).",
+        },
+      },
+    },
+  },
 };
 
 export const businessesEn: Business[] = businesses.map((business) => ({
