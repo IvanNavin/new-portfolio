@@ -347,9 +347,10 @@ export class Game {
       gameOverEl.classList.add("display-none");
     }
 
-    // Add a snake and food again
-    this.addFood();
+    // Snake first, THEN food: addFirstSnake() clears isFood on its cells, so
+    // food-first can be overwritten → a round with no food.
     this.addFirstSnake();
+    this.addFood();
     this.updateBoard();
 
     resetStopwatch();
@@ -359,8 +360,9 @@ export class Game {
   init() {
     this.opts.board = this.makeBoard();
     this.buildCells();
-    this.addFood();
+    // Snake before food (see reset()): food must not land under the snake.
     this.addFirstSnake();
+    this.addFood();
     this.renderHighScore();
     this.updateBoard();
     resetStopwatch();

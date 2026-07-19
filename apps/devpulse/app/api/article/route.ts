@@ -7,6 +7,64 @@ import { NextRequest, NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// Readability does NOT sanitize (scripts + on* handlers survive), yet this HTML
+// is rendered via dangerouslySetInnerHTML. Strip active content with the
+// already-present JSDOM (no new dep) before caching/returning.
+const DANGEROUS_TAGS = [
+  "script",
+  "style",
+  "iframe",
+  "object",
+  "embed",
+  "form",
+  "link",
+  "meta",
+  "base",
+  "noscript",
+  "template",
+  "svg",
+  "math",
+  "frame",
+  "frameset",
+  "applet",
+].join(",");
+const URL_ATTRS = new Set([
+  "href",
+  "src",
+  "xlink:href",
+  "action",
+  "formaction",
+  "poster",
+  "background",
+]);
+function sanitizeHtml(rawHtml: string): string {
+  const { document } = new JSDOM(`<!DOCTYPE html><body>${rawHtml}</body>`)
+    .window;
+
+  document.querySelectorAll(DANGEROUS_TAGS).forEach((el) => el.remove());
+
+  document.querySelectorAll("*").forEach((el) => {
+    for (const attr of [...el.attributes]) {
+      const name = attr.name.toLowerCase();
+      if (name.startsWith("on") || name === "style") {
+        el.removeAttribute(attr.name);
+        continue;
+      }
+      if (URL_ATTRS.has(name)) {
+        // Collapse control chars/whitespace so "java\tscript:" can't sneak by.
+        const v = attr.value.replace(/[\u0000-\u0020]+/g, "").toLowerCase();
+        const isUnsafe =
+          v.startsWith("javascript:") ||
+          v.startsWith("vbscript:") ||
+          (v.startsWith("data:") && !v.startsWith("data:image/"));
+        if (isUnsafe) el.removeAttribute(attr.name);
+      }
+    }
+  });
+
+  return document.body.innerHTML;
+}
+
 /**
  * /api/article?id=<newsItemId>
  *
@@ -49,7 +107,8 @@ export async function GET(req: NextRequest) {
         title: item.title,
         source: item.source,
         url: item.url,
-        html: item.cleanedHtml,
+        // Re-sanitize on read: rows cached before this may hold active content.
+        html: sanitizeHtml(item.cleanedHtml),
         cached: true,
       },
       {
@@ -108,10 +167,13 @@ export async function GET(req: NextRequest) {
   // through; truncation is invisible to the user.
   const capped = cleaned.length > 200_000 ? cleaned.slice(0, 200_000) : cleaned;
 
+  // Sanitize before caching so the DB never stores an XSS payload.
+  const safe = sanitizeHtml(capped);
+
   // Fire-and-forget cache write — don't wait for the DB round trip
   // before returning the body to the user.
   prisma.newsItem
-    .update({ where: { id: item.id }, data: { cleanedHtml: capped } })
+    .update({ where: { id: item.id }, data: { cleanedHtml: safe } })
     .catch(() => {});
 
   return NextResponse.json(
@@ -120,7 +182,7 @@ export async function GET(req: NextRequest) {
       title: item.title,
       source: item.source,
       url: item.url,
-      html: capped,
+      html: safe,
       cached: false,
     },
     {

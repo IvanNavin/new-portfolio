@@ -24,13 +24,13 @@ export const Filters = () => {
         value={experience}
         onChange={setExperience}
         label='Experience'
-        max={300}
+        max={700}
       />
       <RangeSelect
         value={attack}
         onChange={setAttack}
         label='Attack'
-        max={200}
+        max={300}
       />
     </div>
   );

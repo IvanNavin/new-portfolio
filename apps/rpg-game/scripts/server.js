@@ -66,6 +66,13 @@ const pickSpawn = () => {
 // allow-list is ignored so a client can't inject an arbitrary sprite key.
 const VALID_SKINS = ["girl1", "girl2", "girl3", "boy1", "boy2", "boy3"];
 
+// Authoritative: coerce/trim/cap the name; never trust a modified/legacy client.
+const MAX_NAME_LEN = 12;
+const cleanName = (raw) => {
+  const s = (typeof raw === "string" ? raw : "").trim().slice(0, MAX_NAME_LEN);
+  return s || "Anonymous";
+};
+
 const FILES =
   /\.(js|js.map|woff|woff2|svg|bmp|jpg|jpeg|gif|png|ico)(\?v=\d+\.\d+\.\d+)?$/;
 
@@ -94,7 +101,11 @@ const init = async () => {
         return h.file(path.join(process.cwd(), "dist", request.path));
       }
 
-      return h.file(path.join(process.cwd(), "dist", PATH[request.path]));
+      // SPA fallback: any non-asset path (e.g. a refresh on "/anything") serves
+      // index.html. Previously PATH[request.path] was undefined for anything
+      // but "/", so path.join threw and Hapi returned a 500.
+      const file = PATH[request.path] || "index.html";
+      return h.file(path.join(process.cwd(), "dist", file));
     },
   });
 
@@ -117,7 +128,7 @@ const init = async () => {
     socket.on("join", (payload) => {
       // Accept either a plain name string (legacy) or { name, skin }.
       const isObj = typeof payload === "object" && payload !== null;
-      const name = isObj ? payload.name : payload;
+      const name = cleanName(isObj ? payload.name : payload);
       const joinSkin = isObj ? payload.skin : undefined;
       // Prefer the skin sent with join, fall back to the one from 'start',
       // then the default — so skin never depends on event ordering.
@@ -154,9 +165,13 @@ const init = async () => {
       // Let's try a simple in-memory list
       socket.data.player = newPlayer;
 
+      // Only fully-joined players: one that emitted 'start' (partial { name })
+      // but not 'join' has no col/row/id → would crash the receiver's onJoin.
+      const isJoined = (p) =>
+        p && Number.isInteger(p.col) && Number.isInteger(p.row) && p.id;
       const playersList = [];
       io.sockets.sockets.forEach((s) => {
-        if (s.data.player) {
+        if (isJoined(s.data.player)) {
           playersList.push(s.data.player);
         }
       });
@@ -220,10 +235,11 @@ const init = async () => {
     // Chat Logic
     socket.on("start", (payload) => {
       // Accept either a plain string (legacy) or { name, skin }.
-      const name =
+      const name = cleanName(
         typeof payload === "object" && payload !== null
           ? payload.name
-          : payload;
+          : payload,
+      );
       const skin =
         typeof payload === "object" && payload !== null
           ? payload.skin

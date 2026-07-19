@@ -102,6 +102,15 @@ export const VisitStatTable = () => {
     ),
   });
 
+  // Reset to page 1 when filters/search/date change — else pageIndex stays high
+  // and skip overshoots a smaller result set, showing "no rows".
+  useEffect(() => {
+    setPagination((prev) =>
+      prev.pageIndex === 0 ? prev : { ...prev, pageIndex: 0 },
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedColumnFilters, debouncedGlobalFilter, debouncedDateRange]);
+
   useEffect(() => {
     void fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -2,7 +2,7 @@ import { log } from '@repo/utils';
 import { AnyType } from '@src/types';
 import { isInIframe } from '@src/utils/isInIframe';
 import { signIn, useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface GoogleOpt {
   isOneTap?: boolean;
@@ -41,6 +41,13 @@ const useGoogleIdentify = (props?: UseGoogleIdentifyProps) => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const { nextAuthOpt, googleOpt } = props || {};
 
+  // Latest values for the run-once script effect, without making them deps.
+  // Callers pass inline object literals (new identity each render) that would
+  // otherwise tear down + re-append the GSI <script> every render. Also avoids
+  // stale closures.
+  const latest = useRef({ nextAuthOpt, googleOpt, session, isLoading });
+  latest.current = { nextAuthOpt, googleOpt, session, isLoading };
+
   useEffect(() => {
     setIsSignedIn(!!session);
   }, [session]);
@@ -66,6 +73,7 @@ const useGoogleIdentify = (props?: UseGoogleIdentifyProps) => {
     // handle script loading
     script.onload = async () => {
       const { google } = window;
+      const { session, isLoading, googleOpt } = latest.current;
       let isLoggedIn = !!session;
 
       if (!isLoggedIn) {
@@ -87,7 +95,7 @@ const useGoogleIdentify = (props?: UseGoogleIdentifyProps) => {
             // call provider with the token provided by google
             await signIn('google', {
               credential: response.credential,
-              ...nextAuthOpt,
+              ...latest.current.nextAuthOpt,
             });
 
             log('logged in');
@@ -122,10 +130,12 @@ const useGoogleIdentify = (props?: UseGoogleIdentifyProps) => {
     document.head?.appendChild(script);
 
     return () => {
-      // Cleanup script on component unmount
-      document.head?.removeChild(script);
+      // Unmount-only; parentNode guard against a late-onload double-remove.
+      if (script.parentNode) script.parentNode.removeChild(script);
     };
-  }, [googleOpt, isLoading, isSignedIn, nextAuthOpt]);
+    // Load the GSI script exactly once; live values are read from `latest`.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return { isLoading, isSignedIn };
 };

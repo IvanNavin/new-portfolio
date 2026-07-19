@@ -10,8 +10,9 @@ import { PokedexContext } from './context';
 
 export const Pokedex = () => {
   const [types, setTypes] = useState<string[]>([]);
-  const [experience, setExperience] = useState<[number, number]>([0, 300]);
-  const [attack, setAttack] = useState<[number, number]>([0, 200]);
+  // Upper bounds cover the real data range so the default filter hides nothing.
+  const [experience, setExperience] = useState<[number, number]>([0, 700]);
+  const [attack, setAttack] = useState<[number, number]>([0, 300]);
 
   return (
     <PokedexContext.Provider

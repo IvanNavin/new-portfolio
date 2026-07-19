@@ -172,6 +172,11 @@ void main() {
 }
 `;
 
+// Stable defaults: literal defaults allocate fresh arrays each render, and
+// focal/rotation are effect deps → the WebGL program rebuilt every re-render.
+const DEFAULT_FOCAL: [number, number] = [0.5, 0.5];
+const DEFAULT_ROTATION: [number, number] = [1.0, 0.0];
+
 interface GalaxyProps {
   focal?: [number, number];
   rotation?: [number, number];
@@ -196,8 +201,8 @@ interface GalaxyProps {
 }
 
 export default function Galaxy({
-  focal = [0.5, 0.5],
-  rotation = [1.0, 0.0],
+  focal = DEFAULT_FOCAL,
+  rotation = DEFAULT_ROTATION,
   starSpeed = 0.5,
   density = 1,
   hueShift = 140,

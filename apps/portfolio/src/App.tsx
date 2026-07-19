@@ -34,11 +34,13 @@ export function App() {
   const workId = path.startsWith("/works/") ? path.slice("/works/".length) : "";
   const isWork = isWorkId(workId);
 
+  // Collapse detail routes to their section by PREFIX (not only for valid ids):
+  // an unknown "/works/<bad>" used to fall through to the Home face.
   const cubeActive = isCv
     ? "/about"
-    : isTalk
+    : path.startsWith("/talks/")
       ? "/talks"
-      : isWork
+      : path.startsWith("/works/")
         ? "/works"
         : path;
 

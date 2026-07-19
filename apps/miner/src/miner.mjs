@@ -110,6 +110,13 @@ export class Miner {
     }
   };
 
+  // Once won/lost, ignore input — else the player can keep revealing cells and
+  // even flip a lost board into a win.
+  isOver = () => {
+    const state = this.opts.field.dataset.state;
+    return state === "gameOver" || state === "youWin";
+  };
+
   gameOver = () => {
     this.showAllMine();
     this.opts.field.dataset.state = "gameOver";
@@ -162,6 +169,8 @@ export class Miner {
   };
 
   onCell = ({ target }) => {
+    if (this.isOver()) return;
+
     const index = target.getAttribute("index");
     const y = Math.floor(index / this.opts.cols);
     const x = index % this.opts.cols;
@@ -220,6 +229,7 @@ export class Miner {
 
   onRightClick = (e) => {
     e.preventDefault();
+    if (this.isOver()) return;
     const { target } = e;
     const index = target.getAttribute("index");
     const y = Math.floor(index / this.opts.cols);

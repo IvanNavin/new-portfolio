@@ -1864,11 +1864,19 @@ export const Fluid = () => {
       window.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("keydown", onKeydown);
       // Stop the rAF loop so a remount (e.g. on resize) doesn't leave old loops
-      // spinning. The old canvas's WebGL context is freed by GC once detached —
-      // we don't loseContext() here because StrictMode's dev double-mount reuses
-      // the same canvas, and killing its context would crash the second mount.
+      // spinning.
       cancelAnimationFrame(animationFrameId);
       clearInterval(autoSplatInterval);
+
+      // Explicitly release the GL context — GC isn't enough (browsers cap ~16,
+      // and the resize remount makes a new one each time → "Too many active
+      // WebGL contexts"). Defer + isConnected guard so StrictMode's canvas reuse
+      // is skipped but a real unmount/remount fires.
+      setTimeout(() => {
+        if (!canvas.isConnected) {
+          gl.getExtension("WEBGL_lose_context")?.loseContext();
+        }
+      }, 0);
     };
   }, []);
 
