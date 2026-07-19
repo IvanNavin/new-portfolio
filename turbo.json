@@ -28,7 +28,7 @@
       "persistent": true
     },
     "typecheck": {
-      "dependsOn": ["^typecheck"],
+      "dependsOn": ["^typecheck", "generate", "^generate"],
       "inputs": ["tsconfig.json", "src/**/*.ts", "src/**/*.tsx"]
     },
     "format": {

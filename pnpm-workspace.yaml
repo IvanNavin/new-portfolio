@@ -1,0 +1,17 @@
+# Node workspace members. Excluded on purpose:
+#  - static demo apps (2048, destructurizator, miner, snake): no package.json,
+#    deployed separately to Netlify
+#  - business-ideas: no source in git
+#  - gantt-chart: a CRA app pinned to React 18 (frappe-gantt-react uses
+#    findDOMNode, removed in React 19), which conflicts with this workspace's
+#    React 19 override — it stays standalone (own package-lock, npm).
+# rpg-game (vanilla webpack, no React) is a full member.
+packages:
+  - apps/devpulse
+  - apps/language
+  - apps/pokedex
+  - apps/portfolio
+  - apps/rpg-game
+  - apps/solitaire
+  - apps/visit-stat
+  - packages/*
