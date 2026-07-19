@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "RPG Game",
   "engines": {
-    "node": "20.x"
+    "node": ">=20"
   },
   "scripts": {
     "build:dev": "npx cross-env NODE_ENV=development webpack",
