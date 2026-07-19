@@ -1,26 +1,26 @@
 'use client';
 import useGoogleIdentify from '@src/hooks/useGoogleIdentify';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
+// Stable identity across renders (avoids re-triggering the GSI effect).
+const NEXT_AUTH_OPT = { redirect: true };
+const GOOGLE_OPT = { isOneTap: false, use_fedcm_for_prompt: true };
 
 export const LoginPage = () => {
   const router = useRouter();
-  const nextAuthOpt = {
-    redirect: true,
-  };
-
-  const googleOpt = {
-    isOneTap: false,
-    use_fedcm_for_prompt: true,
-  };
 
   const { isSignedIn } = useGoogleIdentify({
-    nextAuthOpt,
-    googleOpt,
+    nextAuthOpt: NEXT_AUTH_OPT,
+    googleOpt: GOOGLE_OPT,
   });
 
-  if (isSignedIn) {
-    void router.replace('/');
-  }
+  // Redirect is a side effect — never navigate during render.
+  useEffect(() => {
+    if (isSignedIn) {
+      void router.replace('/');
+    }
+  }, [isSignedIn, router]);
 
   return (
     <div className='container'>

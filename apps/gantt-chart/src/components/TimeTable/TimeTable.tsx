@@ -36,7 +36,8 @@ const makeToday = (str: string) => {
   const date = new Date().toLocaleDateString('en-US')
   const text = `<text x="${x - 24}" y="${topOffset - 5}" fill="black" >${date}</text>`
 
-  return text + arr.join(' ') + '></rect>'
+  // Tagged group so a prior marker can be found + removed before re-inserting.
+  return `<g class="today-line-marker">${text}${arr.join(' ')}></rect></g>`
 }
 
 export const TimeTable = () => {
@@ -52,18 +53,23 @@ export const TimeTable = () => {
   }
 
   useEffect(() => {
-    if (viewMode === ViewMode.Day) {
-      setTimeout(() => {
-        const todayColumn = document.querySelector('.today-highlight')
-        const gantt = document.querySelector('.gantt')
+    if (viewMode !== ViewMode.Day) return
 
-        if (gantt && todayColumn) {
-          const line = makeToday(todayColumn.outerHTML)
-          gantt.insertAdjacentHTML('beforeend', line)
-        }
-      })
-    }
-  }, [viewMode])
+    // Re-run on `data` too: FrappeGantt rebuilds its SVG on task changes, wiping
+    // the marker — without this the today line vanished until a view toggle.
+    const timer = setTimeout(() => {
+      const todayColumn = document.querySelector('.today-highlight')
+      const gantt = document.querySelector('.gantt')
+
+      if (gantt && todayColumn) {
+        // Drop any stale marker first so toggling views can't stack duplicates.
+        gantt.querySelector('.today-line-marker')?.remove()
+        gantt.insertAdjacentHTML('beforeend', makeToday(todayColumn.outerHTML))
+      }
+    })
+
+    return () => clearTimeout(timer)
+  }, [viewMode, data])
 
   return (
     <div className={s.wrapper}>

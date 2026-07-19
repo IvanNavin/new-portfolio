@@ -12,15 +12,15 @@ interface IProps {
 }
 
 export const Dependencies = ({ control }: IProps) => {
-  const [tasksList, setTasksList] = useState<(string | undefined)[]>([])
+  // Value = task id (label = name): frappe-gantt links arrows by id, not name,
+  // so storing names meant arrows never drew. Leading '' is the "None" option.
+  const [options, setOptions] = useState<{ id: string; name: string }[]>([])
 
   const { data } = useTypedSelector((state) => state.gridReducer)
 
   useEffect(() => {
     if (data) {
-      const arr = data.map(({ name }) => name).filter(Boolean)
-      arr.unshift('')
-      setTasksList(arr)
+      setOptions([{ id: '', name: '' }, ...data.map(({ id, name }) => ({ id, name }))])
     }
   }, [data])
 
@@ -33,13 +33,13 @@ export const Dependencies = ({ control }: IProps) => {
           <InputLabel sx={styles.mbMinus12}>Dependency:</InputLabel>
           <Select
             size='small'
-            value={value && !tasksList?.length ? '' : value || ''}
+            value={typeof value === 'string' ? value : ''}
             onChange={onChange}
             sx={styles.w224}
           >
-            {tasksList.map((name) => (
-              <MenuItem key={name} value={name}>
-                {name ? name : 'None'}
+            {options.map(({ id, name }) => (
+              <MenuItem key={id} value={id}>
+                {name || 'None'}
               </MenuItem>
             ))}
           </Select>

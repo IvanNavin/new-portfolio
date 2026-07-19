@@ -18,6 +18,11 @@ const MOVE_DIRS = {
 // block, so walkability = the cell exists AND has none of these.
 const BLOCKERS = new Set(["wall", "water", "tree", "rock", "bush"]);
 
+// True if any layer holds a blocker. One pass (vs. findObjectsByType per type),
+// which matters in the per-tap BFS.
+const cellIsBlocked = (cell) =>
+  cell.objects.some((layer) => layer.some((obj) => BLOCKERS.has(obj.type)));
+
 class ClientGame {
   constructor(cfg) {
     Object.assign(this, {
@@ -144,8 +149,7 @@ class ClientGame {
     const moved = player.moveByCellCoord(
       dcol,
       drow,
-      (cell) =>
-        cell && ![...BLOCKERS].some((t) => cell.findObjectsByType(t).length),
+      (cell) => !!cell && !cellIsBlocked(cell),
     );
 
     if (moved) this.api.move(dir);
@@ -197,8 +201,8 @@ class ClientGame {
     const worldX = x + this.engine.camera.x;
     const worldY = y + this.engine.camera.y;
 
+    // cellAtXY clamps to bounds, so a tap always resolves to a cell — no null case.
     const targetCell = map.cellAtXY(worldX, worldY);
-    if (!targetCell) return;
 
     const path = this.findPath(
       player.cell.cellCol,
@@ -221,9 +225,7 @@ class ClientGame {
   // null, so they are never walkable.
   isWalkable(col, row) {
     const cell = this.map.cellAt(col, row);
-    return !!(
-      cell && ![...BLOCKERS].some((t) => cell.findObjectsByType(t).length)
-    );
+    return !!cell && !cellIsBlocked(cell);
   }
 
   // Breadth-first search over the 4-neighbour grid from (startCol,startRow) to
@@ -292,6 +294,8 @@ class ClientGame {
   createPlayer({ id, col, row, layer, skin, name }) {
     if (!this.players[id]) {
       const cell = this.map.cellAt(col, row);
+      // Defensive: a partial player (bad col/row) has no cell — skip, don't crash.
+      if (!cell) return null;
       const playerObj = cell.createGameObject(
         {
           class: "player",

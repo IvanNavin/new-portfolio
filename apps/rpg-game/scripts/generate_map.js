@@ -194,7 +194,9 @@ for (const [tx, ty] of spawnTargets) {
       for (let dx = -r; dx <= r && !placed; dx++) {
         const x = tx + dx;
         const y = ty + dy;
-        if (inBounds(x, y) && !isBorder(x, y) && ground[y][x] !== "water") {
+        // A real walkable spot (excludes blocking deco) so the nudge finds an
+        // open cell instead of bulldozing whatever the target landed on.
+        if (isWalkable(x, y)) {
           placed = [x, y];
         }
       }

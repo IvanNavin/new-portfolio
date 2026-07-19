@@ -26,6 +26,16 @@ class ClientInput {
     // chat and back on the page (canvas focus is easy to lose).
     window.addEventListener("keydown", (e) => this.onKeyDown(e), false);
     window.addEventListener("keyup", (e) => this.onKeyUp(e), false);
+    // On blur a held key's keyup goes to the other window and never clears here,
+    // so the player would keep walking — drop all held keys on blur / tab hide.
+    window.addEventListener("blur", () => this.keysPressed.clear(), false);
+    document.addEventListener(
+      "visibilitychange",
+      () => {
+        if (document.hidden) this.keysPressed.clear();
+      },
+      false,
+    );
   }
 
   // Don't hijack keystrokes while the player is typing in a text field.

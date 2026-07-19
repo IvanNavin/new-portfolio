@@ -1,0 +1,53 @@
+# Node workspace members. Excluded on purpose:
+#  - static demo apps (2048, destructurizator, miner, snake): no package.json,
+#    deployed separately to Netlify
+#  - gantt-chart: a React-18 CRA app. It gets React 18 at runtime in an isolated
+#    tree, but its transitive @types (react-datepicker, react-router, MUI) pull
+#    @types/react 19 from the shared store, breaking its type-check (TS2786).
+#    Kept standalone (own package-lock, npm) so it has a clean React-18 @types
+#    tree with no version bleed.
+packages:
+  - apps/business-ideas
+  - apps/devpulse
+  - apps/language
+  - apps/pokedex
+  - apps/portfolio
+  - apps/rpg-game
+  - apps/solitaire
+  - apps/visit-stat
+  - packages/*
+
+# pnpm 11 reads settings from here, not .npmrc or the package.json "pnpm" field.
+# link internal "@repo/foo": "*" deps from the workspace (they don't use the
+# workspace: protocol) instead of hitting the registry (404):
+linkWorkspacePackages: true
+autoInstallPeers: true
+# don't fail installs on peer-dep mismatches (matches the old --legacy-peer-deps)
+strictPeerDependencies: false
+# pnpm 11 blocks freshly published versions (~1 day) by default; 0 disables it.
+# Set a positive value (minutes) to re-enable the supply-chain safeguard.
+minimumReleaseAge: 0
+
+# Force single versions across the workspace (was package.json "resolutions"
+# under yarn, then pnpm.overrides). React is intentionally NOT pinned here — each
+# app declares its own so gantt can stay on 18 while the rest use 19.
+overrides:
+  prisma: ^6.19.3
+  '@prisma/client': ^6.19.3
+  ts-api-utils: ^2.1.0
+  vite: 7.3.5
+
+# pnpm 11 does not run dependency build scripts unless approved here. These need
+# theirs to build native binaries / generate clients — without approval a bare
+# `pnpm install` (e.g. on Vercel) fails with ERR_PNPM_IGNORED_BUILDS.
+allowBuilds:
+  '@parcel/watcher': true
+  '@prisma/client': true
+  '@prisma/engines': true
+  '@swc/core': true
+  bufferutil: true
+  esbuild: true
+  prisma: true
+  sharp: true
+  sqlite3: true
+  unrs-resolver: true

@@ -14,7 +14,7 @@ export const Tasks = () => {
     <div className={s.Tasks}>
       <DateSelect />
       {data.map((task) => (
-        <Task task={task} key={task.name} />
+        <Task task={task} key={task.id} />
       ))}
     </div>
   )

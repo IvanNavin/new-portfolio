@@ -45,21 +45,52 @@ export function AuthedStateSync() {
         .catch(() => ({ urls: [] })),
     ]).then(([savedRes, dismissedRes, readRes]) => {
       try {
-        const savedUrls: string[] = Array.isArray(savedRes.urls)
-          ? savedRes.urls
-          : [];
-        const dismissedUrls: string[] = Array.isArray(dismissedRes.urls)
-          ? dismissedRes.urls
-          : [];
-        const readUrls: string[] = Array.isArray(readRes.urls)
-          ? readRes.urls
-          : [];
-        localStorage.setItem("devpulse.saved", JSON.stringify(savedUrls));
-        localStorage.setItem(
+        const serverUrls = (res: { urls?: unknown }): string[] =>
+          Array.isArray(res.urls)
+            ? res.urls.filter((u): u is string => typeof u === "string")
+            : [];
+
+        // Merge with the server list instead of overwriting — a first sign-in
+        // must not wipe guest-saved items. Guest-only entries are pushed to the
+        // server too, so they survive across devices.
+        const mergeAndUpload = (
+          key: string,
+          endpoint: string,
+          urls: string[],
+        ) => {
+          let localUrls: string[] = [];
+          try {
+            const parsed = JSON.parse(localStorage.getItem(key) || "[]");
+            if (Array.isArray(parsed)) {
+              localUrls = parsed.filter((u) => typeof u === "string");
+            }
+          } catch {
+            /* ignore */
+          }
+
+          const serverSet = new Set(urls);
+          const localOnly = localUrls.filter((u) => !serverSet.has(u));
+          const union = [...urls, ...localOnly];
+
+          localStorage.setItem(key, JSON.stringify(union));
+
+          for (const url of localOnly) {
+            fetch(endpoint, {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({ url }),
+            }).catch(() => {});
+          }
+        };
+
+        mergeAndUpload("devpulse.saved", "/api/saved", serverUrls(savedRes));
+        mergeAndUpload(
           "devpulse.dismissed",
-          JSON.stringify(dismissedUrls),
+          "/api/dismissed",
+          serverUrls(dismissedRes),
         );
-        localStorage.setItem("devpulse.read", JSON.stringify(readUrls));
+        mergeAndUpload("devpulse.read", "/api/read", serverUrls(readRes));
+
         localStorage.setItem(SYNCED_KEY, sessionEmail);
         for (const k of [
           "devpulse.saved",

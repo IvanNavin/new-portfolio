@@ -18,8 +18,14 @@ window.addEventListener("load", async () => {
   const canvas = document.getElementById("world");
   const skinPicker = document.querySelector(".skin-picker");
 
-  let isFirstConnection = true;
   let currentUserId = "";
+
+  // Identify self by our own socket id, not the first broadcast: "chat
+  // connection" is sent to everyone, so inferring from the first one mislabelled
+  // our own messages when another player started first.
+  socket.on("connect", () => {
+    currentUserId = socket.id;
+  });
 
   startGame.style.display = "flex";
 
@@ -123,12 +129,7 @@ window.addEventListener("load", async () => {
     chatWrap.dataset.online = online;
   });
 
-  socket.on("chat connection", ({ time, msg, id }) => {
-    if (isFirstConnection) {
-      currentUserId = id;
-      isFirstConnection = false;
-    }
-
+  socket.on("chat connection", ({ time, msg }) => {
     appendMessage(
       `<p><strong>${getTime(time)}</strong> ${escapeHtml(msg)}</p>`,
     );

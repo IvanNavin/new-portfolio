@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import * as yup from 'yup'
@@ -58,10 +58,14 @@ export const useAddEditTask = (task: Partial<Task> | null, onClose: () => void) 
   useEffect(() => {
     if (task) {
       reset({
-        name: task.name || '',
-        date: [new Date(task.start as string) || null, new Date(task.end as string) || null],
+        // parseISO reads 'yyyy-MM-dd' as LOCAL midnight, matching the local-time
+        // format() on save. new Date(str) parsed as UTC → date drifted back a
+        // day in negative-UTC zones on every edit.
+        date: [task.start ? parseISO(task.start) : null, task.end ? parseISO(task.end) : null],
         progress: task.progress || 0,
-        dependencies: task.dependencies || '',
+        // Single-select: seed with the first dependency id (dependencies is a
+        // string[]; passing the array matched no option and rendered blank).
+        dependencies: task.dependencies?.[0] || '',
       })
     }
   }, [task, reset])

@@ -2,4 +2,9 @@
 
 . "$(dirname "$0")/_/husky.sh"
 
-yarn lint-staged
+# pnpm 11 needs Node >=22.13 — activate the repo's Node (.nvmrc) so the hook
+# doesn't run on an older ambient version.
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" && nvm use >/dev/null 2>&1
+
+pnpm lint-staged

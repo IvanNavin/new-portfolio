@@ -48,7 +48,9 @@ const ElectricBorder: React.FC<ElectricBorderProps> = ({
   const lastFrameTimeRef = useRef(0);
 
   const random = useCallback((x: number): number => {
-    return (Math.sin(x * 12.9898) * 43758.5453) % 1;
+    // GLSL fract() is always [0,1); JS `% 1` keeps the sign, biasing the noise.
+    const v = Math.sin(x * 12.9898) * 43758.5453;
+    return v - Math.floor(v);
   }, []);
 
   const noise2D = useCallback(

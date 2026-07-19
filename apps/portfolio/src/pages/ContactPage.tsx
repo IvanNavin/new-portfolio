@@ -5,6 +5,10 @@ import { BackButton } from "@/components/BackButton";
 import type { PageProps } from "./types";
 
 const Ferrofluid = lazy(() => import("@/components/reactbits/Ferrofluid"));
+
+// Stable identity: an inline array would re-trigger Ferrofluid's effect (which
+// rebuilds the whole WebGL renderer) on every re-render.
+const FERROFLUID_COLORS = ["#fde047", "#e7a92c", "#fff3d6"];
 import { ContactLinks } from "./contact/ContactLinks";
 import { BookingEmbed } from "./contact/BookingEmbed";
 import {
@@ -33,7 +37,7 @@ export function ContactPage(_props: PageProps) {
       >
         {path === "/contact" && (
           <Suspense fallback={null}>
-            <Ferrofluid colors={["#fde047", "#e7a92c", "#fff3d6"]} />
+            <Ferrofluid colors={FERROFLUID_COLORS} />
           </Suspense>
         )}
       </div>

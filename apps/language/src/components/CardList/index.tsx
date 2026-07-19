@@ -11,7 +11,7 @@ import { CustomLoader } from '@src/components/CustomLoader';
 import { Input } from '@src/components/Input';
 import { CardType } from '@src/types';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import s from './CardList.module.scss';
 
@@ -136,21 +136,33 @@ export const CardList = () => {
     }
   };
 
+  // Run the guest→DB migration at most once per login.
+  const migratedRef = useRef(false);
+
   useEffect(() => {
+    if (!userEmail) {
+      migratedRef.current = false;
+      return;
+    }
+
     (async () => {
       setIsBusy(true);
 
-      if (userEmail) {
-        if (cards.length) {
-          await moveLocalStorageCardsToDB();
-        }
-
-        await loadCards();
+      // useLocalStorage returns [] on first render and hydrates later. Keep
+      // `cards` in the deps so guest cards migrate once they hydrate instead of
+      // being dropped against the empty default.
+      if (!migratedRef.current && cards.length) {
+        migratedRef.current = true;
+        await moveLocalStorageCardsToDB();
       }
+
+      await loadCards();
 
       setIsBusy(false);
     })();
-  }, [userEmail]);
+    // moveLocalStorageCardsToDB/loadCards are stable enough for this flow.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userEmail, cards]);
 
   return (
     <>
