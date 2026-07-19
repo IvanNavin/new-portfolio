@@ -2,10 +2,11 @@
 #  - static demo apps (2048, destructurizator, miner, snake): no package.json,
 #    deployed separately to Netlify
 #  - business-ideas: no source in git
-#  - gantt-chart: a CRA app pinned to React 18 (frappe-gantt-react uses
-#    findDOMNode, removed in React 19), which conflicts with this workspace's
-#    React 19 override — it stays standalone (own package-lock, npm).
-# rpg-game (vanilla webpack, no React) is a full member.
+#  - gantt-chart: a React-18 CRA app. It gets React 18 at runtime in an isolated
+#    tree, but its transitive @types (react-datepicker, react-router, MUI) pull
+#    @types/react 19 from the shared store, breaking its type-check (TS2786).
+#    Kept standalone (own package-lock, npm) so it has a clean React-18 @types
+#    tree with no version bleed.
 packages:
   - apps/devpulse
   - apps/language

@@ -4,7 +4,7 @@
     "node": ">=20.19.0"
   },
   "name": "with-tailwind",
-  "packageManager": "pnpm@9.15.9",
+  "packageManager": "pnpm@10.34.5",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -21,10 +21,6 @@
   },
   "pnpm": {
     "overrides": {
-      "react": "^19.2.6",
-      "react-dom": "^19.2.6",
-      "@types/react": "^19.2.15",
-      "@types/react-dom": "^19.2.3",
       "prisma": "^6.19.3",
       "@prisma/client": "^6.19.3",
       "ts-api-utils": "^2.1.0",
