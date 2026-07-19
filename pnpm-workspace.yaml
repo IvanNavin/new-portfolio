@@ -28,20 +28,6 @@ strictPeerDependencies: false
 # Set a positive value (minutes) to re-enable the supply-chain safeguard.
 minimumReleaseAge: 0
 
-# pnpm 11 does not run dependency build scripts unless allow-listed. These need
-# theirs to build native binaries / generate clients (a bare `pnpm install`,
-# e.g. on Vercel, fails with ERR_PNPM_IGNORED_BUILDS otherwise).
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@prisma/client'
-  - '@prisma/engines'
-  - bufferutil
-  - esbuild
-  - prisma
-  - sharp
-  - sqlite3
-  - unrs-resolver
-
 # Force single versions across the workspace (was package.json "resolutions"
 # under yarn, then pnpm.overrides). React is intentionally NOT pinned here — each
 # app declares its own so gantt can stay on 18 while the rest use 19.
@@ -50,3 +36,17 @@ overrides:
   '@prisma/client': ^6.19.3
   ts-api-utils: ^2.1.0
   vite: 7.3.5
+
+# pnpm 11 does not run dependency build scripts unless approved here. These need
+# theirs to build native binaries / generate clients — without approval a bare
+# `pnpm install` (e.g. on Vercel) fails with ERR_PNPM_IGNORED_BUILDS.
+allowBuilds:
+  '@parcel/watcher': true
+  '@prisma/client': true
+  '@prisma/engines': true
+  bufferutil: true
+  esbuild: true
+  prisma: true
+  sharp: true
+  sqlite3: true
+  unrs-resolver: true
