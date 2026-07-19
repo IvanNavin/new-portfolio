@@ -2,11 +2,13 @@
 
 import { auth } from "@lib/auth";
 import { prisma } from "@lib/prisma";
+import { isBlockedHost } from "@lib/safeFetch";
 import { Category } from "@lib/sources";
 import { addUserBoost, removeUserBoost } from "@lib/userBoosts";
 import { addUserMute, removeUserMute } from "@lib/userMutes";
 import {
   addCustomSource,
+  MAX_CUSTOM_SOURCES,
   removeCustomSource,
   toggleSource,
 } from "@lib/userSources";
@@ -168,15 +170,41 @@ export async function importOpmlAction(
     return { error: "No <outline xmlUrl=…> entries found." };
   }
 
+  // Same up-front protocol + SSRF check addCustomSource applies to a single
+  // URL: drop anything that isn't a public http(s) endpoint so the importer
+  // can't be used to seed private-network / non-http feed rows the cron then
+  // repeatedly tries. safeFetch is still the final runtime guard.
+  const valid = entries.filter((e) => {
+    try {
+      const u = new URL(e.url);
+      return (
+        (u.protocol === "https:" || u.protocol === "http:") &&
+        !isBlockedHost(u.hostname)
+      );
+    } catch {
+      return false;
+    }
+  });
+
   const existing = await prisma.devpulseSource.findMany({
-    where: { url: { in: entries.map((e) => e.url) } },
+    where: { url: { in: valid.map((e) => e.url) } },
     select: { url: true },
   });
   const seen = new Set(existing.map((r) => r.url));
-  const fresh = entries.filter((e) => !seen.has(e.url));
-  if (fresh.length > 0) {
+  const fresh = valid.filter((e) => !seen.has(e.url));
+
+  // Enforce the SAME per-user cap as addCustomSource so a bulk OPML upload
+  // can't trivially defeat the anti-abuse limit. Import only up to the
+  // remaining slots; the rest count as skipped.
+  const myCount = await prisma.devpulseSource.count({
+    where: { isBuiltIn: false, createdByUserId: session.user.id },
+  });
+  const remaining = Math.max(0, MAX_CUSTOM_SOURCES - myCount);
+  const toImport = fresh.slice(0, remaining);
+
+  if (toImport.length > 0) {
     await prisma.devpulseSource.createMany({
-      data: fresh.map((e) => ({
+      data: toImport.map((e) => ({
         name: e.name,
         url: e.url,
         category: e.category,
@@ -191,7 +219,7 @@ export async function importOpmlAction(
   revalidatePath("/");
   revalidatePath("/settings");
   return {
-    imported: fresh.length,
-    skipped: entries.length - fresh.length,
+    imported: toImport.length,
+    skipped: entries.length - toImport.length,
   };
 }

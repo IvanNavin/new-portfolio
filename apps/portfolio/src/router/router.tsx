@@ -51,22 +51,33 @@ export function useRouter(): RouterValue {
 
 type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & { to: string };
 
+/** A `to` the browser must handle itself: an absolute URL (http:, mailto:,
+ *  tel:, …) or a protocol-relative `//host` — never an in-app SPA route. */
+const isExternalHref = (to: string): boolean =>
+  /^[a-z][a-z0-9+.-]*:/i.test(to) || to.startsWith("//");
+
 /** Anchor that navigates through the custom router instead of reloading. */
-export function Link({ to, onClick, ...rest }: LinkProps) {
+export function Link({ to, onClick, target, download, ...rest }: LinkProps) {
   const { navigate } = useRouter();
   return (
     <a
       href={to}
+      target={target}
+      download={download}
       onClick={(e) => {
         onClick?.(e);
-        // Respect modifier-clicks / non-left clicks (open in new tab, etc.)
         if (
           e.defaultPrevented ||
           e.button !== 0 ||
           e.metaKey ||
           e.ctrlKey ||
           e.shiftKey ||
-          e.altKey
+          e.altKey ||
+          // Let the browser handle new-tab / download / external targets —
+          // routing these through the SPA would swallow the navigation.
+          (target != null && target !== "_self") ||
+          download != null ||
+          isExternalHref(to)
         ) {
           return;
         }

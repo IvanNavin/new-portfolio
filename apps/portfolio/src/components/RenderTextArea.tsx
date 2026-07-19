@@ -10,9 +10,12 @@ export const RenderTextArea = ({ t, tKey }: Props) => {
   // Before i18n resources load, t() with returnObjects returns the key string,
   // not an object — guard so we don't render it char-by-char or crash.
   const value = t(tKey, { returnObjects: true });
-  const allText: string[] =
+  // Keep only string values — if a locale ever nests an object/array under one
+  // of these keys, rendering it as a child throws "Objects are not valid as a
+  // React child" and blanks the page. Filtering also drops the `as` assertion.
+  const allText =
     value && typeof value === "object"
-      ? (Object.values(value) as string[])
+      ? Object.values(value).filter((v): v is string => typeof v === "string")
       : [];
 
   return (

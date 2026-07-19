@@ -4,6 +4,14 @@ import { isBlockedHost, safeFetch } from "./safeFetch";
 import { Category } from "./sources";
 import { DbSource } from "./sourcesDb";
 
+// Per-user cap on custom sources: a malicious (or just over-enthusiastic)
+// signup could otherwise add 10k garbage feeds, each of which the cron
+// dutifully fetches on every run, blowing through the Hobby DB quota and
+// outbound bandwidth. 25 is generous for a personal reader — the curated
+// built-in list is ~30 and most users add a handful. Enforced both here
+// (addCustomSource) and in the OPML importer so neither path bypasses it.
+export const MAX_CUSTOM_SOURCES = 25;
+
 /**
  * Per-user source resolution.
  *
@@ -162,8 +170,7 @@ export async function resolveFeedUrl(rawUrl: string): Promise<string> {
 }
 
 export type AddSourceResult =
-  | { ok: true; sourceId: string }
-  | { ok: false; error: string };
+  { ok: true; sourceId: string } | { ok: false; error: string };
 
 /** Validate + persist a new user-added source. Returns the new id on
  *  success; reports a friendly error otherwise. Called from a server
@@ -208,13 +215,7 @@ export async function addCustomSource(
     return { ok: false, error: "Pick a valid category." };
   }
 
-  // Per-user cap: a malicious (or just over-enthusiastic) signup
-  // could otherwise add 10k garbage feeds, each of which the cron
-  // dutifully fetches on every run, blowing through the Hobby DB
-  // quota and outbound bandwidth. 25 is generous for a personal
-  // reader — the curated built-in list is ~30 and most users add a
-  // handful.
-  const MAX_CUSTOM_SOURCES = 25;
+  // Per-user cap (see MAX_CUSTOM_SOURCES).
   const myCount = await prisma.devpulseSource.count({
     where: { isBuiltIn: false, createdByUserId: userId },
   });

@@ -29,7 +29,7 @@
     },
     "typecheck": {
       "dependsOn": ["^typecheck", "generate", "^generate"],
-      "inputs": ["tsconfig.json", "src/**/*.ts", "src/**/*.tsx"]
+      "inputs": ["$TURBO_DEFAULT$"]
     },
     "format": {
       "dependsOn": ["^format"]

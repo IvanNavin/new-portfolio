@@ -168,6 +168,18 @@ function extractEngagement(rawText: string | null): number | null {
   return best;
 }
 
+// Reject non-http(s) links (javascript:, data:, mailto:, …). A hostile or
+// compromised upstream feed could otherwise land a `javascript:` URL in
+// news_item.url, which then renders as an <a href> in NewsCard — stored XSS.
+function isHttpUrl(value: string): boolean {
+  try {
+    const { protocol } = new URL(value);
+    return protocol === "http:" || protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export function parseFeed(xml: string): ParsedItem[] {
   // Atom first — looks for <entry>; RSS uses <item>.
   const isAtom = /<feed[\s>]/i.test(xml) && /<entry[\s>]/i.test(xml);
@@ -194,10 +206,11 @@ export function parseFeed(xml: string): ParsedItem[] {
       pickTag(block, "content");
 
     const publishedAt = parseDate(dateRaw);
-    if (!title || !url || !publishedAt) continue;
+    const cleanUrl = url?.trim();
+    if (!title || !cleanUrl || !publishedAt || !isHttpUrl(cleanUrl)) continue;
 
     items.push({
-      url: url.trim(),
+      url: cleanUrl,
       title,
       excerpt: cleanText(summaryRaw),
       publishedAt,

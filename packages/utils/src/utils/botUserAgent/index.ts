@@ -20,6 +20,11 @@ export const BOT_USER_AGENT_REGEX = new RegExp(
   'i',
 );
 
+// Escape regex metacharacters so a caller-supplied `extra` term can't break
+// the pattern (SyntaxError) or open a ReDoS vector when interpolated below.
+const escapeRegExp = (s: string): string =>
+  s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 // Return true if UA matches bot patterns
 export const isBotUserAgent = (
   userAgent: string | null | undefined,
@@ -28,7 +33,7 @@ export const isBotUserAgent = (
   if (!userAgent) return false;
   if (extra?.length) {
     const rx = new RegExp(
-      `(${[...BOT_USER_AGENT_PATTERNS, ...extra].join('|')})`,
+      `(${[...BOT_USER_AGENT_PATTERNS, ...extra.map(escapeRegExp)].join('|')})`,
       'i',
     );
     return rx.test(userAgent);

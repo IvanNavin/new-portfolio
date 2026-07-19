@@ -1,4 +1,4 @@
-import { isBlockedHost } from "@lib/safeFetch";
+import { isBlockedHost, safeFetch } from "@lib/safeFetch";
 import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -17,8 +17,11 @@ const CACHE_HEADERS = {
 
 async function tryFetch(url: string): Promise<Response | null> {
   try {
-    const res = await fetch(url, {
-      signal: AbortSignal.timeout(TIMEOUT_MS),
+    // safeFetch (not raw fetch) so the SSRF guard re-validates every redirect
+    // hop — a public `https://${host}/favicon.ico` could otherwise 302 to an
+    // internal/cloud-metadata address and we'd blindly follow it.
+    const res = await safeFetch(url, {
+      timeoutMs: TIMEOUT_MS,
       headers: { "user-agent": "devpulse-bot/0.1" },
     });
     if (!res.ok) return null;

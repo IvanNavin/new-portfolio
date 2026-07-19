@@ -6,6 +6,40 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// Cap each invocation: the fresh path does a 10s safeFetch + JSDOM/Readability
+// parse, so bound the function so a slow upstream can't pin it for minutes.
+export const maxDuration = 20;
+
+// Best-effort per-IP throttle for the EXPENSIVE (uncached) extraction path.
+// Item ids are enumerable (by-urls returns them), so without this a script can
+// amplify each cheap request into a 10s+ JSDOM parse — DoS / Vercel cost blowup.
+// Fluid Compute reuses instances so this blunts floods; it isn't a hard
+// cross-region guarantee (a shared store would be), but it's the right tier
+// for a hobby aggregator and never throttles cached reads.
+const RATE_WINDOW_MS = 60_000;
+const RATE_MAX = 15;
+const extractionHits = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const recent = (extractionHits.get(ip) ?? []).filter(
+    (t) => now - t < RATE_WINDOW_MS,
+  );
+  recent.push(now);
+  extractionHits.set(ip, recent);
+  if (extractionHits.size > 5000) {
+    for (const [k, v] of extractionHits) {
+      if (v.every((t) => now - t >= RATE_WINDOW_MS)) extractionHits.delete(k);
+    }
+  }
+  return recent.length > RATE_MAX;
+}
+
+function clientIp(req: NextRequest): string {
+  const fwd = req.headers.get("x-forwarded-for");
+  if (fwd) return fwd.split(",")[0].trim();
+  return req.headers.get("x-real-ip") ?? "unknown";
+}
 
 // Readability does NOT sanitize (scripts + on* handlers survive), yet this HTML
 // is rendered via dangerouslySetInnerHTML. Strip active content with the
@@ -116,6 +150,14 @@ export async function GET(req: NextRequest) {
           "cache-control": "private, max-age=3600",
         },
       },
+    );
+  }
+
+  // Only the uncached path is expensive — throttle it, never cached reads.
+  if (isRateLimited(clientIp(req))) {
+    return NextResponse.json(
+      { ok: false, error: "rate limited" },
+      { status: 429, headers: { "retry-after": "60" } },
     );
   }
 

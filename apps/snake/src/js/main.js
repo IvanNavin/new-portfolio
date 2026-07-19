@@ -54,6 +54,15 @@ function exitToMenu() {
     game.removeControls();
   }
 
+  // Stop the render loop — setting running=false only pauses moves; the
+  // gameLoop keeps re-requesting frames, so without this an idle ~60fps loop
+  // runs forever in the menu (CPU/battery drain). startGame() starts a fresh
+  // loop for the next round.
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
+
   document.querySelector(".pause-menu").classList.add("display-none");
   document.querySelector(".game-over").classList.add("display-none");
   document.querySelector(".game-screen").classList.add("display-none");

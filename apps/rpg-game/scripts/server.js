@@ -73,6 +73,33 @@ const cleanName = (raw) => {
   return s || "Anonymous";
 };
 
+// Authoritative: coerce/trim/cap chat text. A modified client can emit any
+// payload — a non-string (renders as "[object Object]" for everyone) or a
+// multi-megabyte string the server would fan out to every player. Returns
+// "" for anything empty so the caller can drop it.
+const MAX_MSG_LEN = 500;
+const cleanMessage = (raw) =>
+  (typeof raw === "string" ? raw : "").trim().slice(0, MAX_MSG_LEN);
+
+// Simple per-socket chat throttle: at most CHAT_BURST messages per
+// CHAT_WINDOW_MS. Without it one client can flood the broadcast loop and
+// DoS every connected player (bandwidth/CPU).
+const CHAT_WINDOW_MS = 10_000;
+const CHAT_BURST = 15;
+const chatAllowed = (socket) => {
+  const now = Date.now();
+  const hits = (socket.data.chatHits || []).filter(
+    (t) => now - t < CHAT_WINDOW_MS,
+  );
+  if (hits.length >= CHAT_BURST) {
+    socket.data.chatHits = hits;
+    return false;
+  }
+  hits.push(now);
+  socket.data.chatHits = hits;
+  return true;
+};
+
 const FILES =
   /\.(js|js.map|woff|woff2|svg|bmp|jpg|jpeg|gif|png|ico)(\?v=\d+\.\d+\.\d+)?$/;
 
@@ -276,14 +303,13 @@ const init = async () => {
       io.emit("chat online", { online: onlineCount });
     });
 
-    socket.on("chat message", (msg) => {
-      console.log(
-        "CHAT MESSAGE event. socket.data.player:",
-        socket.data.player,
-      );
+    socket.on("chat message", (raw) => {
+      const msg = cleanMessage(raw);
+      if (!msg) return; // drop empty / non-string payloads
+      if (!chatAllowed(socket)) return; // drop floods
+
       const player = socket.data.player;
       const name = player ? player.name : "Anonymous";
-      console.log("Sending chat message with name:", name);
       io.emit("chat message", {
         name,
         time: Date.now(),

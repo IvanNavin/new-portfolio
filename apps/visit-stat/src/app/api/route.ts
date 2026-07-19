@@ -138,7 +138,11 @@ export const POST = async (req: NextRequest) => {
     // Basic fallback
     if (!ip || ip === '::1' || ip === '127.0.0.1') ip = '';
 
-    // Geo lookup
+    // Geo is intentionally not resolved here. The freegeoip.app service this
+    // legacy handler used is long dead, and calling it put the visitor's raw
+    // IP in a URL to a now-unowned domain (privacy leak) plus added blocking
+    // latency on every request. Real ingest is POST /api/track, which derives
+    // geo from Vercel edge headers. Geo columns stay null for this endpoint.
     type Geo = {
       ip?: string;
       country_code?: string | null;
@@ -148,19 +152,7 @@ export const POST = async (req: NextRequest) => {
       latitude?: number | null;
       longitude?: number | null;
     };
-    let geo: Geo = {};
-    try {
-      const endpoint = ip
-        ? `https://freegeoip.app/json/${ip}`
-        : `https://freegeoip.app/json/`;
-      const geoRes = await fetch(endpoint, {
-        next: { revalidate: 60 * 60 * 12 },
-      });
-      if (geoRes.ok) geo = await geoRes.json();
-      else console.error('freeGeoIP status:', geoRes.status);
-    } catch (err) {
-      console.error('Geo lookup failed:', err);
-    }
+    const geo: Geo = {};
 
     // Headers
     const userAgent = req.headers.get('user-agent') || '';

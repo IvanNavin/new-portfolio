@@ -16,6 +16,10 @@ const stableStringify = (value: AnyType): string => {
 // Distinct items, first-seen order. Unlike filter(Boolean) this keeps legit
 // falsy values (0, '', false, null) and dedupes objects regardless of key order.
 export const getUniqueData = (data: AnyType): AnyType => {
+  // Degrade instead of crashing: a non-array (undefined/null/object) would
+  // otherwise throw "data is not iterable" in this exported, widely-used util.
+  if (!Array.isArray(data)) return [];
+
   const seen = new Set<string | undefined>();
   const result: AnyType[] = [];
 
