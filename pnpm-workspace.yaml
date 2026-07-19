@@ -16,3 +16,23 @@ packages:
   - apps/solitaire
   - apps/visit-stat
   - packages/*
+
+# pnpm 11 reads settings from here, not .npmrc or the package.json "pnpm" field.
+# link internal "@repo/foo": "*" deps from the workspace (they don't use the
+# workspace: protocol) instead of hitting the registry (404):
+linkWorkspacePackages: true
+autoInstallPeers: true
+# don't fail installs on peer-dep mismatches (matches the old --legacy-peer-deps)
+strictPeerDependencies: false
+# pnpm 11 blocks freshly published versions (~1 day) by default; 0 disables it.
+# Set a positive value (minutes) to re-enable the supply-chain safeguard.
+minimumReleaseAge: 0
+
+# Force single versions across the workspace (was package.json "resolutions"
+# under yarn, then pnpm.overrides). React is intentionally NOT pinned here — each
+# app declares its own so gantt can stay on 18 while the rest use 19.
+overrides:
+  prisma: ^6.19.3
+  '@prisma/client': ^6.19.3
+  ts-api-utils: ^2.1.0
+  vite: 7.3.5
