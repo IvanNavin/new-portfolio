@@ -104,7 +104,7 @@ export function BackButton({
           hovered ? "cursor-pointer" : ""
         }`}
       >
-        <canvas ref={canvasRef} className="block size-[100px]" />
+        <canvas ref={canvasRef} className="block size-[100px] rounded-full" />
         <span className="font-russo pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-base leading-tight text-white">
           {text}
         </span>

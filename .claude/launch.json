@@ -3,8 +3,11 @@
   "configurations": [
     {
       "name": "portfolio",
-      "runtimeExecutable": "yarn",
-      "runtimeArgs": ["workspace", "portfolio", "dev"],
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd apps/portfolio && node_modules/.bin/vite --port 5173"
+      ],
       "port": 5173
     },
     {
