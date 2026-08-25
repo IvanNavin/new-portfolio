@@ -8,7 +8,9 @@
 #    Kept standalone (own package-lock, npm) so it has a clean React-18 @types
 #    tree with no version bleed.
 packages:
+  - apps/devops-quest
   - apps/devpulse
+  - apps/film-scope
   - apps/language
   - apps/pokedex
   - apps/portfolio
@@ -44,6 +46,8 @@ allowBuilds:
   '@parcel/watcher': true
   '@prisma/client': true
   '@prisma/engines': true
+  # pulled in by next-intl (film-scope)
+  '@swc/core': true
   bufferutil: true
   esbuild: true
   prisma: true

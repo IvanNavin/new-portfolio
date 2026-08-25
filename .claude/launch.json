@@ -2,6 +2,24 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "devops-quest",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd apps/devops-quest && node_modules/.bin/next dev --turbo -p 3060"
+      ],
+      "port": 3060
+    },
+    {
+      "name": "film-scope",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": [
+        "-c",
+        "cd apps/film-scope && node_modules/.bin/next dev --turbo -p 3020"
+      ],
+      "port": 3020
+    },
+    {
       "name": "portfolio",
       "runtimeExecutable": "bash",
       "runtimeArgs": [

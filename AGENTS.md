@@ -47,8 +47,9 @@ with `--turbo`; `rpg-game` is webpack; `visit-stat` has no `typecheck` script.
 Prisma client: `pnpm generate:prisma` (root) regenerates from `packages/prisma/schema.prisma`.
 `postinstall` runs it automatically unless `SKIP_PRISMA=true`.
 
-There is **no test suite** in this repo — `pnpm test` does not exist at the root, and app `test`
-scripts are placeholders. Don't claim tests pass; there are none to run.
+Tests exist in **one** app only: `apps/devops-quest` (vitest). `pnpm test` at the root runs
+`turbo test`, which today means just that app. Every other app's `test` script is still a
+placeholder — don't claim those pass.
 
 ## Git hooks (husky)
 
@@ -63,8 +64,8 @@ scripts are placeholders. Don't claim tests pass; there are none to run.
 ### Workspace members
 
 Only these are pnpm workspace packages (see `pnpm-workspace.yaml`):
-`apps/devpulse`, `apps/language`, `apps/pokedex`, `apps/portfolio`, `apps/rpg-game`,
-`apps/solitaire`, `apps/visit-stat`, and `packages/*`.
+`apps/devops-quest`, `apps/devpulse`, `apps/language`, `apps/pokedex`, `apps/portfolio`,
+`apps/rpg-game`, `apps/solitaire`, `apps/visit-stat`, and `packages/*`.
 
 **Deliberately excluded** (do not add them to the workspace):
 
@@ -100,6 +101,14 @@ Only these are pnpm workspace packages (see `pnpm-workspace.yaml`):
   scoring, per-user state).
 - **language**, **pokedex** — Next.js 14, Mantine UI, Prisma 5, NextAuth 4 (language).
 - **visit-stat** — Next.js 15, Mantine + mantine-react-table. Run locally only.
+- **devops-quest** — Next.js 16 + Tailwind v4 game that teaches DevOps: 12 levels / 58 missions,
+  ~80% practice. The core is a pure-TypeScript shell simulator in `lib/shell/` (virtual
+  filesystem with real permission bits, a parser handling pipes/redirects/quotes, and command
+  modules for linux/git/docker/kubectl/terraform). Curriculum lives in `lib/content/levels/*.ts`
+  as plain data — a mission is one object, and its success check is an ordinary predicate over
+  `ShellState`. Progress is localStorage-first (`lib/progress/`). **This is the only app with
+  tests**: `pnpm --filter devops-quest test` (vitest) — notably it replays every mission's own
+  printed solution and asserts all its goals turn green, so broken content fails CI, not players.
 
 ### Version divergence (expected, not a bug)
 

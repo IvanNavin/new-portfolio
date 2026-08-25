@@ -1,0 +1,317 @@
+import { describe, expect, it } from 'vitest';
+
+import { getNode, modeToString, parseMode, readFile, resolvePath } from './fs';
+import { makeMachine } from './machines';
+import { parseLine } from './parse';
+import { runLine } from './run';
+import type { ShellState } from './types';
+
+const run = (state: ShellState, ...lines: string[]) => {
+  let current = state;
+  let last = {
+    state,
+    output: [] as ReturnType<typeof runLine>['output'],
+    cleared: false,
+  };
+  for (const line of lines) {
+    last = runLine(current, line);
+    current = last.state;
+  }
+  return {
+    state: current,
+    out: last.output.map((o) => o.text).join('\n'),
+    output: last.output,
+  };
+};
+
+describe('parse', () => {
+  const env = { NAME: 'world', EMPTY: '' };
+
+  it('splits words and honours quotes', () => {
+    const result = parseLine(
+      'echo "hello there" \'raw $NAME\'',
+      env,
+      '/home/deploy',
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.segments[0].commands[0].argv).toEqual([
+      'echo',
+      'hello there',
+      'raw $NAME',
+    ]);
+  });
+
+  it('expands variables only outside single quotes', () => {
+    const result = parseLine('echo "$NAME" $NAME', env, '/home/deploy');
+    if (!result.ok) return;
+    expect(result.segments[0].commands[0].argv).toEqual([
+      'echo',
+      'world',
+      'world',
+    ]);
+  });
+
+  it('expands ~ to the home directory', () => {
+    const result = parseLine('ls ~/.ssh', env, '/home/deploy');
+    if (!result.ok) return;
+    expect(result.segments[0].commands[0].argv).toEqual([
+      'ls',
+      '/home/deploy/.ssh',
+    ]);
+  });
+
+  it('builds a pipeline', () => {
+    const result = parseLine('cat a | grep b | wc -l', env, '/root');
+    if (!result.ok) return;
+    expect(result.segments[0].commands).toHaveLength(3);
+  });
+
+  it('captures redirects without keeping them as argv', () => {
+    const result = parseLine('echo hi > out.txt', env, '/root');
+    if (!result.ok) return;
+    const [command] = result.segments[0].commands;
+    expect(command.argv).toEqual(['echo', 'hi']);
+    expect(command.redirects).toEqual([
+      { fd: 1, path: 'out.txt', append: false },
+    ]);
+  });
+
+  it('reports an unterminated quote instead of guessing', () => {
+    const result = parseLine('echo "oops', env, '/root');
+    expect(result.ok).toBe(false);
+  });
+});
+
+describe('paths and modes', () => {
+  it('normalises .. and .', () => {
+    const state = makeMachine({ cwd: '/var/log' });
+    expect(resolvePath(state, '../www')).toBe('/var/www');
+    expect(resolvePath(state, './nginx/../app.log')).toBe('/var/log/app.log');
+  });
+
+  it('renders octal modes the way ls -l does', () => {
+    const state = makeMachine({
+      files: { '/tmp/key': { content: 'x', mode: 0o600 } },
+    });
+    const node = getNode(state.fs, '/tmp/key');
+    expect(node && modeToString(node)).toBe('-rw-------');
+  });
+
+  it('parses symbolic and octal chmod specs', () => {
+    expect(parseMode('755', 0o644)).toBe(0o755);
+    expect(parseMode('u+x', 0o644)).toBe(0o744);
+    expect(parseMode('go-r', 0o644)).toBe(0o600);
+    expect(parseMode('a=r', 0o777)).toBe(0o444);
+    expect(parseMode('nonsense', 0o644)).toBeNull();
+  });
+});
+
+describe('core commands', () => {
+  it('creates, lists and reads files', () => {
+    const { state, out } = run(
+      makeMachine({ user: 'deploy' }),
+      'mkdir -p /tmp/demo',
+      'echo "hello" > /tmp/demo/a.txt',
+      'cat /tmp/demo/a.txt',
+    );
+    expect(out.trim()).toBe('hello');
+    expect(readFile(state.fs, '/tmp/demo/a.txt')).toBe('hello\n');
+  });
+
+  it('appends with >> instead of truncating', () => {
+    const { state } = run(
+      makeMachine(),
+      'echo one > /tmp/f',
+      'echo two >> /tmp/f',
+    );
+    expect(readFile(state.fs, '/tmp/f')).toBe('one\ntwo\n');
+  });
+
+  it('pipes stdout into the next command', () => {
+    const { out } = run(
+      makeMachine({
+        files: { '/tmp/log': 'ok\nERROR boom\nok\nERROR again\n' },
+      }),
+      'cat /tmp/log | grep ERROR | wc -l',
+    );
+    expect(out.trim()).toBe('2');
+  });
+
+  it('reports unknown commands the way bash does', () => {
+    const { out } = run(makeMachine(), 'dokcer ps');
+    expect(out).toBe('bash: dokcer: command not found');
+  });
+
+  it('stops an && chain when the left side fails', () => {
+    const { state } = run(
+      makeMachine(),
+      'cat /nope && touch /tmp/should-not-exist',
+    );
+    expect(getNode(state.fs, '/tmp/should-not-exist')).toBeNull();
+  });
+
+  it('refuses to remove a directory without -r', () => {
+    const { out, state } = run(makeMachine({ dirs: ['/tmp/d'] }), 'rm /tmp/d');
+    expect(out).toContain('Is a directory');
+    expect(getNode(state.fs, '/tmp/d')).not.toBeNull();
+  });
+
+  it('finds files by name pattern', () => {
+    const { out } = run(
+      makeMachine({ files: { '/etc/a.conf': 'x', '/etc/b.txt': 'x' } }),
+      'find /etc -name "*.conf"',
+    );
+    expect(out).toContain('/etc/a.conf');
+    expect(out).not.toContain('/etc/b.txt');
+  });
+});
+
+describe('permissions', () => {
+  it('denies reading a file the user has no rights to', () => {
+    const { out } = run(
+      makeMachine({
+        user: 'deploy',
+        files: { '/root/secret': { content: 'x', mode: 0o600, owner: 'root' } },
+      }),
+      'cat /root/secret',
+    );
+    expect(out).toContain('Permission denied');
+  });
+
+  it('lets root through and lets sudo borrow root', () => {
+    const { out } = run(
+      makeMachine({
+        user: 'deploy',
+        files: {
+          '/root/secret': { content: 'classified', mode: 0o600, owner: 'root' },
+        },
+      }),
+      'sudo cat /root/secret',
+    );
+    expect(out.trim()).toBe('classified');
+  });
+
+  it('refuses sudo for a user outside the sudo group', () => {
+    const { out } = run(
+      makeMachine({ user: 'deploy', users: [{ name: 'intern', groups: [] }] }),
+      'su intern',
+      'sudo whoami',
+    );
+    expect(out).toContain('not in the sudoers file');
+  });
+
+  it('chmod 600 shows up in ls -l and in the node', () => {
+    const { state, out } = run(
+      makeMachine({
+        user: 'deploy',
+        files: { '/home/deploy/key': { content: 'k', owner: 'deploy' } },
+      }),
+      'chmod 600 /home/deploy/key',
+      'ls -l /home/deploy/key',
+    );
+    expect(getNode(state.fs, '/home/deploy/key')?.mode).toBe(0o600);
+    expect(out).toContain('-rw-------');
+  });
+
+  it('usermod -aG keeps existing groups, plain -G replaces them', () => {
+    const append = run(
+      makeMachine({
+        user: 'root',
+        users: [{ name: 'app', groups: ['sudo'] }],
+        groups: ['docker'],
+      }),
+      'usermod -aG docker app',
+    );
+    expect(append.state.users.app.groups).toContain('sudo');
+    expect(append.state.users.app.groups).toContain('docker');
+
+    const replace = run(
+      makeMachine({
+        user: 'root',
+        users: [{ name: 'app', groups: ['sudo'] }],
+        groups: ['docker'],
+      }),
+      'usermod -G docker app',
+    );
+    expect(replace.state.users.app.groups).not.toContain('sudo');
+  });
+
+  it('writes new accounts into /etc/passwd', () => {
+    const { state } = run(
+      makeMachine({ user: 'root' }),
+      'useradd -m -s /bin/bash ci',
+    );
+    expect(readFile(state.fs, '/etc/passwd')).toContain('ci:x:');
+    expect(state.users.ci.home).toBe('/home/ci');
+  });
+});
+
+describe('processes and services', () => {
+  const machine = () =>
+    makeMachine({
+      user: 'deploy',
+      services: [
+        {
+          name: 'nginx',
+          description: 'A high performance web server',
+          active: false,
+          port: 80,
+        },
+      ],
+    });
+
+  it('systemctl start flips the unit active and opens its port', () => {
+    const { state, out } = run(
+      machine(),
+      'sudo systemctl start nginx',
+      'systemctl is-active nginx',
+    );
+    expect(out.trim()).toBe('active');
+    expect(state.net.listening.some((l) => l.port === 80)).toBe(true);
+  });
+
+  it('refuses to start a unit without root', () => {
+    const { out } = run(machine(), 'systemctl start nginx');
+    expect(out).toContain('Access denied');
+  });
+
+  it('enable does not start, enable --now does', () => {
+    const onlyEnabled = run(machine(), 'sudo systemctl enable nginx');
+    expect(onlyEnabled.state.services.nginx.enabled).toBe(true);
+    expect(onlyEnabled.state.services.nginx.active).toBe(false);
+
+    const both = run(machine(), 'sudo systemctl enable --now nginx');
+    expect(both.state.services.nginx.active).toBe(true);
+  });
+
+  it('kill removes the process', () => {
+    const state = makeMachine({
+      user: 'deploy',
+      processes: [
+        { pid: 1421, user: 'deploy', command: 'node worker.js', cpu: 98 },
+      ],
+    });
+    const killed = run(state, 'kill -9 1421');
+    expect(killed.state.processes.some((p) => p.pid === 1421)).toBe(false);
+  });
+
+  it('journalctl -u reads that unit only', () => {
+    const state = makeMachine({
+      services: [
+        { name: 'nginx', log: ['emerg: bind() to 0.0.0.0:80 failed'] },
+      ],
+    });
+    const { out } = run(state, 'journalctl -u nginx');
+    expect(out).toContain('bind() to 0.0.0.0:80 failed');
+  });
+});
+
+describe('man', () => {
+  it('serves a page for a known command and refuses an unknown one', () => {
+    expect(run(makeMachine(), 'man chmod').out).toContain('chmod');
+    expect(run(makeMachine(), 'man frobnicate').out).toContain(
+      'No manual entry',
+    );
+  });
+});

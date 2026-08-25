@@ -31,6 +31,10 @@
       "dependsOn": ["^typecheck", "generate", "^generate"],
       "inputs": ["$TURBO_DEFAULT$"]
     },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
     "format": {
       "dependsOn": ["^format"]
     },
