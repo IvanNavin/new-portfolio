@@ -1,0 +1,47 @@
+// Local copy of just this app's models.
+//
+// Vercel uploads only apps/devops-quest for this project, so a `@repo/prisma`
+// workspace dependency cannot resolve at build time. Same arrangement as
+// apps/devpulse: the models below are mirrored in packages/prisma/schema.prisma,
+// where migrations are managed, and the two files must be edited in tandem.
+
+generator client {
+  provider = "prisma-client-js"
+  // Generated INTO this app rather than into the shared node_modules copy of
+  // @prisma/client: devpulse also generates from its own schema, and with the
+  // default output the two apps silently overwrite each other's client on every
+  // `pnpm install`. Keeping it local also means Vercel traces it automatically.
+  output   = "../generated/prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+}
+
+model DevopsQuestUser {
+  id        String                @id @default(cuid())
+  email     String                @unique
+  name      String?
+  image     String?
+  createdAt DateTime              @default(now())
+  progress  DevopsQuestProgress[]
+
+  @@map("devopsquest_user")
+}
+
+model DevopsQuestProgress {
+  id        String   @id @default(cuid())
+  userId    String
+  missionId String
+  stars     Int
+  hintsUsed Int      @default(0)
+  xp        Int
+  updatedAt DateTime @updatedAt
+
+  user DevopsQuestUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, missionId])
+  @@index([userId])
+  @@map("devopsquest_progress")
+}

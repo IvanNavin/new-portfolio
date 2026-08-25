@@ -8,6 +8,7 @@ import { nextRank, rankFor, rankProgress } from '@/lib/progress/rank';
 import { useProgress } from '@/lib/progress/useProgress';
 
 import { ProgressBar } from '../ui/ProgressBar';
+import { AccountChip } from './AccountChip';
 
 export const Hud = () => {
   const { xp, stars } = useProgress();
@@ -43,10 +44,13 @@ export const Hud = () => {
           </div>
         </div>
 
-        <div className="ml-auto flex shrink-0 items-center gap-1 font-mono text-[12px] sm:ml-0">
-          <span className="text-warn">★</span>
-          <span className="text-ink">{stars}</span>
-          <span className="text-ink-faint">/ {MAX_STARS}</span>
+        <div className="ml-auto flex shrink-0 items-center gap-3 sm:ml-0">
+          <span className="flex items-center gap-1 font-mono text-[12px]">
+            <span className="text-warn">★</span>
+            <span className="text-ink">{stars}</span>
+            <span className="text-ink-faint">/ {MAX_STARS}</span>
+          </span>
+          <AccountChip />
         </div>
       </div>
     </header>

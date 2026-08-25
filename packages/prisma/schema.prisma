@@ -251,3 +251,36 @@ model DevpulseDismissedItem {
   @@unique([userId, url])
   @@map("devpulse_dismissed_item")
 }
+
+// ---------------------------------------------------------------------------
+// devops-quest — the DevOps learning game. Mirrored in
+// apps/devops-quest/prisma/schema.prisma (that app ships its own copy because
+// Vercel uploads only its directory). Edit both files together.
+// ---------------------------------------------------------------------------
+
+model DevopsQuestUser {
+  id        String                @id @default(cuid())
+  email     String                @unique
+  name      String?
+  image     String?
+  createdAt DateTime              @default(now())
+  progress  DevopsQuestProgress[]
+
+  @@map("devopsquest_user")
+}
+
+model DevopsQuestProgress {
+  id        String   @id @default(cuid())
+  userId    String
+  missionId String
+  stars     Int
+  hintsUsed Int      @default(0)
+  xp        Int
+  updatedAt DateTime @updatedAt
+
+  user DevopsQuestUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, missionId])
+  @@index([userId])
+  @@map("devopsquest_progress")
+}
