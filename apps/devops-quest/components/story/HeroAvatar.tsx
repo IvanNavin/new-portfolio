@@ -1,23 +1,23 @@
 import { cn } from '@/lib/cn';
 
-type MentorAvatarProps = {
+type HeroAvatarProps = {
   size?: number;
   className?: string;
 };
 
 /**
- * Тарас, drawn inline. A raccoon earns the role honestly: nocturnal, digs
- * through bins for the useful thing, washes everything twice — which is most
- * of the job. Fixed fur colours rather than theme tokens, because a mascot
- * keeps its own palette in light and dark alike.
+ * Тарас — the raccoon you play. The species earns the role honestly: nocturnal,
+ * digs through bins for the one useful thing, washes everything twice. Fixed
+ * fur colours rather than theme tokens, because a character keeps its own
+ * palette in light and dark alike.
  */
-export const MentorAvatar = ({ size = 44, className }: MentorAvatarProps) => (
+export const HeroAvatar = ({ size = 44, className }: HeroAvatarProps) => (
   <svg
     width={size}
     height={size}
     viewBox="0 0 64 64"
     role="img"
-    aria-label="Тарас, єнот-сисадмін"
+    aria-label="Тарас, єнот"
     className={cn('shrink-0', className)}
   >
     <circle cx="32" cy="32" r="31" fill="#111823" />

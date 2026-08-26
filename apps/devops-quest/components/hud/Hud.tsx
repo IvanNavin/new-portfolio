@@ -4,9 +4,11 @@ import { Terminal as TerminalIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { MAX_STARS, TOTAL_XP } from '@/lib/content/registry';
+import { HERO } from '@/lib/content/story';
 import { nextRank, rankFor, rankProgress } from '@/lib/progress/rank';
 import { useProgress } from '@/lib/progress/useProgress';
 
+import { HeroAvatar } from '../story/HeroAvatar';
 import { ProgressBar } from '../ui/ProgressBar';
 import { AccountChip } from './AccountChip';
 
@@ -25,10 +27,13 @@ export const Hud = () => {
           </span>
         </Link>
 
-        <div className="hidden min-w-0 flex-1 items-center gap-3 sm:flex">
+        <div className="hidden min-w-0 flex-1 items-center gap-2.5 sm:flex">
+          <HeroAvatar size={26} />
           <div className="min-w-0 flex-1">
             <div className="mb-1 flex items-baseline justify-between gap-2">
               <span className="truncate text-[11.5px] font-medium text-ink">
+                <span className="text-accent">{HERO.name}</span>
+                <span className="mx-1.5 text-ink-faint">·</span>
                 {rank.title}
                 {upcoming ? (
                   <span className="ml-1.5 text-ink-faint">

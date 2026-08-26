@@ -3,11 +3,11 @@
 import { ArrowRight, Map as MapIcon, RotateCcw } from 'lucide-react';
 import Link from 'next/link';
 
-import { praiseFor } from '@/lib/content/mentor';
+import { heroReaction } from '@/lib/content/story';
 import type { Mission } from '@/lib/content/types';
 import type { MissionRecord } from '@/lib/progress/types';
 
-import { MentorSays } from '../mentor/MentorSays';
+import { CharacterSays } from '../story/CharacterSays';
 import { Button } from '../ui/Button';
 import { Stars } from '../ui/Stars';
 
@@ -68,9 +68,9 @@ export const MissionResult = ({
         </div>
       </div>
 
-      <MentorSays className="mt-5 text-left">
-        <p>{praiseFor(record.stars, record.hintsUsed)}</p>
-      </MentorSays>
+      <CharacterSays who="hero" className="mt-5 text-left">
+        <p>{heroReaction(record.stars, record.hintsUsed)}</p>
+      </CharacterSays>
 
       <div className="mt-3 rounded-lg border border-edge bg-surface-sunken px-3.5 py-3 text-left">
         <p className="text-[11px] uppercase tracking-wide text-ink-faint">

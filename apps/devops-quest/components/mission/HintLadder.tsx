@@ -2,7 +2,7 @@
 
 import { Eye, HelpCircle } from 'lucide-react';
 
-import { STUCK_LINE } from '@/lib/content/mentor';
+import { STUCK_LINE } from '@/lib/content/story';
 
 import { Button } from '../ui/Button';
 

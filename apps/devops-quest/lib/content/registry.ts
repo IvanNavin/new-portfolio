@@ -87,3 +87,16 @@ export const goalCount = (mission: Mission): number => {
       return 1;
   }
 };
+
+/** The numbered steps a mission asks for, whatever kind of task it is. */
+export const stepsOf = (mission: Mission): string[] => {
+  switch (mission.task.kind) {
+    case 'terminal':
+    case 'editor':
+      return mission.task.goals.map((goal) => goal.label);
+    case 'quiz':
+      return [mission.task.question];
+    case 'order':
+      return [mission.task.instruction];
+  }
+};

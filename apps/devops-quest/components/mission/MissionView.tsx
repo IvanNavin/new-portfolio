@@ -11,18 +11,19 @@ import {
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { mentorLineFor } from '@/lib/content/mentor';
 import {
   getLevelOfMission,
   getMission,
   nextMission,
+  stepsOf,
 } from '@/lib/content/registry';
+import { sceneFor } from '@/lib/content/story';
 import { rankFor } from '@/lib/progress/rank';
 import type { MissionRecord } from '@/lib/progress/types';
 import { useProgress } from '@/lib/progress/useProgress';
 import { toast } from '@/lib/toasts';
 
-import { MentorSays } from '../mentor/MentorSays';
+import { Narrator } from '../story/Narrator';
 import { EditorTaskView } from '../tasks/EditorTaskView';
 import { OrderTaskView } from '../tasks/OrderTaskView';
 import { QuizTaskView } from '../tasks/QuizTaskView';
@@ -44,6 +45,8 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
   if (!mission) throw new Error(`Unknown mission: ${missionId}`);
 
   const level = getLevelOfMission(mission.id);
+  const scene = sceneFor(mission.id);
+  const steps = stepsOf(mission);
   const upcoming = nextMission(mission.id);
   const { complete, xp } = useProgress();
 
@@ -198,23 +201,40 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
 
       {phase === 'brief' ? (
         <div className="scroll-thin min-h-0 flex-1 overflow-y-auto">
-          <div className="mx-auto max-w-2xl space-y-5 pb-6">
-            {mentorLineFor(mission.id) ? (
-              <MentorSays>
-                <p>{mentorLineFor(mission.id)}</p>
-              </MentorSays>
-            ) : null}
+          <div className="mx-auto max-w-2xl space-y-7 pb-6">
+            {scene ? <Narrator lines={scene} /> : null}
 
-            <div className="rounded-xl border border-accent/25 bg-accent-soft px-4 py-3">
-              <p className="text-[11px] uppercase tracking-wide text-accent">
-                Завдання
-              </p>
-              <p className="mt-1 text-[14px] leading-relaxed text-ink">
+            <section className="rise" style={{ animationDelay: '120ms' }}>
+              <h2 className="mb-2.5 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint">
+                Що каже теорія
+              </h2>
+              <Theory blocks={mission.theory} />
+            </section>
+
+            <section className="rise" style={{ animationDelay: '220ms' }}>
+              <h2 className="mb-2.5 font-mono text-[10.5px] uppercase tracking-[0.2em] text-accent">
+                Твоє завдання
+              </h2>
+              <p className="mb-3 text-[14px] leading-relaxed text-ink">
                 {mission.goal}
               </p>
-            </div>
-
-            <Theory blocks={mission.theory} />
+              <ol className="space-y-2">
+                {steps.map((step, index) => (
+                  <li
+                    key={step}
+                    className="rise flex items-start gap-3 rounded-lg border border-edge bg-surface-raised px-3 py-2.5"
+                    style={{ animationDelay: `${300 + index * 70}ms` }}
+                  >
+                    <span className="mt-px flex size-5 shrink-0 items-center justify-center rounded-md bg-accent-soft font-mono text-[11px] text-accent">
+                      {index + 1}
+                    </span>
+                    <span className="text-[13.5px] leading-snug text-ink-dim">
+                      {step}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </section>
 
             <Button
               variant="primary"
@@ -223,11 +243,10 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
               onClick={() => setPhase('practice')}
             >
               <Play size={14} />
-              Перейти до практики
+              До роботи
             </Button>
             <p className="text-center text-[11.5px] text-ink-faint">
-              Теорія залишиться під рукою — її можна розгорнути збоку в
-              будь-який момент.
+              Теорія й цілі лишаться під рукою — збоку від термінала.
             </p>
           </div>
         </div>

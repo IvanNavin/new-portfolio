@@ -1,7 +1,8 @@
 import { WorldMap } from '@/components/map/WorldMap';
-import { MentorSays } from '@/components/mentor/MentorSays';
-import { MENTOR_INTRO } from '@/lib/content/mentor';
+import { CharacterSays } from '@/components/story/CharacterSays';
+import { Narrator } from '@/components/story/Narrator';
 import { ALL_MISSIONS, LEVELS } from '@/lib/content/registry';
+import { PROLOGUE } from '@/lib/content/story';
 
 const HomePage = () => (
   <div className="space-y-8">
@@ -10,17 +11,22 @@ const HomePage = () => (
         deploy@app-01:~$
       </p>
       <h1 className="mt-2 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-        Стань DevOps-інженером, а не прочитай про це
+        Ніч. Три сервери. Один єнот.
       </h1>
       <p className="mt-2.5 max-w-2xl text-[14px] leading-relaxed text-ink-dim">
-        Кожна місія — коротка теорія і багато практики у справжньому терміналі:
-        файли, права, процеси, мережа, Git, Docker, CI/CD, Kubernetes.
+        Ти граєш за Тараса. Кожна місія починається з поламки, яку він застав, і
+        закінчується тим, що ти лагодиш її сам — у справжньому терміналі.
       </p>
-      <MentorSays variant="intro" showRole className="mt-5">
-        {MENTOR_INTRO.map((paragraph) => (
-          <p key={paragraph.slice(0, 24)}>{paragraph}</p>
-        ))}
-      </MentorSays>
+      <Narrator lines={PROLOGUE} className="mt-5" />
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <CharacterSays who="hero" showRole>
+          <p>Це я. Сервери тепер мої, і кожну ніч на них щось ламається.</p>
+        </CharacterSays>
+        <CharacterSays who="mentor" showRole>
+          <p>Я на пляжі. Але телефон у мене з собою — пиши, якщо застрягнеш.</p>
+        </CharacterSays>
+      </div>
 
       <div className="mt-5 flex flex-wrap gap-x-6 gap-y-1.5 font-mono text-[12px] text-ink-faint">
         <span>
