@@ -1,5 +1,6 @@
 import { getNode, isDir, readFile } from '../../shell/fs';
 import { makeMachine } from '../../shell/machines';
+import { answerFile, notTheKey } from '../goals';
 import type { Level } from '../types';
 
 const APP_LOG = [
@@ -39,8 +40,27 @@ export const level01: Level = {
           kind: 'text',
           text:
             'Ти щойно зайшов на сервер. Термінал показує рядок-запрошення: ' +
-            '`deploy@app-01:~$` — це користувач, хост і поточний каталог. ' +
+            '`deploy@app-01:~$` — це твоє імʼя користувача (`deploy`), імʼя самого ' +
+            'сервера (`app-01`) і каталог, у якому ти зараз стоїш. ' +
             'Тильда `~` означає домашній каталог, тобто `/home/deploy`.',
+        },
+        {
+          kind: 'text',
+          text:
+            'Працює це так: ти пишеш **команду** й натискаєш Enter. Команда може мати ' +
+            '**прапорці** (починаються з дефіса — вони змінюють її поведінку) ' +
+            'і **аргументи** (з чим саме працювати). Порядок завжди однаковий.',
+        },
+        {
+          kind: 'code',
+          caption: 'З чого складається рядок',
+          lines: [
+            'ls -la /var/log',
+            '│  │   │',
+            '│  │   └── аргумент: над чим працюємо',
+            '│  └────── прапорці: як саме працювати',
+            '└───────── команда: що робимо',
+          ],
         },
         {
           kind: 'table',
@@ -60,7 +80,10 @@ export const level01: Level = {
         {
           kind: 'code',
           caption: 'Одне й те саме, двома способами',
-          lines: ['cd /var/log/app', 'cd ../..   # звідти назад у /var'],
+          lines: [
+            'cd /var/log/app   # тепер ти в /var/log/app',
+            'cd ../..          # два рівні вгору — і ти в /var',
+          ],
         },
         {
           kind: 'note',
@@ -166,7 +189,26 @@ export const level01: Level = {
         {
           kind: 'text',
           text:
-            'А щоб зберегти вивід не на екран, а у файл, використовують перенаправлення: ' +
+            'Майже всі конфіги в Linux мають той самий вигляд: рядок `КЛЮЧ=ЗНАЧЕННЯ`. ' +
+            'Ліворуч від `=` — **назва** налаштування, праворуч — **значення**, тобто те, ' +
+            'що воно насправді дорівнює. Рядки, що починаються з `#`, — це коментарі, ' +
+            'їх програма ігнорує.',
+        },
+        {
+          kind: 'code',
+          caption: 'Читаємо конфіг: де назва, а де значення',
+          lines: [
+            '# коментар — не налаштування',
+            'APP_NAME=shop-api',
+            '│        │',
+            '│        └── значення: shop-api',
+            '└── назва: APP_NAME',
+          ],
+        },
+        {
+          kind: 'text',
+          text:
+            'А щоб зберегти щось не на екран, а у файл, використовують перенаправлення: ' +
             '`>` створює файл заново (затираючи старий вміст), `>>` дописує в кінець.',
         },
         {
@@ -175,6 +217,13 @@ export const level01: Level = {
             'echo "hello" > note.txt     # створити/перезаписати',
             'echo "again" >> note.txt    # дописати',
           ],
+        },
+        {
+          kind: 'note',
+          text:
+            '`echo` друкує **рівно той текст**, який ти йому дав, — він нічого не «підставляє». ' +
+            '`echo APP_NAME` запише в файл слово `APP_NAME`, а не `shop-api`. ' +
+            'Щоб записати значення, його треба написати самому: `echo shop-api > файл`.',
         },
       ],
       task: {
@@ -218,15 +267,16 @@ export const level01: Level = {
             check: (s) =>
               s.history.some((line) => /\bcat\b.*\.app\.conf/.test(line)),
           },
-          {
+          answerFile({
             id: 'answer',
-            label: 'Записати значення ENVIRONMENT у файл ~/answer.txt',
+            path: '/home/deploy/answer.txt',
+            label:
+              'Записати у ~/answer.txt значення ENVIRONMENT — тобто слово праворуч від «=»',
+            expected: 'production',
             hintOnFail:
-              'У файлі має бути саме значення (одне слово), а не весь рядок ENVIRONMENT=...',
-            check: (s) =>
-              (readFile(s.fs, '/home/deploy/answer.txt') ?? '').trim() ===
-              'production',
-          },
+              'Потрібне одне слово — значення з рядка ENVIRONMENT=, а не назва змінної.',
+            diagnose: notTheKey('ENVIRONMENT'),
+          }),
         ],
       },
       hints: [
@@ -246,8 +296,9 @@ export const level01: Level = {
         {
           kind: 'text',
           text:
-            'Майже кожен деплой на сервері виглядає однаково: каталог `releases/` з версіями, ' +
-            '`shared/` зі спільними даними (логи, завантаження, .env), і симлінк `current` на активний реліз.',
+            'Майже кожен деплой на сервері виглядає однаково: каталог `releases/`, ' +
+            'де лежить кожна версія окремо, і `shared/` зі спільними даними, ' +
+            'які мають пережити оновлення — логи, завантажені файли, конфіг.',
         },
         {
           kind: 'table',
@@ -313,7 +364,7 @@ export const level01: Level = {
           {
             id: 'gone',
             label:
-              'У /tmp архіву більше немає (саме перемістити, а не скопіювати)',
+              'Архіву більше немає у /tmp — тобто ти перемістив його, а не скопіював',
             hintOnFail: 'Копія лишає оригінал на місці. Потрібна інша команда.',
             check: (s) => getNode(s.fs, '/tmp/app-v2.4.1.tar.gz') === null,
           },
@@ -387,7 +438,7 @@ export const level01: Level = {
           {
             id: 'errors-file',
             label:
-              'Скласти /home/deploy/errors.txt лише з рядків, що містять ERROR',
+              'Записати у /home/deploy/errors.txt лише ті рядки логу, що містять ERROR',
             hintOnFail:
               'У файлі мають бути ВСІ три рядки з ERROR і жодного зайвого. Перевір, чи не потрапив туди WARN.',
             check: (s) => {
@@ -400,15 +451,18 @@ export const level01: Level = {
               );
             },
           },
-          {
+          answerFile({
             id: 'count-file',
+            path: '/home/deploy/error-count.txt',
             label:
               'Записати кількість цих помилок у /home/deploy/error-count.txt',
-            hintOnFail: 'Має бути саме число. Порахувати рядки вміє wc -l.',
-            check: (s) =>
-              (readFile(s.fs, '/home/deploy/error-count.txt') ?? '').trim() ===
-              '3',
-          },
+            expected: '3',
+            hintOnFail: 'Має бути саме число — скільки рядків з ERROR у лозі.',
+            diagnose: (value) =>
+              /^\d+$/.test(value)
+                ? `Число «${value}» не те. Перерахуй: скільки рядків містять ERROR?`
+                : 'Тут має бути тільки число, без тексту навколо. Порахувати рядки вміє wc -l.',
+          }),
           {
             id: 'used-pipe',
             label: 'Скористатися пайпом хоча б раз',
@@ -482,16 +536,21 @@ export const level01: Level = {
                   /^find\b/.test(line.trim()),
               ),
           },
-          {
+          answerFile({
             id: 'answer',
+            path: '/home/deploy/found.txt',
             label:
               'Записати повний шлях знайденого файлу в /home/deploy/found.txt',
+            expected: '/etc/app/worker/queue.conf',
             hintOnFail:
-              'Потрібен саме шлях до файлу з debug=true, повністю — від кореня. Зверни увагу: notes.txt лише згадує слово debug.',
-            check: (s) =>
-              (readFile(s.fs, '/home/deploy/found.txt') ?? '').trim() ===
-              '/etc/app/worker/queue.conf',
-          },
+              'Потрібен повний шлях від кореня до файлу, де саме debug=true.',
+            diagnose: (value) =>
+              value.includes('notes.txt')
+                ? 'У notes.txt слово debug лише згадується — там немає debug=true. Шукай далі.'
+                : !value.startsWith('/')
+                  ? `«${value}» — це не повний шлях. Він має починатися з «/».`
+                  : null,
+          }),
         ],
       },
       hints: [

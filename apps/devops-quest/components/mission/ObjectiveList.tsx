@@ -8,6 +8,8 @@ export type ObjectiveStatus = {
   id: string;
   label: string;
   hintOnFail?: string;
+  /** A specific correction for a wrong attempt; shown as soon as it exists. */
+  feedback?: string | null;
   done: boolean;
 };
 
@@ -61,7 +63,16 @@ export const ObjectiveList = ({
               </span>
             </div>
 
-            {showNudges && !objective.done && objective.hintOnFail ? (
+            {!objective.done && objective.feedback ? (
+              <p className="mt-1.5 pl-6 text-[12px] leading-snug text-danger">
+                {objective.feedback}
+              </p>
+            ) : null}
+
+            {showNudges &&
+            !objective.done &&
+            !objective.feedback &&
+            objective.hintOnFail ? (
               <p className="mt-1.5 pl-6 text-[12px] leading-snug text-warn/80">
                 {objective.hintOnFail}
               </p>

@@ -16,6 +16,14 @@ export type Goal = {
   label: string;
   /** Shown when the player has attempts on the board but this is still red. */
   hintOnFail?: string;
+  /**
+   * Says what is wrong with an attempt that ran fine but produced the wrong
+   * result — writing `ENVIRONMENT` where `production` was wanted, say. Returns
+   * null when there is nothing to correct yet, so it stays silent until the
+   * player has actually tried, and then answers immediately instead of waiting
+   * for them to fail enough times to trigger a hint.
+   */
+  feedback?: (state: ShellState) => string | null;
   check: (state: ShellState) => boolean;
 };
 

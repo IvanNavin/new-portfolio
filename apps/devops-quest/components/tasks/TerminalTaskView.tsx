@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import type { TerminalTask } from '@/lib/content/types';
 
@@ -32,6 +32,7 @@ export const TerminalTaskView = ({
         id: goal.id,
         label: goal.label,
         hintOnFail: goal.hintOnFail,
+        feedback: goal.feedback?.(terminal.state) ?? null,
         done: goal.check(terminal.state),
       })),
     [task.goals, terminal.state],
@@ -39,8 +40,24 @@ export const TerminalTaskView = ({
 
   const solved =
     objectives.length > 0 && objectives.every((objective) => objective.done);
-  // Two stumbles is where a real mentor would step in, not the first typo.
-  const struggling = terminal.failures >= 2 && !solved;
+
+  // Commands that succeed but achieve nothing are the quiet way to get stuck:
+  // there is no error to count, so failures alone would never notice. Track how
+  // long it has been since a goal last went green and step in on that too.
+  const doneCount = objectives.filter((objective) => objective.done).length;
+  const historyLength = terminal.state.history.length;
+  const progressAt = useRef(0);
+  const lastDoneCount = useRef(doneCount);
+  useEffect(() => {
+    // Only move the marker when a goal actually went green — updating it on
+    // every command would make "commands since progress" permanently zero.
+    if (lastDoneCount.current === doneCount) return;
+    lastDoneCount.current = doneCount;
+    progressAt.current = historyLength;
+  }, [doneCount, historyLength]);
+
+  const sinceProgress = historyLength - progressAt.current;
+  const struggling = !solved && (terminal.failures >= 2 || sinceProgress >= 3);
 
   useEffect(() => {
     if (solved) onSolved();

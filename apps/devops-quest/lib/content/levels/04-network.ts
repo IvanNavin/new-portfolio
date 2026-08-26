@@ -1,5 +1,5 @@
-import { readFile } from '../../shell/fs';
 import { makeMachine } from '../../shell/machines';
+import { answerFile } from '../goals';
 import type { Level } from '../types';
 
 const ok200 = (body: string) => ({
@@ -37,13 +37,18 @@ export const level04: Level = {
             'або слухає тільки `127.0.0.1` замість `0.0.0.0`.',
         },
         {
+          kind: 'text',
+          text:
+            '**Інтерфейс** — це мережева картка сервера, справжня або віртуальна; ' +
+            'у кожної своя IP-адреса. Майже завжди їх дві: `lo` — внутрішня, ' +
+            'через яку машина говорить сама з собою (`127.0.0.1`), і `eth0` — та, ' +
+            'якою вона під’єднана до мережі.',
+        },
+        {
           kind: 'table',
           rows: [
             ['ip a', 'мережеві інтерфейси та їхні IP-адреси'],
-            [
-              'ss -tulpn',
-              'сокети: t=tcp, u=udp, l=listening, p=процес, n=числові порти',
-            ],
+            ['ss -tulpn', 'які порти слухаються і яким процесом'],
             ['ping host', 'чи взагалі доходять пакети'],
           ],
         },
@@ -103,16 +108,21 @@ export const level04: Level = {
             check: (s) =>
               s.history.some((line) => /^(ss|netstat)\b/.test(line.trim())),
           },
-          {
+          answerFile({
             id: 'answer',
+            path: '/home/deploy/exposed.txt',
             label:
               'Записати у ~/exposed.txt порт бази даних, який (на щастя) закритий ззовні',
+            expected: '5432',
             hintOnFail:
               'Шукай рядок, де адреса 127.0.0.1, а процес — postgres. Потрібне лише число порту.',
-            check: (s) =>
-              (readFile(s.fs, '/home/deploy/exposed.txt') ?? '').trim() ===
-              '5432',
-          },
+            diagnose: (value) =>
+              value === '6379'
+                ? 'Це порт redis. Потрібен саме порт бази даних — процес postgres.'
+                : value.includes(':')
+                  ? `«${value}» — це адреса з портом. Залиш тільки число після двокрапки.`
+                  : null,
+          }),
         ],
       },
       hints: [
@@ -141,7 +151,10 @@ export const level04: Level = {
           rows: [
             ['A', 'імʼя → IPv4-адреса'],
             ['AAAA', 'імʼя → IPv6-адреса'],
-            ['CNAME', 'імʼя → ІНШЕ ІМʼЯ (аліас). Резолвиться далі по ланцюжку'],
+            [
+              'CNAME',
+              'імʼя → ІНШЕ ІМʼЯ (псевдонім). Далі треба питати вже про нього',
+            ],
             ['MX', 'куди слати пошту для цього домену'],
             ['TXT', 'довільний текст: SPF, верифікації, DKIM'],
           ],
@@ -209,15 +222,20 @@ export const level04: Level = {
                 /^dig\b.*shop-old\.internal/.test(line.trim()),
               ),
           },
-          {
+          answerFile({
             id: 'answer',
+            path: '/home/deploy/dns.txt',
             label: 'Записати кінцеву IP-адресу api.internal у ~/dns.txt',
+            expected: '10.0.0.99',
             hintOnFail:
-              'Це адреса, у яку зрештою розгортається ланцюжок CNAME — а не 10.0.0.5.',
-            check: (s) =>
-              (readFile(s.fs, '/home/deploy/dns.txt') ?? '').trim() ===
-              '10.0.0.99',
-          },
+              'Це адреса, у яку зрештою розгортається ланцюжок CNAME.',
+            diagnose: (value) =>
+              value === '10.0.0.5'
+                ? 'Це адреса shop.internal. api.internal веде через CNAME на інше імʼя — запитай A-запис уже для нього.'
+                : /internal/.test(value)
+                  ? `«${value}» — це імʼя, а не адреса. Пройди ланцюжок до кінця, поки не отримаєш IP.`
+                  : null,
+          }),
         ],
       },
       hints: [
@@ -238,8 +256,18 @@ export const level04: Level = {
         {
           kind: 'text',
           text:
-            '`curl` — це браузер без картинок. Прапорець `-I` показує лише заголовки відповіді: ' +
-            'код статусу, сервер, редиректи. Цього майже завжди достатньо для діагнозу.',
+            'Спершу два слова, без яких далі не розібратись. **Бекенд** — це і є твій ' +
+            'застосунок: програма, що рахує відповідь. **Проксі** (тут — nginx) стоїть ' +
+            'перед ним і приймає запити ззовні, а сам лише передає їх бекенду й повертає ' +
+            'відповідь назад. Тобто запит іде: браузер → проксі → бекенд.',
+        },
+        {
+          kind: 'text',
+          text:
+            '`curl` — це браузер без картинок. Прапорець `-I` показує лише заголовки ' +
+            'відповіді — це службові рядки перед самим вмістом сторінки: код статусу, ' +
+            'який сервер відповів, куди він перенаправляє. ' +
+            'Цього майже завжди достатньо для діагнозу.',
         },
         {
           kind: 'table',
@@ -247,7 +275,10 @@ export const level04: Level = {
           rows: [
             ['200', 'усе добре'],
             ['301 / 302', 'редирект — дивись заголовок Location'],
-            ['401 / 403', 'не автентифікований / не авторизований'],
+            [
+              '401 / 403',
+              '401 — сервер не знає, хто ти; 403 — знає, але тобі не можна',
+            ],
             ['404', 'такого шляху немає — це проблема застосунку'],
             ['502 / 503', 'проксі не достукався до бекенда — бекенд лежить'],
             ['504', 'бекенд є, але не встиг відповісти — таймаут'],
@@ -333,26 +364,33 @@ export const level04: Level = {
             check: (s) =>
               s.history.some((line) => line.includes('/api/health')),
           },
-          {
+          answerFile({
             id: 'answer',
+            path: '/home/deploy/status.txt',
             label:
               'Записати код статусу, який повертає /api/health, у ~/status.txt',
-            hintOnFail: 'Потрібні лише три цифри коду.',
-            check: (s) =>
-              (readFile(s.fs, '/home/deploy/status.txt') ?? '').trim() ===
-              '502',
-          },
-          {
+            expected: '502',
+            hintOnFail: 'Потрібні лише три цифри коду відповіді.',
+            diagnose: (value) =>
+              value === '301'
+                ? 'Це код кореня сайту. Потрібен код саме для /api/health.'
+                : value === '200'
+                  ? 'Це код успіху. Подивись уважно, що відповів /api/health.'
+                  : null,
+          }),
+          answerFile({
             id: 'diagnosis',
+            path: '/home/deploy/diagnosis.txt',
             label:
               'Записати у ~/diagnosis.txt слово backend або nginx — хто саме зламаний',
+            expected: 'backend',
             hintOnFail:
               'nginx відповів кодом, тобто сам він живий. Хто тоді не відповів ЙОМУ?',
-            check: (s) =>
-              (readFile(s.fs, '/home/deploy/diagnosis.txt') ?? '')
-                .trim()
-                .toLowerCase() === 'backend',
-          },
+            diagnose: (value) =>
+              value.toLowerCase() === 'nginx'
+                ? 'Якби зламався сам nginx, відповіді не було б узагалі — був би Connection refused. А він відповів кодом 502.'
+                : null,
+          }),
         ],
       },
       hints: [

@@ -1,5 +1,5 @@
-import { readFile } from '../../shell/fs';
 import { makeMachine, seed } from '../../shell/machines';
+import { answerFile } from '../goals';
 import type { Level } from '../types';
 
 const WORKFLOW_SOLUTION = [
@@ -83,7 +83,10 @@ export const level08: Level = {
           rows: [
             ['on: push', 'тригер — подія в репозиторії'],
             ['runs-on', 'на якій машині виконувати'],
-            ['uses:', 'взяти готову дію (checkout, setup-node)'],
+            [
+              'uses:',
+              'взяти готовий чужий крок: checkout завантажує твій код на машину CI, setup-node ставить Node',
+            ],
             ['run:', 'просто виконати команду в shell'],
             ['needs: build', 'ця job почнеться лише після успішної build'],
             [
@@ -260,6 +263,13 @@ export const level08: Level = {
         {
           kind: 'text',
           text:
+            'Спершу два слова. **Лінтер** — програма, що перевіряє код на помилки й стиль, ' +
+            'не запускаючи його. **Staging** — окреме середовище, точна копія прода, ' +
+            'але з тестовими даними: туди викочують першим, щоб зламати там, а не в людей.',
+        },
+        {
+          kind: 'text',
+          text:
             'Пайплайн будують за принципом «найдешевша перевірка — найраніше». ' +
             'Лінтер падає за 10 секунд, збірка образу — за 4 хвилини. ' +
             'Немає сенсу збирати образ коду, який не проходить лінтер.',
@@ -425,6 +435,14 @@ export const level08: Level = {
         {
           kind: 'text',
           text:
+            'Кожна команда, завершуючись, повертає системі число — **код виходу**. ' +
+            '`0` означає «все добре», будь-що інше — помилку. Саме за цим числом CI ' +
+            'і вирішує, червоний білд чи зелений; тому в лозі так часто видно ' +
+            '`exit code 1`.',
+        },
+        {
+          kind: 'text',
+          text:
             'Лог CI довгий і більшість у ньому — шум. Читати треба **знизу вгору** ' +
             'і шукати перший рядок з `Error`, `FAIL` або ненульовим кодом виходу. ' +
             'Усе, що після нього, — це вже наслідки.',
@@ -485,24 +503,34 @@ export const level08: Level = {
                   line.includes('build.log'),
               ),
           },
-          {
+          answerFile({
             id: 'stage',
+            path: '/home/deploy/stage.txt',
             label:
               'Записати у ~/stage.txt, на якій команді впав пайплайн (npm test / npm ci / npm run build)',
+            expected: 'npm test',
             hintOnFail:
               'Шукай останню команду, яка встигла запуститись перед помилкою.',
-            check: (s) =>
-              (readFile(s.fs, '/home/deploy/stage.txt') ?? '').trim() ===
-              'npm test',
-          },
-          {
+            diagnose: (value) =>
+              value === 'npm ci'
+                ? 'npm ci відпрацював успішно — «added 412 packages». Дивись далі по лозі.'
+                : value === 'npm run build'
+                  ? 'До збірки пайплайн не дійшов — він упав раніше.'
+                  : null,
+          }),
+          answerFile({
             id: 'file',
+            path: '/home/deploy/failing.txt',
             label: 'Записати у ~/failing.txt імʼя тестового файлу, який упав',
-            hintOnFail: 'Це файл, біля якого стоїть «1 failed».',
-            check: (s) =>
-              (readFile(s.fs, '/home/deploy/failing.txt') ?? '').trim() ===
-              'src/checkout.test.ts',
-          },
+            expected: 'src/checkout.test.ts',
+            hintOnFail: 'Це файл, біля якого в лозі стоїть «1 failed».',
+            diagnose: (value) =>
+              /cart|user/.test(value)
+                ? `${value} пройшов — біля нього стоїть галочка. Шукай той, де «1 failed».`
+                : !value.includes('/')
+                  ? 'Потрібен шлях так, як він написаний у лозі, разом із каталогом src/.'
+                  : null,
+          }),
         ],
       },
       hints: [

@@ -1,5 +1,5 @@
-import { readFile } from '../../shell/fs';
 import { makeMachine, seed } from '../../shell/machines';
+import { answerFile } from '../goals';
 import type { Level } from '../types';
 
 const MAIN_TF = [
@@ -49,8 +49,16 @@ export const level12: Level = {
         {
           kind: 'text',
           text:
-            'Terraform порівнює три речі: **код** (як має бути), **state** (як було минулого разу) ' +
-            'і **реальність** у хмарі. Різницю він і застосовує.',
+            'Terraform порівнює три речі: **код** (як має бути), **state** — файл, у якому ' +
+            'він записав, що створив минулого разу, — і **реальність** у хмарі. ' +
+            'Різницю він і застосовує.',
+        },
+        {
+          kind: 'text',
+          text:
+            'Сам Terraform не вміє нічого створювати. Уміють **провайдери** — окремі ' +
+            'плагіни, кожен з яких знає, як говорити зі своєю хмарою: один з AWS, ' +
+            'інший з Google Cloud, третій з Hetzner. Саме їх і завантажує `init`.',
         },
         {
           kind: 'table',
@@ -414,13 +422,17 @@ export const level12: Level = {
                 /kubectl\s+get\s+(pods?|po)\b/.test(line),
               ),
           },
-          {
+          answerFile({
             id: 'notes',
+            path: '/home/deploy/release.txt',
             label: 'Записати у ~/release.txt тег випущеної версії',
-            check: (s) =>
-              (readFile(s.fs, '/home/deploy/release.txt') ?? '').trim() ===
-              'v1.6.0',
-          },
+            expected: 'v1.6.0',
+            hintOnFail: 'Той самий тег, яким ти позначив коміт — разом із «v».',
+            diagnose: (value) =>
+              value === '1.6.0'
+                ? 'Майже — тег містить літеру «v» на початку: v1.6.0.'
+                : null,
+          }),
         ],
       },
       hints: [

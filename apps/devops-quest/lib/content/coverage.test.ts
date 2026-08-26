@@ -1,3 +1,6 @@
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
 import { ALL_MISSIONS, LEVELS } from './registry';
@@ -78,19 +81,13 @@ const textOf = (block: TheoryBlock): string => {
   }
 };
 
-const taughtTextOf = (mission: Mission): string => {
-  const parts = mission.theory.map(textOf);
-  // Hints and the printed solution do not count as teaching: a player who
-  // solves it unaided must have had the command explained beforehand.
-  if (mission.task.kind === 'terminal') {
-    parts.push(
-      ...mission.task.goals.map(
-        (goal) => `${goal.label} ${goal.hintOnFail ?? ''}`,
-      ),
-    );
-  }
-  return parts.join('\n');
-};
+/**
+ * Only the theory counts as teaching — not hints, not the printed solution, and
+ * not the goal labels either. A goal that names a command the player was never
+ * shown is the bug, not the lesson.
+ */
+const taughtTextOf = (mission: Mission): string =>
+  mission.theory.map(textOf).join('\n');
 
 /** Does `haystack` introduce `command` as a standalone word? */
 const teaches = (haystack: string, command: string): boolean => {
@@ -196,5 +193,31 @@ describe('theory covers the practice', () => {
 
   it('every mission id appears exactly once in the walk', () => {
     expect(cases).toHaveLength(ALL_MISSIONS.length);
+  });
+});
+
+describe('goals that grade a written answer explain a wrong one', () => {
+  const dir = join(process.cwd(), 'lib/content/levels');
+  const files = readdirSync(dir).filter((name) => name.endsWith('.ts'));
+
+  // Comparing a file's contents to an expected string inside a bare `check:` is
+  // the shape that leaves a learner staring at a grey checkbox with no idea the
+  // answer itself was wrong. `answerFile()` pairs that check with feedback, so
+  // it is the only sanctioned way to write one.
+  it.each(files)(
+    '%s uses answerFile() instead of a bare content check',
+    (name) => {
+      const source = readFileSync(join(dir, name), 'utf8');
+      const offenders = source
+        .split('\n')
+        .map((line, index) => ({ line: line.trim(), number: index + 1 }))
+        .filter(({ line }) => line.includes("?? '').trim() ==="))
+        .map(({ number }) => `${name}:${number}`);
+      expect(offenders).toEqual([]);
+    },
+  );
+
+  it('actually found the level files', () => {
+    expect(files.length).toBe(12);
   });
 });
