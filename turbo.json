@@ -13,8 +13,8 @@
         ".next/**",
         "!.next/cache/**",
         "{outputDir}/**/*",
-        "apps/gantt-chart/build/**",
-        "apps/pokedex/generated/**/*"
+        "build/**",
+        "generated/**"
       ]
     },
     "lint": {
