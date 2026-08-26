@@ -16,6 +16,8 @@ type MissionResultProps = {
   record: MissionRecord;
   next: Mission | undefined;
   onRetry: () => void;
+  /** Close the dialog without leaving — the terminal stays where it was. */
+  onStay: () => void;
 };
 
 export const MissionResult = ({
@@ -23,9 +25,20 @@ export const MissionResult = ({
   record,
   next,
   onRetry,
+  onStay,
 }: MissionResultProps) => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-surface-sunken/85 p-4 backdrop-blur-sm">
-    <div className="rise w-full max-w-md rounded-2xl border border-accent/30 bg-surface-raised p-6 text-center shadow-2xl">
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center bg-surface-sunken/85 p-4 backdrop-blur-sm"
+    onClick={onStay}
+    role="presentation"
+  >
+    <div
+      className="rise w-full max-w-md rounded-2xl border border-accent/30 bg-surface-raised p-6 text-center shadow-2xl"
+      onClick={(event) => event.stopPropagation()}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Місію виконано"
+    >
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">
         Місію виконано
       </p>
@@ -84,6 +97,10 @@ export const MissionResult = ({
             </Button>
           </Link>
         )}
+
+        <Button variant="ghost" className="w-full" onClick={onStay}>
+          Залишитись тут
+        </Button>
 
         <div className="flex gap-2">
           <Button variant="quiet" className="flex-1" onClick={onRetry}>

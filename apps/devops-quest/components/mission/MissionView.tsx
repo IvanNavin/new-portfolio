@@ -1,8 +1,15 @@
 'use client';
 
-import { ArrowLeft, BookOpen, ChevronDown, Play } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  ChevronDown,
+  Play,
+  Trophy,
+} from 'lucide-react';
 import Link from 'next/link';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { mentorLineFor } from '@/lib/content/mentor';
 import {
@@ -22,6 +29,8 @@ import { QuizTaskView } from '../tasks/QuizTaskView';
 import { TerminalTaskView } from '../tasks/TerminalTaskView';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
+import { Stars } from '../ui/Stars';
+import { Confetti } from './Confetti';
 import { HintLadder } from './HintLadder';
 import { MissionResult } from './MissionResult';
 import { Theory } from './Theory';
@@ -44,6 +53,10 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
   const [struggling, setStruggling] = useState(false);
   const [theoryOpen, setTheoryOpen] = useState(false);
   const [record, setRecord] = useState<MissionRecord | null>(null);
+  // The celebration is a dialog you can close, not a page turn: finishing a
+  // mission shouldn't yank you off a terminal you might still be poking at.
+  const [resultOpen, setResultOpen] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
   const [resetToken, setResetToken] = useState(0);
   const settled = useRef(false);
 
@@ -54,6 +67,8 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
     const spent = revealed ? 3 : hintsUsed;
     const earned = complete(mission, spent);
     setRecord(earned);
+    setResultOpen(true);
+    setCelebrating(true);
 
     const before = rankFor(xp);
     const after = rankFor(xp + earned.xp);
@@ -63,9 +78,17 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
     }
   }, [complete, hintsUsed, mission, revealed, xp]);
 
+  useEffect(() => {
+    if (!celebrating) return;
+    const timer = window.setTimeout(() => setCelebrating(false), 4200);
+    return () => window.clearTimeout(timer);
+  }, [celebrating]);
+
   const retry = () => {
     settled.current = false;
     setRecord(null);
+    setResultOpen(false);
+    setCelebrating(false);
     setHintsUsed(0);
     setRevealed(false);
     setStruggling(false);
@@ -209,15 +232,68 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
           </div>
         </div>
       ) : (
-        taskView()
+        <>
+          {taskView()}
+
+          <footer className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-edge pt-3">
+            {record ? (
+              <span className="flex items-center gap-2 text-[12.5px] text-accent">
+                <Trophy size={14} />
+                Місію виконано
+                <Stars value={record.stars} />
+                <span className="font-mono text-xp">+{record.xp} XP</span>
+              </span>
+            ) : (
+              <span className="text-[12.5px] text-ink-dim">
+                Закрий усі цілі місії, щоб рухатись далі
+              </span>
+            )}
+
+            <div className="flex items-center gap-2">
+              {record ? (
+                <Button
+                  size="sm"
+                  variant="quiet"
+                  onClick={() => setResultOpen(true)}
+                >
+                  Показати результат
+                </Button>
+              ) : null}
+
+              {upcoming ? (
+                record ? (
+                  <Link href={`/mission/${upcoming.id}`}>
+                    <Button size="sm" variant="primary">
+                      Наступна місія
+                      <ArrowRight size={14} />
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="primary"
+                    disabled
+                    title="Спершу виконай усі цілі цієї місії"
+                  >
+                    Наступна місія
+                    <ArrowRight size={14} />
+                  </Button>
+                )
+              ) : null}
+            </div>
+          </footer>
+        </>
       )}
 
-      {record ? (
+      <Confetti active={celebrating} />
+
+      {record && resultOpen ? (
         <MissionResult
           mission={mission}
           record={record}
           next={upcoming}
           onRetry={retry}
+          onStay={() => setResultOpen(false)}
         />
       ) : null}
     </div>

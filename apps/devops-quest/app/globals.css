@@ -33,7 +33,7 @@
 :root {
   --ink: #e6edf3;
   --ink-dim: #8b96a8;
-  --ink-faint: #59637480;
+  --ink-faint: #78828f;
   --surface: #05070a;
   --surface-raised: #0d1117;
   --surface-sunken: #010204;
@@ -56,7 +56,7 @@
   :root {
     --ink: #10151c;
     --ink-dim: #55606f;
-    --ink-faint: #8892a1;
+    --ink-faint: #626b78;
     --surface: #f4f6f9;
     --surface-raised: #ffffff;
     --surface-sunken: #e7ebf0;
@@ -112,6 +112,27 @@ button:not(:disabled),
 .scroll-thin::-webkit-scrollbar-thumb {
   background: var(--edge-strong);
   border-radius: 4px;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translate3d(0, -12vh, 0) rotate(0deg);
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--drift), 106vh, 0) rotate(var(--spin));
+    opacity: 0;
+  }
+}
+.confetti-piece {
+  position: absolute;
+  top: 0;
+  animation-name: confetti-fall;
+  animation-timing-function: cubic-bezier(0.25, 0.6, 0.4, 1);
+  animation-fill-mode: both;
 }
 
 @keyframes goal-pop {
