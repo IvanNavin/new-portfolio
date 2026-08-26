@@ -2,6 +2,8 @@
 
 import { Eye, HelpCircle } from 'lucide-react';
 
+import { STUCK_LINE } from '@/lib/content/mentor';
+
 import { Button } from '../ui/Button';
 
 type HintLadderProps = {
@@ -75,7 +77,7 @@ export const HintLadder = ({
 
     {offered && used === 0 ? (
       <p className="mt-1.5 text-[11.5px] leading-snug text-warn/80">
-        Схоже, застряг. Підказка коштує трохи XP, але це дешевше за здогадки.
+        {STUCK_LINE}
       </p>
     ) : null}
   </div>

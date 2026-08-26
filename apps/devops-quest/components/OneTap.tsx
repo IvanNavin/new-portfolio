@@ -26,7 +26,9 @@ const CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? '';
  * only enables cross-device progress sync — so this renders nothing at all
  * when no client id is configured.
  */
-export const OneTap = () => {
+export const OneTap = () => (CLIENT_ID ? <OneTapPrompt /> : null);
+
+const OneTapPrompt = () => {
   const { status } = useSession();
   const started = useRef(false);
 
@@ -53,8 +55,6 @@ export const OneTap = () => {
   useEffect(() => {
     start();
   }, [start]);
-
-  if (!CLIENT_ID) return null;
 
   return (
     <Script

@@ -4,9 +4,11 @@ import { ArrowLeft, Check, Lock, Play } from 'lucide-react';
 import Link from 'next/link';
 
 import { cn } from '@/lib/cn';
+import { levelLineFor } from '@/lib/content/mentor';
 import { getLevel } from '@/lib/content/registry';
 import { useProgress } from '@/lib/progress/useProgress';
 
+import { MentorSays } from '../mentor/MentorSays';
 import { Badge } from '../ui/Badge';
 import { Stars } from '../ui/Stars';
 
@@ -35,6 +37,12 @@ export const LevelView = ({ levelId }: LevelViewProps) => {
         </h1>
         <p className="mt-1 text-[13.5px] text-ink-dim">{level.subtitle}</p>
       </div>
+
+      {levelLineFor(level.id) ? (
+        <MentorSays>
+          <p>{levelLineFor(level.id)}</p>
+        </MentorSays>
+      ) : null}
 
       <div className="rounded-xl border border-edge bg-surface-raised px-4 py-3.5">
         <p className="text-[13.5px] leading-relaxed text-ink-dim">

@@ -4,6 +4,7 @@ import { ArrowLeft, BookOpen, ChevronDown, Play } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useRef, useState } from 'react';
 
+import { mentorLineFor } from '@/lib/content/mentor';
 import {
   getLevelOfMission,
   getMission,
@@ -14,6 +15,7 @@ import type { MissionRecord } from '@/lib/progress/types';
 import { useProgress } from '@/lib/progress/useProgress';
 import { toast } from '@/lib/toasts';
 
+import { MentorSays } from '../mentor/MentorSays';
 import { EditorTaskView } from '../tasks/EditorTaskView';
 import { OrderTaskView } from '../tasks/OrderTaskView';
 import { QuizTaskView } from '../tasks/QuizTaskView';
@@ -174,6 +176,12 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
       {phase === 'brief' ? (
         <div className="scroll-thin min-h-0 flex-1 overflow-y-auto">
           <div className="mx-auto max-w-2xl space-y-5 pb-6">
+            {mentorLineFor(mission.id) ? (
+              <MentorSays>
+                <p>{mentorLineFor(mission.id)}</p>
+              </MentorSays>
+            ) : null}
+
             <div className="rounded-xl border border-accent/25 bg-accent-soft px-4 py-3">
               <p className="text-[11px] uppercase tracking-wide text-accent">
                 Завдання

@@ -1,4 +1,6 @@
 import { WorldMap } from '@/components/map/WorldMap';
+import { MentorSays } from '@/components/mentor/MentorSays';
+import { MENTOR_INTRO } from '@/lib/content/mentor';
 import { ALL_MISSIONS, LEVELS } from '@/lib/content/registry';
 
 const HomePage = () => (
@@ -11,12 +13,16 @@ const HomePage = () => (
         Стань DevOps-інженером, а не прочитай про це
       </h1>
       <p className="mt-2.5 max-w-2xl text-[14px] leading-relaxed text-ink-dim">
-        Тобі дали SSH-доступ до сервера і продукт, який «працює на моєму ноуті».
-        Треба довести його до прода. Кожна місія — трохи теорії та багато
-        практики у справжньому терміналі: файли, права, процеси, мережа, Git,
-        Docker, CI/CD, Kubernetes.
+        Кожна місія — коротка теорія і багато практики у справжньому терміналі:
+        файли, права, процеси, мережа, Git, Docker, CI/CD, Kubernetes.
       </p>
-      <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1.5 font-mono text-[12px] text-ink-faint">
+      <MentorSays variant="intro" showRole className="mt-5">
+        {MENTOR_INTRO.map((paragraph) => (
+          <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+        ))}
+      </MentorSays>
+
+      <div className="mt-5 flex flex-wrap gap-x-6 gap-y-1.5 font-mono text-[12px] text-ink-faint">
         <span>
           <span className="text-ink">{LEVELS.length}</span> рівнів
         </span>

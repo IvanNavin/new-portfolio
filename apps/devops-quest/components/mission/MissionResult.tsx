@@ -3,9 +3,11 @@
 import { ArrowRight, Map as MapIcon, RotateCcw } from 'lucide-react';
 import Link from 'next/link';
 
+import { praiseFor } from '@/lib/content/mentor';
 import type { Mission } from '@/lib/content/types';
 import type { MissionRecord } from '@/lib/progress/types';
 
+import { MentorSays } from '../mentor/MentorSays';
 import { Button } from '../ui/Button';
 import { Stars } from '../ui/Stars';
 
@@ -53,7 +55,11 @@ export const MissionResult = ({
         </div>
       </div>
 
-      <div className="mt-5 rounded-lg border border-edge bg-surface-sunken px-3.5 py-3 text-left">
+      <MentorSays className="mt-5 text-left">
+        <p>{praiseFor(record.stars, record.hintsUsed)}</p>
+      </MentorSays>
+
+      <div className="mt-3 rounded-lg border border-edge bg-surface-sunken px-3.5 py-3 text-left">
         <p className="text-[11px] uppercase tracking-wide text-ink-faint">
           Тепер ти вмієш
         </p>

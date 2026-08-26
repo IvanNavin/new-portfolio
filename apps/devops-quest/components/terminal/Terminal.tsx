@@ -88,7 +88,14 @@ export const Terminal = ({ terminal, className }: TerminalProps) => {
       <div
         ref={scrollRef}
         className="scroll-thin min-h-0 flex-1 overflow-y-auto px-3 py-2.5 font-mono text-[12.5px] leading-[1.55]"
-        onClick={() => inputRef.current?.focus()}
+        onMouseDown={(event) => {
+          // Let clicks land normally inside the input (and on selected text)
+          // so the caret goes where the player aimed.
+          if (event.target === inputRef.current) return;
+          if (window.getSelection()?.toString()) return;
+          event.preventDefault();
+          inputRef.current?.focus();
+        }}
       >
         {terminal.lines.map((line) => (
           <div
@@ -104,27 +111,21 @@ export const Terminal = ({ terminal, className }: TerminalProps) => {
 
         <div className="flex items-baseline gap-2">
           <span className="shrink-0 text-accent">{terminal.prompt}</span>
-          <div className="relative min-w-0 flex-1">
-            <input
-              ref={inputRef}
-              value={draft}
-              onChange={(event) => setDraft(event.target.value)}
-              onKeyDown={onKeyDown}
-              spellCheck={false}
-              autoComplete="off"
-              autoCapitalize="off"
-              autoCorrect="off"
-              aria-label="Командний рядок"
-              className="w-full bg-transparent font-mono text-[12.5px] text-ink caret-transparent outline-none"
-            />
-            <span
-              aria-hidden
-              className="caret pointer-events-none absolute top-0 select-none text-ink"
-              style={{ left: `${draft.length}ch` }}
-            >
-              ▋
-            </span>
-          </div>
+          {/* A real caret, not a rendered block: a fake one always sits at the
+              end of the string, so clicking into the middle of a command to fix
+              a typo looked broken even though the edit worked. */}
+          <input
+            ref={inputRef}
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            onKeyDown={onKeyDown}
+            spellCheck={false}
+            autoComplete="off"
+            autoCapitalize="off"
+            autoCorrect="off"
+            aria-label="Командний рядок"
+            className="min-w-0 flex-1 bg-transparent font-mono text-[12.5px] text-ink caret-accent outline-none"
+          />
         </div>
       </div>
 

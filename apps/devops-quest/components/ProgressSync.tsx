@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react';
 import { useEffect, useRef } from 'react';
 
+import { SIGN_IN_ENABLED } from '@/lib/auth-enabled';
 import { readProgress, writeProgress } from '@/lib/progress/storage';
 import { mergeProgress, type Progress } from '@/lib/progress/types';
 import { toast } from '@/lib/toasts';
@@ -13,7 +14,9 @@ import { toast } from '@/lib/toasts';
  * server copy, merge (better run wins per mission), write the result back
  * locally and push it up. Same shape as devpulse's AuthedStateSync.
  */
-export const ProgressSync = () => {
+export const ProgressSync = () => (SIGN_IN_ENABLED ? <SyncOnSignIn /> : null);
+
+const SyncOnSignIn = () => {
   const { status } = useSession();
   const synced = useRef(false);
 

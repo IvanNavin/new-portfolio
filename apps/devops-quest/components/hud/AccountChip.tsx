@@ -3,11 +3,16 @@
 import { LogOut } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 
+import { SIGN_IN_ENABLED } from '@/lib/auth-enabled';
+
 /**
  * Only appears once someone is actually signed in. There is deliberately no
  * "Sign in" button: One Tap offers itself, and the game never gates on it.
  */
-export const AccountChip = () => {
+/** Guard component: keeps `useSession` out of trees with no SessionProvider. */
+export const AccountChip = () => (SIGN_IN_ENABLED ? <SignedInChip /> : null);
+
+const SignedInChip = () => {
   const { data: session, status } = useSession();
   if (status !== 'authenticated' || !session.user) return null;
 
