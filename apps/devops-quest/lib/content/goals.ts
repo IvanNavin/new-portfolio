@@ -50,6 +50,7 @@ export const answerFile = ({
       diagnose?.(value) ?? `Зараз у файлі «${shorten(value)}». ${hintOnFail}`
     );
   },
+  expected,
   check: (state) => (readFile(state.fs, path) ?? '').trim() === expected,
 });
 

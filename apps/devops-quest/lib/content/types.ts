@@ -24,6 +24,11 @@ export type Goal = {
    * for them to fail enough times to trigger a hint.
    */
   feedback?: (state: ShellState) => string | null;
+  /**
+   * The literal answer, when the goal grades one. Exposed purely so a test can
+   * check the player could have found it on the machine rather than guessed.
+   */
+  expected?: string;
   check: (state: ShellState) => boolean;
 };
 

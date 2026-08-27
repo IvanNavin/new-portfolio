@@ -186,9 +186,10 @@ export const level09: Level = {
               'група бекендів; сюди легко додати другий сервер',
             ],
             ['listen 443 ssl;', 'слухати HTTPS'],
+            ['ssl_certificate', 'ланцюжок сертифіката — файл `fullchain.pem`'],
             [
-              'ssl_certificate / ssl_certificate_key',
-              'сертифікат і приватний ключ',
+              'ssl_certificate_key',
+              'приватний ключ до нього — файл `privkey.pem`',
             ],
             ['proxy_pass http://ім’я;', 'куди пересилати запит'],
             ['proxy_set_header Host $host', 'передати бекенду справжній домен'],
@@ -209,7 +210,10 @@ export const level09: Level = {
         starter: [
           '# Застосунок слухає 127.0.0.1:3000.',
           '# Опиши upstream і server-блок на 443 з TLS та проксуванням.',
-          '# Сертифікати вже лежать у /etc/letsencrypt/live/shop.internal/',
+          '#',
+          '# Сертифікати вже випущені й лежать тут:',
+          '#   /etc/letsencrypt/live/shop.internal/fullchain.pem   — сам сертифікат',
+          '#   /etc/letsencrypt/live/shop.internal/privkey.pem     — приватний ключ',
           '',
         ].join('\n'),
         goals: [
