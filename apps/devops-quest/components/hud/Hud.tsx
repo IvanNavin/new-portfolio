@@ -18,7 +18,7 @@ export const Hud = () => {
   const upcoming = nextRank(xp);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-edge bg-surface/85 backdrop-blur">
+    <header className="shrink-0 border-b border-edge bg-surface/85 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-2.5">
         <Link href="/" className="flex shrink-0 items-center gap-2">
           <TerminalIcon size={17} className="text-accent" />

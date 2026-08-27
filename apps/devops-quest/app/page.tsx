@@ -5,7 +5,7 @@ import { ALL_MISSIONS, LEVELS } from '@/lib/content/registry';
 import { PROLOGUE } from '@/lib/content/story';
 
 const HomePage = () => (
-  <div className="space-y-8">
+  <div className="scroll-thin space-y-8 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pr-1">
     <section className="rounded-2xl border border-edge bg-surface-raised px-5 py-6 sm:px-7 sm:py-8">
       <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent">
         deploy@app-01:~$

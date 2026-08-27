@@ -34,11 +34,13 @@ export const viewport: Viewport = {
 
 const RootLayout = ({ children }: { children: ReactNode }) => (
   <html lang="uk" className={`${inter.variable} ${mono.variable}`}>
-    <body className="min-h-dvh">
+    {/* A fixed-height shell on desktop so panes scroll independently instead
+        of the whole page growing; below lg it falls back to normal flow. */}
+    <body className="flex min-h-dvh flex-col lg:h-dvh lg:overflow-hidden">
       {SIGN_IN_ENABLED ? (
         <SessionProviderClient>
           <Hud />
-          <main className="mx-auto flex min-h-[calc(100dvh-49px)] max-w-6xl flex-col px-4 py-5">
+          <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-5 lg:min-h-0">
             {children}
           </main>
           <OneTap />
@@ -47,7 +49,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
       ) : (
         <>
           <Hud />
-          <main className="mx-auto flex min-h-[calc(100dvh-49px)] max-w-6xl flex-col px-4 py-5">
+          <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-5 lg:min-h-0">
             {children}
           </main>
         </>

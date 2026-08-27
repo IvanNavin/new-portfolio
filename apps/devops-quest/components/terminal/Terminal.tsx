@@ -87,13 +87,13 @@ export const Terminal = ({ terminal, className }: TerminalProps) => {
 
       <div
         ref={scrollRef}
-        className="scroll-thin min-h-0 flex-1 overflow-y-auto px-3 py-2.5 font-mono text-[12.5px] leading-[1.55]"
-        onMouseDown={(event) => {
-          // Let clicks land normally inside the input (and on selected text)
-          // so the caret goes where the player aimed.
+        className="scroll-thin min-h-0 flex-1 select-text overflow-y-auto px-3 py-2.5 font-mono text-[12.5px] leading-[1.55]"
+        onClick={(event) => {
+          // Focus the prompt when someone clicks the scrollback — but never
+          // during a drag-select, and never by cancelling mousedown, which is
+          // what stopped the output from being selectable and copyable at all.
           if (event.target === inputRef.current) return;
           if (window.getSelection()?.toString()) return;
-          event.preventDefault();
           inputRef.current?.focus();
         }}
       >

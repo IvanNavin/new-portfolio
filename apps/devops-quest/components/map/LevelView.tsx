@@ -23,7 +23,7 @@ export const LevelView = ({ levelId }: LevelViewProps) => {
   const stats = levelStats(level);
 
   return (
-    <div className="space-y-5">
+    <div className="scroll-thin space-y-5 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pr-1">
       <div>
         <Link
           href="/"
