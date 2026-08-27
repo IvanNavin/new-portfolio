@@ -221,3 +221,34 @@ describe('goals that grade a written answer explain a wrong one', () => {
     expect(files.length).toBe(12);
   });
 });
+
+describe('every mission shows the work, not just names it', () => {
+  /** Only runnable-looking theory counts: code blocks and table terms. */
+  const demonstratedIn = (blocks: TheoryBlock[]): string =>
+    blocks
+      .map((block) =>
+        block.kind === 'code'
+          ? block.lines.join('\n')
+          : block.kind === 'table'
+            ? block.rows.map(([term]) => term).join('\n')
+            : '',
+      )
+      .join('\n');
+
+  // A lesson can describe a problem beautifully and still leave the player with
+  // no idea which keys to press. l02-m03 explained why a 644 `.env` is a
+  // disaster, showed the good and bad `ls -l`, and never once wrote `chmod`.
+  it.each(
+    ALL_MISSIONS.filter((mission) => mission.task.kind === 'terminal').map(
+      (mission) => [mission.id, mission] as const,
+    ),
+  )('%s writes out at least one command it asks for', (_id, mission) => {
+    const used = commandsUsedIn(mission.solution);
+    const shown = demonstratedIn(mission.theory);
+    const demonstrated = used.filter((command) => teaches(shown, command));
+    expect(
+      demonstrated.length,
+      `uses [${used.join(', ')}] but shows none`,
+    ).toBeGreaterThan(0);
+  });
+});

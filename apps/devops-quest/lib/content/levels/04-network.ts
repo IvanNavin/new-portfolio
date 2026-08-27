@@ -270,6 +270,15 @@ export const level04: Level = {
             'Цього майже завжди достатньо для діагнозу.',
         },
         {
+          kind: 'code',
+          caption: 'Як спитати сервер',
+          lines: [
+            'curl -I http://shop.internal            # лише заголовки',
+            'curl -I https://shop.internal/api/health',
+            'curl https://shop.internal/api/health   # ще й тіло відповіді',
+          ],
+        },
+        {
           kind: 'table',
           caption: 'Коди, які треба впізнавати миттєво',
           rows: [

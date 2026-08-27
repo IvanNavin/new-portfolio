@@ -162,6 +162,17 @@ export const level06: Level = {
           lines: ['.env', '.env.local', 'node_modules/', '*.log', 'dist/'],
         },
         {
+          kind: 'code',
+          caption: 'Створюємо .gitignore і комітимо без секрету',
+          lines: [
+            'echo ".env" > .gitignore       # перший рядок — створити файл',
+            'echo "*.log" >> .gitignore     # другий — дописати',
+            'cat .gitignore                 # перевірити, що вийшло',
+            'git add .                      # тепер .env уже не потрапить',
+            'git commit -m "Add app"',
+          ],
+        },
+        {
           kind: 'text',
           text:
             'У `git status` файли діляться на **відстежувані** (git про них знає) ' +
@@ -357,6 +368,17 @@ export const level06: Level = {
             '=======',
             'version=2.0.0',
             '>>>>>>> feature/bump',
+          ],
+        },
+        {
+          kind: 'code',
+          caption: 'Як розвʼязати конфлікт',
+          lines: [
+            'git status                     # які файли конфліктують',
+            'cat VERSION                    # подивитись обидва варіанти',
+            'echo "version=2.0.0" > VERSION # лишити правильний, без маркерів',
+            'git add VERSION                # це і означає «я розвʼязав»',
+            'git commit -m "Merge feature/bump"',
           ],
         },
         {
