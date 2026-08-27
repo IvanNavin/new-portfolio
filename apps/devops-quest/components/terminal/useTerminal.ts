@@ -40,6 +40,8 @@ type TerminalState = {
 
 export type TerminalApi = {
   state: ShellState;
+  /** True while sudo is waiting for a password — the input masks itself. */
+  awaitingPassword: boolean;
   lines: ScrollbackLine[];
   prompt: string;
   submit: (line: string) => void;
@@ -65,9 +67,12 @@ const initial = (task: TerminalTask): TerminalState => ({
 const advance = (previous: TerminalState, raw: string): TerminalState => {
   const line = raw.replace(/\n/g, ' ');
   let id = previous.nextId;
+  // A password is typed blind — echoing it would put it on screen, which is
+  // precisely what sudo goes out of its way not to do.
+  const answeringPrompt = previous.shell.sudo.pending !== null;
   const echo: ScrollbackLine = {
     id: (id += 1),
-    text: `${promptFor(previous.shell)} ${line}`,
+    text: answeringPrompt ? '' : `${promptFor(previous.shell)} ${line}`,
     stream: 'input',
   };
 
@@ -84,7 +89,9 @@ const advance = (previous: TerminalState, raw: string): TerminalState => {
 
   return {
     shell: result.state,
-    lines: result.cleared ? [] : [...previous.lines, echo, ...produced],
+    lines: result.cleared
+      ? []
+      : [...previous.lines, ...(answeringPrompt ? [] : [echo]), ...produced],
     failures:
       previous.failures +
       (produced.some((output) => output.stream === 'stderr') ? 1 : 0),
@@ -173,6 +180,7 @@ export const useTerminal = (task: TerminalTask): TerminalApi => {
 
   return {
     state: state.shell,
+    awaitingPassword: state.shell.sudo.pending !== null,
     lines: state.lines,
     prompt: promptFor(state.shell),
     submit,

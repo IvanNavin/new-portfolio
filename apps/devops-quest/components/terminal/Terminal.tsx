@@ -110,12 +110,15 @@ export const Terminal = ({ terminal, className }: TerminalProps) => {
         ))}
 
         <div className="flex items-baseline gap-2">
-          <span className="shrink-0 text-accent">{terminal.prompt}</span>
+          <span className="shrink-0 text-accent">
+            {terminal.awaitingPassword ? '' : terminal.prompt}
+          </span>
           {/* A real caret, not a rendered block: a fake one always sits at the
               end of the string, so clicking into the middle of a command to fix
               a typo looked broken even though the edit worked. */}
           <input
             ref={inputRef}
+            type={terminal.awaitingPassword ? 'password' : 'text'}
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
             onKeyDown={onKeyDown}
@@ -130,8 +133,9 @@ export const Terminal = ({ terminal, className }: TerminalProps) => {
       </div>
 
       <div className="shrink-0 border-t border-edge bg-surface-raised px-3 py-1 font-mono text-[10.5px] text-ink-faint">
-        ↑↓ історія · Tab автодоповнення · Ctrl+L очистити · man &lt;команда&gt;
-        довідка
+        {terminal.awaitingPassword
+          ? 'пароль не показується під час набору — так само, як у справжньому sudo'
+          : '↑↓ історія · Tab автодоповнення · Ctrl+L очистити · man <команда> довідка'}
       </div>
     </div>
   );

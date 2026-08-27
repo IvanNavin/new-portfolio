@@ -43,6 +43,13 @@ export type MachineOptions = {
   docker?: Partial<DockerState>;
   k8s?: Partial<K8sState>;
   terraform?: Partial<TerraformState>;
+  /**
+   * Make the first sudo ask for a password. Off by default: in every mission
+   * after the one that teaches sudo, the player is assumed to have
+   * authenticated earlier in the shift — which is exactly what sudo's
+   * credential cache does on a real box.
+   */
+  sudoLocked?: boolean;
 };
 
 const emptyGit = (): GitState => ({
@@ -275,6 +282,12 @@ export const makeMachine = (options: MachineOptions = {}): ShellState => {
     docker: { ...emptyDocker(), ...options.docker },
     k8s: { ...emptyK8s(), ...options.k8s },
     terraform: { ...emptyTerraform(), ...options.terraform },
+    sudo: {
+      unlocked: options.sudoLocked !== true,
+      pending: null,
+      attempts: 0,
+      password: 'horih2031',
+    },
     history: [],
     nextPid: 1500 + processes.length,
   };

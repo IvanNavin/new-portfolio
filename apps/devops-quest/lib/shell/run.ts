@@ -147,6 +147,39 @@ export const runLine = (input: ShellState, line: string): RunResult => {
 
   if (trimmed === '') return { state, output, cleared: false };
 
+  // A line typed at a password prompt is an answer, not a command — and sudo
+  // reads it from the terminal, so it never reaches shell history.
+  if (state.sudo.pending !== null) {
+    const held = state.sudo.pending;
+    if (trimmed === state.sudo.password) {
+      state.sudo.unlocked = true;
+      state.sudo.pending = null;
+      state.sudo.attempts = 0;
+      return runLine(state, held);
+    }
+
+    state.sudo.attempts += 1;
+    if (state.sudo.attempts >= 3) {
+      state.sudo.pending = null;
+      state.sudo.attempts = 0;
+      return {
+        state,
+        output: [
+          { text: 'sudo: 3 incorrect password attempts', stream: 'stderr' },
+        ],
+        cleared: false,
+      };
+    }
+    return {
+      state,
+      output: [
+        { text: 'Sorry, try again.', stream: 'stderr' },
+        { text: `[sudo] password for ${state.user}: `, stream: 'system' },
+      ],
+      cleared: false,
+    };
+  }
+
   state.history.push(trimmed);
 
   const home = state.users[state.user]?.home ?? '/root';
@@ -155,6 +188,21 @@ export const runLine = (input: ShellState, line: string): RunResult => {
     return {
       state,
       output: [{ text: parsed.error, stream: 'stderr' }],
+      cleared: false,
+    };
+  }
+
+  // First sudo of the session: hold the line and ask, the way sudo really does.
+  const usesSudo = parsed.segments.some((segment) =>
+    segment.commands.some((command) => command.argv[0] === 'sudo'),
+  );
+  if (usesSudo && !state.sudo.unlocked) {
+    state.sudo.pending = trimmed;
+    return {
+      state,
+      output: [
+        { text: `[sudo] password for ${state.user}: `, stream: 'system' },
+      ],
       cleared: false,
     };
   }

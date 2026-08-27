@@ -315,3 +315,66 @@ describe('man', () => {
     );
   });
 });
+
+describe('sudo authentication', () => {
+  const locked = () =>
+    makeMachine({
+      user: 'deploy',
+      sudoLocked: true,
+      files: {
+        '/root/secret': { content: 'classified', mode: 0o600, owner: 'root' },
+      },
+    });
+
+  it('asks for a password the first time and holds the command back', () => {
+    const { out, state } = run(locked(), 'sudo cat /root/secret');
+    expect(out).toContain('[sudo] password for deploy:');
+    expect(out).not.toContain('classified');
+    expect(state.sudo.pending).toBe('sudo cat /root/secret');
+  });
+
+  it('runs the held command once the password is right', () => {
+    const { out, state } = run(locked(), 'sudo cat /root/secret', 'horih2031');
+    expect(out.trim()).toBe('classified');
+    expect(state.sudo.unlocked).toBe(true);
+  });
+
+  it('stays quiet on every later sudo — that is the credential cache', () => {
+    const { out } = run(
+      locked(),
+      'sudo cat /root/secret',
+      'horih2031',
+      'sudo cat /root/secret',
+    );
+    expect(out).not.toContain('[sudo] password');
+    expect(out.trim()).toBe('classified');
+  });
+
+  it('rejects a wrong password and gives up after three tries', () => {
+    const first = run(locked(), 'sudo cat /root/secret', 'nope');
+    expect(first.out).toContain('Sorry, try again.');
+
+    const exhausted = run(locked(), 'sudo cat /root/secret', 'a', 'b', 'c');
+    expect(exhausted.out).toContain('3 incorrect password attempts');
+    expect(exhausted.state.sudo.pending).toBeNull();
+  });
+
+  it('keeps the password out of shell history', () => {
+    const { state } = run(locked(), 'sudo cat /root/secret', 'horih2031');
+    expect(state.history).not.toContain('horih2031');
+  });
+
+  it('does not ask at all in missions that assume an earlier login', () => {
+    const { out } = run(
+      makeMachine({
+        user: 'deploy',
+        files: {
+          '/root/secret': { content: 'classified', mode: 0o600, owner: 'root' },
+        },
+      }),
+      'sudo cat /root/secret',
+    );
+    expect(out).not.toContain('[sudo] password');
+    expect(out.trim()).toBe('classified');
+  });
+});

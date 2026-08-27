@@ -214,6 +214,20 @@ export type TerraformState = {
   hasStateFile: boolean;
 };
 
+/**
+ * sudo caches your credentials per terminal for about fifteen minutes, which
+ * is why it asks once and then goes quiet. Modelling that is the difference
+ * between a learner meeting `[sudo] password for ...` here or on a real server.
+ */
+export type SudoState = {
+  /** Already authenticated in this session — sudo stays silent. */
+  unlocked: boolean;
+  /** The command line held back until a password arrives. */
+  pending: string | null;
+  attempts: number;
+  password: string;
+};
+
 export type ShellState = {
   hostname: string;
   fs: DirNode;
@@ -229,6 +243,7 @@ export type ShellState = {
   docker: DockerState;
   k8s: K8sState;
   terraform: TerraformState;
+  sudo: SudoState;
   /** Every command line the player has submitted, in order. */
   history: string[];
   nextPid: number;

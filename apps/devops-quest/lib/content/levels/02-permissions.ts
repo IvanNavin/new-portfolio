@@ -48,8 +48,23 @@ export const level02: Level = {
           kind: 'text',
           text:
             '`sudo` виконує **одну команду** від імені root. Він працює лише якщо ти в групі ' +
-            '`sudo` (у деяких дистрибутивах — `wheel`). Інакше отримаєш ' +
-            '`is not in the sudoers file`.',
+            '`sudo`. Інакше отримаєш `is not in the sudoers file`.',
+        },
+        {
+          kind: 'text',
+          text:
+            'Перед цим `sudo` перевірить, що це справді ти, — і спитає **твій власний** ' +
+            'пароль, а не рутовий. Пароль Тараса Оксана продиктувала в дзвінку: ' +
+            '`horih2031`. Під час набору він не показується — ні крапок, ні зірочок. ' +
+            'Це нормально, просто друкуй і тисни Enter.',
+        },
+        {
+          kind: 'note',
+          text:
+            'Спитає він лише **раз**: далі `sudo` памʼятає, що ти вже підтвердився, ' +
+            'приблизно 15 хвилин для цього термінала. Тому наступні команди підуть мовчки. ' +
+            'А на хмарних серверах його часто взагалі налаштовують не питати ' +
+            '(`NOPASSWD`) — щоб скрипти й CI могли працювати без людини.',
         },
         {
           kind: 'note',
@@ -63,6 +78,9 @@ export const level02: Level = {
         boot: () =>
           makeMachine({
             user: 'deploy',
+            // The only mission where sudo asks: every later one assumes the
+            // credential cache from earlier in the shift, as it works for real.
+            sudoLocked: true,
             files: {
               '/root/.secret-plan': {
                 content: 'ship it on friday\n',
@@ -100,10 +118,10 @@ export const level02: Level = {
       },
       hints: [
         'Спершу дізнайся, хто ти. Потім подивись, хто ще є в системі. І лише тоді — файл, який тобі «не можна».',
-        '`id` покаже групи. `/etc/passwd` читається звичайним `cat`. А для чужого файлу потрібен префікс, що піднімає права на одну команду.',
-        'id\ncat /etc/passwd\nsudo cat /root/.secret-plan',
+        '`id` покаже групи. `/etc/passwd` читається звичайним `cat`. А для чужого файлу потрібен префікс, що піднімає права на одну команду — і він спитає пароль.',
+        'id\ncat /etc/passwd\nsudo cat /root/.secret-plan\nhorih2031',
       ],
-      solution: 'id\ncat /etc/passwd\nsudo cat /root/.secret-plan',
+      solution: 'id\ncat /etc/passwd\nsudo cat /root/.secret-plan\nhorih2031',
     },
 
     {
