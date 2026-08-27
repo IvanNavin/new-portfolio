@@ -5,17 +5,16 @@ import {
   ArrowRight,
   BookOpen,
   ChevronDown,
-  Play,
   Trophy,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { cn } from '@/lib/cn';
 import {
   getLevelOfMission,
   getMission,
   nextMission,
-  stepsOf,
 } from '@/lib/content/registry';
 import { sceneFor } from '@/lib/content/story';
 import { rankFor } from '@/lib/progress/rank';
@@ -46,15 +45,13 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
 
   const level = getLevelOfMission(mission.id);
   const scene = sceneFor(mission.id);
-  const steps = stepsOf(mission);
   const upcoming = nextMission(mission.id);
   const { complete, xp } = useProgress();
 
-  const [phase, setPhase] = useState<'brief' | 'practice'>('brief');
   const [hintsUsed, setHintsUsed] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [struggling, setStruggling] = useState(false);
-  const [theoryOpen, setTheoryOpen] = useState(false);
+  const [theoryOpen, setTheoryOpen] = useState(true);
   const [record, setRecord] = useState<MissionRecord | null>(null);
   // The celebration is a dialog you can close, not a page turn: finishing a
   // mission shouldn't yank you off a terminal you might still be poking at.
@@ -70,7 +67,6 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
     const spent = revealed ? 3 : hintsUsed;
     const earned = complete(mission, spent);
     setRecord(earned);
-    setResultOpen(true);
     setCelebrating(true);
 
     const before = rankFor(xp);
@@ -111,28 +107,32 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
         solution={mission.solution}
         offered={struggling}
       />
+    </>
+  );
 
+  const intro = (
+    <>
+      {scene ? <Narrator lines={scene} /> : null}
       <div>
         <button
           type="button"
           onClick={() => setTheoryOpen((open) => !open)}
-          className="flex w-full items-center justify-between rounded-lg border border-edge bg-surface-raised px-2.5 py-2 text-[12.5px] text-ink-dim hover:border-edge-strong"
+          className="flex w-full items-center justify-between rounded-lg px-0.5 py-1 text-left"
         >
-          <span className="flex items-center gap-2">
+          <span className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint">
             <BookOpen size={13} />
-            Теорія місії
+            Що каже теорія
           </span>
           <ChevronDown
             size={14}
-            className={
-              theoryOpen
-                ? 'rotate-180 transition-transform'
-                : 'transition-transform'
-            }
+            className={cn(
+              'text-ink-faint transition-transform',
+              theoryOpen && 'rotate-180',
+            )}
           />
         </button>
         {theoryOpen ? (
-          <div className="mt-2.5">
+          <div className="mt-2">
             <Theory blocks={mission.theory} />
           </div>
         ) : null}
@@ -149,6 +149,7 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
             onSolved={onSolved}
             resetToken={resetToken}
             onStruggling={setStruggling}
+            intro={intro}
             sidebar={sidebar}
           />
         );
@@ -159,6 +160,7 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
             onSolved={onSolved}
             resetToken={resetToken}
             onStruggling={setStruggling}
+            intro={intro}
             sidebar={sidebar}
           />
         );
@@ -167,7 +169,12 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
           <QuizTaskView
             task={mission.task}
             onSolved={onSolved}
-            sidebar={sidebar}
+            sidebar={
+              <>
+                {intro}
+                {sidebar}
+              </>
+            }
           />
         );
       case 'order':
@@ -175,7 +182,12 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
           <OrderTaskView
             task={mission.task}
             onSolved={onSolved}
-            sidebar={sidebar}
+            sidebar={
+              <>
+                {intro}
+                {sidebar}
+              </>
+            }
           />
         );
     }
@@ -199,110 +211,55 @@ export const MissionView = ({ missionId }: MissionViewProps) => {
         <Badge tone="xp">{mission.xp} XP</Badge>
       </header>
 
-      {phase === 'brief' ? (
-        <div className="scroll-thin min-h-0 flex-1 overflow-y-auto">
-          <div className="mx-auto max-w-2xl space-y-7 pb-6">
-            {scene ? <Narrator lines={scene} /> : null}
+      {taskView()}
 
-            <section className="rise" style={{ animationDelay: '120ms' }}>
-              <h2 className="mb-2.5 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint">
-                Що каже теорія
-              </h2>
-              <Theory blocks={mission.theory} />
-            </section>
+      <footer className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-edge pt-3">
+        {record ? (
+          <span className="flex items-center gap-2 text-[12.5px] text-accent">
+            <Trophy size={14} />
+            Місію виконано
+            <Stars value={record.stars} />
+            <span className="font-mono text-xp">+{record.xp} XP</span>
+          </span>
+        ) : (
+          <span className="text-[12.5px] text-ink-dim">
+            Закрий усі кроки завдання, щоб рухатись далі
+          </span>
+        )}
 
-            <section className="rise" style={{ animationDelay: '220ms' }}>
-              <h2 className="mb-2.5 font-mono text-[10.5px] uppercase tracking-[0.2em] text-accent">
-                Твоє завдання
-              </h2>
-              <p className="mb-3 text-[14px] leading-relaxed text-ink">
-                {mission.goal}
-              </p>
-              <ol className="space-y-2">
-                {steps.map((step, index) => (
-                  <li
-                    key={step}
-                    className="rise flex items-start gap-3 rounded-lg border border-edge bg-surface-raised px-3 py-2.5"
-                    style={{ animationDelay: `${300 + index * 70}ms` }}
-                  >
-                    <span className="mt-px flex size-5 shrink-0 items-center justify-center rounded-md bg-accent-soft font-mono text-[11px] text-accent">
-                      {index + 1}
-                    </span>
-                    <span className="text-[13.5px] leading-snug text-ink-dim">
-                      {step}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </section>
-
+        <div className="flex items-center gap-2">
+          {record ? (
             <Button
-              variant="primary"
-              size="md"
-              className="w-full"
-              onClick={() => setPhase('practice')}
+              size="sm"
+              variant="quiet"
+              onClick={() => setResultOpen(true)}
             >
-              <Play size={14} />
-              До роботи
+              Показати результат
             </Button>
-            <p className="text-center text-[11.5px] text-ink-faint">
-              Теорія й цілі лишаться під рукою — збоку від термінала.
-            </p>
-          </div>
-        </div>
-      ) : (
-        <>
-          {taskView()}
+          ) : null}
 
-          <footer className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-edge pt-3">
-            {record ? (
-              <span className="flex items-center gap-2 text-[12.5px] text-accent">
-                <Trophy size={14} />
-                Місію виконано
-                <Stars value={record.stars} />
-                <span className="font-mono text-xp">+{record.xp} XP</span>
-              </span>
-            ) : (
-              <span className="text-[12.5px] text-ink-dim">
-                Закрий усі цілі місії, щоб рухатись далі
-              </span>
-            )}
-
-            <div className="flex items-center gap-2">
-              {record ? (
-                <Button
-                  size="sm"
-                  variant="quiet"
-                  onClick={() => setResultOpen(true)}
-                >
-                  Показати результат
+          {upcoming ? (
+            record ? (
+              <Link href={`/mission/${upcoming.id}`}>
+                <Button size="sm" variant="primary">
+                  Наступна місія
+                  <ArrowRight size={14} />
                 </Button>
-              ) : null}
-
-              {upcoming ? (
-                record ? (
-                  <Link href={`/mission/${upcoming.id}`}>
-                    <Button size="sm" variant="primary">
-                      Наступна місія
-                      <ArrowRight size={14} />
-                    </Button>
-                  </Link>
-                ) : (
-                  <Button
-                    size="sm"
-                    variant="primary"
-                    disabled
-                    title="Спершу виконай усі цілі цієї місії"
-                  >
-                    Наступна місія
-                    <ArrowRight size={14} />
-                  </Button>
-                )
-              ) : null}
-            </div>
-          </footer>
-        </>
-      )}
+              </Link>
+            ) : (
+              <Button
+                size="sm"
+                variant="primary"
+                disabled
+                title="Спершу виконай усі цілі цієї місії"
+              >
+                Наступна місія
+                <ArrowRight size={14} />
+              </Button>
+            )
+          ) : null}
+        </div>
+      </footer>
 
       <Confetti active={celebrating} />
 

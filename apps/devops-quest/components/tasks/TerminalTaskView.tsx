@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { type ReactNode, useEffect, useMemo, useRef } from 'react';
 
 import type { TerminalTask } from '@/lib/content/types';
 
@@ -14,7 +14,9 @@ type TerminalTaskViewProps = {
   /** Bumped by the parent to force a fresh machine on "try again". */
   resetToken: number;
   onStruggling: (struggling: boolean) => void;
-  sidebar: React.ReactNode;
+  /** Rendered above the task list — the scene that opens the mission. */
+  intro: ReactNode;
+  sidebar: ReactNode;
 };
 
 export const TerminalTaskView = ({
@@ -22,6 +24,7 @@ export const TerminalTaskView = ({
   onSolved,
   resetToken,
   onStruggling,
+  intro,
   sidebar,
 }: TerminalTaskViewProps) => {
   const terminal = useTerminal(task);
@@ -76,6 +79,7 @@ export const TerminalTaskView = ({
   return (
     <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
       <div className="scroll-thin min-h-0 space-y-5 overflow-y-auto pr-1">
+        {intro}
         <ObjectiveList objectives={objectives} showNudges={struggling} />
         {sidebar}
       </div>

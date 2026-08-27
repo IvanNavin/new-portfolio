@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, Circle } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 import { cn } from '@/lib/cn';
 
@@ -28,16 +28,16 @@ export const ObjectiveList = ({
   return (
     <div>
       <div className="mb-2 flex items-baseline justify-between">
-        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-ink-faint">
-          Цілі місії
+        <h3 className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-accent">
+          Твоє завдання
         </h3>
         <span className="font-mono text-[11px] text-ink-dim">
           {done}/{objectives.length}
         </span>
       </div>
 
-      <ul className="space-y-1.5">
-        {objectives.map((objective) => (
+      <ol className="space-y-1.5">
+        {objectives.map((objective, index) => (
           <li
             key={objective.id}
             className={cn(
@@ -47,12 +47,23 @@ export const ObjectiveList = ({
                 : 'border-edge bg-surface-raised',
             )}
           >
-            <div className="flex items-start gap-2">
-              {objective.done ? (
-                <Check size={14} className="mt-0.5 shrink-0 text-accent" />
-              ) : (
-                <Circle size={14} className="mt-0.5 shrink-0 text-ink-faint" />
-              )}
+            <div className="flex items-start gap-2.5">
+              {/* The step number is the checkbox: it becomes a tick when done,
+                  so the task list and the progress list are the same list. */}
+              <span
+                className={cn(
+                  'mt-px flex size-5 shrink-0 items-center justify-center rounded-md font-mono text-[11px]',
+                  objective.done
+                    ? 'bg-accent text-surface'
+                    : 'bg-surface-sunken text-ink-faint',
+                )}
+              >
+                {objective.done ? (
+                  <Check size={13} strokeWidth={3} />
+                ) : (
+                  index + 1
+                )}
+              </span>
               <span
                 className={cn(
                   'text-[13px] leading-snug',
@@ -64,7 +75,7 @@ export const ObjectiveList = ({
             </div>
 
             {!objective.done && objective.feedback ? (
-              <p className="mt-1.5 pl-6 text-[12px] leading-snug text-danger">
+              <p className="mt-1.5 pl-[30px] text-[12px] leading-snug text-danger">
                 {objective.feedback}
               </p>
             ) : null}
@@ -73,13 +84,13 @@ export const ObjectiveList = ({
             !objective.done &&
             !objective.feedback &&
             objective.hintOnFail ? (
-              <p className="mt-1.5 pl-6 text-[12px] leading-snug text-warn/80">
+              <p className="mt-1.5 pl-[30px] text-[12px] leading-snug text-warn/80">
                 {objective.hintOnFail}
               </p>
             ) : null}
           </li>
         ))}
-      </ul>
+      </ol>
     </div>
   );
 };

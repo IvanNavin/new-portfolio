@@ -13,6 +13,8 @@ type EditorTaskViewProps = {
   onSolved: () => void;
   resetToken: number;
   onStruggling: (struggling: boolean) => void;
+  /** Rendered above the task list — the scene that opens the mission. */
+  intro: ReactNode;
   sidebar: ReactNode;
 };
 
@@ -21,6 +23,7 @@ export const EditorTaskView = ({
   onSolved,
   resetToken,
   onStruggling,
+  intro,
   sidebar,
 }: EditorTaskViewProps) => {
   const [text, setText] = useState(task.starter);
@@ -68,6 +71,7 @@ export const EditorTaskView = ({
   return (
     <div className="grid min-h-0 flex-1 gap-4 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
       <div className="scroll-thin min-h-0 space-y-5 overflow-y-auto pr-1">
+        {intro}
         <ObjectiveList objectives={objectives} showNudges={checked !== null} />
         {sidebar}
       </div>
