@@ -191,6 +191,36 @@ describe('theory covers the practice', () => {
     expect(untaught).toEqual([]);
   });
 
+  // `usermod -aG deployers ci` was demonstrated; the task then asked for two
+  // groups at once. That they are comma-joined, and that a space breaks it, was
+  // written nowhere — so the only route was to guess the punctuation.
+  it.each(
+    cases
+      .filter(({ mission }) => mission.task.kind === 'terminal')
+      .map(({ mission, taught }) => [mission.id, mission, taught] as const),
+  )(
+    '%s demonstrates any compound argument it expects',
+    (_id, mission, taught) => {
+      const compound = new Set<string>();
+      for (const rawLine of mission.solution.split('\n')) {
+        for (const word of stripComment(rawLine).trim().split(/\s+/)) {
+          if (word.includes(',') && !word.startsWith('-')) compound.add(word);
+        }
+      }
+
+      const shownWith =
+        taught +
+        (mission.task.kind === 'terminal'
+          ? mission.task.goals.map((goal) => goal.label).join('\n')
+          : '');
+
+      const undemonstrated = [...compound].filter(
+        (word) => !shownWith.includes(word),
+      );
+      expect(undemonstrated).toEqual([]);
+    },
+  );
+
   it('every mission id appears exactly once in the walk', () => {
     expect(cases).toHaveLength(ALL_MISSIONS.length);
   });
