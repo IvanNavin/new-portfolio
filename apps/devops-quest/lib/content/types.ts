@@ -29,6 +29,14 @@ export type Goal = {
    * check the player could have found it on the machine rather than guessed.
    */
   expected?: string;
+  /**
+   * Marks a goal the player must *not* break rather than one they must reach:
+   * «don't kill the database», «don't lose the other keys». It is green from
+   * the first second by design, so it is listed apart from the numbered work —
+   * a satisfied constraint sitting in the objective list makes a fresh mission
+   * look half-finished, which is exactly the wrong first impression.
+   */
+  constraint?: true;
   check: (state: ShellState) => boolean;
 };
 
@@ -44,6 +52,8 @@ export type EditorGoal = {
   id: string;
   label: string;
   hintOnFail?: string;
+  /** Same meaning as on a terminal goal: something to preserve, not to reach. */
+  constraint?: true;
   check: (text: string) => boolean;
 };
 

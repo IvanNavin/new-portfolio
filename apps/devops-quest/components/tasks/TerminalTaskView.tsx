@@ -36,6 +36,7 @@ export const TerminalTaskView = ({
         label: goal.label,
         hintOnFail: goal.hintOnFail,
         feedback: goal.feedback?.(terminal.state) ?? null,
+        constraint: goal.constraint,
         done: goal.check(terminal.state),
       })),
     [task.goals, terminal.state],
@@ -47,7 +48,9 @@ export const TerminalTaskView = ({
   // Commands that succeed but achieve nothing are the quiet way to get stuck:
   // there is no error to count, so failures alone would never notice. Track how
   // long it has been since a goal last went green and step in on that too.
-  const doneCount = objectives.filter((objective) => objective.done).length;
+  const doneCount = objectives.filter(
+    (objective) => objective.done && !objective.constraint,
+  ).length;
   const historyLength = terminal.state.history.length;
   const progressAt = useRef(0);
   const lastDoneCount = useRef(doneCount);

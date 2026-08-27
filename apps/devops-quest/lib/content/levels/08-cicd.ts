@@ -231,8 +231,9 @@ export const level08: Level = {
           },
           {
             id: 'still-works',
+            constraint: true,
             label:
-              'Не зламати сам пайплайн: docker push і checkout мають лишитись',
+              'Сам пайплайн має вціліти: docker push і checkout лишаються на місці',
             check: (text) =>
               /docker push/m.test(text) && /actions\/checkout@/m.test(text),
           },

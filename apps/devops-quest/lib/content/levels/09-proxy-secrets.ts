@@ -1,5 +1,6 @@
 import { getNode, readFile } from '../../shell/fs';
 import { makeMachine } from '../../shell/machines';
+import { answerFile } from '../goals';
 import type { Level } from '../types';
 
 const NGINX_SOLUTION = [
@@ -19,6 +20,19 @@ const NGINX_SOLUTION = [
   '        proxy_set_header Host $host;',
   '        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;',
   '        proxy_set_header X-Forwarded-Proto $scheme;',
+  '    }',
+  '}',
+  '',
+].join('\n');
+
+const GOOD_NGINX = [
+  'server {',
+  '    listen 80;',
+  '    server_name shop.internal;',
+  '',
+  '    location / {',
+  '        proxy_pass http://127.0.0.1:3000;',
+  '        proxy_set_header Host $host;',
   '    }',
   '}',
   '',
@@ -50,7 +64,7 @@ export const level09: Level = {
     {
       id: 'l09-m01',
       title: 'Конфіг, який не проходить перевірку',
-      goal: 'Ти знайшов синтаксичну помилку в nginx.conf, виправив її та перезавантажив конфіг.',
+      goal: 'Ти знайшов помилку в nginx.conf, повернув робочий конфіг і підняв сервер.',
       xp: 190,
       theory: [
         {
@@ -73,6 +87,37 @@ export const level09: Level = {
           ],
         },
         {
+          kind: 'text',
+          text:
+            '`nginx -t` не просто каже «погано» — він називає **файл і номер рядка**, ' +
+            'на якому спіткнувся. Це і є адреса помилки, її не треба шукати очима.',
+        },
+        {
+          kind: 'code',
+          caption: 'Так виглядає відповідь на зламаний конфіг',
+          lines: [
+            'nginx: [emerg] directive "proxy_pass" is not terminated by ";" in /etc/nginx/nginx.conf:6',
+            'nginx: configuration file /etc/nginx/nginx.conf test failed',
+            '                                                        └── номер рядка',
+          ],
+        },
+        {
+          kind: 'text',
+          text:
+            'Тепер як лагодити. Правило на сервері просте: **перед правкою конфіга роби ' +
+            'копію**. Тоді, якщо правка все зламала, лагодження — це один рядок: ' +
+            'повернути копію на місце. Копію заведено класти поруч із розширенням `.bak`.',
+        },
+        {
+          kind: 'code',
+          caption: 'Резервна копія і відкат',
+          lines: [
+            'sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak  # ПЕРЕД правкою',
+            'sudo cp /etc/nginx/nginx.conf.bak /etc/nginx/nginx.conf  # відкотити',
+            'sudo nginx -t                                            # і одразу перевірити',
+          ],
+        },
+        {
           kind: 'note',
           text:
             'Золоте правило: **ніколи** не робити reload без `nginx -t`. Перевірка займає ' +
@@ -82,13 +127,22 @@ export const level09: Level = {
       ],
       task: {
         kind: 'terminal',
-        intro: ['Хтось правив конфіг і nginx більше не піднімається.', ''],
+        intro: [
+          'Хтось правив конфіг і nginx більше не піднімається.',
+          'На щастя, перед правкою зробили копію: /etc/nginx/nginx.conf.bak',
+          '',
+        ],
         boot: () =>
           makeMachine({
             user: 'deploy',
             files: {
               '/etc/nginx/nginx.conf': {
                 content: BROKEN_NGINX,
+                owner: 'root',
+                group: 'root',
+              },
+              '/etc/nginx/nginx.conf.bak': {
+                content: GOOD_NGINX,
                 owner: 'root',
                 group: 'root',
               },
@@ -112,9 +166,19 @@ export const level09: Level = {
               'Є прапорець, що робить саме перевірку без застосування.',
             check: (s) => s.history.some((line) => /nginx\s+-t/.test(line)),
           },
+          answerFile({
+            id: 'line',
+            path: '/home/deploy/broken-line.txt',
+            label: 'Записати у ~/broken-line.txt номер рядка з помилкою',
+            expected: '6',
+            hintOnFail:
+              'Номер стоїть у виводі nginx -t після двокрапки — одразу за іменем файлу.',
+          }),
           {
             id: 'fixed',
-            label: 'Виправити рядок proxy_pass — йому бракує крапки з комою',
+            label: 'Повернути на місце робочий конфіг із резервної копії',
+            hintOnFail:
+              'Копія лежить поруч: /etc/nginx/nginx.conf.bak. Скопіюй її поверх зламаного файлу — файл належить root.',
             check: (s) => {
               const config = readFile(s.fs, '/etc/nginx/nginx.conf') ?? '';
               return /proxy_pass\s+http:\/\/127\.0\.0\.1:3000;/.test(config);
@@ -122,12 +186,12 @@ export const level09: Level = {
           },
           {
             id: 'verified',
-            label: 'Перевірити конфіг ЩЕ РАЗ після виправлення',
+            label: 'Перевірити конфіг ЩЕ РАЗ — уже після відновлення',
             hintOnFail:
               'Перевірка має бути після правки, інакше ти застосовуєш неперевірений конфіг.',
             check: (s) => {
               const fixAt = s.history.findIndex(
-                (line) => /proxy_pass/.test(line) && />/.test(line),
+                (line) => !/nginx\s+-t/.test(line) && /nginx\.conf/.test(line),
               );
               const tests = s.history
                 .map((line, index) => ({ line, index }))
@@ -143,23 +207,14 @@ export const level09: Level = {
         ],
       },
       hints: [
-        'Спершу спитай у самого nginx, що йому не подобається — він назве файл і рядок.',
-        'Помилка на рядку з proxy_pass: немає `;`. Перепиши весь блок у файл (через sudo tee або перезапис файлу), знову зроби nginx -t і лише тоді стартуй сервіс.',
-        'Перепиши конфіг у /tmp через echo із `>` і `>>`, скопіюй його на місце через ' +
-          '`sudo cp /tmp/nginx.conf /etc/nginx/nginx.conf`, знову `sudo nginx -t`, потім ' +
-          '`sudo systemctl start nginx`.',
+        'Спершу спитай у самого nginx, що йому не подобається — він назве і файл, і рядок.',
+        'Помилка на рядку 6: у proxy_pass немає `;`. Не переписуй конфіг руками — поруч лежить .bak, зроблений перед правкою.',
+        'sudo nginx -t\necho 6 > ~/broken-line.txt\nsudo cp /etc/nginx/nginx.conf.bak /etc/nginx/nginx.conf\nsudo nginx -t\nsudo systemctl start nginx',
       ],
       solution: [
         'sudo nginx -t',
-        '# переписати конфіг із крапкою з комою:',
-        'echo "server {" > /tmp/nginx.conf',
-        'echo "    listen 80;" >> /tmp/nginx.conf',
-        'echo "    server_name shop.internal;" >> /tmp/nginx.conf',
-        'echo "    location / {" >> /tmp/nginx.conf',
-        'echo "        proxy_pass http://127.0.0.1:3000;" >> /tmp/nginx.conf',
-        'echo "    }" >> /tmp/nginx.conf',
-        'echo "}" >> /tmp/nginx.conf',
-        'sudo cp /tmp/nginx.conf /etc/nginx/nginx.conf',
+        'echo 6 > ~/broken-line.txt',
+        'sudo cp /etc/nginx/nginx.conf.bak /etc/nginx/nginx.conf',
         'sudo nginx -t',
         'sudo systemctl start nginx',
       ].join('\n'),
@@ -333,6 +388,7 @@ export const level09: Level = {
           },
           {
             id: 'example-open',
+            constraint: true,
             label:
               '.env.example навпаки має лишитись читабельним (644) — у ньому немає секретів',
             hintOnFail: 'Не закривай його — це шаблон для колег.',

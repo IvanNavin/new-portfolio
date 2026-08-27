@@ -242,6 +242,41 @@ export const level11: Level = {
           ],
         },
         {
+          kind: 'code',
+          caption: 'Скелет Deployment — у нього лишається підставити значення',
+          lines: [
+            'apiVersion: apps/v1',
+            'kind: Deployment',
+            'metadata:',
+            '  name: <імʼя деплойменту>',
+            'spec:',
+            '  replicas: <скільки копій>',
+            '  selector:',
+            '    matchLabels:',
+            '      app: <мітка>',
+            '  template:',
+            '    metadata:',
+            '      labels:',
+            '        app: <та сама мітка>',
+            '    spec:',
+            '      containers:',
+            '        - name: <імʼя контейнера>',
+            '          image: <образ:тег>',
+            '          ports:',
+            '            - containerPort: <порт>',
+          ],
+        },
+        {
+          kind: 'code',
+          caption: 'Проба — окремий блок усередині опису контейнера',
+          lines: [
+            'readinessProbe:',
+            '  httpGet:',
+            '    path: /health     # який шлях смикати',
+            '    port: 8080        # на якому порту',
+          ],
+        },
+        {
           kind: 'note',
           text:
             'Мітки в `selector.matchLabels` мають збігатися з мітками в `template.metadata.labels`. ' +

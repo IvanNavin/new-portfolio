@@ -458,10 +458,17 @@ export const level06: Level = {
                 ? 'Ти лишив версію з main (1.0.1). За умовою перемагає 2.0.0 — та, що з гілки feature/bump.'
                 : `Зараз у VERSION «${text.replace(/\s+/g, ' ').slice(0, 40)}». Має лишитись рядок version=2.0.0`;
             },
-            check: (s) =>
-              (readFile(s.fs, '/srv/shop/VERSION') ?? '').includes(
-                'version=2.0.0',
-              ),
+            // The conflict block quotes both versions, so «contains 2.0.0» is
+            // true before the player touches anything. The goal is only met
+            // once the markers are gone AND that is the line left standing.
+            check: (s) => {
+              const text = readFile(s.fs, '/srv/shop/VERSION') ?? '';
+              return (
+                !text.includes('<<<<<<<') &&
+                !text.includes('>>>>>>>') &&
+                text.includes('version=2.0.0')
+              );
+            },
           },
           {
             id: 'committed',
@@ -508,6 +515,31 @@ export const level06: Level = {
             'Якщо коміт **уже запушений** і його бачили колеги — тільки `revert`. ' +
             '`reset --hard` на спільній гілці зламає репозиторій усім, хто встиг зробити pull: ' +
             'у них лишаться коміти, яких «більше не існує».',
+        },
+        {
+          kind: 'text',
+          text:
+            'Обидві команди треба на щось націлити — на конкретний коміт. Його адреса — ' +
+            '**хеш**, короткий набір символів у лівій колонці `git log --oneline`. ' +
+            'Є й зручний псевдонім `HEAD` — він завжди означає «той коміт, на якому ' +
+            'я стою зараз», тобто останній.',
+        },
+        {
+          kind: 'code',
+          caption: 'Скасовуємо останній коміт',
+          lines: [
+            'git log --oneline        # знайти коміт: ліворуч хеш, праворуч повідомлення',
+            'git revert 4f2a1c9       # скасувати конкретний коміт за хешем',
+            'git revert HEAD          # те саме для останнього — без пошуку хеша',
+            'cat app.conf             # переконатись, що значення повернулось',
+          ],
+        },
+        {
+          kind: 'text',
+          text:
+            'Відкіт існує лише в тебе на машині, поки його не відправили назад у спільний ' +
+            'репозиторій. Робить це `git push origin main`: `origin` — коротке імʼя ' +
+            'сервера, звідки клонували, `main` — гілка, яку відправляємо.',
         },
         {
           kind: 'note',

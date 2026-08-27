@@ -282,3 +282,76 @@ describe('every mission shows the work, not just names it', () => {
     ).toBeGreaterThan(0);
   });
 });
+
+/**
+ * A mission must not open already solved.
+ *
+ * l02-m05 asked the player to give a directory 755 while booting it at 755, so
+ * half the checklist was ticked before the first command; l12-m02 wrote both
+ * answers into the starter file's own comments. Neither is visible by reading
+ * the mission — you have to run the checks against the untouched machine.
+ *
+ * Goals that guard something instead of asking for it — «don't kill the
+ * database» — are the deliberate exception, and say so with `constraint: true`.
+ * Those are held to the opposite rule: they must start out satisfied, or the
+ * player is told not to break something that is already broken.
+ */
+describe('missions start unsolved', () => {
+  const terminalMissions = ALL_MISSIONS.filter(
+    (mission) => mission.task.kind === 'terminal',
+  ).map((mission) => [mission.id, mission] as const);
+
+  it.each(terminalMissions)('%s has nothing done for free', (_id, mission) => {
+    if (mission.task.kind !== 'terminal') throw new Error('not terminal');
+    const booted = mission.task.boot();
+    const free = mission.task.goals
+      .filter((goal) => goal.constraint === undefined)
+      .filter((goal) => goal.check(structuredClone(booted)))
+      .map((goal) => `${goal.id}: ${goal.label}`);
+    expect(free).toEqual([]);
+  });
+
+  it.each(terminalMissions)(
+    '%s starts with constraints intact',
+    (_id, mission) => {
+      if (mission.task.kind !== 'terminal') throw new Error('not terminal');
+      const booted = mission.task.boot();
+      const broken = mission.task.goals
+        .filter((goal) => goal.constraint === true)
+        .filter((goal) => !goal.check(structuredClone(booted)))
+        .map((goal) => `${goal.id}: ${goal.label}`);
+      expect(broken).toEqual([]);
+    },
+  );
+
+  const editorMissions = ALL_MISSIONS.filter(
+    (mission) => mission.task.kind === 'editor',
+  ).map((mission) => [mission.id, mission] as const);
+
+  it.each(editorMissions)('%s starter answers nothing', (_id, mission) => {
+    if (mission.task.kind !== 'editor') throw new Error('not editor');
+    const starter = mission.task.starter;
+    const free = mission.task.goals
+      .filter((goal) => goal.constraint === undefined)
+      .filter((goal) => goal.check(starter))
+      .map((goal) => `${goal.id}: ${goal.label}`);
+    expect(free).toEqual([]);
+  });
+
+  it.each(editorMissions)(
+    '%s starter keeps constraints true',
+    (_id, mission) => {
+      if (mission.task.kind !== 'editor') throw new Error('not editor');
+      const broken = mission.task.goals
+        .filter((goal) => goal.constraint === true)
+        .filter(
+          (goal) =>
+            !goal.check(
+              mission.task.kind === 'editor' ? mission.task.starter : '',
+            ),
+        )
+        .map((goal) => `${goal.id}: ${goal.label}`);
+      expect(broken).toEqual([]);
+    },
+  );
+});

@@ -321,6 +321,11 @@ export const level01: Level = {
       ],
       task: {
         kind: 'terminal',
+        intro: [
+          'Реліз приїхав на сервер, але ліг не туди: архів лежить у /tmp.',
+          'Подивись `ls /tmp`, щоб дізнатись його точне імʼя.',
+          '',
+        ],
         boot: () =>
           makeMachine({
             user: 'deploy',

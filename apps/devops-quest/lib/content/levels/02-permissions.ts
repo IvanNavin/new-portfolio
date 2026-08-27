@@ -523,38 +523,80 @@ export const level02: Level = {
         {
           kind: 'text',
           text:
-            'Права кажуть **що можна робити**, власник каже **кому**. Якщо файли розпакували ' +
-            'під root, а сервіс працює під `app`, він не зможе ні писати логи, ні оновити реліз. ' +
-            'Лікує це `chown`.',
+            'Права кажуть **що** можна робити. Але «власник rwx» саме по собі нічого не варте, ' +
+            'поки не сказано, **хто** цей власник. Тому кожен файл і кожен каталог носить із собою ' +
+            'ще дві позначки: імʼя користувача-власника й імʼя групи.',
+        },
+        {
+          kind: 'code',
+          caption: 'Ці дві позначки видно в ls -l — третя й четверта колонки',
+          lines: [
+            'drwxr-xr-x 2 root root 4096 Mar 14 09:20 logs',
+            '           │ │    └──── група:   root',
+            '           │ └───────── власник: root',
+            '           └─────────── скільки посилань (нам не важливо)',
+          ],
+        },
+        {
+          kind: 'text',
+          text:
+            'Звідси й береться найчастіша поломка деплою. Архів розпакували під `root` — ' +
+            'отже, власник усього дерева `root`. А сервіс працює під користувачем `app`. ' +
+            'Для нього це «чужі файли»: діють права **інших**, а вони зазвичай `r-x`. ' +
+            'Записати лог або оновити реліз він не може, і падає з `Permission denied`.',
+        },
+        {
+          kind: 'text',
+          text:
+            'Лікує це `chown` (change owner). Через двокрапку можна одразу задати й групу, ' +
+            'а прапорець `-R` (recursive) проходить по всьому дереву — сам каталог, ' +
+            'усе, що всередині, і все, що всередині того.',
         },
         {
           kind: 'code',
           lines: [
-            'sudo chown app /srv/app/current      # змінити власника',
-            'sudo chown app:app /srv/app/current  # власника і групу',
-            'sudo chown -R app:app /srv/app       # рекурсивно по всьому дереву',
+            'sudo chown app /srv/shop            # лише власник',
+            'sudo chown app:app /srv/shop        # власник і група, через двокрапку',
+            'sudo chown -R app:app /srv/shop     # те саме, але й для всього вмісту',
+            'ls -l /srv/shop                     # перевірити, що колонки змінились',
           ],
         },
         {
           kind: 'note',
           text:
-            '`chown` завжди потребує root: віддати свій файл комусь іншому звичайний користувач ' +
-            'не може — інакше можна було б підкидати файли чужим акаунтам.',
+            '`chown` завжди потребує root: віддати свій файл комусь іншому звичайний ' +
+            'користувач не може — інакше можна було б підкидати файли чужим акаунтам.',
+        },
+        {
+          kind: 'note',
+          text:
+            '`chown` і `chmod` — різні інструменти, і часто потрібні обидва. ' +
+            'Спершу `chown` віддає каталог правильному користувачеві, потім `chmod` ' +
+            'ставить йому потрібні цифри. Змінити власника й забути про права — ' +
+            'значить отримати той самий `Permission denied`, тільки під іншим імʼям.',
         },
       ],
       task: {
         kind: 'terminal',
+        intro: [
+          'Сервіс shop не стартує: у логах Permission denied.',
+          'Реліз розпакували під root, а працює сервіс під користувачем app.',
+          'Почни з `ls -l /srv/shop` — подивись на колонки власника й на права logs.',
+          '',
+        ],
         boot: () =>
           makeMachine({
             user: 'deploy',
             users: [{ name: 'app', groups: [] }],
             dirs: [
               { path: '/srv/shop', owner: 'root', group: 'root', mode: 0o755 },
+              // Someone «fixed» a leak with chmod -R 555: nothing here is
+              // writable any more, not even for whoever ends up owning it.
               {
                 path: '/srv/shop/logs',
                 owner: 'root',
                 group: 'root',
-                mode: 0o755,
+                mode: 0o555,
               },
             ],
             files: {
@@ -572,11 +614,26 @@ export const level02: Level = {
           }),
         goals: [
           {
+            id: 'looked',
+            label: 'Подивитися, кому зараз належить /srv/shop',
+            hintOnFail:
+              'Довгий формат списку показує власника й групу: ls -l /srv/shop',
+            check: (s) =>
+              s.history.some((line) => /^ls\b.*-.*l/.test(line.trim())),
+          },
+          {
             id: 'owner',
             label:
               'Передати весь каталог /srv/shop користувачу app і групі app',
             hintOnFail:
               'Перевір, чи ти застосував зміну рекурсивно — вкладені файли теж мають змінити власника.',
+            feedback: (s) => {
+              const root = getNode(s.fs, '/srv/shop');
+              const inner = getNode(s.fs, '/srv/shop/logs/app.log');
+              if (root?.owner !== 'app') return null;
+              if (inner?.owner === 'app' && inner?.group === 'app') return null;
+              return 'Сам каталог уже належить app, а от файли всередині — ще ні. Потрібен прапорець -R.';
+            },
             check: (s) => {
               const paths = [
                 '/srv/shop',
@@ -593,19 +650,26 @@ export const level02: Level = {
           {
             id: 'writable',
             label:
-              'Дати каталогу logs права 755, щоб сервіс міг писати туди логи',
+              'Повернути каталогу logs права 755 — зараз у власника немає навіть w',
+            hintOnFail:
+              'Зараз у logs права 555 (r-xr-xr-x): писати не може ніхто. Власнику потрібне rwx — це 7.',
+            feedback: (s) => {
+              const mode = getNode(s.fs, '/srv/shop/logs')?.mode ?? 0;
+              if (mode === 0o755 || mode === 0o555) return null;
+              return `Зараз у logs права ${mode.toString(8).padStart(3, '0')}. Потрібно рівно 755.`;
+            },
             check: (s) =>
               (getNode(s.fs, '/srv/shop/logs')?.mode ?? 0) === 0o755,
           },
         ],
       },
       hints: [
-        'Власник міняється однією командою, але за замовчуванням вона зачіпає лише сам каталог, не його вміст.',
-        'Потрібен рекурсивний прапорець і запис `користувач:група`. І це операція від root.',
-        'sudo chown -R app:app /srv/shop\nsudo chmod 755 /srv/shop/logs',
+        'Спершу подивись `ls -l /srv/shop`: там дві проблеми одразу — не той власник і у logs немає біта w.',
+        'Власник міняється через chown, і за замовчуванням команда зачіпає лише сам каталог, не вміст — потрібен -R та запис `користувач:група`. Права окремо, через chmod. Обидві операції від root.',
+        'ls -l /srv/shop\nsudo chown -R app:app /srv/shop\nsudo chmod 755 /srv/shop/logs\nls -l /srv/shop',
       ],
       solution:
-        'sudo chown -R app:app /srv/shop\nsudo chmod 755 /srv/shop/logs',
+        'ls -l /srv/shop\nsudo chown -R app:app /srv/shop\nsudo chmod 755 /srv/shop/logs\nls -l /srv/shop',
     },
   ],
 };

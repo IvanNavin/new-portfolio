@@ -38,6 +38,7 @@ export const EditorTaskView = ({
       id: goal.id,
       label: goal.label,
       hintOnFail: goal.hintOnFail,
+      constraint: goal.constraint,
       done: goal.check(text),
     }));
     setChecked(statuses);
@@ -65,7 +66,9 @@ export const EditorTaskView = ({
       id: goal.id,
       label: goal.label,
       hintOnFail: goal.hintOnFail,
-      done: false,
+      constraint: goal.constraint,
+      // Before the first check, a constraint is intact by definition.
+      done: goal.constraint === true,
     }));
 
   return (

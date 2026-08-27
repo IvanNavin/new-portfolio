@@ -2,6 +2,13 @@ import { makeMachine, seed } from '../../shell/machines';
 import { answerFile } from '../goals';
 import type { Level } from '../types';
 
+/**
+ * Terraform's comment character is `#`, and the starter file's brief is written
+ * in comments. Grading the raw text would let the instructions count as the
+ * answer, so every check reads the code with comments stripped out.
+ */
+const code = (text: string): string => text.replace(/#.*$/gm, '');
+
 const MAIN_TF = [
   'terraform {',
   '  required_providers {',
@@ -160,6 +167,32 @@ export const level12: Level = {
           ],
         },
         {
+          kind: 'code',
+          caption: 'Провайдер оголошується так само — блоком',
+          lines: [
+            '# необовʼязковий, але стандартний преамбул: яку версію провайдера брати',
+            'terraform {',
+            '  required_providers {',
+            '    aws = {',
+            '      source  = "hashicorp/aws"',
+            '      version = "~> 5.0"',
+            '    }',
+            '  }',
+            '}',
+            '',
+            'provider "aws" {',
+            '  region = "eu-central-1"   # у якому регіоні створювати ресурси',
+            '}',
+          ],
+        },
+        {
+          kind: 'text',
+          text:
+            'Значення всередині блоку пишуть як `ключ = "значення"` — зі знаком рівності ' +
+            'і в лапках, якщо це текст. Саме ці рядки й читає `terraform init`, ' +
+            'щоб зрозуміти, який плагін завантажити.',
+        },
+        {
           kind: 'text',
           text:
             'Друге імʼя (`assets`) — це локальна адреса ресурсу всередині коду: ' +
@@ -180,8 +213,8 @@ export const level12: Level = {
         starter: [
           '# Опиши інфраструктуру:',
           '#   провайдер aws, регіон eu-central-1',
-          '#   бакет aws_s3_bucket з локальним іменем "assets", bucket = "shop-assets-prod"',
-          '#   машина aws_instance з локальним іменем "api", instance_type = "t3.small"',
+          '#   бакет aws_s3_bucket, локальне імʼя assets, bucket = shop-assets-prod',
+          '#   машина aws_instance, локальне імʼя api, instance_type = t3.small',
           '',
         ].join('\n'),
         goals: [
@@ -190,7 +223,7 @@ export const level12: Level = {
             label: 'Оголосити провайдера aws з регіоном eu-central-1',
             check: (text) =>
               /provider\s+"aws"\s*\{[\s\S]*?region\s*=\s*"eu-central-1"[\s\S]*?\}/m.test(
-                text,
+                code(text),
               ),
           },
           {
@@ -198,23 +231,25 @@ export const level12: Level = {
             label: 'Описати ресурс aws_s3_bucket з локальним іменем assets',
             hintOnFail: 'Формат: resource "aws_s3_bucket" "assets" { ... }',
             check: (text) =>
-              /resource\s+"aws_s3_bucket"\s+"assets"\s*\{/m.test(text),
+              /resource\s+"aws_s3_bucket"\s+"assets"\s*\{/m.test(code(text)),
           },
           {
             id: 'bucket-name',
             label: 'Задати bucket = "shop-assets-prod"',
-            check: (text) => /bucket\s*=\s*"shop-assets-prod"/m.test(text),
+            check: (text) =>
+              /bucket\s*=\s*"shop-assets-prod"/m.test(code(text)),
           },
           {
             id: 'instance',
             label: 'Описати ресурс aws_instance з локальним іменем api',
             check: (text) =>
-              /resource\s+"aws_instance"\s+"api"\s*\{/m.test(text),
+              /resource\s+"aws_instance"\s+"api"\s*\{/m.test(code(text)),
           },
           {
             id: 'type',
             label: 'Задати instance_type = "t3.small"',
-            check: (text) => /instance_type\s*=\s*"t3\.small"/m.test(text),
+            check: (text) =>
+              /instance_type\s*=\s*"t3\.small"/m.test(code(text)),
           },
         ],
       },

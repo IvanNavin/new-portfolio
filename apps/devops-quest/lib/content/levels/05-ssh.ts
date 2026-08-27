@@ -115,6 +115,20 @@ export const level05: Level = {
             'і **демонстративно його ігнорує**, навіть не пробуючи.',
         },
         {
+          kind: 'text',
+          text:
+            'Заходять на сервер командою `ssh`, а кому й куди — пишуть одним словом ' +
+            'через равлик: `ssh користувач@машина`. Ключ при цьому не вказують — ' +
+            '`ssh` сам бере його з `~/.ssh`.',
+        },
+        {
+          kind: 'code',
+          lines: [
+            'ssh deploy@app-01              # зайти під deploy на машину app-01',
+            'ssh -i ~/.ssh/deploy_key deploy@app-01   # взяти конкретний ключ',
+          ],
+        },
+        {
           kind: 'code',
           caption: 'Як виглядає відмова',
           lines: [
@@ -269,6 +283,11 @@ export const level05: Level = {
       ],
       task: {
         kind: 'terminal',
+        intro: [
+          'CI-раннер прислав свій публічний ключ — він лежить у /tmp/ci_key.pub.',
+          'У authorized_keys уже є ключі Alice і Bob. Вони мають там і лишитись.',
+          '',
+        ],
         boot: () =>
           makeMachine({
             user: 'deploy',
@@ -315,7 +334,8 @@ export const level05: Level = {
           },
           {
             id: 'kept',
-            label: 'Не втратити ключі Alice і Bob, які там уже були',
+            constraint: true,
+            label: 'Ключі Alice і Bob, які там уже були, мають лишитись',
             hintOnFail:
               'Схоже, ти використав `>` замість `>>` — і затер чужі ключі. Натисни «Скинути».',
             check: (s) => {
@@ -326,6 +346,7 @@ export const level05: Level = {
           },
           {
             id: 'perms',
+            constraint: true,
             label: 'Файл authorized_keys має лишитися з правами 600',
             check: (s) =>
               (getNode(s.fs, '/home/deploy/.ssh/authorized_keys')?.mode ??
@@ -392,14 +413,16 @@ export const level05: Level = {
           },
           {
             id: 'pubkey',
-            label: 'Залишити увімкненою автентифікацію за ключем',
+            constraint: true,
+            label: 'Автентифікація за ключем має лишитись увімкненою',
             hintOnFail:
               'Якщо вимкнути і пароль, і ключі — на сервер не зайде ніхто. PubkeyAuthentication має бути yes.',
             check: (text) => /^\s*PubkeyAuthentication\s+yes\s*$/im.test(text),
           },
           {
             id: 'port',
-            label: 'Не чіпати порт — він має лишитись 22',
+            constraint: true,
+            label: 'Порт має лишитись 22',
             check: (text) => /^\s*Port\s+22\s*$/im.test(text),
           },
         ],

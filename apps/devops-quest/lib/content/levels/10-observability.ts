@@ -105,7 +105,7 @@ export const level10: Level = {
             id: 'endpoint',
             path: '/home/deploy/endpoint.txt',
             label:
-              'Записати проблемний ендпоінт у ~/endpoint.txt (наприклад /checkout)',
+              'Записати проблемний ендпоінт у ~/endpoint.txt — шлях у форматі /щось',
             expected: '/checkout',
             hintOnFail: 'Подивись, який шлях повторюється в усіх рядках з 502.',
             diagnose: (value) =>
@@ -206,7 +206,8 @@ export const level10: Level = {
           },
           {
             id: 'kept',
-            label: 'Файл має лишитись на місці, а app.log — недоторканим',
+            constraint: true,
+            label: 'debug.log має лишитись на місці, а app.log — недоторканим',
             hintOnFail:
               'Якщо ти видалив файл — натисни «Скинути»: процес тримав би дескриптор.',
             check: (s) =>
@@ -346,7 +347,7 @@ export const level10: Level = {
             id: 'cause',
             path: '/home/deploy/cause.txt',
             label:
-              'Записати у ~/cause.txt слово database — те, до чого бекенд не достукався',
+              'Записати у ~/cause.txt одним словом, до чого бекенд не достукався',
             expected: 'database',
             hintOnFail:
               'У журналі shop-api написано, до чого саме він не зміг підключитися.',
