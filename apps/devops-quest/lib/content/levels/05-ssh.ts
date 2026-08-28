@@ -224,20 +224,11 @@ export const level05: Level = {
             label: 'Успішно зайти по ssh після виправлення',
             hintOnFail:
               'Спробуй ssh ЩЕ РАЗ після зміни прав — ціль зараховується за успішним входом.',
-            check: (s) => {
-              const fixedAt = s.history.findIndex((line) =>
-                /chmod\s+700/.test(line),
-              );
-              const lastSsh = s.history
-                .map((line, index) => ({ line, index }))
-                .filter(({ line }) => /^ssh\b/.test(line.trim()))
-                .pop();
-              return (
-                fixedAt !== -1 &&
-                lastSsh !== undefined &&
-                lastSsh.index > fixedAt
-              );
-            },
+            // Asks the machine whether a session actually got in. It used to
+            // grep history for the literal «chmod 700», so anyone who fixed the
+            // directory symbolically — `chmod u=rwx,go= ~/.ssh`, exactly what
+            // level 2 teaches — could never turn this green.
+            check: (s) => s.logins.length > 0,
           },
         ],
       },

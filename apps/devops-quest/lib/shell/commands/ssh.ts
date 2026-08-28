@@ -226,6 +226,9 @@ const ssh: Command = (state, argv) => {
     );
   }
 
+  // Record the login, so a goal can ask «did they get in?» instead of grepping
+  // history for one particular spelling of the fix.
+  state.logins.push(`${target.user}@${target.host}`);
   return ok(
     state,
     [

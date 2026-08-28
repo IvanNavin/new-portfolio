@@ -17,6 +17,17 @@ export const MANPAGES: Record<string, ManPage> = {
     summary: 'Друкує абсолютний шлях поточного каталогу.',
     synopsis: ['pwd'],
   },
+  printf: {
+    name: 'printf',
+    summary:
+      'Друкує текст за форматом. На відміну від echo, розуміє \\n завжди.',
+    synopsis: ['printf FORMAT [ARG]...'],
+    options: [['%s', 'підставити наступний аргумент']],
+    examples: [
+      'printf "%s=%s\\n" APP_ENV production',
+      'printf ".env\\n*.log\\n" > .gitignore',
+    ],
+  },
   ls: {
     name: 'ls',
     summary: 'Показує вміст каталогу.',

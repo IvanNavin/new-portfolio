@@ -252,8 +252,15 @@ const status: Command = (state, argv) => {
 
 const add: Command = (state, argv) => {
   if (!state.git.initialized) return notARepo(state);
-  const targets = argv.slice(1).filter((a) => !a.startsWith('-'));
-  if (targets.length === 0) {
+  const args = argv.slice(1);
+  // `-A` was handled as if it were a pathspec, but the filter below dropped
+  // every flag first — so the branch was dead and the most common spelling of
+  // «add everything» answered «Nothing specified, nothing added».
+  const stagesEverything = args.some((argument) =>
+    ['-A', '--all', '-u', '--update'].includes(argument),
+  );
+  const targets = args.filter((a) => !a.startsWith('-'));
+  if (targets.length === 0 && !stagesEverything) {
     return fail(
       state,
       "Nothing specified, nothing added.\nhint: Maybe you wanted to say 'git add .'?",
@@ -261,8 +268,9 @@ const add: Command = (state, argv) => {
   }
 
   const working = workingTree(state);
+  if (stagesEverything) state.git.index = { ...working };
   for (const target of targets) {
-    if (target === '.' || target === '-A' || target === '*') {
+    if (target === '.' || target === '*') {
       state.git.index = { ...working };
       continue;
     }

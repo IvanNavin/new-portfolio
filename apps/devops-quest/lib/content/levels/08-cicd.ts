@@ -400,7 +400,11 @@ export const level08: Level = {
             hintOnFail:
               'Потрібно переконатись, що образ попередньої версії ще на місці.',
             check: (s) =>
-              s.history.some((line) => /docker\s+images/.test(line)),
+              // `docker image ls` is the same command, and the spelling
+              // Docker's own docs prefer.
+              s.history.some((line) =>
+                /docker\s+(images|image\s+ls)/.test(line),
+              ),
           },
           {
             id: 'stopped',

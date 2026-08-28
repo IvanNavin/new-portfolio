@@ -536,3 +536,40 @@ describe('reporting commands always answer', () => {
     expect(run(server, 'ps aux').out).toContain('postgres');
   });
 });
+
+describe('printf', () => {
+  it('writes escapes as real characters', () => {
+    const { state } = run(
+      makeMachine({ user: 'deploy' }),
+      'printf ".env\\n*.log\\n" > .gitignore',
+    );
+    expect(readFile(state.fs, '/home/deploy/.gitignore')).toBe('.env\n*.log\n');
+  });
+
+  it('substitutes %s in order', () => {
+    const { out } = run(
+      makeMachine({ user: 'deploy' }),
+      'printf "%s=%s" APP_ENV production',
+    );
+    expect(out).toBe('APP_ENV=production');
+  });
+});
+
+describe('git add', () => {
+  it('accepts -A as «everything», like git does', () => {
+    const repo = () => {
+      let state = makeMachine({
+        user: 'deploy',
+        cwd: '/srv/shop',
+        dirs: [{ path: '/srv/shop', owner: 'deploy', group: 'deploy' }],
+        files: { '/srv/shop/server.js': { content: 'x\n' } },
+      });
+      state = runLine(state, 'git init').state;
+      return state;
+    };
+    for (const flag of ['-A', '--all', '.']) {
+      const { state } = run(repo(), `git add ${flag}`, 'git commit -m "x"');
+      expect(state.git.commits.length, `git add ${flag}`).toBe(1);
+    }
+  });
+});

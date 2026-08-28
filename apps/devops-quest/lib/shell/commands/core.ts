@@ -168,6 +168,25 @@ const echo: Command = (state, argv) => {
   return ok(state, noNewline ? text : `${text}\n`);
 };
 
+/**
+ * `printf` is a bash builtin, so «command not found» was factually wrong — and
+ * it is the natural reach for writing a multi-line file, which this box asks
+ * for more than once. Format specifiers beyond %s are out of scope; escapes
+ * are what people actually use it for here.
+ */
+const printf: Command = (state, argv) => {
+  const args = argv.slice(1);
+  if (args.length === 0) return fail(state, 'printf: usage: printf format');
+  const [format, ...rest] = args;
+  let index = 0;
+  const text = format
+    .replace(/%s/g, () => rest[index++] ?? '')
+    .replace(/\\n/g, '\n')
+    .replace(/\\t/g, '\t')
+    .replace(/\\\\/g, '\\');
+  return ok(state, text);
+};
+
 const touch: Command = (state, argv) => {
   const targets = operandsOf(argv);
   if (targets.length === 0) return fail(state, 'touch: missing file operand');
@@ -680,6 +699,7 @@ export const CORE_COMMANDS: Record<string, Command> = {
   ls,
   cat,
   echo,
+  printf,
   touch,
   mkdir,
   rm,

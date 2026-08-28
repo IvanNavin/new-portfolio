@@ -301,6 +301,7 @@ export const makeMachine = (options: MachineOptions = {}): ShellState => {
     processes,
     services,
     disk: options.disk ?? { size: 41152812, used: 8214128 },
+    logins: [],
     net,
     git: { ...emptyGit(), ...options.git },
     docker: { ...emptyDocker(), ...options.docker },

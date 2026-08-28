@@ -254,6 +254,8 @@ export type ShellState = {
   history: string[];
   /** Reported by `df`; a mission can declare a nearly-full disk. */
   disk: Disk;
+  /** `user@host` for every ssh session that actually got in. */
+  logins: string[];
   nextPid: number;
   /** Set when a command asks the shell to clear the screen. */
   clearScreen?: boolean;
