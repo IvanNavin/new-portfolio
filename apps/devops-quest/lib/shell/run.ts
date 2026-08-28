@@ -60,7 +60,14 @@ const execSimple = (
   // the executor without the command registry importing it back.
   let sudoUser: string | null = null;
   if (argv[0] === 'sudo') {
-    const rest = argv.slice(1).filter((a) => a !== '-i' && a !== '-s');
+    // sudo's own options come *before* the command name; everything after it
+    // belongs to the command. Filtering them out globally ate the `-s` in
+    // `sudo nginx -s reload`, which then failed as «unknown option» — advising
+    // the very line that had just been typed.
+    const rest = argv.slice(1);
+    while (rest.length > 0 && (rest[0] === '-i' || rest[0] === '-s')) {
+      rest.shift();
+    }
     if (rest.length === 0) {
       return {
         state: working,

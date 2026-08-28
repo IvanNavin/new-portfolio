@@ -189,7 +189,7 @@ const run: Command = (state, argv) => {
     image: `${repo}:${tag}`,
     status: 'running',
     ports: publish,
-    command: 'node server.js',
+    command: defaultCommandFor(`${repo}:${tag}`),
     logs: [`Server listening on port ${publish[0]?.split(':')[1] ?? '3000'}`],
     env: Object.fromEntries(
       envPairs.map((pair) => {
@@ -220,7 +220,7 @@ const ps: Command = (state, argv) => {
     .filter((each) => all || each.status === 'running')
     .map(
       (each) =>
-        `${each.id}   ${each.image.padEnd(18)} "${each.command}"   ${
+        `${each.id}   ${each.image.padEnd(18)} ${`"${each.command}"`.padEnd(19)} ${
           each.status === 'running' ? 'Up 2 minutes' : 'Exited (0) 1 minute ago'
         }`.padEnd(80) + `${each.ports.join(', ').padEnd(24)} ${each.name}`,
     );
@@ -246,6 +246,22 @@ const images: Command = (state) =>
       ),
     ].join('\n'),
   );
+
+/**
+ * What a container of this image would actually be running.
+ *
+ * Every container was created with a hardcoded `node server.js`, so
+ * `docker run nginx:alpine` listed the nginx container as running Node. Nobody
+ * learning what an image is should have to ignore that.
+ */
+const defaultCommandFor = (image: string): string => {
+  const name = image.split(':')[0].split('/').pop() ?? '';
+  if (name.includes('nginx')) return "nginx -g 'daemon off;'";
+  if (name.includes('postgres')) return 'postgres';
+  if (name.includes('redis')) return 'redis-server';
+  if (name.includes('mysql') || name.includes('maria')) return 'mysqld';
+  return 'node server.js';
+};
 
 const findContainer = (state: ShellState, key: string) =>
   state.docker.containers.find(
@@ -364,6 +380,22 @@ const pull: Command = (state, argv) => {
   );
 };
 
+/** The `image:` line inside one service block, if the service declares one. */
+const imageForService = (yaml: string, service: string): string | null => {
+  const lines = yaml.split('\n');
+  const start = lines.findIndex((line) =>
+    new RegExp(`^ {2}${service}:\\s*$`).test(line),
+  );
+  if (start === -1) return null;
+  for (let index = start + 1; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (/^ {2}\S/.test(line)) break; // next service
+    const match = line.match(/^\s+image:\s*(\S+)\s*$/);
+    if (match) return match[1].replace(/^["']|["']$/g, '');
+  }
+  return null;
+};
+
 const compose: Command = (state, argv) => {
   const action = argv.slice(2).find((a) => !a.startsWith('-'));
   const yaml =
@@ -402,13 +434,16 @@ const compose: Command = (state, argv) => {
   for (const service of services) {
     const name = `shop-${service}`;
     if (findContainer(state, name)) continue;
+    // The compose file says which image each service uses; inventing
+    // «db:latest» contradicted the file the player had just read.
+    const image = imageForService(yaml, service) ?? `${service}:latest`;
     state.docker.containers.push({
       id: idFor(name),
       name,
-      image: `${service}:latest`,
+      image,
       status: 'running',
       ports: [],
-      command: service,
+      command: defaultCommandFor(image),
       logs: [`${service} started`],
       env: {},
       volumes: [],

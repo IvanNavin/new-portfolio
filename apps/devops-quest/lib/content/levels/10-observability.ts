@@ -166,6 +166,9 @@ export const level10: Level = {
           makeMachine({
             user: 'deploy',
             cwd: '/var/log',
+            // The mission is «диск заповнився»; the default machine reports a
+            // disk at 21%, which told the player there was no problem.
+            disk: { size: 41152812, used: 40308544 },
             files: {
               '/var/log/app/debug.log': {
                 content: `${'DEBUG verbose trace line with a lot of noise\n'.repeat(400)}`,
@@ -380,10 +383,10 @@ export const level10: Level = {
       hints: [
         'Іди по ланцюжку: запит → проксі → сервіс за ним → його журнал. Не перестрибуй одразу до restart.',
         'curl підтвердить 502. `systemctl status shop-api` покаже inactive, `journalctl -u shop-api` — ECONNREFUSED до бази. Запиши причину у файл і лише тоді стартуй сервіс.',
-        'curl -I https://shop.internal/api/health\nsystemctl status shop-api\njournalctl -u shop-api -n 30\necho database > ~/cause.txt\nsudo systemctl start shop-api',
+        'curl -I https://shop.internal/api/health\nsystemctl status shop-api\njournalctl -u shop-api -n 30\necho database > ~/cause.txt\nsudo systemctl start shop-api\nsystemctl status shop-api',
       ],
       solution:
-        'curl -I https://shop.internal/api/health\nsystemctl status shop-api\njournalctl -u shop-api -n 30\necho database > ~/cause.txt\nsudo systemctl start shop-api',
+        'curl -I https://shop.internal/api/health\nsystemctl status shop-api\njournalctl -u shop-api -n 30\necho database > ~/cause.txt\nsudo systemctl start shop-api\nsystemctl status shop-api',
     },
 
     {

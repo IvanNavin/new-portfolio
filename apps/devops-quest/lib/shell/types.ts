@@ -76,6 +76,12 @@ export type ListeningPort = {
   address: string;
 };
 
+/** What `df` reports. Declared per machine, in 1K blocks. */
+export type Disk = {
+  size: number;
+  used: number;
+};
+
 export type HttpResponse = {
   status: number;
   statusText: string;
@@ -246,6 +252,8 @@ export type ShellState = {
   sudo: SudoState;
   /** Every command line the player has submitted, in order. */
   history: string[];
+  /** Reported by `df`; a mission can declare a nearly-full disk. */
+  disk: Disk;
   nextPid: number;
   /** Set when a command asks the shell to clear the screen. */
   clearScreen?: boolean;

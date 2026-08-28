@@ -209,7 +209,7 @@ export const level09: Level = {
       hints: [
         'Спершу спитай у самого nginx, що йому не подобається — він назве і файл, і рядок.',
         'Помилка на рядку 6: у proxy_pass немає `;`. Не переписуй конфіг руками — поруч лежить .bak, зроблений перед правкою.',
-        'sudo nginx -t\necho 6 > ~/broken-line.txt\nsudo cp /etc/nginx/nginx.conf.bak /etc/nginx/nginx.conf\nsudo nginx -t\nsudo systemctl start nginx',
+        'sudo nginx -t\necho 6 > ~/broken-line.txt\nsudo cp /etc/nginx/nginx.conf.bak /etc/nginx/nginx.conf\nsudo nginx -t\nsudo systemctl start nginx\nsystemctl status nginx',
       ],
       solution: [
         'sudo nginx -t',
@@ -217,6 +217,7 @@ export const level09: Level = {
         'sudo cp /etc/nginx/nginx.conf.bak /etc/nginx/nginx.conf',
         'sudo nginx -t',
         'sudo systemctl start nginx',
+        'systemctl status nginx',
       ].join('\n'),
     },
 
@@ -510,11 +511,11 @@ export const level09: Level = {
       },
       hints: [
         'Одна команда випускає сертифікат, далі перевір права на ключ і скажи nginx перечитати конфіг.',
-        '`sudo certbot --nginx -d shop.internal`, потім `ls -l /etc/letsencrypt/live/shop.internal/`, потім `sudo nginx -s reload`.',
-        'sudo certbot --nginx -d shop.internal\nls -l /etc/letsencrypt/live/shop.internal/\nsudo nginx -s reload',
+        '`sudo certbot --nginx -d shop.internal`, потім `ls -l /etc/letsencrypt/live/shop.internal/`. Перед reload — обовʼязково `sudo nginx -t`, як і вчив попередній урок.',
+        'sudo certbot --nginx -d shop.internal\nls -l /etc/letsencrypt/live/shop.internal/\nsudo nginx -t\nsudo nginx -s reload\nopenssl x509 -text -noout -in /etc/letsencrypt/live/shop.internal/fullchain.pem',
       ],
       solution:
-        'sudo certbot --nginx -d shop.internal\nls -l /etc/letsencrypt/live/shop.internal/\nsudo nginx -s reload',
+        'sudo certbot --nginx -d shop.internal\nls -l /etc/letsencrypt/live/shop.internal/\nsudo nginx -t\nsudo nginx -s reload\nopenssl x509 -text -noout -in /etc/letsencrypt/live/shop.internal/fullchain.pem',
     },
 
     {

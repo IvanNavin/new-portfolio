@@ -579,15 +579,54 @@ const date: Command = (state) => ok(state, 'Fri Mar 14 09:20:11 UTC 2031');
 
 const hostnameCmd: Command = (state) => ok(state, state.hostname);
 
-const df: Command = (state) =>
-  ok(
+/** 1K blocks as `df -h` and `du -h` write them. */
+const human = (kb: number): string => {
+  if (kb === 0) return '0';
+  if (kb >= 1024 * 1024) return `${(kb / 1024 / 1024).toFixed(1)}G`;
+  if (kb >= 1024) return `${Math.round(kb / 1024)}M`;
+  return `${kb}K`;
+};
+
+const hasFlag = (argv: string[], letter: string): boolean =>
+  argv
+    .slice(1)
+    .some((word) => word.startsWith('-') && word.slice(1).includes(letter));
+
+// `-h` used to be ignored: `df -h` printed 1K blocks and `du -sh` printed a
+// bare number with no unit, on the one mission that is about reading disk
+// usage. The numbers come from the machine so a mission can declare a disk
+// that is actually full — «Диск заповнився» used to show 21% used.
+const df: Command = (state, argv) => {
+  const readable = hasFlag(argv, 'h');
+  const { size, used } = state.disk;
+  const rows: [string, number, number, string][] = [
+    ['/dev/vda1', size, used, '/'],
+    ['tmpfs', 2019104, 0, '/dev/shm'],
+  ];
+  const cell = (value: number): string =>
+    readable ? human(value) : String(value);
+
+  return ok(
     state,
     [
-      'Filesystem     1K-blocks    Used Available Use% Mounted on',
-      '/dev/vda1       41152812 8214128  31234232  21% /',
-      'tmpfs            2019104       0   2019104   0% /dev/shm',
+      readable
+        ? `${'Filesystem'.padEnd(15)}${'Size'.padStart(5)}${'Used'.padStart(6)}${'Avail'.padStart(6)}${'Use%'.padStart(5)} Mounted on`
+        : `${'Filesystem'.padEnd(15)}${'1K-blocks'.padStart(9)}${'Used'.padStart(8)}${'Available'.padStart(10)}${'Use%'.padStart(5)} Mounted on`,
+      ...rows.map(([name, total, taken, mount]) => {
+        const percent = total === 0 ? 0 : Math.round((taken / total) * 100);
+        const widths = readable ? [5, 6, 6] : [9, 8, 10];
+        return (
+          name.padEnd(15) +
+          cell(total).padStart(widths[0]) +
+          cell(taken).padStart(widths[1]) +
+          cell(total - taken).padStart(widths[2]) +
+          `${percent}%`.padStart(5) +
+          ` ${mount}`
+        );
+      }),
     ].join('\n'),
   );
+};
 
 const du: Command = (state, argv) => {
   const target = resolvePath(state, operandsOf(argv)[0] ?? '.');
@@ -596,7 +635,7 @@ const du: Command = (state, argv) => {
     const node = getNode(state.fs, path);
     return sum + (node ? Math.max(1, Math.ceil(sizeOf(node) / 1024)) : 0);
   }, 0);
-  return ok(state, `${total}\t${target}`);
+  return ok(state, `${hasFlag(argv, 'h') ? human(total) : total}\t${target}`);
 };
 
 const env: Command = (state) =>

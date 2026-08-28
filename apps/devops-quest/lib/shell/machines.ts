@@ -39,6 +39,8 @@ export type MachineOptions = {
   processes?: Partial<Process>[];
   services?: (Partial<Service> & { name: string })[];
   net?: Partial<NetState>;
+  /** Override what `df` reports, in 1K blocks. */
+  disk?: { size: number; used: number };
   git?: Partial<GitState>;
   docker?: Partial<DockerState>;
   k8s?: Partial<K8sState>;
@@ -298,6 +300,7 @@ export const makeMachine = (options: MachineOptions = {}): ShellState => {
     },
     processes,
     services,
+    disk: options.disk ?? { size: 41152812, used: 8214128 },
     net,
     git: { ...emptyGit(), ...options.git },
     docker: { ...emptyDocker(), ...options.docker },

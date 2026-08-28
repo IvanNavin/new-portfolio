@@ -265,7 +265,9 @@ const ufw: Command = (state, argv) => {
     if (!state.net.firewall.enabled) return ok(state, 'Status: inactive');
     const rows = state.net.firewall.rules.map(
       (rule) =>
-        `${`${rule.port}/${rule.proto}`.padEnd(24)} ${rule.action === 'allow' ? 'ALLOW' : 'DENY'}       Anywhere`,
+        // ALLOW and DENY are different lengths, so the From column has to be
+        // padded to a fixed width rather than followed by fixed spaces.
+        `${`${rule.port}/${rule.proto}`.padEnd(26)} ${(rule.action === 'allow' ? 'ALLOW' : 'DENY').padEnd(11)} Anywhere`,
     );
     return ok(
       state,

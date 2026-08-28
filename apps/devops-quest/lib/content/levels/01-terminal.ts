@@ -386,10 +386,10 @@ export const level01: Level = {
       hints: [
         'Два каталоги і одне переміщення. Зверни увагу: shared/logs — це два рівні вкладеності.',
         '`mkdir -p` створює всю гілку одразу. Для архіву потрібна команда, після якої в /tmp нічого не залишиться.',
-        'mkdir -p /srv/app/releases\nmkdir -p /srv/app/shared/logs\nmv /tmp/app-v2.4.1.tar.gz /srv/app/releases/',
+        'ls /tmp\nmkdir -p /srv/app/releases\nmkdir -p /srv/app/shared/logs\nmv /tmp/app-v2.4.1.tar.gz /srv/app/releases/\nls /tmp\nls /srv/app/releases',
       ],
       solution:
-        'mkdir -p /srv/app/releases\nmkdir -p /srv/app/shared/logs\nmv /tmp/app-v2.4.1.tar.gz /srv/app/releases/',
+        'ls /tmp\nmkdir -p /srv/app/releases\nmkdir -p /srv/app/shared/logs\nmv /tmp/app-v2.4.1.tar.gz /srv/app/releases/\nls /tmp\nls /srv/app/releases',
     },
 
     {
@@ -486,10 +486,10 @@ export const level01: Level = {
       hints: [
         'Тобі потрібні два файли: один із самими рядками ERROR, другий — з їх кількістю.',
         'Вибірку робить `grep ERROR app.log`, а порахувати її можна, віддавши результат у `wc -l` через пайп. Не забудь `>`.',
-        'grep ERROR app.log > /home/deploy/errors.txt\ngrep ERROR app.log | wc -l > /home/deploy/error-count.txt',
+        'grep ERROR app.log\ngrep ERROR app.log > /home/deploy/errors.txt\ngrep ERROR app.log | wc -l > /home/deploy/error-count.txt\ncat /home/deploy/error-count.txt',
       ],
       solution:
-        'grep ERROR app.log > /home/deploy/errors.txt\ngrep ERROR app.log | wc -l > /home/deploy/error-count.txt',
+        'grep ERROR app.log\ngrep ERROR app.log > /home/deploy/errors.txt\ngrep ERROR app.log | wc -l > /home/deploy/error-count.txt\ncat /home/deploy/error-count.txt',
     },
 
     {

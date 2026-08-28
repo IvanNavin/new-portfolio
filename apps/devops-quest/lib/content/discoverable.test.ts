@@ -276,3 +276,66 @@ describe('the intended path shows what the task talks about', () => {
     },
   );
 });
+
+/**
+ * Doing the mission right must look like something.
+ *
+ * Four missions ran their whole solution without printing a single character:
+ * three `mkdir`/`mv` lines, three `chmod` lines. The player types them, the
+ * terminal stays blank, the checklist ticks — and there is no way to tell the
+ * commands did what was intended, nor any habit of checking. Each of those
+ * missions' own theory ended on a verification step (`ls -l .env`, `id ci`)
+ * that the solution then skipped.
+ */
+describe('a solved mission shows its work', () => {
+  it.each(
+    ALL_MISSIONS.filter((mission) => mission.task.kind === 'terminal').map(
+      (mission) => [mission.id, mission] as const,
+    ),
+  )('%s prints something along the way', (_id, mission) => {
+    expect(printedBySolution(mission).trim()).not.toBe('');
+  });
+});
+
+/**
+ * And it must end on proof, not on a blind action.
+ *
+ * Four missions finished with `kill 1421` or `sudo systemctl start nginx` and
+ * stopped there: the last thing the player did changed the machine, and
+ * nothing showed whether it worked. Each of those levels teaches the opposite
+ * — «сервіс active» і «сайт відповідає» — це не одне й те саме.
+ *
+ * Ending silently is fine only when the last line records an answer the player
+ * was already shown, which is what `echo <answer> > file` does.
+ */
+describe('a solution ends on something the player can read', () => {
+  it.each(
+    ALL_MISSIONS.filter((mission) => mission.task.kind === 'terminal').map(
+      (mission) => [mission.id, mission] as const,
+    ),
+  )('%s does not finish on an unverified action', (_id, mission) => {
+    if (mission.task.kind !== 'terminal') throw new Error('not terminal');
+    const lines = mission.solution
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line !== '' && !line.startsWith('#'));
+    const last = lines[lines.length - 1];
+
+    let state = mission.task.boot();
+    let lastOutput = '';
+    for (const line of lines) {
+      const result = runLine(state, line);
+      state = result.state;
+      lastOutput = result.output
+        .map((segment) => segment.text)
+        .join('')
+        .trim();
+    }
+
+    const recordsAnAnswer = last.includes('>');
+    expect(
+      lastOutput !== '' || recordsAnAnswer,
+      `${mission.id} ends on «${last}», which prints nothing and records nothing`,
+    ).toBe(true);
+  });
+});

@@ -130,9 +130,9 @@ export const level03: Level = {
       hints: [
         'Спершу подивись, що взагалі крутиться. Виснови роби за колонкою %CPU.',
         '`ps aux` покаже PID 1421 з майже 100% CPU. Зупини саме його — за номером.',
-        'ps aux\nkill 1421',
+        'ps aux\nkill 1421\nps aux',
       ],
-      solution: 'ps aux\nkill 1421',
+      solution: 'ps aux\nkill 1421\nps aux',
     },
 
     {
@@ -403,10 +403,10 @@ export const level03: Level = {
       hints: [
         'Не перезапускай навмання. Спершу дізнайся з журналу, ЧОМУ він падає, потім — хто заважає.',
         'У журналі буде «Address already in use» — значить порт 80 уже кимось зайнятий. Знайди його через ss -tulpn або ps aux, запиши PID у файл, прибий процес і тільки тоді стартуй nginx.',
-        'journalctl -u nginx\nss -tulpn\nps aux\necho 2201 > /home/deploy/culprit.txt\nsudo kill 2201\nsudo systemctl start nginx',
+        'journalctl -u nginx\nss -tulpn\nps aux\necho 2201 > /home/deploy/culprit.txt\nsudo kill 2201\nsudo systemctl start nginx\nsystemctl status nginx',
       ],
       solution:
-        'journalctl -u nginx\nss -tulpn\nps aux\necho 2201 > /home/deploy/culprit.txt\nsudo kill 2201\nsudo systemctl start nginx',
+        'journalctl -u nginx\nss -tulpn\nps aux\necho 2201 > /home/deploy/culprit.txt\nsudo kill 2201\nsudo systemctl start nginx\nsystemctl status nginx',
     },
 
     {

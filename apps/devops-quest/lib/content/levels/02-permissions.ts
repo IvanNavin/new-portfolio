@@ -413,10 +413,10 @@ export const level02: Level = {
       hints: [
         'Три об’єкти: два файли з секретами і каталог навколо них. Файли й каталоги закриваються різними числами.',
         'Для файлів із секретами — 600. Для приватного каталогу потрібен ще біт x, щоб власник міг у нього зайти: 700.',
-        'chmod 600 /srv/app/.env\nchmod 600 /srv/app/secrets/api.key\nchmod 700 /srv/app/secrets',
+        'chmod 600 /srv/app/.env\nchmod 600 /srv/app/secrets/api.key\nchmod 700 /srv/app/secrets\nls -l /srv/app\nls -l /srv/app/secrets',
       ],
       solution:
-        'chmod 600 /srv/app/.env\nchmod 600 /srv/app/secrets/api.key\nchmod 700 /srv/app/secrets',
+        'chmod 600 /srv/app/.env\nchmod 600 /srv/app/secrets/api.key\nchmod 700 /srv/app/secrets\nls -l /srv/app\nls -l /srv/app/secrets',
     },
 
     {
@@ -508,10 +508,10 @@ export const level02: Level = {
       hints: [
         'Спочатку має існувати група — інакше додати в неї когось не вийде. Усе це вимагає root.',
         'Порядок: groupadd, потім useradd з прапорцем для домашнього каталогу, потім usermod. Не забудь про append-прапорець.',
-        'sudo groupadd deployers\nsudo useradd -m -s /bin/bash ci\nsudo usermod -aG deployers,docker ci',
+        'sudo groupadd deployers\nsudo useradd -m -s /bin/bash ci\nsudo usermod -aG deployers,docker ci\nid ci',
       ],
       solution:
-        'sudo groupadd deployers\nsudo useradd -m -s /bin/bash ci\nsudo usermod -aG deployers,docker ci',
+        'sudo groupadd deployers\nsudo useradd -m -s /bin/bash ci\nsudo usermod -aG deployers,docker ci\nid ci',
     },
 
     {

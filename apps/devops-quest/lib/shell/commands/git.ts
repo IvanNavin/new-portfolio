@@ -605,13 +605,18 @@ const push: Command = (state, argv) => {
   if (state.git.pushed[branchName] === head)
     return ok(state, 'Everything up-to-date');
 
+  // The range is «what the remote had» .. «what it has now». Printing head on
+  // both sides showed the same hash twice, which is not a thing git ever says.
+  const previous = state.git.pushed[branchName];
   state.git.pushed[branchName] = head;
   return ok(
     state,
     [
       `Enumerating objects: ${state.git.commits.length * 3}, done.`,
       `To ${state.git.remotes[remoteName]}`,
-      `   ${head}..${head}  ${branchName} -> ${branchName}`,
+      previous
+        ? `   ${previous}..${head}  ${branchName} -> ${branchName}`
+        : ` * [new branch]      ${branchName} -> ${branchName}`,
     ].join('\n'),
   );
 };
