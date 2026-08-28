@@ -134,16 +134,21 @@ export const level08: Level = {
           {
             id: 'checkout',
             label: 'Забрати код через actions/checkout',
+            hintOnFail: 'Крок усередині steps: `- uses: actions/checkout@v4`.',
             check: (text) => /uses:\s*actions\/checkout@/m.test(text),
           },
           {
             id: 'test',
             label: 'Прогнати тести (npm test)',
+            hintOnFail:
+              'Команду виконують кроком `- run: npm test` — і перед ним потрібен `- run: npm ci`.',
             check: (text) => /run:\s*npm\s+test/m.test(text),
           },
           {
             id: 'deploy-job',
             label: 'Описати окрему job deploy, що запускає ./deploy.sh',
+            hintOnFail:
+              'Другий ключ усередині jobs: `deploy:` — на тому ж рівні відступу, що й `build:`.',
             check: (text) =>
               /^\s{2}deploy:/m.test(text) && /deploy\.sh/m.test(text),
           },

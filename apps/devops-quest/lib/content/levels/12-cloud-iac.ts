@@ -130,6 +130,8 @@ export const level12: Level = {
           {
             id: 'state',
             label: 'Переконатися, що ресурси зʼявились у state',
+            hintOnFail:
+              '`terraform state list` перелічує те, чим Terraform уже керує.',
             check: (s) =>
               s.terraform.hasStateFile &&
               s.history.some((line) => /terraform\s+state\s+list/.test(line)),
@@ -229,6 +231,8 @@ export const level12: Level = {
           {
             id: 'provider',
             label: 'Оголосити провайдера aws з регіоном eu-central-1',
+            hintOnFail:
+              'Блок `provider "aws" { region = "eu-central-1" }` — значення в лапках.',
             check: (text) =>
               /provider\s+"aws"\s*\{[\s\S]*?region\s*=\s*"eu-central-1"[\s\S]*?\}/m.test(
                 code(text),
@@ -244,18 +248,23 @@ export const level12: Level = {
           {
             id: 'bucket-name',
             label: 'Задати bucket = "shop-assets-prod"',
+            hintOnFail:
+              'Аргумент усередині блоку ресурсу, у лапках. Коментарі не рахуються — потрібен справжній рядок.',
             check: (text) =>
               /bucket\s*=\s*"shop-assets-prod"/m.test(code(text)),
           },
           {
             id: 'instance',
             label: 'Описати ресурс aws_instance з локальним іменем api',
+            hintOnFail: 'Формат: resource "aws_instance" "api" { ... }',
             check: (text) =>
               /resource\s+"aws_instance"\s+"api"\s*\{/m.test(code(text)),
           },
           {
             id: 'type',
             label: 'Задати instance_type = "t3.small"',
+            hintOnFail:
+              'Аргумент усередині блоку aws_instance, значення в лапках.',
             check: (text) =>
               /instance_type\s*=\s*"t3\.small"/m.test(code(text)),
           },

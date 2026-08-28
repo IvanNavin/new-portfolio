@@ -402,3 +402,55 @@ describe('ordering tasks are shown scrambled', () => {
     expect(once).toEqual(twice);
   });
 });
+
+/**
+ * The player spends most of the time being wrong, so the wrong path has to
+ * teach too.
+ *
+ * An editor mission grades only when asked and shows nothing else — no error
+ * output, no partial state. A failing goal with nothing to say leaves the
+ * player staring at a red line with no idea which part of the file is wrong.
+ * Fourteen of them had no `hintOnFail` at all.
+ */
+describe('a failing goal always has something to say', () => {
+  it.each(
+    ALL_MISSIONS.filter((mission) => mission.task.kind === 'editor').map(
+      (mission) => [mission.id, mission] as const,
+    ),
+  )('%s tells the player what is missing', (_id, mission) => {
+    if (mission.task.kind !== 'editor') throw new Error('not editor');
+    const mute = mission.task.goals
+      .filter((goal) => goal.constraint === undefined)
+      .filter((goal) => (goal.hintOnFail ?? '').trim() === '')
+      .map((goal) => goal.id);
+    expect(mute).toEqual([]);
+  });
+});
+
+/**
+ * A quiz must reward understanding, not test-taking.
+ *
+ * In three of them the right answer was the longest option by twenty-odd
+ * characters, because it was the only one written out fully while the
+ * distractors were throwaway one-liners. Picking the longest is a habit every
+ * student has; it should not work here.
+ */
+describe('quiz answers cannot be guessed by shape', () => {
+  it.each(
+    ALL_MISSIONS.filter((mission) => mission.task.kind === 'quiz').map(
+      (mission) => [mission.id, mission] as const,
+    ),
+  )('%s does not make the answer the longest option', (_id, mission) => {
+    if (mission.task.kind !== 'quiz') throw new Error('not a quiz');
+    const longest = Math.max(
+      ...mission.task.options.map((option) => option.label.length),
+    );
+    const everyAnswerIsLongest = mission.task.correct.every(
+      (id) =>
+        mission.task.kind === 'quiz' &&
+        mission.task.options.find((option) => option.id === id)!.label
+          .length === longest,
+    );
+    expect(everyAnswerIsLongest).toBe(false);
+  });
+});

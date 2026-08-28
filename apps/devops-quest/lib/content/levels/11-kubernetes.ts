@@ -308,6 +308,8 @@ export const level11: Level = {
           {
             id: 'kind',
             label: 'Це має бути Deployment з іменем shop-api',
+            hintOnFail:
+              '`kind: Deployment`, а імʼя — у `metadata.name`, не в spec.',
             check: (text) =>
               /kind:\s*Deployment/m.test(text) &&
               /^\s{2}name:\s*shop-api\s*$/m.test(text),
@@ -315,6 +317,7 @@ export const level11: Level = {
           {
             id: 'replicas',
             label: 'Задати 3 репліки',
+            hintOnFail: '`replicas: 3` — усередині spec, поруч із selector.',
             check: (text) => /^\s*replicas:\s*3\s*$/m.test(text),
           },
           {
@@ -327,12 +330,16 @@ export const level11: Level = {
           {
             id: 'image',
             label: 'Вказати образ registry.acme.io/shop-api:1.4.0',
+            hintOnFail:
+              '`image:` живе всередині елемента списку containers, разом із name.',
             check: (text) =>
               /image:\s*registry\.acme\.io\/shop-api:1\.4\.0/m.test(text),
           },
           {
             id: 'port',
             label: 'Вказати containerPort 8080',
+            hintOnFail:
+              'Список ports усередині контейнера: `- containerPort: 8080`.',
             check: (text) => /containerPort:\s*8080/m.test(text),
           },
           {
@@ -435,6 +442,8 @@ export const level11: Level = {
           {
             id: 'rollout',
             label: 'Перевірити статус викочування',
+            hintOnFail:
+              '`kubectl rollout status deployment/shop-api` — він дочекається, поки викочування завершиться.',
             check: (s) =>
               s.history.some((line) => /kubectl\s+rollout\s+status/.test(line)),
           },
@@ -580,6 +589,8 @@ export const level11: Level = {
           {
             id: 'healthy',
             label: 'Переконатися, що всі поди знову Running',
+            hintOnFail:
+              'Після відкоту подивись `kubectl get pods` — у колонці STATUS не має лишитись CrashLoopBackOff.',
             check: (s) =>
               s.k8s.pods.every((pod) => pod.status === 'Running') &&
               s.history.some((line) =>
@@ -624,7 +635,8 @@ export const level11: Level = {
         options: [
           {
             id: 'a',
-            label: 'Подів стане 2, поки хтось не застосує маніфест заново',
+            label:
+              'Подів стане 2 і так і лишиться, поки хтось не застосує маніфест заново',
           },
           {
             id: 'b',
@@ -633,11 +645,13 @@ export const level11: Level = {
           },
           {
             id: 'c',
-            label: 'Видалиться весь Deployment разом із рештою подів',
+            label:
+              'Видалиться весь Deployment разом із рештою подів — команда діє на весь набір',
           },
           {
             id: 'd',
-            label: 'Kubernetes відмовить: поди Deployment видаляти не можна',
+            label:
+              'Kubernetes відмовить: поди, якими керує Deployment, видаляти напряму не можна',
           },
         ],
         correct: ['b'],

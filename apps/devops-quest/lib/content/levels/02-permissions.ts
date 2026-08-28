@@ -281,6 +281,8 @@ export const level02: Level = {
           {
             id: 'verified',
             label: 'Перевірити результат через ls -l',
+            hintOnFail:
+              'Права видно лише в довгому форматі — ls -l у поточному каталозі.',
             check: (s) =>
               s.history.some(
                 (line) => /^ls\b/.test(line.trim()) && /-\w*l/.test(line),

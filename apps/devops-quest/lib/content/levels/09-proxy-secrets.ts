@@ -276,6 +276,8 @@ export const level09: Level = {
           {
             id: 'upstream',
             label: 'Описати upstream, що вказує на 127.0.0.1:3000',
+            hintOnFail:
+              'Окремий блок поза server: `upstream імʼя { server 127.0.0.1:3000; }`.',
             check: (text) =>
               /upstream\s+\w+\s*\{[\s\S]*?server\s+127\.0\.0\.1:3000;[\s\S]*?\}/m.test(
                 text,
@@ -284,11 +286,14 @@ export const level09: Level = {
           {
             id: 'ssl',
             label: 'Слухати 443 з увімкненим ssl',
+            hintOnFail: 'Усередині server-блоку: `listen 443 ssl;`.',
             check: (text) => /listen\s+443\s+ssl;/m.test(text),
           },
           {
             id: 'certs',
             label: 'Вказати сертифікат і приватний ключ',
+            hintOnFail:
+              'Дві директиви: ssl_certificate з fullchain.pem і ssl_certificate_key з privkey.pem. Шляхи є у стартовому файлі.',
             check: (text) =>
               /ssl_certificate\s+\S*fullchain\.pem;/m.test(text) &&
               /ssl_certificate_key\s+\S*privkey\.pem;/m.test(text),
@@ -303,6 +308,8 @@ export const level09: Level = {
           {
             id: 'headers',
             label: 'Передати бекенду Host, X-Forwarded-For і X-Forwarded-Proto',
+            hintOnFail:
+              'Три рядки `proxy_set_header ІМʼЯ $змінна;` усередині location — значення є в таблиці теорії.',
             check: (text) =>
               /proxy_set_header\s+Host\s+\$host;/m.test(text) &&
               /proxy_set_header\s+X-Forwarded-For\s+\$proxy_add_x_forwarded_for;/m.test(
@@ -405,6 +412,8 @@ export const level09: Level = {
           {
             id: 'checked',
             label: 'Переконатися, що змінна справді видима застосунку',
+            hintOnFail:
+              'Прочитай її назад: printenv APP_ENV. Виставити й не перевірити — половина роботи.',
             check: (s) =>
               s.history.some((line) => /^(printenv|env)\b/.test(line.trim())) ||
               s.history.some((line) => /echo\s+\$APP_ENV/.test(line)),

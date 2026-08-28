@@ -593,6 +593,8 @@ export const level06: Level = {
           {
             id: 'restored',
             label: 'Значення в app.conf повернулося до workers=4',
+            hintOnFail:
+              'Файл руками правити не треба — це має зробити сам відкіт. Перевір `cat app.conf` після revert.',
             check: (s) =>
               (readFile(s.fs, '/srv/shop/app.conf') ?? '').includes(
                 'workers=4',

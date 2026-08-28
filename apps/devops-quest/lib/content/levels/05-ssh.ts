@@ -76,6 +76,8 @@ export const level05: Level = {
           {
             id: 'public',
             label: 'Поруч має зʼявитися публічний ключ .pub',
+            hintOnFail:
+              'Окремо його не створюють — ssh-keygen робить обидва файли за раз. Якщо .pub немає, значить не спрацювала сама генерація.',
             check: (s) =>
               getNode(s.fs, '/home/deploy/.ssh/id_ed25519.pub') !== null,
           },

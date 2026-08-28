@@ -135,6 +135,8 @@ export const level07: Level = {
           {
             id: 'checked',
             label: 'Переконатися, що він у списку працюючих',
+            hintOnFail:
+              'Список запущених контейнерів показує `docker ps` — контейнер web має бути в ньому.',
             check: (s) => s.history.some((line) => /docker\s+ps/.test(line)),
           },
         ],
@@ -222,6 +224,8 @@ export const level07: Level = {
           {
             id: 'workdir',
             label: 'Задати робочий каталог через WORKDIR',
+            hintOnFail:
+              'Рядок виду `WORKDIR /app` — далі всі шляхи рахуються від нього.',
             check: (text) => /^\s*WORKDIR\s+\S+/im.test(text),
           },
           {
@@ -252,6 +256,7 @@ export const level07: Level = {
           {
             id: 'expose',
             label: 'Задокументувати порт 3000 через EXPOSE',
+            hintOnFail: 'Один рядок: `EXPOSE 3000`, до CMD.',
             check: (text) => /^\s*EXPOSE\s+3000\s*$/im.test(text),
           },
           {
@@ -370,6 +375,8 @@ export const level07: Level = {
             id: 'verified',
             label:
               'Довести запитом, що застосунок відповідає на localhost:8080',
+            hintOnFail:
+              '`docker ps` каже лише, що процес живий. Потрібен справжній запит: curl -I http://localhost:8080',
             check: (s) =>
               s.history.some((line) => /curl.*localhost:8080/.test(line)),
           },
@@ -525,6 +532,8 @@ export const level07: Level = {
           {
             id: 'listed',
             label: 'Переконатися, що обидва контейнери працюють',
+            hintOnFail:
+              '`docker compose ps` покаже, що підняв compose — обидва сервіси мають бути Up.',
             check: (s) =>
               s.history.some((line) => /docker\s+(compose\s+)?ps/.test(line)),
           },
