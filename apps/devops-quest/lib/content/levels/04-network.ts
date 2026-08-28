@@ -106,7 +106,11 @@ export const level04: Level = {
             label: 'Вивести список портів, що слухаються',
             hintOnFail: 'Комбінація прапорців, яку варто запамʼятати: -tulpn.',
             check: (s) =>
-              s.history.some((line) => /^(ss|netstat)\b/.test(line.trim())),
+              // Credit only a form that actually lists listeners: bare `ss`
+              // shows established connections, so it answers nothing here.
+              s.history.some((line) =>
+                /^(ss|netstat)\s+-\S*[la]/.test(line.trim()),
+              ),
           },
           answerFile({
             id: 'answer',

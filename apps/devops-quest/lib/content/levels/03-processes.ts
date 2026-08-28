@@ -244,7 +244,11 @@ export const level03: Level = {
             hintOnFail: 'Подивись сокети: ss -tulpn',
             check: (s) =>
               s.net.listening.some((entry) => entry.port === 80) &&
-              s.history.some((line) => /^(ss|netstat)\b/.test(line.trim())),
+              // Credit only a form that actually lists listeners: bare `ss`
+              // shows established connections, so it answers nothing here.
+              s.history.some((line) =>
+                /^(ss|netstat)\s+-\S*[la]/.test(line.trim()),
+              ),
           },
         ],
       },
@@ -347,7 +351,11 @@ export const level03: Level = {
             id: 'sockets',
             label: 'Подивитися, хто зайняв порт 80',
             check: (s) =>
-              s.history.some((line) => /^(ss|netstat)\b/.test(line.trim())),
+              // Credit only a form that actually lists listeners: bare `ss`
+              // shows established connections, so it answers nothing here.
+              s.history.some((line) =>
+                /^(ss|netstat)\s+-\S*[la]/.test(line.trim()),
+              ),
           },
           answerFile({
             id: 'answer',

@@ -29,12 +29,21 @@ const ip: Command = (state, argv) => {
   return ok(state, lines.join('\n'));
 };
 
+/**
+ * Real `ss` lists *established* connections by default; listening sockets need
+ * `-l` (or `-a`, which shows both). This machine models no established
+ * connections, so anything without those flags prints the header and no rows —
+ * which is what the real tool does on an idle box, and the reason the
+ * combination worth memorising is `-tulpn`. It must never print nothing at
+ * all: a command that returns an empty screen reads as a broken terminal.
+ */
 const ss: Command = (state, argv) => {
-  const flags = argv.slice(1).join('');
-  const wantsListening =
-    flags.includes('l') || flags.includes('t') || argv.length === 1;
-  if (!wantsListening) return ok(state, '');
-  const rows = [...state.net.listening]
+  const flags = argv
+    .slice(1)
+    .filter((argument) => argument.startsWith('-'))
+    .join('');
+  const showsListening = flags.includes('l') || flags.includes('a');
+  const rows = (showsListening ? [...state.net.listening] : [])
     .sort((a, b) => a.port - b.port)
     .map(
       (entry) =>

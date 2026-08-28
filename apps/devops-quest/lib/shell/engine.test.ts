@@ -378,3 +378,74 @@ describe('sudo authentication', () => {
     expect(out.trim()).toBe('classified');
   });
 });
+
+/**
+ * A command whose whole job is to report something must print something.
+ *
+ * `ss -n` returned an empty string: the listing was gated on the flags
+ * containing `l` or `t`, so every other spelling fell through to `ok(state,
+ * '')`. On screen that is indistinguishable from a broken terminal — the
+ * player types a real command, the prompt comes straight back, and there is
+ * nothing to react to. Silence is correct for commands that act (`cd`,
+ * `chmod`, `mkdir`); it is never correct for one that answers a question.
+ */
+describe('reporting commands always answer', () => {
+  const machine = () =>
+    makeMachine({
+      user: 'deploy',
+      // Something to report: `ls` in an empty directory is rightly silent, and
+      // the rule under test is about commands that stay silent when there IS
+      // an answer.
+      files: { '/home/deploy/notes.txt': { content: 'hello\n' } },
+      processes: [
+        { pid: 1421, user: 'deploy', command: 'node worker.js', cpu: 98.4 },
+      ],
+      net: {
+        listening: [
+          { port: 22, proto: 'tcp', process: 'sshd', address: '0.0.0.0' },
+          { port: 80, proto: 'tcp', process: 'nginx', address: '0.0.0.0' },
+        ],
+      },
+    });
+
+  it.each([
+    'ss',
+    'ss -n',
+    'ss -t',
+    'ss -l',
+    'ss -a',
+    'ss -tulpn',
+    'ps',
+    'ps aux',
+    'ls',
+    'ls -l',
+    'ls -la',
+    'ip a',
+    'df',
+    'df -h',
+    'du -sh /var/log',
+    'id',
+    'whoami',
+    'pwd',
+    'env',
+    'uptime',
+    'free',
+    'history',
+    'docker ps',
+    'docker images',
+    'kubectl get pods',
+  ])('`%s` prints something', (line) => {
+    const { out } = run(machine(), line);
+    expect(out.trim()).not.toBe('');
+  });
+
+  it('ss lists listeners only with -l or -a, like the real tool', () => {
+    const listeners = /nginx/;
+    expect(run(machine(), 'ss -tulpn').out).toMatch(listeners);
+    expect(run(machine(), 'ss -l').out).toMatch(listeners);
+    expect(run(machine(), 'ss -a').out).toMatch(listeners);
+    // No established connections on this machine, so these are header-only.
+    expect(run(machine(), 'ss -n').out).not.toMatch(listeners);
+    expect(run(machine(), 'ss').out).not.toMatch(listeners);
+  });
+});
