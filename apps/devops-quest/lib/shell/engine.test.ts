@@ -471,4 +471,36 @@ describe('reporting commands always answer', () => {
     // Without -p there is no process column at all — that is what p asks for.
     expect(run(withPids, 'ss -tuln').out).not.toContain('pid=');
   });
+
+  // l04-m01 declares four listeners and no processes, so looking the owner up
+  // in the process table produced a blank column on every row — and its task
+  // is «find the line whose process is postgres». Every declared port must
+  // have an owner, or the answer is not on screen.
+  it('names the process on every listening socket', () => {
+    const server = makeMachine({
+      user: 'deploy',
+      net: {
+        listening: [
+          { port: 80, proto: 'tcp', process: 'nginx', address: '0.0.0.0' },
+          {
+            port: 5432,
+            proto: 'tcp',
+            process: 'postgres',
+            address: '127.0.0.1',
+          },
+          { port: 6379, proto: 'tcp', process: 'redis', address: '127.0.0.1' },
+        ],
+      },
+    });
+    const sockets = run(server, 'ss -tulpn').out;
+    for (const name of ['nginx', 'postgres', 'redis']) {
+      expect(sockets).toContain(`"${name}"`);
+    }
+    // Every row that lists a port also says who holds it.
+    for (const row of sockets.split('\n').filter((l) => l.includes('LISTEN'))) {
+      expect(row).toMatch(/users:\(\("[^"]+",pid=\d+/);
+    }
+    // And they are real entries in the process table, so ps finds them too.
+    expect(run(server, 'ps aux').out).toContain('postgres');
+  });
 });

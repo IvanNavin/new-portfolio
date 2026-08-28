@@ -259,6 +259,27 @@ export const makeMachine = (options: MachineOptions = {}): ShellState => {
     })),
   ];
 
+  // A listening socket with no process behind it is not a state a real machine
+  // can be in, and it showed: `ss -tulpn` looks the owner up in the process
+  // table, so ports declared without one printed a blank process column and
+  // «find the line where the process is postgres» became unanswerable. Give
+  // every declared listener an owner, unless the mission already named one.
+  const net = { ...emptyNet(), ...options.net };
+  net.listening.forEach((entry, index) => {
+    const owned = processes.some((process) =>
+      process.command.includes(entry.process),
+    );
+    if (owned) return;
+    processes.push({
+      pid: 800 + index,
+      user: entry.process === 'postgres' ? 'postgres' : 'root',
+      command: entry.process,
+      cpu: 0.2,
+      mem: 1.4,
+      state: 'S',
+    });
+  });
+
   const state: ShellState = {
     hostname,
     fs,
@@ -277,7 +298,7 @@ export const makeMachine = (options: MachineOptions = {}): ShellState => {
     },
     processes,
     services,
-    net: { ...emptyNet(), ...options.net },
+    net,
     git: { ...emptyGit(), ...options.git },
     docker: { ...emptyDocker(), ...options.docker },
     k8s: { ...emptyK8s(), ...options.k8s },
