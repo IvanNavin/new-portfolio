@@ -3,6 +3,7 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { scramble } from '../scramble';
 import { ALL_MISSIONS, LEVELS } from './registry';
 import type { Mission, TheoryBlock } from './types';
 
@@ -354,4 +355,50 @@ describe('missions start unsolved', () => {
       expect(broken).toEqual([]);
     },
   );
+});
+
+/**
+ * An ordering task must not be shown already in the right order.
+ *
+ * l03-m04 listed its six diagnosis steps exactly as `correct` listed them,
+ * because that is how the mission is written and read. On screen it meant
+ * clicking the steps top to bottom solved it — the same «already half-done»
+ * failure as a pre-satisfied goal, in a different disguise. The view scrambles
+ * them now; this pins that the scramble is applied and never lands on the
+ * answer.
+ */
+describe('ordering tasks are shown scrambled', () => {
+  const orderMissions = ALL_MISSIONS.filter(
+    (mission) => mission.task.kind === 'order',
+  ).map((mission) => [mission.id, mission] as const);
+
+  it('found the ordering missions', () => {
+    expect(orderMissions.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it.each(orderMissions)(
+    '%s is not presented in solved order',
+    (_id, mission) => {
+      if (mission.task.kind !== 'order') throw new Error('not an order task');
+      const { items, correct } = mission.task;
+      const shown = scramble(
+        items,
+        correct,
+        (item) => item.id,
+        items.map((item) => item.id).join(','),
+      );
+      expect(shown.map((item) => item.id)).not.toEqual([...correct]);
+      // Every step is still on offer, exactly once.
+      expect([...shown.map((item) => item.id)].sort()).toEqual(
+        [...items.map((item) => item.id)].sort(),
+      );
+    },
+  );
+
+  it('scrambles the same way every time, so hydration agrees', () => {
+    const items = [{ id: 'a' }, { id: 'b' }, { id: 'c' }, { id: 'd' }];
+    const once = scramble(items, ['a', 'b', 'c', 'd'], (i) => i.id, 'seed');
+    const twice = scramble(items, ['a', 'b', 'c', 'd'], (i) => i.id, 'seed');
+    expect(once).toEqual(twice);
+  });
 });

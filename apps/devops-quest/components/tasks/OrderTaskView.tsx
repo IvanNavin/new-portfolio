@@ -1,10 +1,11 @@
 'use client';
 
 import { X } from 'lucide-react';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
 
 import { cn } from '@/lib/cn';
 import type { OrderTask } from '@/lib/content/types';
+import { scramble } from '@/lib/scramble';
 
 import { RichText } from '../mission/RichText';
 import { Button } from '../ui/Button';
@@ -27,7 +28,20 @@ export const OrderTaskView = ({
   const [chosen, setChosen] = useState<string[]>([]);
   const [verdict, setVerdict] = useState<'right' | 'wrong' | null>(null);
 
-  const pool = task.items.filter((item) => !chosen.includes(item.id));
+  // Shown scrambled: the authoring order is the answer, so rendering the array
+  // as written let the player click straight down the list and win.
+  const shown = useMemo(
+    () =>
+      scramble(
+        task.items,
+        task.correct,
+        (item) => item.id,
+        task.items.map((item) => item.id).join(','),
+      ),
+    [task.items, task.correct],
+  );
+
+  const pool = shown.filter((item) => !chosen.includes(item.id));
   const labelOf = (id: string) =>
     task.items.find((item) => item.id === id)?.label ?? id;
 
