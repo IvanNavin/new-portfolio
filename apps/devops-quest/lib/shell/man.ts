@@ -224,9 +224,20 @@ export const MANPAGES: Record<string, ManPage> = {
   },
   ss: {
     name: 'ss',
-    summary: 'Показує сокети: хто на якому порту слухає.',
-    synopsis: ['ss -tulpn'],
-    examples: ['ss -tulpn | grep 443'],
+    summary:
+      'Показує сокети. Без прапорців — встановлені зʼєднання; слухачів дає -l.',
+    synopsis: ['ss [-t] [-u] [-l] [-p] [-n]'],
+    options: [
+      ['-t', 'TCP'],
+      ['-u', 'UDP'],
+      ['-l', 'лише ті, що СЛУХАЮТЬ. Без нього слухачів не буде видно'],
+      ['-p', 'показати процес і його pid'],
+      ['-n', 'числа замість назв: 80, а не "http"'],
+    ],
+    examples: [
+      'ss -tulpn          # усі пʼять прапорців разом — робоча комбінація',
+      'ss -tulpn | grep 443',
+    ],
   },
   ssh: {
     name: 'ssh',

@@ -440,12 +440,35 @@ describe('reporting commands always answer', () => {
   });
 
   it('ss lists listeners only with -l or -a, like the real tool', () => {
-    const listeners = /nginx/;
-    expect(run(machine(), 'ss -tulpn').out).toMatch(listeners);
-    expect(run(machine(), 'ss -l').out).toMatch(listeners);
-    expect(run(machine(), 'ss -a').out).toMatch(listeners);
+    const port80 = /0\.0\.0\.0:80/;
+    expect(run(machine(), 'ss -tulpn').out).toMatch(port80);
+    expect(run(machine(), 'ss -l').out).toMatch(port80);
+    expect(run(machine(), 'ss -a').out).toMatch(port80);
     // No established connections on this machine, so these are header-only.
-    expect(run(machine(), 'ss -n').out).not.toMatch(listeners);
-    expect(run(machine(), 'ss').out).not.toMatch(listeners);
+    expect(run(machine(), 'ss -n').out).not.toMatch(port80);
+    expect(run(machine(), 'ss').out).not.toMatch(port80);
+  });
+
+  // The pid column was hardcoded to 1 on every row, so the answer to «which
+  // process holds port 80» was not in the output of the command that is
+  // supposed to give it. It has to be the listening process's real pid.
+  it('ss -p reports the real pid of the listening process', () => {
+    const withPids = makeMachine({
+      user: 'deploy',
+      processes: [
+        { pid: 2201, user: 'root', command: 'python3 -m http.server 80' },
+      ],
+      net: {
+        listening: [
+          { port: 22, proto: 'tcp', process: 'sshd', address: '0.0.0.0' },
+          { port: 80, proto: 'tcp', process: 'python3', address: '0.0.0.0' },
+        ],
+      },
+    });
+    const out = run(withPids, 'ss -tulpn').out;
+    expect(out).toContain('pid=2201');
+    expect(out).toContain('pid=412'); // sshd, from the default process list
+    // Without -p there is no process column at all — that is what p asks for.
+    expect(run(withPids, 'ss -tuln').out).not.toContain('pid=');
   });
 });

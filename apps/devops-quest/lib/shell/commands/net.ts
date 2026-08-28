@@ -43,14 +43,25 @@ const ss: Command = (state, argv) => {
     .filter((argument) => argument.startsWith('-'))
     .join('');
   const showsListening = flags.includes('l') || flags.includes('a');
+  // `-p` is what asks for the owning process, so the column appears only with
+  // it — and the pid must be that process's real pid. It used to be hardcoded
+  // to 1 for every row, which made «find the pid holding port 80» impossible
+  // to answer with the very command the mission tells you to run.
+  const showsProcess = flags.includes('p');
   const rows = (showsListening ? [...state.net.listening] : [])
     .sort((a, b) => a.port - b.port)
-    .map(
-      (entry) =>
-        `${entry.proto.padEnd(6)} LISTEN 0      4096   ${`${entry.address}:${entry.port}`.padEnd(
-          22,
-        )} 0.0.0.0:*    users:(("${entry.process}",pid=1,fd=6))`,
-    );
+    .map((entry) => {
+      const owner = state.processes.find((process) =>
+        process.command.includes(entry.process),
+      );
+      const users =
+        showsProcess && owner
+          ? `    users:(("${entry.process}",pid=${owner.pid},fd=6))`
+          : '';
+      return `${entry.proto.padEnd(6)} LISTEN 0      4096   ${`${entry.address}:${entry.port}`.padEnd(
+        22,
+      )} 0.0.0.0:*${users}`;
+    });
   return ok(
     state,
     [
