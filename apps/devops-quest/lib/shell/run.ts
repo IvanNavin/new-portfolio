@@ -180,11 +180,10 @@ export const runLine = (input: ShellState, line: string): RunResult => {
     };
   }
 
-  state.history.push(trimmed);
-
   const home = state.users[state.user]?.home ?? '/root';
   const parsed = parseLine(trimmed, state.env, home);
   if (!parsed.ok) {
+    state.history.push(trimmed);
     return {
       state,
       output: [{ text: parsed.error, stream: 'stderr' }],
@@ -197,6 +196,11 @@ export const runLine = (input: ShellState, line: string): RunResult => {
     segment.commands.some((command) => command.argv[0] === 'sudo'),
   );
   if (usesSudo && !state.sudo.unlocked) {
+    // Held, not run — so it must not enter history yet. Goals read history to
+    // decide what the player has done, and recording a command that is still
+    // sitting at a password prompt marked the mission complete the instant
+    // `sudo cat …` was typed, before the file was ever read. It lands in
+    // history below, once the password lets it through for real.
     state.sudo.pending = trimmed;
     return {
       state,
@@ -206,6 +210,8 @@ export const runLine = (input: ShellState, line: string): RunResult => {
       cleared: false,
     };
   }
+
+  state.history.push(trimmed);
 
   let working = state;
   let lastCode = 0;

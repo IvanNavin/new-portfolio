@@ -380,6 +380,38 @@ describe('sudo authentication', () => {
 });
 
 /**
+ * A command held at a password prompt has not run yet.
+ *
+ * History was recorded before the sudo gate, so typing `sudo cat /root/…` put
+ * the line in history while it sat waiting for a password. Goals read history
+ * to decide what the player has done, so l02-m01 went «Місію виконано» the
+ * instant sudo was typed — before the password, before the file was ever read,
+ * and before the player saw the thing the whole mission is about. The same
+ * line was then pushed a second time when it actually ran.
+ */
+describe('sudo holds the command until the password', () => {
+  const locked = () => makeMachine({ user: 'deploy', sudoLocked: true });
+
+  it('does not record a command that is still waiting for the password', () => {
+    const { state } = run(locked(), 'sudo cat /etc/shadow');
+    expect(state.history).toEqual([]);
+    expect(state.sudo.pending).toBe('sudo cat /etc/shadow');
+  });
+
+  it('records it exactly once, when the password lets it through', () => {
+    const { state } = run(locked(), 'sudo whoami', 'horih2031');
+    expect(state.history).toEqual(['sudo whoami']);
+    expect(state.sudo.pending).toBeNull();
+  });
+
+  it('still has not run it after a wrong password', () => {
+    const { state, out } = run(locked(), 'sudo whoami', 'nope');
+    expect(state.history).toEqual([]);
+    expect(out).toContain('Sorry, try again.');
+  });
+});
+
+/**
  * A command whose whole job is to report something must print something.
  *
  * `ss -n` returned an empty string: the listing was gated on the flags

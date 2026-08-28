@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { getNode, isFile, walk } from '../shell/fs';
+import { runLine } from '../shell/run';
 import type { ShellState } from '../shell/types';
 import { ALL_MISSIONS, LEVELS } from './registry';
 import type { Mission, TheoryBlock } from './types';
@@ -175,4 +176,103 @@ describe('editor missions name every file they expect', () => {
     const missing = needed.filter((name) => !given.includes(name));
     expect(missing).toEqual([]);
   });
+});
+
+/**
+ * Following the mission's own path must reveal what the mission asks about.
+ *
+ * The checks above read the *state*: they prove the answer exists somewhere on
+ * the machine. That is not the same as the player seeing it. l04-m01 declared
+ * a postgres socket, so the state said «postgres is here» and the state-based
+ * check passed — while `ss -tulpn` printed a blank process column, and the
+ * task's own words, «the line whose process is postgres», pointed at nothing.
+ * Two rows shared 127.0.0.1 and the mission was unanswerable.
+ *
+ * So these replay each solution and read what was actually printed.
+ */
+
+/** Everything printed by running a mission's solution, start to finish. */
+const printedBySolution = (mission: Mission): string => {
+  if (mission.task.kind !== 'terminal') throw new Error('not a terminal task');
+  let state = mission.task.boot();
+  const printed: string[] = [];
+  for (const line of mission.solution.split('\n')) {
+    if (line.trim() === '') continue;
+    const result = runLine(state, line);
+    state = result.state;
+    printed.push(...result.output.map((segment) => segment.text));
+  }
+  return printed.join('\n');
+};
+
+/** Named things this mission's world contains — processes, services, pods. */
+const namedEntities = (state: ShellState): string[] => {
+  const names = [
+    ...state.net.listening.map((socket) => socket.process),
+    ...Object.values(state.services).map((service) => service.name),
+    ...state.k8s.pods.map((pod) => pod.name),
+    ...state.k8s.deployments.map((deployment) => deployment.name),
+    ...state.docker.containers.map((container) => container.name),
+    ...state.docker.images.map((image) => image.repo),
+  ];
+  // Short names collide with ordinary words; landmarks worth pointing at are
+  // longer than that.
+  return [...new Set(names)].filter((name) => name && name.length >= 4);
+};
+
+describe('the intended path shows what the task talks about', () => {
+  const terminalMissions = ALL_MISSIONS.filter(
+    (mission) => mission.task.kind === 'terminal',
+  ).map((mission) => [mission.id, mission] as const);
+
+  it.each(terminalMissions)(
+    '%s shows every landmark its task names',
+    (_id, mission) => {
+      if (mission.task.kind !== 'terminal') throw new Error('not terminal');
+      const world = namedEntities(mission.task.boot());
+      const taskWords = [
+        ...(mission.task.intro ?? []),
+        ...mission.task.goals.map(
+          (goal) => `${goal.label} ${goal.hintOnFail ?? ''}`,
+        ),
+      ].join('\n');
+      const printed = printedBySolution(mission);
+
+      const pointedAt = world.filter((name) => taskWords.includes(name));
+      const invisible = pointedAt.filter((name) => !printed.includes(name));
+      expect(invisible).toEqual([]);
+    },
+  );
+
+  it.each(terminalMissions)(
+    '%s prints any answer it expects to be typed literally',
+    (_id, mission) => {
+      if (mission.task.kind !== 'terminal') throw new Error('not terminal');
+      const printed = printedBySolution(mission);
+      const onScreen = [
+        theoryTextOf(mission.theory),
+        ...(mission.task.intro ?? []),
+      ].join('\n');
+
+      const unfindable = mission.task.goals
+        .filter((goal) => goal.expected !== undefined)
+        // Only answers the solution types out by hand need to be looked up
+        // somewhere. One a pipeline computes into a file — `wc -l > count` —
+        // never has to appear on screen at all.
+        .filter((goal) => mission.solution.includes(goal.expected as string))
+        .filter((goal) => {
+          const expected = goal.expected as string;
+          const inTask = `${goal.label} ${goal.hintOnFail ?? ''}`.includes(
+            expected,
+          );
+          return (
+            !printed.includes(expected) &&
+            !onScreen.includes(expected) &&
+            !inTask
+          );
+        })
+        .map((goal) => `${goal.id}: ${goal.expected}`);
+      expect(unfindable).toEqual([]);
+    },
+  );
 });

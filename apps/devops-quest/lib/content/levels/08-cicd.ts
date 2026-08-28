@@ -85,7 +85,7 @@ export const level08: Level = {
             ['runs-on', 'на якій машині виконувати'],
             [
               'uses:',
-              'взяти готовий чужий крок: checkout завантажує твій код на машину CI, setup-node ставить Node',
+              'взяти готовий чужий крок. `actions/checkout@v4` завантажує твій код на машину CI, `actions/setup-node@v4` ставить Node',
             ],
             ['run:', 'просто виконати команду в shell'],
             ['needs: build', 'ця job почнеться лише після успішної build'],
