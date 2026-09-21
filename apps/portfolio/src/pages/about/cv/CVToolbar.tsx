@@ -74,12 +74,7 @@ export const CVToolbar = ({ labels }: Props) => {
         </Magnetic>
 
         <Magnetic>
-          <a
-            href={CV_PDF_PATH}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={BTN_CLASS}
-          >
+          <a href={CV_PDF_PATH} download className={BTN_CLASS}>
             <AnimatedFx>{labels.downloadPdf}</AnimatedFx>
           </a>
         </Magnetic>
