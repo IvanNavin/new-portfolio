@@ -42,7 +42,8 @@ turbo run lint --filter=devpulse
 
 Per-app scripts differ — check the app's `package.json`. Notable: `portfolio` uses Vite
 (`dev`=`vite`); `language` runs `next dev --experimental-https`; `devpulse` runs on port 3010
-with `--turbo`; `rpg-game` is webpack; `visit-stat` has no `typecheck` script.
+and `film-scope` on 3020, both with `--turbo`; `rpg-game` is webpack; `visit-stat` has no
+`typecheck` script.
 
 Prisma client: `pnpm generate:prisma` (root) regenerates from `packages/prisma/schema.prisma`.
 `postinstall` runs it automatically unless `SKIP_PRISMA=true`.
@@ -64,8 +65,8 @@ placeholder — don't claim those pass.
 ### Workspace members
 
 Only these are pnpm workspace packages (see `pnpm-workspace.yaml`):
-`apps/devops-quest`, `apps/devpulse`, `apps/language`, `apps/pokedex`, `apps/portfolio`,
-`apps/rpg-game`, `apps/solitaire`, `apps/visit-stat`, and `packages/*`.
+`apps/devops-quest`, `apps/devpulse`, `apps/film-scope`, `apps/language`, `apps/pokedex`,
+`apps/portfolio`, `apps/rpg-game`, `apps/solitaire`, `apps/visit-stat`, and `packages/*`.
 
 **Deliberately excluded** (do not add them to the workspace):
 
@@ -99,6 +100,16 @@ Only these are pnpm workspace packages (see `pnpm-workspace.yaml`):
 - **devpulse** — Next.js 16 (App Router) news/feed app with AI analysis (AI SDK v5 + Google
   provider), Prisma 6, NextAuth 5 beta. Business logic lives in `app/…` + `lib/` (feed parsing,
   scoring, per-user state).
+- **film-scope** — Next.js 16 + Tailwind v4 catalog of films/shows over the TMDB API, built
+  around filters other sites lack: exclusions ("every country except…"), multi-genre AND/OR,
+  cast include _and_ exclude, and a Bayesian "best of" ranking instead of a raw average
+  (`lib/filters/score.ts`). `lib/filters/` is the request+response contract and imports nothing
+  from `app/` or React on purpose — it is meant to move to a shared package when the browser
+  extension lands. `lib/tmdb/` holds the client and the discover orchestration; everything the
+  TMDB API cannot express (country/language/person exclusion, our ranking) is applied in
+  `lib/filters/postFilter.ts`. Runs with **no API token**: an empty `TMDB_ACCESS_TOKEN` serves
+  `lib/tmdb/__fixtures__/catalog.json` through the same code path, behind a "demo data" banner.
+  Note the two disjoint TMDB genre vocabularies (films vs shows) — see `lib/tmdb/genres.ts`.
 - **language**, **pokedex** — Next.js 14, Mantine UI, Prisma 5, NextAuth 4 (language).
 - **visit-stat** — Next.js 15, Mantine + mantine-react-table. Run locally only.
 - **devops-quest** — Next.js 16 + Tailwind v4 game that teaches DevOps: 12 levels / 58 missions,

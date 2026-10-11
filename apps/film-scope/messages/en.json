@@ -1,0 +1,260 @@
+{
+  "app": {
+    "name": "FilmScope",
+    "tagline": "Filters that actually work",
+    "description": "Find films and shows by the things other catalogs ignore — cast, origin, age rating, and an honest \"best of\" ranking."
+  },
+  "demo": {
+    "title": "Demo data",
+    "body": "No TMDB token is configured, so this catalog is a small invented sample. Ratings and titles here are placeholders, not real records."
+  },
+  "filters": {
+    "heading": "Filters",
+    "show": "Filters",
+    "hide": "Close",
+    "reset": "Reset all",
+    "include": "add",
+    "exclude": "exclude",
+    "any": "Any",
+    "search": "Search…",
+    "noResults": "Nothing found",
+    "from": "From",
+    "to": "To",
+    "addBand": "exclude a range",
+    "bandsTitle": "Excluded ranges",
+    "matchAny": "any",
+    "matchAll": "all",
+    "sections": {
+      "basics": "Basics",
+      "people": "Cast & crew",
+      "rating": "Rating",
+      "origin": "Origin",
+      "availability": "Where to watch",
+      "details": "Details",
+      "tv": "Series"
+    },
+    "type": {
+      "label": "Type",
+      "movie": "Films",
+      "tv": "Shows",
+      "both": "Both"
+    },
+    "genres": {
+      "label": "Genres",
+      "sciFiTvHint": "TMDB has no separate Science Fiction for shows — it files sci-fi and fantasy under one genre, so both come back together. Films do have the split. To narrow further, use the keyword filter below."
+    },
+    "cast": {
+      "label": "Starring",
+      "placeholder": "Type an actor's name",
+      "hint": "Add two names and switch to \"all\" to find what they made together."
+    },
+    "crew": {
+      "label": "Director, writer, composer…",
+      "placeholder": "Type a name"
+    },
+    "countries": {
+      "label": "Country of origin"
+    },
+    "languages": {
+      "label": "Original language"
+    },
+    "companies": {
+      "label": "Studio",
+      "placeholder": "A24, Pixar, Ghibli…",
+      "hint": "Excluding a studio works too."
+    },
+    "keywords": {
+      "label": "Keywords",
+      "placeholder": "time travel, heist…",
+      "hint": "TMDB's own tags — the sharpest filter here once you find the right one."
+    },
+    "year": {
+      "label": "Year",
+      "exact": "one year",
+      "range": "range",
+      "decade": "{decade}s"
+    },
+    "runtime": {
+      "label": "Runtime (min)"
+    },
+    "rating": {
+      "label": "Rating",
+      "source": "Source",
+      "value": "Score (0–10)",
+      "votes": "Vote count",
+      "votesHint": "The most important control here. Below a few hundred votes a rating means nothing.",
+      "sourceTmdb": "TMDB",
+      "sourceImdb": "IMDb",
+      "sourceMixed": "Combined",
+      "imdbUnavailable": "IMDb ratings need the Stage 2 index — falling back to TMDB."
+    },
+    "certification": {
+      "label": "Age rating",
+      "hint": "Films only — TMDB cannot filter shows by certification."
+    },
+    "providers": {
+      "label": "Streaming service",
+      "hint": "Region: {region}",
+      "unavailable": "Provider list needs a TMDB token."
+    },
+    "monetization": {
+      "label": "How",
+      "flatrate": "Subscription",
+      "free": "Free",
+      "ads": "With ads",
+      "rent": "Rent",
+      "buy": "Buy"
+    },
+    "tvStatus": {
+      "label": "Status",
+      "hint": "Include-only: TMDB has no exclusion for this.",
+      "returning": "Returning",
+      "planned": "Planned",
+      "inProduction": "In production",
+      "ended": "Ended",
+      "cancelled": "Cancelled",
+      "pilot": "Pilot"
+    },
+    "tvTypes": {
+      "label": "Kind",
+      "documentary": "Documentary",
+      "news": "News",
+      "miniseries": "Miniseries",
+      "reality": "Reality",
+      "scripted": "Scripted",
+      "talkShow": "Talk show",
+      "video": "Video"
+    },
+    "animation": {
+      "label": "Animation",
+      "any": "include",
+      "without": "exclude",
+      "only": "only",
+      "hint": "Animation is a genre in TMDB, so animated features count as films. Accuracy follows TMDB's tagging — some stop-motion and hybrid titles are not marked as animation there."
+    },
+    "regions": {
+      "label": "Regions",
+      "west": "Western",
+      "europe": "Europe",
+      "asia": "Asia",
+      "india": "India",
+      "latam": "Latin America",
+      "cis": "CIS",
+      "hint": "A shortcut that fills the country list below — every country stays editable afterwards."
+    }
+  },
+  "sort": {
+    "label": "Sort by",
+    "score": "Best (weighted)",
+    "votes": "Most voted",
+    "release": "Release date",
+    "runtime": "Runtime",
+    "popularity": "Popularity",
+    "revenue": "Box office",
+    "asc": "Ascending",
+    "desc": "Descending",
+    "title": "Title (A–Z)"
+  },
+  "presets": {
+    "heading": "Quick picks",
+    "bestMoviesThisYear": "Best films of {year}",
+    "bestMoviesLastYear": "Best films of {year}",
+    "bestTvThisYear": "Best shows of {year}",
+    "bestTvLastYear": "Best shows of {year}",
+    "bestFamilyFiveYears": "Best family films, last 5 years",
+    "bestOfAllTime": "Best of all time",
+    "hiddenGems": "Hidden gems",
+    "shortAndGood": "Great and under 100 min",
+    "finishedTv": "Finished shows — binge now",
+    "ongoingTv": "Still airing"
+  },
+  "results": {
+    "count": "{count, plural, =0 {No titles} one {# title} other {# titles}}",
+    "approximate": "Ranked within the top {scanned} candidates — exact ordering arrives with the full index.",
+    "empty": "Nothing matches these filters.",
+    "emptyHint": "Try lowering the minimum votes or removing an exclusion.",
+    "page": "Page {page} of {total}",
+    "previous": "Previous",
+    "next": "Next",
+    "loading": "Loading…",
+    "perPage": "Per page"
+  },
+  "card": {
+    "score": "Score",
+    "votes": "{count} votes",
+    "noRating": "Not rated",
+    "minutes": "{count} min"
+  },
+  "title": {
+    "back": "Back to catalog",
+    "overview": "Overview",
+    "noOverview": "No synopsis available in this language.",
+    "overviewFallback": "Shown in English — no translation available.",
+    "cast": "Cast",
+    "crew": "Crew",
+    "details": "Details",
+    "keywords": "Keywords",
+    "whereToWatch": "Where to watch",
+    "noProviders": "No streaming availability found for your region.",
+    "similar": "You might also like",
+    "trailer": "Trailer",
+    "status": "Status",
+    "originalTitle": "Original title",
+    "originalLanguage": "Original language",
+    "countries": "Countries",
+    "companies": "Production",
+    "budget": "Budget",
+    "revenue": "Box office",
+    "seasons": "{count} seasons",
+    "episodes": "{count} episodes",
+    "certification": "Age rating",
+    "filterByPerson": "Show all titles with {name}",
+    "notFound": "Title not found.",
+    "seasonsLabel": "Seasons",
+    "episodesLabel": "Episodes"
+  },
+  "watchlist": {
+    "add": "Save",
+    "remove": "Saved",
+    "watched": "Watched",
+    "heading": "Saved titles",
+    "empty": "Nothing saved yet."
+  },
+  "locale": {
+    "label": "Language",
+    "en": "English",
+    "uk": "Українська",
+    "ru": "Русский"
+  },
+  "footer": {
+    "attribution": "This product uses the TMDB API but is not endorsed or certified by TMDB.",
+    "nonCommercial": "A non-commercial personal project. No video is hosted or streamed here."
+  },
+  "active": {
+    "heading": "Active filters",
+    "clear": "Clear all",
+    "none": "No filters — showing everything",
+    "genres": "Genre",
+    "countries": "Country",
+    "languages": "Language",
+    "companies": "Studio",
+    "keywords": "Keyword",
+    "cast": "Starring",
+    "crew": "Crew",
+    "providers": "On",
+    "year": "Year",
+    "runtime": "Runtime",
+    "score": "Score",
+    "votes": "Votes",
+    "type": "Type",
+    "animation": "Animation",
+    "certification": "Age rating",
+    "tvStatus": "Status",
+    "tvTypes": "Kind",
+    "monetization": "Access",
+    "notFrom": "not {value}",
+    "range": "{from}–{to}",
+    "min": "from {value}",
+    "max": "up to {value}"
+  }
+}

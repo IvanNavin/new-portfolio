@@ -1,0 +1,10 @@
+# Next.js build output
+.next/
+out/
+
+# Local env (covered by root .gitignore too, kept here for clarity)
+.env
+.env.local
+
+# Vercel
+.vercel

@@ -1,0 +1,81 @@
+@import 'tailwindcss';
+
+/* Dark by default — a catalog of posters reads better on near-black. The light
+   palette is defined for people whose OS asks for it, and both are plain token
+   swaps so no component needs a variant. */
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --color-ink: var(--ink);
+  --color-ink-dim: var(--ink-dim);
+  --color-ink-faint: var(--ink-faint);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-edge: var(--edge);
+  --color-edge-strong: var(--edge-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-score: var(--score);
+  --color-danger: var(--danger);
+}
+
+:root {
+  --ink: #eef1f6;
+  --ink-dim: #9aa4b4;
+  --ink-faint: #616b7d;
+  --surface: #0a0c10;
+  --surface-raised: #131720;
+  --surface-sunken: #06080b;
+  --edge: #1e2532;
+  --edge-strong: #2c3547;
+  --accent: #6ea8fe;
+  --accent-soft: rgba(110, 168, 254, 0.14);
+  --score: #f2c14e;
+  --danger: #f3796f;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --ink: #12161d;
+    --ink-dim: #59616f;
+    --ink-faint: #8b93a1;
+    --surface: #f7f8fa;
+    --surface-raised: #ffffff;
+    --surface-sunken: #eceef2;
+    --edge: #dfe3e9;
+    --edge-strong: #c6ccd6;
+    --accent: #2563eb;
+    --accent-soft: rgba(37, 99, 235, 0.1);
+    --score: #b3820c;
+    --danger: #c0392b;
+    color-scheme: light;
+  }
+}
+
+html,
+body {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Utility used by the poster grid to keep every tile the same shape whether or
+   not an image loaded. */
+.poster-ratio {
+  aspect-ratio: 2 / 3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
