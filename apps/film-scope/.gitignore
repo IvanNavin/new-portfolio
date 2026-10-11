@@ -2,9 +2,11 @@
 .next/
 out/
 
-# Local env (covered by root .gitignore too, kept here for clarity)
-.env
-.env.local
+# Local env. `vercel link` writes .env.local (it holds a VERCEL_OIDC_TOKEN),
+# and .env holds the TMDB token — neither belongs in git. The example file is
+# the one env file that does.
+.env*
+!.env.example
 
 # Vercel
 .vercel
