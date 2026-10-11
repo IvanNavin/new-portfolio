@@ -294,9 +294,6 @@ importers:
       '@next/eslint-plugin-next':
         specifier: ^16.2.6
         version: 16.2.10
-      '@repo/eslint-config':
-        specifier: '*'
-        version: link:../../packages/config-eslint
       '@tailwindcss/postcss':
         specifier: ^4.3.0
         version: 4.3.3
